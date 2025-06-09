@@ -113,25 +113,36 @@ private fun Content(
     listViewState: ShopsListViewState,
     navigateToShopDetail: (ShopId) -> Unit,
 ) {
-    Box(modifier = modifier) {
         when (selectedViewMode) {
             ShopsViewMode.Map -> ShopsMapView(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 state = mapState,
                 onShopSelected = onShopSelected,
             )
 
-            ShopsViewMode.List -> Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("List View Placeholder")
-                Text("${listViewState.shops.size} shops")
-                Button(onClick = { navigateToShopDetail("placeholder") }) {
-                    Text("Navigate to a Shop Detail")
-                }
-            }
+            ShopsViewMode.List -> ShopsListView(
+                modifier = modifier.fillMaxSize(),
+                listViewState = listViewState,
+                navigateToShopDetail = navigateToShopDetail
+            )
+    }
+}
+
+@Composable
+private fun ShopsListView(
+    modifier: Modifier,
+    listViewState: ShopsListViewState,
+    navigateToShopDetail: (ShopId) -> Unit
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("List View Placeholder")
+        Text("${listViewState.shops.size} shops")
+        Button(onClick = { navigateToShopDetail("placeholder") }) {
+            Text("Navigate to a Shop Detail")
         }
     }
 }
