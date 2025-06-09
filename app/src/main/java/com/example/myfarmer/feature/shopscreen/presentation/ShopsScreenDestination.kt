@@ -22,7 +22,7 @@ fun NavGraphBuilder.shopsScreenDestination() {
         val shopsListViewState by shopsListViewModel.state.collectAsState()
 
         ShopsScreen(
-            mapState = shopsMapViewState,
+            mapViewState = shopsMapViewState,
             onShopSelected = shopsMapViewModel::onShopSelected,
             listViewState = shopsListViewState,
             navigateToShopDetail = shopsListViewModel::navigateToShopDetail,

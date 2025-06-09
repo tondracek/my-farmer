@@ -41,7 +41,7 @@ private val pageCount = ShopsViewMode.entries.size
 
 @Composable
 fun ShopsScreen(
-    mapState: ShopsMapViewState,
+    mapViewState: ShopsMapViewState,
     onShopSelected: (ShopId?) -> Unit,
     listViewState: ShopsListViewState,
     navigateToShopDetail: (ShopId) -> Unit,
@@ -73,7 +73,7 @@ fun ShopsScreen(
                 Content(
                     modifier = Modifier.fillMaxSize(),
                     selectedViewMode = page.toShopsViewMode(),
-                    mapState = mapState,
+                    mapState = mapViewState,
                     onShopSelected = onShopSelected,
                     listViewState = listViewState,
                     navigateToShopDetail = navigateToShopDetail
@@ -125,7 +125,7 @@ private fun Content(
             ) {
                 Text("List View Placeholder")
                 Text("${listViewState.shops.size} shops")
-                Button(onClick = { navigateToShopDetail("") }) {
+                Button(onClick = { navigateToShopDetail("placeholder") }) {
                     Text("Navigate to a Shop Detail")
                 }
             }
@@ -138,7 +138,7 @@ private fun Content(
 private fun ShopScreenMapPreview() {
     MyFarmerTheme {
         ShopsScreen(
-            mapState = ShopsMapViewState(),
+            mapViewState = ShopsMapViewState(),
             onShopSelected = {},
             listViewState = ShopsListViewState(),
             navigateToShopDetail = {},
@@ -151,7 +151,7 @@ private fun ShopScreenMapPreview() {
 private fun ShopScreenListPreview() {
     MyFarmerTheme {
         ShopsScreen(
-            mapState = ShopsMapViewState(),
+            mapViewState = ShopsMapViewState(),
             onShopSelected = {},
             listViewState = ShopsListViewState(),
             navigateToShopDetail = {},
