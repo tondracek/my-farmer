@@ -1,16 +1,12 @@
-package com.example.myfarmer.feature.shopscreen.presentation.mapview.components
+package com.example.myfarmer.feature.shopsmapview.presentation.components
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
@@ -30,6 +26,7 @@ import com.example.myfarmer.shared.domain.ImageResource
 import com.example.myfarmer.shared.domain.Shop
 import com.example.myfarmer.shared.domain.sampleShops
 import com.example.myfarmer.shared.theme.MyFarmerTheme
+import com.example.myfarmer.shared.ui.components.CategoriesRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,22 +120,6 @@ fun CategoriesRowTitle(modifier: Modifier = Modifier, categories: List<Category>
     }
 }
 
-@Composable
-fun CategoriesRow(categories: List<Category>) {
-    Row(
-        modifier = Modifier
-            .padding(0.dp, 4.dp)
-            .horizontalScroll(rememberScrollState()),
-    ) {
-        categories.forEach { category ->
-            Box(
-                modifier = Modifier.padding(4.dp, 0.dp)
-            ) {
-                CategoryLabel(category = category)
-            }
-        }
-    }
-}
 
 @Composable
 fun Description(modifier: Modifier = Modifier, description: String) {

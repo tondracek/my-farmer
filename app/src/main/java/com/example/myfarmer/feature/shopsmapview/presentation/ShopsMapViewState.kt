@@ -1,4 +1,4 @@
-package com.example.myfarmer.feature.shopscreen.presentation.mapview
+package com.example.myfarmer.feature.shopsmapview.presentation
 
 import com.example.myfarmer.shared.domain.Shop
 import com.example.myfarmer.shared.domain.ShopId

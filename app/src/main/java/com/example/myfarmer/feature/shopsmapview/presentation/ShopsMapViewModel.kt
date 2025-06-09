@@ -1,4 +1,4 @@
-package com.example.myfarmer.feature.shopscreen.presentation.mapview
+package com.example.myfarmer.feature.shopsmapview.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ShopsMapViewModel @Inject constructor() : ViewModel() {
 
-    private val _shops: Flow<Set<Shop>> = flowOf(sampleShops)
+    private val _shops: Flow<Set<Shop>> = flowOf(sampleShops.toSet())
 
     private val _state = MutableStateFlow(ShopsMapViewState())
     val state: StateFlow<ShopsMapViewState> = combine(

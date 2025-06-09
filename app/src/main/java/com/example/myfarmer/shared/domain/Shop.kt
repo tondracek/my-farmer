@@ -9,7 +9,7 @@ data class Shop(
     val userRatings: List<UserRating>,
     val averageRating: Double,
     val location: ShopLocation,
-    val id: ShopId = "", /* TODO: Use UUID or similar */
+    val id: ShopId,
 )
 
 typealias ShopId = String

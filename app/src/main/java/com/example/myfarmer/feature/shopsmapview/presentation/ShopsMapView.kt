@@ -1,11 +1,14 @@
-package com.example.myfarmer.feature.shopscreen.presentation.mapview
+package com.example.myfarmer.feature.shopsmapview.presentation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.myfarmer.feature.shopsmapview.presentation.components.ShopBottomSheet
 import com.example.myfarmer.shared.domain.ShopId
+import com.example.myfarmer.shared.theme.MyFarmerTheme
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
@@ -20,6 +23,9 @@ fun ShopsMapView(
     state: ShopsMapViewState,
     onShopSelected: (ShopId?) -> Unit,
 ) {
+    val viewModel: ShopsMapViewModel = hiltViewModel()
+    print(viewModel.state)
+
     val cameraPositionState = rememberCameraPositionState()
 
     LaunchedEffect(state.initialCameraBounds) {
@@ -49,14 +55,23 @@ fun ShopsMapView(
             )
         }
     }
+
+    if (state.selectedShop != null) {
+        ShopBottomSheet(
+            shop = state.shops.first { it.id == state.selectedShop },
+            onDismissRequest = { onShopSelected(null) }
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun ShopsMapViewPreview() {
-    ShopsMapView(
-        state = ShopsMapViewState(),
-        onShopSelected = {},
-        modifier = Modifier.fillMaxSize(),
-    )
+    MyFarmerTheme {
+        ShopsMapView(
+            state = ShopsMapViewState(),
+            onShopSelected = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
 }

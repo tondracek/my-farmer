@@ -5,9 +5,10 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.myfarmer.feature.shopscreen.presentation.listview.ShopsListViewModel
-import com.example.myfarmer.feature.shopscreen.presentation.mapview.ShopsMapViewModel
-import com.example.myfarmer.feature.shopscreen.presentation.root.ShopsScreen
+import com.example.myfarmer.feature.shopslistview.presentation.ShopsListView
+import com.example.myfarmer.feature.shopslistview.presentation.ShopsListViewModel
+import com.example.myfarmer.feature.shopsmapview.presentation.ShopsMapView
+import com.example.myfarmer.feature.shopsmapview.presentation.ShopsMapViewModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,10 +23,20 @@ fun NavGraphBuilder.shopsScreenDestination() {
         val shopsListViewState by shopsListViewModel.state.collectAsState()
 
         ShopsScreen(
-            mapViewState = shopsMapViewState,
-            onShopSelected = shopsMapViewModel::onShopSelected,
-            listViewState = shopsListViewState,
-            navigateToShopDetail = shopsListViewModel::navigateToShopDetail,
+            mapView = { modifier ->
+                ShopsMapView(
+                    modifier = modifier,
+                    state = shopsMapViewState,
+                    onShopSelected = shopsMapViewModel::onShopSelected,
+                )
+            },
+            listView = { modifier ->
+                ShopsListView(
+                    modifier = modifier,
+                    state = shopsListViewState,
+                    onNavigateToShopDetail = shopsListViewModel::navigateToShopDetail,
+                )
+            }
         )
     }
 }

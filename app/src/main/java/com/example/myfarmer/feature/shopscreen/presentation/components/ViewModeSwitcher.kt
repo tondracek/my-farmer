@@ -1,4 +1,4 @@
-package com.example.myfarmer.feature.shopscreen.presentation.root.components
+package com.example.myfarmer.feature.shopscreen.presentation.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.myfarmer.R
-import com.example.myfarmer.feature.shopscreen.presentation.root.ShopsViewMode
+import com.example.myfarmer.feature.shopscreen.presentation.ShopsViewMode
 import com.example.myfarmer.shared.theme.MyFarmerTheme
 import com.example.myfarmer.shared.ui.preview.PreviewApi34Dark
 import com.example.myfarmer.shared.ui.preview.PreviewApi34Light
@@ -84,8 +84,8 @@ private fun ViewModeButton(
     Button(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 4.dp)
-            .scale(if (selected) 1f else 0.95f)
-            .animateContentSize(),
+            .animateContentSize()
+            .scale(if (selected) 1f else 0.95f),
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,

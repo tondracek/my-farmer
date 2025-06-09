@@ -1,16 +1,12 @@
-package com.example.myfarmer.feature.shopscreen.presentation.root
+package com.example.myfarmer.feature.shopscreen.presentation
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -21,11 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.myfarmer.R
-import com.example.myfarmer.feature.shopscreen.presentation.listview.ShopsListViewState
-import com.example.myfarmer.feature.shopscreen.presentation.mapview.ShopsMapView
-import com.example.myfarmer.feature.shopscreen.presentation.mapview.ShopsMapViewState
-import com.example.myfarmer.feature.shopscreen.presentation.root.components.ViewModeSwitcher
-import com.example.myfarmer.shared.domain.ShopId
+import com.example.myfarmer.feature.shopscreen.presentation.components.ViewModeSwitcher
 import com.example.myfarmer.shared.theme.MyFarmerTheme
 import com.example.myfarmer.shared.ui.navbar.BottomNavigationBar
 import com.example.myfarmer.shared.ui.preview.PreviewApi34
@@ -42,10 +34,8 @@ private val pageCount = ShopsViewMode.entries.size
 
 @Composable
 fun ShopsScreen(
-    mapViewState: ShopsMapViewState,
-    onShopSelected: (ShopId?) -> Unit,
-    listViewState: ShopsListViewState,
-    navigateToShopDetail: (ShopId) -> Unit,
+    mapView: @Composable (Modifier) -> Unit,
+    listView: @Composable (Modifier) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -74,15 +64,11 @@ fun ShopsScreen(
             HorizontalPager(
                 state = pagerState,
                 userScrollEnabled = false
-            ) { page ->
-                Content(
-                    modifier = Modifier.fillMaxSize(),
-                    selectedViewMode = page.toShopsViewMode(),
-                    mapState = mapViewState,
-                    onShopSelected = onShopSelected,
-                    listViewState = listViewState,
-                    navigateToShopDetail = navigateToShopDetail
-                )
+            ) {
+                when (currentViewMode) {
+                    ShopsViewMode.Map -> mapView(Modifier.fillMaxSize())
+                    ShopsViewMode.List -> listView(Modifier.fillMaxSize())
+                }
             }
 
             ViewModeSwitcher(
@@ -107,58 +93,13 @@ fun ShopsScreen(
     }
 }
 
-@Composable
-private fun Content(
-    modifier: Modifier,
-    selectedViewMode: ShopsViewMode,
-    mapState: ShopsMapViewState,
-    onShopSelected: (ShopId?) -> Unit,
-    listViewState: ShopsListViewState,
-    navigateToShopDetail: (ShopId) -> Unit,
-) {
-    when (selectedViewMode) {
-        ShopsViewMode.Map -> ShopsMapView(
-            modifier = modifier.fillMaxSize(),
-            state = mapState,
-            onShopSelected = onShopSelected,
-        )
-
-        ShopsViewMode.List -> ShopsListView(
-            modifier = modifier.fillMaxSize(),
-            listViewState = listViewState,
-            navigateToShopDetail = navigateToShopDetail
-        )
-    }
-}
-
-@Composable
-private fun ShopsListView(
-    modifier: Modifier,
-    listViewState: ShopsListViewState,
-    navigateToShopDetail: (ShopId) -> Unit
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("List View Placeholder")
-        Text("${listViewState.shops.size} shops")
-        Button(onClick = { navigateToShopDetail("placeholder") }) {
-            Text("Navigate to a Shop Detail")
-        }
-    }
-}
-
 @PreviewApi34
 @Composable
 private fun ShopScreenPreview() {
     MyFarmerTheme {
         ShopsScreen(
-            mapViewState = ShopsMapViewState(),
-            onShopSelected = {},
-            listViewState = ShopsListViewState(),
-            navigateToShopDetail = {},
+            mapView = {},
+            listView = {},
         )
     }
 }
