@@ -14,11 +14,7 @@ class ShopScreenViewModel @Inject constructor(
     private val _state = MutableStateFlow(ShopsScreenState())
     val state: StateFlow<ShopsScreenState> = _state
 
-    fun onMapModeSelected() = _state.update {
-        it.copy(viewMode = ShopViewMode.Map)
-    }
-
-    fun onListModeSelected() = _state.update {
-        it.copy(viewMode = ShopViewMode.List)
+    fun onViewModeSelected(shopsViewMode: ShopsViewMode) = _state.update {
+        it.copy(viewMode = shopsViewMode)
     }
 }

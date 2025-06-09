@@ -3,9 +3,12 @@ package com.example.myfarmer.feature.shopscreen.presentation.root
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,11 +25,10 @@ import com.example.myfarmer.shared.ui.preview.PreviewApi34
 import com.example.myfarmer.shared.ui.topbar.FloatingTopBar
 
 @Composable
-fun ShopScreen(
+fun ShopsScreen(
     /* Root resources */
     shopsScreenState: ShopsScreenState,
-    onMapModeSelected: () -> Unit,
-    onListModeSelected: () -> Unit,
+    onViewModeSelected: (ShopsViewMode) -> Unit,
     /* MapView recourses */
     mapState: ShopsMapViewState,
     onShopSelected: (ShopId?) -> Unit,
@@ -41,31 +43,26 @@ fun ShopScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            when (shopsScreenState.viewMode) {
-                ShopViewMode.Map -> ShopsMapView(
-                    modifier = Modifier.fillMaxSize(),
-                    state = mapState,
-                    onShopSelected = onShopSelected,
-                )
-
-                ShopViewMode.List -> Text(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = "List View Placeholder",
-                )
-            }
+            Content(
+                modifier = Modifier.fillMaxSize(),
+                shopsScreenState = shopsScreenState,
+                onPageChanged = onViewModeSelected,
+                mapState = mapState,
+                onShopSelected = onShopSelected
+            )
 
             ViewModeSwitcher(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(16.dp),
                 selectedMode = shopsScreenState.viewMode,
-                onMapClick = onMapModeSelected,
-                onListClick = onListModeSelected,
+                onMapClick = { onViewModeSelected(ShopsViewMode.Map) },
+                onListClick = { onViewModeSelected(ShopsViewMode.List) },
             )
 
             val topBarTitle = when (shopsScreenState.viewMode) {
-                ShopViewMode.Map -> stringResource(R.string.shops_map)
-                ShopViewMode.List -> stringResource(R.string.shops_list)
+                ShopsViewMode.Map -> stringResource(R.string.shops_map)
+                ShopsViewMode.List -> stringResource(R.string.shops_list)
             }
             FloatingTopBar(
                 modifier = Modifier.align(Alignment.TopCenter),
@@ -77,14 +74,58 @@ fun ShopScreen(
     }
 }
 
+@Composable
+private fun Content(
+    modifier: Modifier,
+    shopsScreenState: ShopsScreenState,
+    onPageChanged: (ShopsViewMode) -> Unit,
+    mapState: ShopsMapViewState,
+    onShopSelected: (ShopId?) -> Unit
+) {
+    fun ShopsViewMode.toPage(): Int = this.ordinal
+    fun Int.toShopsViewMode(): ShopsViewMode = ShopsViewMode.entries[this]
+
+    val pagerState = rememberPagerState(
+        pageCount = { 2 },
+        initialPage = shopsScreenState.viewMode.toPage(),
+    )
+
+    LaunchedEffect(shopsScreenState.viewMode) {
+        if (shopsScreenState.viewMode == pagerState.currentPage.toShopsViewMode()) return@LaunchedEffect
+        pagerState.animateScrollToPage(shopsScreenState.viewMode.toPage())
+    }
+
+    LaunchedEffect(pagerState.currentPage) {
+        if (shopsScreenState.viewMode == pagerState.currentPage.toShopsViewMode()) return@LaunchedEffect
+        onPageChanged(pagerState.currentPage.toShopsViewMode())
+    }
+
+    HorizontalPager(
+        state = pagerState,
+        modifier = modifier.fillMaxSize(),
+    ) { page ->
+        when (page) {
+            ShopsViewMode.Map.toPage() -> ShopsMapView(
+                modifier = Modifier.fillMaxSize(),
+                state = mapState,
+                onShopSelected = onShopSelected,
+            )
+
+            ShopsViewMode.List.toPage() -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) { Text("List View Placeholder") }
+        }
+    }
+}
+
 @PreviewApi34
 @Composable
 private fun ShopScreenMapPreview() {
     MyFarmerTheme {
-        ShopScreen(
-            shopsScreenState = ShopsScreenState(viewMode = ShopViewMode.Map),
-            onMapModeSelected = {},
-            onListModeSelected = {},
+        ShopsScreen(
+            shopsScreenState = ShopsScreenState(viewMode = ShopsViewMode.Map),
+            onViewModeSelected = {},
             mapState = ShopsMapViewState(),
             onShopSelected = {},
             listViewState = ShopsListViewState(),
@@ -96,10 +137,9 @@ private fun ShopScreenMapPreview() {
 @Composable
 private fun ShopScreenListPreview() {
     MyFarmerTheme {
-        ShopScreen(
-            shopsScreenState = ShopsScreenState(viewMode = ShopViewMode.List),
-            onMapModeSelected = {},
-            onListModeSelected = {},
+        ShopsScreen(
+            shopsScreenState = ShopsScreenState(viewMode = ShopsViewMode.List),
+            onViewModeSelected = {},
             mapState = ShopsMapViewState(),
             onShopSelected = {},
             listViewState = ShopsListViewState(),

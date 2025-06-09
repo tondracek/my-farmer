@@ -1,5 +1,7 @@
 package com.example.myfarmer.feature.shopscreen.presentation.root.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -20,11 +22,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.myfarmer.R
-import com.example.myfarmer.feature.shopscreen.presentation.root.ShopViewMode
+import com.example.myfarmer.feature.shopscreen.presentation.root.ShopsViewMode
 import com.example.myfarmer.shared.theme.MyFarmerTheme
 import com.example.myfarmer.shared.ui.preview.PreviewApi34Dark
 import com.example.myfarmer.shared.ui.preview.PreviewApi34Light
@@ -32,7 +35,7 @@ import com.example.myfarmer.shared.ui.preview.PreviewApi34Light
 @Composable
 fun ViewModeSwitcher(
     modifier: Modifier = Modifier,
-    selectedMode: ShopViewMode,
+    selectedMode: ShopsViewMode,
     onMapClick: () -> Unit,
     onListClick: () -> Unit,
 ) {
@@ -46,13 +49,13 @@ fun ViewModeSwitcher(
             ViewModeButton(
                 label = stringResource(R.string.map),
                 icon = Icons.Default.Check,
-                selected = selectedMode == ShopViewMode.Map,
+                selected = selectedMode == ShopsViewMode.Map,
                 onClick = onMapClick
             )
             ViewModeButton(
                 label = stringResource(R.string.list),
                 icon = Icons.AutoMirrored.Filled.List,
-                selected = selectedMode == ShopViewMode.List,
+                selected = selectedMode == ShopsViewMode.List,
                 onClick = onListClick
             )
         }
@@ -66,24 +69,31 @@ private fun ViewModeButton(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
-    val colors = when (selected) {
-        true -> ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-        )
+    val containerColor by animateColorAsState(
+        if (selected) MaterialTheme.colorScheme.primary
+        else MaterialTheme.colorScheme.surfaceVariant,
+        label = "containerColor"
+    )
 
-        false -> ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
+    val contentColor by animateColorAsState(
+        if (selected) MaterialTheme.colorScheme.onPrimary
+        else MaterialTheme.colorScheme.onSurfaceVariant,
+        label = "contentColor"
+    )
+
     Button(
-        modifier = Modifier.padding(
-            horizontal = 8.dp,
-            vertical = 4.dp,
-        ),
+        modifier = Modifier
+            .padding(
+                horizontal = 8.dp,
+                vertical = 4.dp,
+            )
+            .scale(if (selected) 1f else 0.9f)
+            .animateContentSize(),
         onClick = onClick,
-        colors = colors,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+        ),
     ) {
         Row(
             modifier = Modifier.padding(2.dp),
@@ -99,12 +109,12 @@ private fun ViewModeButton(
 @PreviewApi34Light
 @Composable
 private fun ViewModeSwitcherMapPreview() {
-    var selectedMode by remember { mutableStateOf(ShopViewMode.Map) }
+    var selectedMode by remember { mutableStateOf(ShopsViewMode.Map) }
     MyFarmerTheme {
         ViewModeSwitcher(
             selectedMode = selectedMode,
-            onMapClick = { selectedMode = ShopViewMode.Map },
-            onListClick = { selectedMode = ShopViewMode.List },
+            onMapClick = { selectedMode = ShopsViewMode.Map },
+            onListClick = { selectedMode = ShopsViewMode.List },
         )
     }
 }
@@ -112,12 +122,12 @@ private fun ViewModeSwitcherMapPreview() {
 @PreviewApi34Dark
 @Composable
 private fun ViewModeSwitcherListPreview() {
-    var selectedMode by remember { mutableStateOf(ShopViewMode.List) }
+    var selectedMode by remember { mutableStateOf(ShopsViewMode.List) }
     MyFarmerTheme {
         ViewModeSwitcher(
             selectedMode = selectedMode,
-            onMapClick = { selectedMode = ShopViewMode.Map },
-            onListClick = { selectedMode = ShopViewMode.List },
+            onMapClick = { selectedMode = ShopsViewMode.Map },
+            onListClick = { selectedMode = ShopsViewMode.List },
         )
     }
 }

@@ -14,6 +14,7 @@ composeBom = "2025.06.00"
 navigation = "2.9.0"
 serialization = "1.7.3"
 hiltNavigationCompose = "1.2.0"
+composeFoundation = "1.8.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,6 +40,8 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 androidx-hilt-navigation-fragment = { group = "androidx.hilt", name = "hilt-navigation-fragment", version.ref = "androidxHilt" }
 androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidxHilt" }
+
+androidx-compose-pager = { group = "androidx.compose.foundation", name = "foundation", version.ref = "composeFoundation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
