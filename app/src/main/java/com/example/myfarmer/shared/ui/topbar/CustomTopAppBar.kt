@@ -17,6 +17,6 @@ fun CustomTopAppBar(
         title = { Text(text = title) },
         navigationIcon = navigationIcon,
         actions = actions,
-        colors = CustomTopBarColors(),
+        colors = customTopBarColors(),
     )
 }

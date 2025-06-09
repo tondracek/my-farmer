@@ -14,6 +14,6 @@ class ShopsListViewModel @Inject constructor(
     val state: StateFlow<ShopsListViewState> = _state
 
     fun navigateToShopDetail(shopId: ShopId) {
-        /* navigate to shop detail */
+        println("TODO: Navigate to shop $shopId detail")
     }
 }

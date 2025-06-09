@@ -33,8 +33,8 @@ fun FloatingTopBar(
             .padding(horizontal = 12.dp, vertical = 8.dp),
         shape = RoundedCornerShape(64.dp),
         /* TODO: create a custom color scheme based on Material3 */
-        color = CustomTopBarColors().containerColor,
-        contentColor = CustomTopBarColors().titleContentColor,
+        color = customTopBarColors().containerColor,
+        contentColor = customTopBarColors().titleContentColor,
         tonalElevation = 4.dp,
         shadowElevation = 4.dp,
     ) {
@@ -60,7 +60,7 @@ fun FloatingTopBar(
 
 @PreviewApi34
 @Composable
-fun RoundedTopBarPreview() {
+private fun RoundedTopBarPreview() {
     MyFarmerTheme {
         FloatingTopBar(
             title = "My Farmer",
