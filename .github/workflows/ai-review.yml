@@ -1,0 +1,14 @@
+name: CodiumAI Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  codium-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Codium-ai/pr-agent@v0.1.104
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_review: true
