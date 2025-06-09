@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.myfarmer.shared.theme.MyFarmerTheme
 import com.example.myfarmer.shared.ui.iconbutton.ProfileIconButton
@@ -46,8 +47,11 @@ fun FloatingTopBar(
         ) {
             ToggleSideMenuIconButton(onToggleSideMenu)
             Text(
-                modifier = Modifier.animateContentSize(),
+                modifier = Modifier
+                    .weight(1f)
+                    .animateContentSize(),
                 text = title,
+                textAlign = TextAlign.Center,
             )
             ProfileIconButton(onProfileClick)
         }

@@ -83,11 +83,8 @@ private fun ViewModeButton(
 
     Button(
         modifier = Modifier
-            .padding(
-                horizontal = 8.dp,
-                vertical = 4.dp,
-            )
-            .scale(if (selected) 1f else 0.9f)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .scale(if (selected) 1f else 0.95f)
             .animateContentSize(),
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(

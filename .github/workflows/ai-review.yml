@@ -3,15 +3,12 @@ name: CodiumAI Review
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-  push:
-    branches:
-      - main
 
 jobs:
   ai-review:
     runs-on: ubuntu-latest
     steps:
-      - uses: Codium-ai/pr-agent@v0.29
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          pr_review: true
+      - name: Run PR Agent
+        uses: Codium-ai/pr-agent@v0.29
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
