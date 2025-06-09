@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">My Farmer</string>
+    <string name="map">Map</string>
+    <string name="list">List</string>
+    <string name="shops_map">Shops Map</string>
+    <string name="shops_list">Shops List</string>
 </resources>
