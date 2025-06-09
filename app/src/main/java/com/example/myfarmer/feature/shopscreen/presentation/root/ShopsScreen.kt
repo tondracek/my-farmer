@@ -121,7 +121,8 @@ private fun Content(
 
             ShopsViewMode.List -> Column(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text("List View Placeholder")
                 Text("${listViewState.shops.size} shops")
@@ -135,20 +136,7 @@ private fun Content(
 
 @PreviewApi34
 @Composable
-private fun ShopScreenMapPreview() {
-    MyFarmerTheme {
-        ShopsScreen(
-            mapViewState = ShopsMapViewState(),
-            onShopSelected = {},
-            listViewState = ShopsListViewState(),
-            navigateToShopDetail = {},
-        )
-    }
-}
-
-@PreviewApi34
-@Composable
-private fun ShopScreenListPreview() {
+private fun ShopScreenPreview() {
     MyFarmerTheme {
         ShopsScreen(
             mapViewState = ShopsMapViewState(),

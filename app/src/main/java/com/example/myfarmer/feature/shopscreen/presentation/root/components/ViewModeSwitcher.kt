@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -48,7 +48,7 @@ fun ViewModeSwitcher(
         Row(verticalAlignment = Alignment.CenterVertically) {
             ViewModeButton(
                 label = stringResource(R.string.map),
-                icon = Icons.Default.Check,
+                icon = Icons.Filled.Place,
                 selected = selectedMode == ShopsViewMode.Map,
                 onClick = onMapClick
             )

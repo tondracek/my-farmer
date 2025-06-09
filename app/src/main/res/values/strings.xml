@@ -4,4 +4,7 @@
     <string name="list">List</string>
     <string name="shops_map">Shops Map</string>
     <string name="shops_list">Shops List</string>
+    <string name="recommended">Recommended</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
 </resources>
