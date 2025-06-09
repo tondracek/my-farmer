@@ -42,7 +42,7 @@ fun ViewModeSwitcher(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(64.dp),
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surfaceContainer,
         tonalElevation = 4.dp,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
