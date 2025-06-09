@@ -1,21 +1,58 @@
 package com.example.myfarmer.feature.shopscreen.presentation.mapview
 
 import androidx.lifecycle.ViewModel
-import com.example.myfarmer.feature.shopscreen.presentation.common.ShopId
+import androidx.lifecycle.viewModelScope
+import com.example.myfarmer.shared.domain.Shop
+import com.example.myfarmer.shared.domain.ShopId
+import com.example.myfarmer.shared.domain.sampleShops
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class ShopsMapViewModel @Inject constructor(
+class ShopsMapViewModel @Inject constructor() : ViewModel() {
 
-) : ViewModel() {
+    private val _shops: Flow<Set<Shop>> = flowOf(sampleShops)
+
     private val _state = MutableStateFlow(ShopsMapViewState())
-    val state: StateFlow<ShopsMapViewState> = _state
+    val state: StateFlow<ShopsMapViewState> = combine(
+        _shops,
+        _state,
+    ) { shops, state ->
+        state.copy(
+            shops = shops,
+            initialCameraBounds = getLatLngBounds(shops.map { it.location.toLatLng() })
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = ShopsMapViewState()
+    )
 
     fun onShopSelected(shopId: ShopId?) {
         _state.update { it.copy(selectedShop = shopId) }
     }
+}
+
+private fun getLatLngBounds(locations: Collection<LatLng>): LatLngBounds? {
+    if (locations.isEmpty()) {
+        return null
+    }
+
+    val latitudes = locations.map { it.latitude }
+    val longitudes = locations.map { it.longitude }
+
+    return LatLngBounds(
+        LatLng(latitudes.min(), longitudes.min()),
+        LatLng(latitudes.max(), longitudes.max()),
+    )
 }

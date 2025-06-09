@@ -8,4 +8,8 @@
     <string name="recommended">Doporučené</string>
     <string name="home">Domů</string>
     <string name="settings">Nastavení</string>
+    <string name="gallery">Galerie</string>
+    <string name="no_pictures_found">Obrázky nenalezeny</string>
+    <string name="categories">Kategorie</string>
+    <string name="description">Popis</string>
 </resources>

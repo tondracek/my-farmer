@@ -21,11 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.myfarmer.R
-import com.example.myfarmer.feature.shopscreen.presentation.common.ShopId
 import com.example.myfarmer.feature.shopscreen.presentation.listview.ShopsListViewState
 import com.example.myfarmer.feature.shopscreen.presentation.mapview.ShopsMapView
 import com.example.myfarmer.feature.shopscreen.presentation.mapview.ShopsMapViewState
 import com.example.myfarmer.feature.shopscreen.presentation.root.components.ViewModeSwitcher
+import com.example.myfarmer.shared.domain.ShopId
 import com.example.myfarmer.shared.theme.MyFarmerTheme
 import com.example.myfarmer.shared.ui.navbar.BottomNavigationBar
 import com.example.myfarmer.shared.ui.preview.PreviewApi34
@@ -71,7 +71,10 @@ fun ShopsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            HorizontalPager(state = pagerState) { page ->
+            HorizontalPager(
+                state = pagerState,
+                userScrollEnabled = false
+            ) { page ->
                 Content(
                     modifier = Modifier.fillMaxSize(),
                     selectedViewMode = page.toShopsViewMode(),
@@ -113,18 +116,18 @@ private fun Content(
     listViewState: ShopsListViewState,
     navigateToShopDetail: (ShopId) -> Unit,
 ) {
-        when (selectedViewMode) {
-            ShopsViewMode.Map -> ShopsMapView(
-                modifier = modifier.fillMaxSize(),
-                state = mapState,
-                onShopSelected = onShopSelected,
-            )
+    when (selectedViewMode) {
+        ShopsViewMode.Map -> ShopsMapView(
+            modifier = modifier.fillMaxSize(),
+            state = mapState,
+            onShopSelected = onShopSelected,
+        )
 
-            ShopsViewMode.List -> ShopsListView(
-                modifier = modifier.fillMaxSize(),
-                listViewState = listViewState,
-                navigateToShopDetail = navigateToShopDetail
-            )
+        ShopsViewMode.List -> ShopsListView(
+            modifier = modifier.fillMaxSize(),
+            listViewState = listViewState,
+            navigateToShopDetail = navigateToShopDetail
+        )
     }
 }
 

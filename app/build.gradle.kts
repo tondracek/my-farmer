@@ -72,4 +72,8 @@ dependencies {
 
     implementation(libs.androidx.compose.pager)
     implementation(libs.androidx.material.icons.extended)
+
+    implementation(libs.maps.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }

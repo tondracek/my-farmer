@@ -1,7 +1,7 @@
 package com.example.myfarmer.feature.shopscreen.presentation.listview
 
 import androidx.lifecycle.ViewModel
-import com.example.myfarmer.feature.shopscreen.presentation.common.ShopId
+import com.example.myfarmer.shared.domain.ShopId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
