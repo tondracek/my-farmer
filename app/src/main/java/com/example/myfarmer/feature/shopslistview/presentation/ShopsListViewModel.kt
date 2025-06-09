@@ -35,6 +35,6 @@ class ShopsListViewModel @Inject constructor(
     )
 
     fun navigateToShopDetail(shopId: ShopId) {
-        println("TODO: Navigate to shop $shopId detail")
+        /* TODO: Navigate to shop shopId detail */
     }
 }

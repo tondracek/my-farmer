@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myfarmer.feature.shopsmapview.presentation.components.ShopBottomSheet
 import com.example.myfarmer.shared.domain.ShopId
 import com.example.myfarmer.shared.theme.MyFarmerTheme
@@ -23,9 +22,6 @@ fun ShopsMapView(
     state: ShopsMapViewState,
     onShopSelected: (ShopId?) -> Unit,
 ) {
-    val viewModel: ShopsMapViewModel = hiltViewModel()
-    print(viewModel.state)
-
     val cameraPositionState = rememberCameraPositionState()
 
     LaunchedEffect(state.initialCameraBounds) {

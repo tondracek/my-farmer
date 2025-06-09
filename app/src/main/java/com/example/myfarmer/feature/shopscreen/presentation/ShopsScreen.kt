@@ -64,8 +64,8 @@ fun ShopsScreen(
             HorizontalPager(
                 state = pagerState,
                 userScrollEnabled = false
-            ) {
-                when (currentViewMode) {
+            ) { page ->
+                when (page.toShopsViewMode()) {
                     ShopsViewMode.Map -> mapView(Modifier.fillMaxSize())
                     ShopsViewMode.List -> listView(Modifier.fillMaxSize())
                 }
