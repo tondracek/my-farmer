@@ -5,4 +5,11 @@
     <string name="list">Seznam</string>
     <string name="shops_map">Mapa Obchodů</string>
     <string name="shops_list">Seznam Obchodů</string>
+    <string name="recommended">Doporučené</string>
+    <string name="home">Domů</string>
+    <string name="settings">Nastavení</string>
+    <string name="gallery">Galerie</string>
+    <string name="no_pictures_found">Obrázky nenalezeny</string>
+    <string name="categories">Kategorie</string>
+    <string name="description">Popis</string>
 </resources>
