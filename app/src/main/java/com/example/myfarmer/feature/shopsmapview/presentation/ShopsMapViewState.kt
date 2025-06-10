@@ -1,7 +1,7 @@
 package com.example.myfarmer.feature.shopsmapview.presentation
 
-import com.example.myfarmer.shared.domain.Shop
-import com.example.myfarmer.shared.domain.ShopId
+import com.example.myfarmer.shared.domain.model.Shop
+import com.example.myfarmer.shared.domain.model.ShopId
 import com.google.android.gms.maps.model.LatLngBounds
 
 data class ShopsMapViewState(

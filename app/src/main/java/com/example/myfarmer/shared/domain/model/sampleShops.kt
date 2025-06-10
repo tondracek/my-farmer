@@ -1,4 +1,4 @@
-package com.example.myfarmer.shared.domain
+package com.example.myfarmer.shared.domain.model
 
 import androidx.compose.ui.graphics.Color
 
@@ -44,14 +44,14 @@ val sampleShops: List<Shop> by lazy {
         ),
         Shop(
             id = "2",
-            name = "Domácí včelařství v Björnsonově sadu",
+            name = "Domácí včelařství v Jundrově",
             images = listOf(
                 ImageResource("https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Beekeeper_with_moveable_comb_hive.jpg/1024px-Beekeeper_with_moveable_comb_hive.jpg"),
                 ImageResource("https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Western_honey_bee_on_a_honeycomb.jpg/1280px-Western_honey_bee_on_a_honeycomb.jpg"),
                 ImageResource("https://justbeehoney.co.uk/cdn/shop/articles/104740553_l2_5000x.jpg")
             ),
             description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
-            location = ShopLocation(49.207337, 16.593656),
+            location = ShopLocation(49.209166, 16.556608),
             categories = listOf(
                 Category("Med", Color(0xFFFFC107)),
                 Category("Včelařství", Color(0xFFFF9800)),

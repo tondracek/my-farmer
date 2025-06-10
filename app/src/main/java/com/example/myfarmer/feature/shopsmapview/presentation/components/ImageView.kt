@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import coil3.compose.AsyncImage
 import com.example.myfarmer.R
-import com.example.myfarmer.shared.domain.ImageResource
+import com.example.myfarmer.shared.domain.model.ImageResource
 
 @Composable
 fun ImageView(

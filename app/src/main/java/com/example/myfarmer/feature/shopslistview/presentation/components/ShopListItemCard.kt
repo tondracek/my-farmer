@@ -19,8 +19,9 @@ import androidx.compose.ui.unit.dp
 import com.example.myfarmer.feature.shopslistview.presentation.model.ShopListViewItem
 import com.example.myfarmer.feature.shopslistview.presentation.model.toListItem
 import com.example.myfarmer.feature.shopsmapview.presentation.components.ImageView
-import com.example.myfarmer.shared.domain.ShopId
-import com.example.myfarmer.shared.domain.sampleShops
+import com.example.myfarmer.shared.domain.model.ShopId
+import com.example.myfarmer.shared.domain.model.sampleShops
+import com.example.myfarmer.shared.location.km
 import com.example.myfarmer.shared.theme.MyFarmerTheme
 import com.example.myfarmer.shared.ui.components.CategoriesRow
 import com.example.myfarmer.shared.ui.preview.AsyncImagePreviewFix
@@ -62,7 +63,7 @@ fun ShopListItemCard(
 
                         if (shop.distance != null)
                             Text(
-                                text = shop.distance,
+                                text = shop.distance.toString(),
                                 style = MaterialTheme.typography.labelMedium
                             )
                     }
@@ -85,7 +86,7 @@ private fun ShopListItemCardPreview() {
     MyFarmerTheme {
         AsyncImagePreviewFix {
             ShopListItemCard(
-                shop = sampleShops.first().toListItem(),
+                shop = sampleShops.first().toListItem(3.5.km),
                 onNavigateToShopDetail = {}
             )
         }

@@ -2,9 +2,9 @@ package com.example.myfarmer.feature.shopsmapview.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myfarmer.shared.domain.Shop
-import com.example.myfarmer.shared.domain.ShopId
-import com.example.myfarmer.shared.domain.sampleShops
+import com.example.myfarmer.shared.domain.model.Shop
+import com.example.myfarmer.shared.domain.model.ShopId
+import com.example.myfarmer.shared.domain.model.sampleShops
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +30,8 @@ class ShopsMapViewModel @Inject constructor() : ViewModel() {
     ) { shops, state ->
         state.copy(
             shops = shops,
-            initialCameraBounds = getLatLngBounds(shops.map { it.location.toLatLng() })
+            initialCameraBounds = state.initialCameraBounds
+                ?: getLatLngBounds(shops.map { it.location.toLatLng() })
         )
     }.stateIn(
         scope = viewModelScope,
@@ -44,15 +45,9 @@ class ShopsMapViewModel @Inject constructor() : ViewModel() {
 }
 
 private fun getLatLngBounds(locations: Collection<LatLng>): LatLngBounds? {
-    if (locations.isEmpty()) {
-        return null
-    }
+    if (locations.isEmpty()) return null
 
-    val latitudes = locations.map { it.latitude }
-    val longitudes = locations.map { it.longitude }
-
-    return LatLngBounds(
-        LatLng(latitudes.min(), longitudes.min()),
-        LatLng(latitudes.max(), longitudes.max()),
-    )
+    val builder = LatLngBounds.builder()
+    locations.forEach { builder.include(it) }
+    return builder.build()
 }

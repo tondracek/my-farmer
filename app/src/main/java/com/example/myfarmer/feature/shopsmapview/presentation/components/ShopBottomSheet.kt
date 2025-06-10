@@ -21,10 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myfarmer.R
-import com.example.myfarmer.shared.domain.Category
-import com.example.myfarmer.shared.domain.ImageResource
-import com.example.myfarmer.shared.domain.Shop
-import com.example.myfarmer.shared.domain.sampleShops
+import com.example.myfarmer.shared.domain.model.Category
+import com.example.myfarmer.shared.domain.model.ImageResource
+import com.example.myfarmer.shared.domain.model.Shop
+import com.example.myfarmer.shared.domain.model.sampleShops
 import com.example.myfarmer.shared.theme.MyFarmerTheme
 import com.example.myfarmer.shared.ui.components.CategoriesRow
 

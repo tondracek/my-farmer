@@ -12,9 +12,11 @@ import androidx.compose.ui.unit.dp
 import com.example.myfarmer.feature.shopslistview.presentation.components.ShopListItemCard
 import com.example.myfarmer.feature.shopslistview.presentation.model.ShopListViewItem
 import com.example.myfarmer.feature.shopslistview.presentation.model.toListItem
-import com.example.myfarmer.shared.domain.ShopId
-import com.example.myfarmer.shared.domain.sampleShops
+import com.example.myfarmer.shared.domain.model.ShopId
+import com.example.myfarmer.shared.domain.model.sampleShops
+import com.example.myfarmer.shared.location.km
 import com.example.myfarmer.shared.theme.MyFarmerTheme
+import com.example.myfarmer.shared.ui.layout.LoadingScreen
 import com.example.myfarmer.shared.ui.preview.AsyncImagePreviewFix
 import com.example.myfarmer.shared.ui.preview.PreviewApi34
 
@@ -23,6 +25,22 @@ fun ShopsListView(
     modifier: Modifier = Modifier,
     state: ShopsListViewState,
     onNavigateToShopDetail: (ShopId) -> Unit,
+) {
+    when (state) {
+        ShopsListViewState.Loading -> LoadingScreen()
+        is ShopsListViewState.Success -> Success(
+            modifier = modifier,
+            state = state,
+            onNavigateToShopDetail = onNavigateToShopDetail
+        )
+    }
+}
+
+@Composable
+private fun Success(
+    modifier: Modifier,
+    state: ShopsListViewState.Success,
+    onNavigateToShopDetail: (ShopId) -> Unit
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -51,8 +69,8 @@ private fun ShopsListViewPreview() {
         AsyncImagePreviewFix {
             ShopsListView(
                 modifier = Modifier,
-                state = ShopsListViewState(
-                    shops = sampleShops.map { it.toListItem() }
+                state = ShopsListViewState.Success(
+                    shops = sampleShops.map { it.toListItem(2.5.km) }
                 ),
                 onNavigateToShopDetail = {},
             )

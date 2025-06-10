@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myfarmer.shared.domain.Category
-import com.example.myfarmer.shared.domain.sampleShops
+import com.example.myfarmer.shared.domain.model.Category
+import com.example.myfarmer.shared.domain.model.sampleShops
 import com.example.myfarmer.shared.theme.MyFarmerTheme
 
 @Composable

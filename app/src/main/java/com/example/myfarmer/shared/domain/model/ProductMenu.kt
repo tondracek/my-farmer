@@ -1,4 +1,4 @@
-package com.example.myfarmer.shared.domain
+package com.example.myfarmer.shared.domain.model
 
 data class ProductMenu(
     val products: List<Product>

@@ -3,9 +3,10 @@ package com.example.myfarmer.feature.shopslistview.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myfarmer.feature.shopslistview.presentation.model.toListItem
-import com.example.myfarmer.shared.domain.Shop
-import com.example.myfarmer.shared.domain.ShopId
-import com.example.myfarmer.shared.domain.sampleShops
+import com.example.myfarmer.shared.domain.model.Shop
+import com.example.myfarmer.shared.domain.model.ShopId
+import com.example.myfarmer.shared.domain.model.sampleShops
+import com.example.myfarmer.shared.location.usecase.MeasureDistanceFromMeUC
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,20 +19,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShopsListViewModel @Inject constructor(
+    measureDistanceFromMe: MeasureDistanceFromMeUC
 ) : ViewModel() {
-
     private val _shops: Flow<List<Shop>> = flowOf(sampleShops + sampleShops + sampleShops)
-    private val _state = MutableStateFlow(ShopsListViewState())
+    private val _state = MutableStateFlow(ShopsListViewState.Loading)
 
     val state: StateFlow<ShopsListViewState> = combine(
         _shops,
         _state
-    ) { shops, state ->
-        state.copy(shops = shops.map { it.toListItem() })
+    ) { shops, _ ->
+        val shopListItems = shops.map {
+            val distance = measureDistanceFromMe(it.location.toLatLng())
+            it.toListItem(distance)
+        }
+
+        ShopsListViewState.Success(shops = shopListItems)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = ShopsListViewState()
+        initialValue = ShopsListViewState.Loading
     )
 
     fun navigateToShopDetail(shopId: ShopId) {

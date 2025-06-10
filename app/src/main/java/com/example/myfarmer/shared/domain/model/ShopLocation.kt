@@ -1,4 +1,4 @@
-package com.example.myfarmer.shared.domain
+package com.example.myfarmer.shared.domain.model
 
 import com.google.android.gms.maps.model.LatLng
 
