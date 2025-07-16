@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTopBarColors() = TopAppBarDefaults.topAppBarColors(
+fun customTopBarColors() = TopAppBarDefaults.topAppBarColors(
     containerColor = MaterialTheme.colorScheme.primaryContainer,
     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
     navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,

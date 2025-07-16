@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.example.myfarmer.feature.shopscreen.presentation.ShopScreenRoute
-import com.example.myfarmer.feature.shopscreen.presentation.shopScreenDestination
+import com.example.myfarmer.feature.shopscreen.presentation.ShopsScreenRoute
+import com.example.myfarmer.feature.shopscreen.presentation.shopsScreenDestination
 import com.example.myfarmer.shared.theme.MyFarmerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,9 +22,9 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = ShopScreenRoute
+                    startDestination = ShopsScreenRoute
                 ) {
-                    shopScreenDestination()
+                    shopsScreenDestination()
                 }
             }
         }

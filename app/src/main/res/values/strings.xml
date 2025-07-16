@@ -4,4 +4,11 @@
     <string name="list">List</string>
     <string name="shops_map">Shops Map</string>
     <string name="shops_list">Shops List</string>
+    <string name="recommended">Recommended</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="gallery">Gallery</string>
+    <string name="no_pictures_found">No pictures found</string>
+    <string name="categories">Categories</string>
+    <string name="description">Description</string>
 </resources>

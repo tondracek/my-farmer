@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.myfarmer.shared.theme.MyFarmerTheme
 import com.example.myfarmer.shared.ui.iconbutton.ProfileIconButton
@@ -32,8 +33,8 @@ fun FloatingTopBar(
             .padding(horizontal = 12.dp, vertical = 8.dp),
         shape = RoundedCornerShape(64.dp),
         /* TODO: create a custom color scheme based on Material3 */
-        color = CustomTopBarColors().containerColor,
-        contentColor = CustomTopBarColors().titleContentColor,
+        color = customTopBarColors().containerColor,
+        contentColor = customTopBarColors().titleContentColor,
         tonalElevation = 4.dp,
         shadowElevation = 4.dp,
     ) {
@@ -46,8 +47,11 @@ fun FloatingTopBar(
         ) {
             ToggleSideMenuIconButton(onToggleSideMenu)
             Text(
-                modifier = Modifier.animateContentSize(),
+                modifier = Modifier
+                    .weight(1f)
+                    .animateContentSize(),
                 text = title,
+                textAlign = TextAlign.Center,
             )
             ProfileIconButton(onProfileClick)
         }
@@ -56,7 +60,7 @@ fun FloatingTopBar(
 
 @PreviewApi34
 @Composable
-fun RoundedTopBarPreview() {
+private fun RoundedTopBarPreview() {
     MyFarmerTheme {
         FloatingTopBar(
             title = "My Farmer",
