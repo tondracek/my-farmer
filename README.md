@@ -5,6 +5,7 @@
 **Tech:**
 
 - KMP (Kotlin multiplatform), Jetpack Compose, SwiftUI
+- Firebase
 
 **Zaměření práce**:
 
