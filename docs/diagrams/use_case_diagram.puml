@@ -1,0 +1,70 @@
+@startuml
+
+left to right direction
+
+actor "Customer" as Customer
+actor "Logged Customer" as LoggedCustomer
+actor "Seller" as Seller
+
+rectangle "App" {
+
+  ' ------------------ '
+  ' CUSTOMER USE CASES '
+  ' ------------------ '
+
+  usecase "View Shop Details" as ViewShopDetails
+
+  usecase "Browse Shops List" as BrowseShopsList
+  usecase "Browse Shops Map" as BrowseShopsMap
+
+  usecase "Filter Shops" as FilterShops
+
+  usecase "Filter by Product Category" as FilterByProductCategory
+  usecase "Filter by Distance" as FilterByDistance
+  usecase "Filter by Rating" as FilterByRating
+
+  Customer -- ViewShopDetails
+  Customer -- BrowseShopsList
+  Customer -- BrowseShopsMap
+
+  BrowseShopsList -- FilterShops : <<extends>>
+  BrowseShopsMap -- FilterShops : <<extends>>
+
+  FilterShops -- FilterByProductCategory : <<extends>>
+  FilterShops -- FilterByDistance : <<extends>>
+  FilterShops -- FilterByRating : <<extends>>
+
+  ' ------------------------- '
+  ' LOGGED CUSTOMER USE CASES '
+  ' ------------------------- '
+
+  usecase "Add Shop to Favorites" as AddShopToFavorites
+  usecase "Rate Shop" as RateShop
+  usecase "Write Review" as WriteReview
+
+  LoggedCustomer -- AddShopToFavorites
+  LoggedCustomer -- RateShop
+  RateShop -- WriteReview : <<extends>>
+
+  ' ---------------- '
+  ' SELLER USE CASES '
+  ' ---------------- '
+
+  usecase "Manage Shops" as ManageShops
+  usecase "Update Shop Details" as UpdateShopDetails
+
+  usecase "Update Location" as UpdateLocation
+  usecase "Update Contact Info" as UpdateContactInfo
+  usecase "Update Opening Hours" as UpdateOpeningHours
+  usecase "Update Products List" as UpdateProductsList
+
+  Seller -- ManageShops
+  Seller -- UpdateShopDetails
+
+  UpdateShopDetails -- UpdateLocation : <<extends>>
+  UpdateShopDetails -- UpdateContactInfo : <<extends>>
+  UpdateShopDetails -- UpdateOpeningHours : <<extends>>
+  UpdateShopDetails -- UpdateProductsList : <<extends>>
+}
+
+@enduml
