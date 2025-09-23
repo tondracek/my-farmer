@@ -28,8 +28,8 @@ rectangle "App" {
     Customer -- BrowseShopsList
     Customer -- BrowseShopsMap
 
-    BrowseShopsList -- FilterShops : <<extends>>
-    BrowseShopsMap -- FilterShops : <<extends>>
+    BrowseShopsList <-- FilterShops : <<extends>>
+    BrowseShopsMap <-- FilterShops : <<extends>>
 
     FilterShops <|-- FilterByProductCategory
     FilterShops <|-- FilterByDistance
