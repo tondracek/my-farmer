@@ -37,3 +37,11 @@
 
 - při zapnutí aplikace se zobrazí úvodní obrazovka pro představení a popis (pro snadnou orientaci)
 - aplikace bude využívat cloudové služby: Firebase Auth, Firebase Firestore, ...
+
+**Use Case Diagram**:
+
+![Use Case](docs/diagram-img/use_case_diagram.svg)
+
+**Class Diagram**:
+
+_TODO_
