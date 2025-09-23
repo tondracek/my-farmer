@@ -4,6 +4,12 @@ on:
   push:
     paths:
       - 'docs/diagram/**/*.puml'
+    branches:
+      - main
+      - master
+  pull_request:
+    paths:
+      - 'docs/diagram/**/*.puml'
 
 permissions:
   contents: write
@@ -16,7 +22,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Render all .puml files under docs/diagram (recursive)
+      - name: Render all .puml files under docs/diagram
         run: |
           mkdir -p docs/diagram-img
           docker run --rm \
