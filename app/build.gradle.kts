@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myfarmer"
+    namespace = "com.tondracek.myfarmer"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.myfarmer"
+        applicationId = "com.tondracek.myfarmer"
         minSdk = 27
         targetSdk = 35
         versionCode = 1
