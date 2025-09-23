@@ -1,5 +1,6 @@
 @startuml
 
+skinparam backgroundColor #FFFFFF
 left to right direction
 
 actor "Customer" as Customer
