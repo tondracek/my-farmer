@@ -2,11 +2,11 @@ name: Generate UML Diagrams
 
 on:
   push:
-    paths:
-      - 'docs/diagram/**/*.puml'
     branches:
       - main
       - master
+    paths:
+      - 'docs/diagram/**/*.puml'
   pull_request:
     paths:
       - 'docs/diagram/**/*.puml'
