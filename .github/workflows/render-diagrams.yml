@@ -2,14 +2,9 @@ name: Generate UML Diagrams
 
 on:
   push:
-    branches:
-      - main
-      - master
     paths:
       - 'docs/diagram/**/*.puml'
-  pull_request:
-    paths:
-      - 'docs/diagram/**/*.puml'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -22,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Render all .puml files under docs/diagram
+      - name: Render all .puml files under docs/diagram (recursive)
         run: |
           mkdir -p docs/diagram-img
           docker run --rm \
