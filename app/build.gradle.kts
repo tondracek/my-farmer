@@ -5,11 +5,14 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
+
+    /* has to be last */
+    alias(libs.plugins.google.services)
 }
 
 android {
     namespace = "com.tondracek.myfarmer"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.tondracek.myfarmer"
@@ -79,4 +82,12 @@ dependencies {
     implementation(libs.coil.network.okhttp)
     implementation(libs.accompanist.permissions)
     implementation(libs.kotlinx.coroutines.play.services)
+
+    // Firebase BOM (controls versions for all Firebase libs)
+    implementation(platform(libs.firebase.bom))
+
+    // Firebase SDKs
+//    implementation(libs.firebase.auth.ktx)
+//    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.dataconnect)
 }
