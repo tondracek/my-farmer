@@ -3,68 +3,69 @@
 left to right direction
 
 actor "Customer" as Customer
-actor "Logged Customer" as LoggedCustomer
 actor "Seller" as Seller
 
 rectangle "App" {
 
-  ' ------------------ '
-  ' CUSTOMER USE CASES '
-  ' ------------------ '
+  rectangle "Customer Use Cases" {
+    usecase "View Shop Details" as ViewShopDetails
 
-  usecase "View Shop Details" as ViewShopDetails
+    usecase "Browse Shops List" as BrowseShopsList
+    usecase "Browse Shops Map" as BrowseShopsMap
 
-  usecase "Browse Shops List" as BrowseShopsList
-  usecase "Browse Shops Map" as BrowseShopsMap
+    usecase "Filter Shops" as FilterShops
 
-  usecase "Filter Shops" as FilterShops
+    usecase "Filter by Product Category" as FilterByProductCategory
+    usecase "Filter by Distance" as FilterByDistance
+    usecase "Filter by Rating" as FilterByRating
 
-  usecase "Filter by Product Category" as FilterByProductCategory
-  usecase "Filter by Distance" as FilterByDistance
-  usecase "Filter by Rating" as FilterByRating
+    usecase "Add Shop to Favorites" as AddShopToFavorites <<requires login>>
+    usecase "Rate Shop" as RateShop <<requires login>>
+    usecase "Write Review" as WriteReview <<requires login>>
 
-  Customer -- ViewShopDetails
-  Customer -- BrowseShopsList
-  Customer -- BrowseShopsMap
+    Customer -- ViewShopDetails
+    Customer -- BrowseShopsList
+    Customer -- BrowseShopsMap
 
-  BrowseShopsList -- FilterShops : <<extends>>
-  BrowseShopsMap -- FilterShops : <<extends>>
+    BrowseShopsList -- FilterShops : <<extends>>
+    BrowseShopsMap -- FilterShops : <<extends>>
 
-  FilterShops -- FilterByProductCategory : <<extends>>
-  FilterShops -- FilterByDistance : <<extends>>
-  FilterShops -- FilterByRating : <<extends>>
+    FilterShops <|-- FilterByProductCategory
+    FilterShops <|-- FilterByDistance
+    FilterShops <|-- FilterByRating
 
-  ' ------------------------- '
-  ' LOGGED CUSTOMER USE CASES '
-  ' ------------------------- '
+    Customer -- AddShopToFavorites
+    Customer -- RateShop
+    RateShop <-- WriteReview : <<extends>>
 
-  usecase "Add Shop to Favorites" as AddShopToFavorites
-  usecase "Rate Shop" as RateShop
-  usecase "Write Review" as WriteReview
+    usecase "Login/Register" as LoginRegisterCustomer
+    usecase "Logout" as LogoutCustomer
 
-  LoggedCustomer -- AddShopToFavorites
-  LoggedCustomer -- RateShop
-  RateShop -- WriteReview : <<extends>>
+    Customer -- LoginRegisterCustomer
+    Customer -- LogoutCustomer
+  }
 
-  ' ---------------- '
-  ' SELLER USE CASES '
-  ' ---------------- '
+  rectangle "Seller Use Cases" {
+    usecase "Manage Shops" as ManageShops <<requires login>>
 
-  usecase "Manage Shops" as ManageShops
-  usecase "Update Shop Details" as UpdateShopDetails
+    usecase "Update Location" as UpdateLocation <<requires login>>
+    usecase "Update Contact Info" as UpdateContactInfo <<requires login>>
+    usecase "Update Opening Hours" as UpdateOpeningHours <<requires login>>
+    usecase "Manage Shop Products" as ManageShopProducts <<requires login>>
 
-  usecase "Update Location" as UpdateLocation
-  usecase "Update Contact Info" as UpdateContactInfo
-  usecase "Update Opening Hours" as UpdateOpeningHours
-  usecase "Update Products List" as UpdateProductsList
+    Seller -- ManageShops
 
-  Seller -- ManageShops
-  Seller -- UpdateShopDetails
+    ManageShops <|-- UpdateLocation
+    ManageShops <|-- UpdateContactInfo
+    ManageShops <|-- UpdateOpeningHours
+    ManageShops <|-- ManageShopProducts
 
-  UpdateShopDetails -- UpdateLocation : <<extends>>
-  UpdateShopDetails -- UpdateContactInfo : <<extends>>
-  UpdateShopDetails -- UpdateOpeningHours : <<extends>>
-  UpdateShopDetails -- UpdateProductsList : <<extends>>
+    usecase "Login/Register" as LoginRegisterSeller
+    usecase "Logout" as LogoutSeller
+
+    Seller -- LoginRegisterSeller
+    Seller -- LogoutSeller
+  }
 }
 
 @enduml
