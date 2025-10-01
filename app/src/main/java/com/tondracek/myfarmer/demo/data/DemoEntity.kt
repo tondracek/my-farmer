@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @FirestoreCollection("demo")
-data class DemoFbDto(
-    override val id: String,
-    val nameeeeee: String,
-    val index: Int,
-    val date: String
+data class DemoEntity(
+    override var id: String = "",
+    var name: String = "",
+    var index: Int = 0,
+    var date: String = "",
 ) : FirebaseEntity

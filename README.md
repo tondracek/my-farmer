@@ -51,7 +51,7 @@ _TODO_
 - demo aplikace
 - UC diagram
 - návrh architektury kódu
-    - generic repository
+    - generic firebase repository -> konkrétní repository (dědí z generic FB repository)
     - UC classes namísto service class
     - UseCaseResult wrapper
         - Success + data

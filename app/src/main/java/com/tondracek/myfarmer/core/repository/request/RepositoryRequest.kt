@@ -13,7 +13,8 @@ data class RepositoryRequest(
         private var offset: Int? = null
 
         fun addFilter(filter: RequestFilter) = apply { filters.add(filter) }
-        fun addFilters(vararg filters: RequestFilter) = apply { this.filters.addAll(filters) }
+        fun addFilters(vararg filters: RequestFilter?) =
+            apply { this.filters.addAll(filters.filterNotNull()) }
 
         fun addSort(sort: RequestSort) = apply { sorts.add(sort) }
         fun addSorts(vararg sorts: RequestSort) = apply { this.sorts.addAll(sorts) }

@@ -1,16 +1,11 @@
 package com.tondracek.myfarmer.auth.domain
 
 import com.tondracek.myfarmer.core.domain.UseCaseResult
+import com.tondracek.myfarmer.systemuser.SystemUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import java.util.UUID
 import javax.inject.Inject
-
-typealias UserId = UUID
-
-data class SystemUser(
-    val id: UserId
-)
 
 class IsLoggedInUC @Inject constructor(
 ) : () -> Flow<UseCaseResult<SystemUser>> {

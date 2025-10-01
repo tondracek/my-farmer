@@ -7,10 +7,12 @@ sealed interface UseCaseResult<out T> {
     open class Failure(val userError: String, val systemError: String? = null) :
         UseCaseResult<Nothing>
 
-    fun withSuccess(block: (T) -> Unit): UseCaseResult<T> = apply {
-        if (this is Success) block(data)
+    fun <R> withSuccess(block: (T) -> R): UseCaseResult<R> {
+        return when (this) {
+            is Success -> Success(block(data))
+            is Failure -> this
+        }
     }
-
 
     fun withFailure(block: (Failure) -> Unit): UseCaseResult<T> = apply {
         if (this is Failure) block(this)
