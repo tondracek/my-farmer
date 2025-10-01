@@ -86,8 +86,5 @@ dependencies {
     // Firebase BOM (controls versions for all Firebase libs)
     implementation(platform(libs.firebase.bom))
 
-    // Firebase SDKs
-//    implementation(libs.firebase.auth.ktx)
-//    implementation(libs.firebase.firestore.ktx)
-    implementation(libs.firebase.dataconnect)
+    implementation("com.google.firebase:firebase-firestore")
 }

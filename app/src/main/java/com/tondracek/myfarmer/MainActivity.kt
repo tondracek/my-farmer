@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.tondracek.myfarmer.feature.shopscreen.presentation.ShopsScreenRoute
-import com.tondracek.myfarmer.feature.shopscreen.presentation.shopsScreenDestination
+import com.tondracek.myfarmer.ui.shopscreen.presentation.ShopsScreenRoute
+import com.tondracek.myfarmer.ui.shopscreen.presentation.shopsScreenDestination
 import com.tondracek.myfarmer.shared.theme.MyFarmerTheme
 import dagger.hilt.android.AndroidEntryPoint
 

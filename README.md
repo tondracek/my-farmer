@@ -45,3 +45,20 @@
 **Class Diagram**:
 
 _TODO_
+
+**Postup vývoje**
+
+- demo aplikace
+- UC diagram
+- návrh architektury kódu
+    - generic repository
+    - UC classes namísto service class
+    - UseCaseResult wrapper
+        - Success + data
+        - Failure + error messages
+        - funkcionální přístup
+    - rozdělení shared kódu, android kódu a iOS kódu
+        - shared = business + data
+        - android/iOS = ui
+- implementace generického repository a napojení na firebase
+- demo vyzkoušení aplikace pro android i iOS (využití školních iMaců)

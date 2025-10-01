@@ -4,7 +4,7 @@ data class Shop(
     val name: String,
     val images: List<ImageResource>,
     val description: String,
-    val categories: List<Category>,
+    val categories: List<ProductCategory>,
     val menu: ProductMenu,
     val userRatings: List<UserRating>,
     val averageRating: Double,
