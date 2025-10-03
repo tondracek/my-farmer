@@ -1,0 +1,72 @@
+@startuml
+
+skinparam backgroundColor #FFFFFF
+left to right direction
+
+actor "Customer" as Customer
+actor "Seller" as Seller
+
+rectangle "App" {
+
+  rectangle "Customer Use Cases" {
+    usecase "View Shop Details" as ViewShopDetails
+
+    usecase "Browse Shops List" as BrowseShopsList
+    usecase "Browse Shops Map" as BrowseShopsMap
+
+    usecase "Filter Shops" as FilterShops
+
+    usecase "Filter by Product Category" as FilterByProductCategory
+    usecase "Filter by Distance" as FilterByDistance
+    usecase "Filter by Rating" as FilterByRating
+
+    usecase "Add Shop to Favorites" as AddShopToFavorites <<requires login>>
+    usecase "Rate Shop" as RateShop <<requires login>>
+    usecase "Write Review" as WriteReview <<requires login>>
+
+    Customer -- ViewShopDetails
+    Customer -- BrowseShopsList
+    Customer -- BrowseShopsMap
+
+    BrowseShopsList <-- FilterShops : <<extends>>
+    BrowseShopsMap <-- FilterShops : <<extends>>
+
+    FilterShops <|-- FilterByProductCategory
+    FilterShops <|-- FilterByDistance
+    FilterShops <|-- FilterByRating
+
+    Customer -- AddShopToFavorites
+    Customer -- RateShop
+    RateShop <-- WriteReview : <<extends>>
+
+    usecase "Login/Register" as LoginRegisterCustomer
+    usecase "Logout" as LogoutCustomer
+
+    Customer -- LoginRegisterCustomer
+    Customer -- LogoutCustomer
+  }
+
+  rectangle "Seller Use Cases" {
+    usecase "Manage Shops" as ManageShops <<requires login>>
+
+    usecase "Update Location" as UpdateLocation <<requires login>>
+    usecase "Update Contact Info" as UpdateContactInfo <<requires login>>
+    usecase "Update Opening Hours" as UpdateOpeningHours <<requires login>>
+    usecase "Manage Shop Products" as ManageShopProducts <<requires login>>
+
+    Seller -- ManageShops
+
+    ManageShops <|-- UpdateLocation
+    ManageShops <|-- UpdateContactInfo
+    ManageShops <|-- UpdateOpeningHours
+    ManageShops <|-- ManageShopProducts
+
+    usecase "Login/Register" as LoginRegisterSeller
+    usecase "Logout" as LogoutSeller
+
+    Seller -- LoginRegisterSeller
+    Seller -- LogoutSeller
+  }
+}
+
+@enduml
