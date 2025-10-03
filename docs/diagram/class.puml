@@ -1,0 +1,144 @@
+@startuml
+
+class User {
+    - id: String
+    - name: String
+    - profilePicture: Image?
+}
+
+' ----------------------------------- '
+
+class UserContactInfo {
+    - phone: String?
+    - email: String?
+}
+
+User "1" *-- "1" UserContactInfo : contactInfo >
+
+' ----------------------------------- '
+
+class Shop {
+    - id: UUID
+    - name: String
+    - owner: User
+    - productCategories: List<ProductCategory>
+    - images: List<Image>
+    - menu: Menu
+    - location: Location
+    - openingHours: OpeningHours
+    - contactInfo: ContactInfo
+    - reviews: List<Review>
+}
+
+User "1" ---o "0..*" Shop : ownedBy <
+
+' ----------------------------------- '
+
+class ProductCategory {
+    - name: String
+    - color: Color
+}
+
+Shop "1" *-- "0..*" ProductCategory : categories >
+
+' ----------------------------------- '
+
+class Menu {
+    - items: List<MenuItem>
+}
+
+class MenuItem {
+    - name: String
+    - description: String?
+    - pricePerUnit: Price
+    - unit: MenuItemUnit
+    - inStock: Boolean
+}
+
+class Price {
+    - amount: BigDecimal
+    - currency: Currency
+}
+
+enum MenuItemUnit {
+    PIECE
+    KILOGRAM
+    GRAM
+    LITER
+    MILLILITER
+}
+
+Shop "1" *-- "1" Menu : menu >
+Menu "1" *-- "0..*" MenuItem : items >
+MenuItem "1" *-- "1" Price : pricePerUnit >
+MenuItem "1" *-- "1" MenuItemUnit : unit >
+
+' ----------------------------------- '
+
+class OpeningHours {
+    - dayToHours: Map<DayOfWeek, String>
+}
+
+enum DayOfWeek {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+
+Shop "1" *-- "1" OpeningHours : openingHours >
+OpeningHours "1" *-- "0..*" DayOfWeek : dayToHours >
+
+' ----------------------------------- '
+
+class ContactInfo {
+    - phone: String?
+    - email: String?
+    - website: MediaLink?
+    - facebook: MediaLink?
+    - instagram: MediaLink?
+}
+
+Shop "1" *-- "1" ContactInfo : contactInfo >
+
+' ----------------------------------- '
+
+class MediaLink {
+    - title: String
+    - url: String
+}
+
+ContactInfo "1" *-- "0..1" MediaLink : facebook >
+ContactInfo "1" *-- "0..1" MediaLink : instagram >
+ContactInfo "1" *-- "0..1" MediaLink : website >
+
+' ----------------------------------- '
+
+class Location {
+    - address: String
+    - latitude: BigDecimal?
+    - longitude: BigDecimal?
+}
+
+Shop "1" *-- "1" Location : location >
+
+' ----------------------------------- '
+
+class Review {
+    - user: User
+    - rating: int
+    - comment: String?
+}
+
+Shop "1" *-- "0..*" Review : reviews >
+
+' ----------------------------------- '
+
+class Image {
+    - url: String
+}
+
+@enduml

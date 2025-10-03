@@ -44,7 +44,7 @@
 
 **Class Diagram**:
 
-_TODO_
+![Class Diagram](docs/diagram-img/class.svg)
 
 **Postup vývoje**
 
