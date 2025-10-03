@@ -50,6 +50,7 @@
 
 - demo aplikace
 - UC diagram
+- Class diagram
 - návrh architektury kódu
     - generic firebase repository -> konkrétní repository (dědí z generic FB repository)
     - UC classes namísto service class
