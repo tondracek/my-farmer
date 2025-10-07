@@ -1,5 +1,7 @@
 @startuml
 
+skinparam backgroundColor #FFFFFF
+
 class User {
     - id: String
     - name: String
