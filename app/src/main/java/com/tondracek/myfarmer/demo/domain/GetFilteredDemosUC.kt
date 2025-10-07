@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.demo.domain
 
 import com.tondracek.myfarmer.auth.domain.flow.IsShopOwnerAuthFlow
-import com.tondracek.myfarmer.core.domain.UseCaseResult
+import com.tondracek.myfarmer.core.usecaseresult.UseCaseResult
 import com.tondracek.myfarmer.demo.data.DemoRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

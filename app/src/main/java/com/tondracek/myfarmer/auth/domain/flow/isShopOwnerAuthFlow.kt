@@ -1,8 +1,8 @@
 package com.tondracek.myfarmer.auth.domain.flow
 
-import com.tondracek.myfarmer.core.domain.UseCaseResult
-import com.tondracek.myfarmer.shared.domain.model.ShopId
-import com.tondracek.myfarmer.shop.domain.IsShopOwnerUC
+import com.tondracek.myfarmer.core.usecaseresult.UseCaseResult
+import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.shop.domain.usecase.IsShopOwnerUC
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest

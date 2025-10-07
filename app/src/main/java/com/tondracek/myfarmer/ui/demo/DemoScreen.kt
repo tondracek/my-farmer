@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.demo.domain.Demo
-import com.tondracek.myfarmer.shared.theme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle

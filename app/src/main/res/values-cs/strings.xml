@@ -12,4 +12,5 @@
     <string name="no_pictures_found">Obrázky nenalezeny</string>
     <string name="categories">Kategorie</string>
     <string name="description">Popis</string>
+    <string name="km">km</string>
 </resources>

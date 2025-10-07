@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.ui.demo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tondracek.myfarmer.core.domain.UseCaseResult
+import com.tondracek.myfarmer.core.usecaseresult.UseCaseResult
 import com.tondracek.myfarmer.demo.domain.AddDemoUC
 import com.tondracek.myfarmer.demo.domain.GetFilteredDemosUC
 import dagger.hilt.android.lifecycle.HiltViewModel
