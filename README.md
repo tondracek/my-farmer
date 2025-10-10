@@ -13,7 +13,7 @@
 - UX design
 - architektura softwaru
 - cloud-based architecture, BaaS (Backend as a Service)
-- multiplatformní vývoj (Android, IOS)
+- android vývoj (Jetpack Compose, Firebase)
 
 **Motivace**:
 
@@ -58,8 +58,6 @@
         - Success + data
         - Failure + error messages
         - funkcionální přístup
-    - rozdělení shared kódu, android kódu a iOS kódu
-        - shared = business + data
-        - android/iOS = ui
+    - rozdělení kódu
+        - modulárně, packages, features, core, common, ui
 - implementace generického repository a napojení na firebase
-- demo vyzkoušení aplikace pro android i iOS (využití školních iMaců)
