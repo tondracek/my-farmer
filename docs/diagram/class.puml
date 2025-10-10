@@ -52,28 +52,17 @@ class Menu {
 class MenuItem {
     - name: String
     - description: String?
-    - pricePerUnit: Price
-    - unit: MenuItemUnit
+    - price: ProductPrice
     - inStock: Boolean
 }
 
-class Price {
-    - amount: BigDecimal
-    - currency: Currency
-}
-
-enum MenuItemUnit {
-    PIECE
-    KILOGRAM
-    GRAM
-    LITER
-    MILLILITER
+class ProductPrice {
+    - price: String
 }
 
 Shop "1" *-- "1" Menu : menu >
 Menu "1" *-- "0..*" MenuItem : items >
-MenuItem "1" *-- "1" Price : pricePerUnit >
-MenuItem "1" *-- "1" MenuItemUnit : unit >
+MenuItem "1" *-- "1" ProductPrice : productPrice >
 
 ' ----------------------------------- '
 
