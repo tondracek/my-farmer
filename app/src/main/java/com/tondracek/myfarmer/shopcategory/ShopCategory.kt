@@ -1,8 +1,8 @@
-package com.tondracek.myfarmer.productcategory
+package com.tondracek.myfarmer.shopcategory
 
 import androidx.compose.ui.graphics.Color
 
-data class ProductCategory(
+data class ShopCategory(
     val name: String,
     val color: Color
 )

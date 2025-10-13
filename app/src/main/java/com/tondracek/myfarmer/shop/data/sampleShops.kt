@@ -2,7 +2,6 @@ package com.tondracek.myfarmer.shop.data
 
 import androidx.compose.ui.graphics.Color
 import com.tondracek.myfarmer.common.ImageResource
-import com.tondracek.myfarmer.productcategory.ProductCategory
 import com.tondracek.myfarmer.productmenu.PricePerUnit
 import com.tondracek.myfarmer.productmenu.Product
 import com.tondracek.myfarmer.productmenu.ProductMenu
@@ -10,6 +9,7 @@ import com.tondracek.myfarmer.productmenu.UnitType
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopLocation
 import com.tondracek.myfarmer.shop.domain.model.UserRating
+import com.tondracek.myfarmer.shopcategory.ShopCategory
 
 val sampleShops: List<Shop> by lazy {
     listOf(
@@ -33,19 +33,19 @@ val sampleShops: List<Shop> by lazy {
             description = "Na FI je všechno",
             location = ShopLocation(49.209806, 16.598833),
             categories = listOf(
-                ProductCategory("Zelenina", Color(0xFF067C06)),
-                ProductCategory("Ovoce", Color(0xFFE4560B)),
-                ProductCategory("Maso", Color(0xFF642000)),
-                ProductCategory("Mléčné výrobky", Color(0xFFCFCECA)),
-                ProductCategory("Pečivo", Color(0xFFCA6207)),
-                ProductCategory("Vejce", Color(0xFFBE9329)),
-                ProductCategory("Další", Color(0xFF0B5DE4)),
-                ProductCategory("Další", Color(0xFF067C06)),
-                ProductCategory("Další", Color(0xFFE4560B)),
-                ProductCategory("Další", Color(0xFF642000)),
-                ProductCategory("Další", Color(0xFFCFCECA)),
-                ProductCategory("Další", Color(0xFFCA6207)),
-                ProductCategory("Další", Color(0xFFBE9329)),
+                ShopCategory("Zelenina", Color(0xFF067C06)),
+                ShopCategory("Ovoce", Color(0xFFE4560B)),
+                ShopCategory("Maso", Color(0xFF642000)),
+                ShopCategory("Mléčné výrobky", Color(0xFFCFCECA)),
+                ShopCategory("Pečivo", Color(0xFFCA6207)),
+                ShopCategory("Vejce", Color(0xFFBE9329)),
+                ShopCategory("Další", Color(0xFF0B5DE4)),
+                ShopCategory("Další", Color(0xFF067C06)),
+                ShopCategory("Další", Color(0xFFE4560B)),
+                ShopCategory("Další", Color(0xFF642000)),
+                ShopCategory("Další", Color(0xFFCFCECA)),
+                ShopCategory("Další", Color(0xFFCA6207)),
+                ShopCategory("Další", Color(0xFFBE9329)),
             ),
             userRatings = emptyList(),
             averageRating = 0.0,
@@ -62,8 +62,8 @@ val sampleShops: List<Shop> by lazy {
             description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
             location = ShopLocation(49.209166, 16.556608),
             categories = listOf(
-                ProductCategory("Med", Color(0xFFFFC107)),
-                ProductCategory("Včelařství", Color(0xFFFF9800)),
+                ShopCategory("Med", Color(0xFFFFC107)),
+                ShopCategory("Včelařství", Color(0xFFFF9800)),
             ),
             userRatings = listOf(
                 UserRating(5.0, "Amazing"),
@@ -90,7 +90,7 @@ val sampleShops: List<Shop> by lazy {
             description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
             location = ShopLocation(49.205778, 16.593361),
             categories = listOf(
-                ProductCategory("Vejce", Color(0xFFBE9329)),
+                ShopCategory("Vejce", Color(0xFFBE9329)),
             ),
             userRatings = listOf(
                 UserRating(5.0, "Amazing"),
@@ -115,7 +115,7 @@ val sampleShops: List<Shop> by lazy {
             description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
             location = ShopLocation(49.205778, 16.59),
             categories = listOf(
-                ProductCategory("Maso", Color(0xFF642000)),
+                ShopCategory("Maso", Color(0xFF642000)),
             ),
             userRatings = listOf(
                 UserRating(5.0, "Amazing"),

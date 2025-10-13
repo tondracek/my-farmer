@@ -16,7 +16,7 @@ rectangle "App" {
 
     usecase "Filter Shops" as FilterShops
 
-    usecase "Filter by Product Category" as FilterByProductCategory
+    usecase "Filter by Product Category" as FilterByCategory
     usecase "Filter by Distance" as FilterByDistance
     usecase "Filter by Rating" as FilterByRating
 
@@ -31,7 +31,7 @@ rectangle "App" {
     BrowseShopsList <-- FilterShops : <<extends>>
     BrowseShopsMap <-- FilterShops : <<extends>>
 
-    FilterShops <|-- FilterByProductCategory
+    FilterShops <|-- FilterByCategory
     FilterShops <|-- FilterByDistance
     FilterShops <|-- FilterByRating
 

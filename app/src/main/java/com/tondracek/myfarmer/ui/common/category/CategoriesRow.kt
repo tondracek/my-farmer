@@ -8,13 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tondracek.myfarmer.productcategory.ProductCategory
 import com.tondracek.myfarmer.shop.data.sampleShops
+import com.tondracek.myfarmer.shopcategory.ShopCategory
 import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
 
 @Composable
 fun CategoriesRow(
-    categories: List<ProductCategory>,
+    categories: List<ShopCategory>,
     modifier: Modifier = Modifier
 ) {
     Row(

@@ -9,10 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tondracek.myfarmer.productcategory.ProductCategory
+import com.tondracek.myfarmer.shopcategory.ShopCategory
 
 @Composable
-fun CategoryLabel(category: ProductCategory) {
+fun CategoryLabel(category: ShopCategory) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = category.color,
@@ -35,11 +35,11 @@ private fun contrastColor(color: Color): Color {
 @Preview
 @Composable
 fun CategoryLabelPrev() {
-    CategoryLabel(category = ProductCategory("Vegetables", Color.Blue))
+    CategoryLabel(category = ShopCategory("Vegetables", Color.Blue))
 }
 
 @Preview
 @Composable
 fun CategoryLabelPrev2() {
-    CategoryLabel(category = ProductCategory("Fruits", Color.White))
+    CategoryLabel(category = ShopCategory("Fruits", Color.White))
 }

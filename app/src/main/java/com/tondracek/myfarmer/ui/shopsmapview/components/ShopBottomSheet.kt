@@ -22,9 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.ImageResource
-import com.tondracek.myfarmer.productcategory.ProductCategory
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.Shop
+import com.tondracek.myfarmer.shopcategory.ShopCategory
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
 import com.tondracek.myfarmer.ui.common.image.ImageView
 import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
@@ -107,7 +107,7 @@ fun ImagesRow(
 }
 
 @Composable
-fun CategoriesRowTitle(modifier: Modifier = Modifier, categories: List<ProductCategory>) {
+fun CategoriesRowTitle(modifier: Modifier = Modifier, categories: List<ShopCategory>) {
     Column(
         modifier = modifier,
     ) {

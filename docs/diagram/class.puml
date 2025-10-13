@@ -23,7 +23,7 @@ class Shop {
     - id: UUID
     - name: String
     - owner: User
-    - productCategories: List<ProductCategory>
+    - shopCategories: List<ShopCategory>
     - images: List<Image>
     - menu: Menu
     - location: Location
@@ -36,12 +36,12 @@ User "1" ---o "0..*" Shop : ownedBy <
 
 ' ----------------------------------- '
 
-class ProductCategory {
+class ShopCategory {
     - name: String
     - color: Color
 }
 
-Shop "1" *-- "0..*" ProductCategory : categories >
+Shop "1" *-- "0..*" ShopCategory : categories >
 
 ' ----------------------------------- '
 
