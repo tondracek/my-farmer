@@ -21,7 +21,8 @@ User "1" *-- "1" UserContactInfo : contactInfo >
 
 class Shop {
     - id: UUID
-    - name: String
+    - name: String?
+    - description: String?
     - owner: User
     - shopCategories: List<ShopCategory>
     - images: List<Image>
