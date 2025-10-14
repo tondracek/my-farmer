@@ -6,16 +6,31 @@ class User {
     - id: String
     - name: String
     - profilePicture: Image?
+    - contactInfo: ContactInfo
 }
 
 ' ----------------------------------- '
 
-class UserContactInfo {
+class ContactInfo {
     - phone: String?
     - email: String?
+    - website: MediaLink?
+    - facebook: MediaLink?
+    - instagram: MediaLink?
 }
 
-User "1" *-- "1" UserContactInfo : contactInfo >
+User "1" *- "1" ContactInfo : contactInfo >
+
+' ----------------------------------- '
+
+class MediaLink {
+    - title: String
+    - url: String
+}
+
+ContactInfo "1" *-- "0..1" MediaLink : facebook >
+ContactInfo "1" *-- "0..1" MediaLink : instagram >
+ContactInfo "1" *-- "0..1" MediaLink : website >
 
 ' ----------------------------------- '
 
@@ -29,7 +44,6 @@ class Shop {
     - menu: Menu
     - location: Location
     - openingHours: OpeningHours
-    - contactInfo: ContactInfo
     - reviews: List<Review>
 }
 
@@ -83,29 +97,6 @@ enum DayOfWeek {
 
 Shop "1" *-- "1" OpeningHours : openingHours >
 OpeningHours "1" *-- "0..*" DayOfWeek : dayToHours >
-
-' ----------------------------------- '
-
-class ContactInfo {
-    - phone: String?
-    - email: String?
-    - website: MediaLink?
-    - facebook: MediaLink?
-    - instagram: MediaLink?
-}
-
-Shop "1" *-- "1" ContactInfo : contactInfo >
-
-' ----------------------------------- '
-
-class MediaLink {
-    - title: String
-    - url: String
-}
-
-ContactInfo "1" *-- "0..1" MediaLink : facebook >
-ContactInfo "1" *-- "0..1" MediaLink : instagram >
-ContactInfo "1" *-- "0..1" MediaLink : website >
 
 ' ----------------------------------- '
 
