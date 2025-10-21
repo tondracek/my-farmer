@@ -6,14 +6,13 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.tondracek.myfarmer.location.model.Location
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class LocationProvider @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) {
 
     private val client: FusedLocationProviderClient by lazy {
