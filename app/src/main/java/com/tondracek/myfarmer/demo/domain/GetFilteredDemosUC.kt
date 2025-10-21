@@ -6,6 +6,7 @@ import com.tondracek.myfarmer.demo.data.DemoRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.UUID
 import javax.inject.Inject
 
 class GetFilteredDemosUC @Inject constructor(
@@ -18,7 +19,7 @@ class GetFilteredDemosUC @Inject constructor(
         names: List<String>? = null,
         index: Int? = null,
     ): Flow<UseCaseResult<List<Demo>>> =
-        isShopOwnerAuthFlow(shopId = "placeholder") {
+        isShopOwnerAuthFlow(shopId = UUID.randomUUID()) {
             demoRepository.getFiltered(names, index)
                 .map { UseCaseResult.Success(it) }
         }

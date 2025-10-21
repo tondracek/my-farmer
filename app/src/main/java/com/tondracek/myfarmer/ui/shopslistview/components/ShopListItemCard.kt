@@ -44,20 +44,21 @@ fun ShopListItemCard(
                     modifier = Modifier
                         .sizeIn(maxHeight = 120.dp, maxWidth = 120.dp)
                         .clip(RoundedCornerShape(12.dp)),
-                    imageResource = shop.picture
+                    imageResource = shop.image
                 )
                 Column {
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            modifier = Modifier.weight(1f),
-                            text = shop.name,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                        if (!shop.name.isNullOrBlank())
+                            Text(
+                                modifier = Modifier.weight(1f),
+                                text = shop.name,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                style = MaterialTheme.typography.titleMedium
+                            )
 
                         if (shop.distance != null)
                             Text(
@@ -65,12 +66,14 @@ fun ShopListItemCard(
                                 style = MaterialTheme.typography.labelMedium
                             )
                     }
-                    Text(
-                        text = shop.description,
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+
+                    if (!shop.description.isNullOrBlank())
+                        Text(
+                            text = shop.description,
+                            maxLines = 3,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                 }
             }
             CategoriesRow(shop.categories)

@@ -38,17 +38,7 @@ fun ShopBottomSheet(shop: Shop, onDismissRequest: () -> Unit = {}) {
                 .padding(8.dp)
                 .fillMaxWidth()
         ) {
-            Text(
-                modifier = Modifier
-                    .padding(4.dp, 8.dp)
-                    .fillMaxWidth(),
-                text = shop.name,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center
-            )
-
-            HorizontalDivider()
+            ShopName(shop)
 
             CategoriesRowTitle(
                 modifier = Modifier.fillMaxWidth(),
@@ -71,7 +61,26 @@ fun ShopBottomSheet(shop: Shop, onDismissRequest: () -> Unit = {}) {
 }
 
 @Composable
-fun ImagesRow(
+private fun ShopName(shop: Shop) {
+    if (shop.name.isNullOrBlank()) return
+
+    Column {
+        Text(
+            modifier = Modifier
+                .padding(4.dp, 8.dp)
+                .fillMaxWidth(),
+            text = shop.name,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center
+        )
+
+        HorizontalDivider()
+    }
+}
+
+@Composable
+private fun ImagesRow(
     modifier: Modifier = Modifier,
     images: List<ImageResource>
 ) {
@@ -123,19 +132,17 @@ fun CategoriesRowTitle(modifier: Modifier = Modifier, categories: List<ShopCateg
 
 
 @Composable
-fun Description(modifier: Modifier = Modifier, description: String) {
-    Column(
-        modifier = modifier,
-    ) {
+fun Description(modifier: Modifier = Modifier, description: String?) {
+    if (description.isNullOrBlank()) return
+
+    Column(modifier = modifier) {
         Text(
             modifier = Modifier.padding(0.dp, 4.dp),
             text = stringResource(R.string.description),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
         )
-        Text(
-            text = description,
-        )
+        Text(text = description)
     }
 }
 

@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.systemuser
+package com.tondracek.myfarmer.systemuser.domain.model
 
 import java.util.UUID
 

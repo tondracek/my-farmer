@@ -2,8 +2,8 @@ package com.tondracek.myfarmer.auth.domain.flow
 
 import com.tondracek.myfarmer.auth.domain.IsLoggedInUC
 import com.tondracek.myfarmer.core.usecaseresult.UseCaseResult
-import com.tondracek.myfarmer.systemuser.SystemUser
-import com.tondracek.myfarmer.systemuser.UserId
+import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest

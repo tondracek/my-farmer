@@ -8,20 +8,20 @@ import com.tondracek.myfarmer.shopcategory.ShopCategory
 
 data class ShopListViewItem(
     val id: ShopId,
-    val picture: ImageResource?,
-    val name: String,
+    val name: String?,
+    val description: String?,
     val categories: List<ShopCategory>,
+    val image: ImageResource?,
     val distance: Distance?,
-    val rating: Double,
-    val description: String,
+    val averageRating: Double,
 )
 
 fun Shop.toListItem(distance: Distance?) = ShopListViewItem(
     id = id,
-    picture = images.firstOrNull(),
+    image = images.firstOrNull(),
     name = name,
     categories = categories,
     distance = distance,
-    rating = averageRating,
+    averageRating = reviews.map { it.rating }.average().takeIf { !it.isNaN() } ?: 0.0,
     description = description,
 )

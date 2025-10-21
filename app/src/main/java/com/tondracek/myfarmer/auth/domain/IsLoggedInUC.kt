@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.auth.domain
 
 import com.tondracek.myfarmer.core.usecaseresult.UseCaseResult
-import com.tondracek.myfarmer.systemuser.SystemUser
+import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import java.util.UUID
