@@ -23,7 +23,7 @@ import kotlinx.coroutines.tasks.await
 import java.util.UUID
 
 abstract class FirebaseRepository<Model, Entity : FirebaseEntity>(
-    val entityClass: Class<Entity>,
+    private val entityClass: Class<Entity>,
 ) : Repository<Model> {
 
     val collectionName: String = entityClass.getAnnotation(FirestoreCollection::class.java)?.name
@@ -59,12 +59,11 @@ abstract class FirebaseRepository<Model, Entity : FirebaseEntity>(
             .applyFilters(request.filters)
             .applySorts(request.sorts)
 
-        return query.snapshots().map {
-            it.documents.mapNotNull { doc ->
-                doc.toObject(entityClass)
-                    ?.let { entity -> mapper.toModel(entity) }
+        return query.snapshots()
+            .map {
+                it.documents.mapNotNull { doc -> doc.toObject(entityClass) }
             }
-        }
+            .let(mapper::mapEntitiesFlowToModel)
     }
 
     private fun Query.applyFilters(filters: List<RequestFilter>): Query =
@@ -73,8 +72,10 @@ abstract class FirebaseRepository<Model, Entity : FirebaseEntity>(
                 is FilterEq<*, *> ->
                     query.whereEqualTo(filter.field.name, filter.value)
 
-                is FilterIn<*, *> ->
-                    query.whereIn(filter.field.name, filter.values)
+                is FilterIn<*, *> -> when (filter.values.isNotEmpty()) {
+                    true -> query.whereIn(filter.field.name, filter.values)
+                    false -> query
+                }
 
                 is FilterGt<*, *> ->
                     query.whereGreaterThan(filter.field.name, filter.value as Any)
@@ -94,10 +95,6 @@ abstract class FirebaseRepository<Model, Entity : FirebaseEntity>(
         sorts.fold(this) { query, sort ->
             when (sort) {
                 is AscendingSort<*> -> query.orderBy(sort.field.name, Query.Direction.ASCENDING)
-                    .also {
-                        println("xxx: ${sort.field}")
-                    }
-
                 is DescendingSort<*> -> query.orderBy(sort.field.name, Query.Direction.DESCENDING)
             }
         }

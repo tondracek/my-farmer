@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.shopcategory
+package com.tondracek.myfarmer.shopcategory.domain.model
 
 import androidx.compose.ui.graphics.Color
 

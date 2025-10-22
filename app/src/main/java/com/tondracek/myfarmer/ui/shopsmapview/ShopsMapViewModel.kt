@@ -4,32 +4,29 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.tondracek.myfarmer.shop.data.sampleShops
-import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class ShopsMapViewModel @Inject constructor() : ViewModel() {
-
-    private val _shops: Flow<Set<Shop>> = flowOf(sampleShops.toSet())
+class ShopsMapViewModel @Inject constructor(
+    getAllShops: GetAllShopsUC,
+) : ViewModel() {
 
     private val _state = MutableStateFlow(ShopsMapViewState())
     val state: StateFlow<ShopsMapViewState> = combine(
-        _shops,
+        getAllShops(),
         _state,
     ) { shops, state ->
         state.copy(
-            shops = shops,
+            shops = shops.toSet(),
             initialCameraBounds = state.initialCameraBounds
                 ?: getLatLngBounds(shops.map { it.location.toLatLng() })
         )

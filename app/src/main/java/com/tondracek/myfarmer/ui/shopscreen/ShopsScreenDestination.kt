@@ -17,9 +17,9 @@ data object ShopsScreenRoute
 fun NavGraphBuilder.shopsScreenDestination() {
     composable<ShopsScreenRoute> {
         val shopsMapViewModel: ShopsMapViewModel = hiltViewModel()
-        val shopsListViewModel: ShopsListViewModel = hiltViewModel()
-
         val shopsMapViewState by shopsMapViewModel.state.collectAsState()
+
+        val shopsListViewModel: ShopsListViewModel = hiltViewModel()
         val shopsListViewState by shopsListViewModel.state.collectAsState()
 
         ShopsScreen(

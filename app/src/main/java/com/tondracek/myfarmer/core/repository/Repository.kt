@@ -4,16 +4,28 @@ import com.tondracek.myfarmer.core.repository.request.RepositoryRequest
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
-interface Repository<T> {
+/**
+ * Generic repository interface for CRUD operations.
+ *
+ * Provides:
+ *  - Create
+ *  - Update
+ *  - Delete
+ *  - Get by ID
+ *  - Get with filtering and pagination
+ *
+ * @param Model The type of the domain model managed by the repository.
+ */
+interface Repository<Model> {
 
-    suspend fun create(item: T)
+    suspend fun create(item: Model)
 
-    suspend fun update(item: T): Boolean
+    suspend fun update(item: Model): Boolean
 
     suspend fun delete(id: UUID): Boolean
 
-    fun getByID(id: UUID): Flow<T?>
+    fun getByID(id: UUID): Flow<Model?>
 
-    fun get(request: RepositoryRequest): Flow<List<T>>
+    fun get(request: RepositoryRequest): Flow<List<Model>>
 
 }

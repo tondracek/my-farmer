@@ -2,14 +2,14 @@ package com.tondracek.myfarmer.shop.data
 
 import androidx.compose.ui.graphics.Color
 import com.tondracek.myfarmer.common.ImageResource
-import com.tondracek.myfarmer.openinghours.domain.model.ShopOpeningHours
-import com.tondracek.myfarmer.productmenu.MenuItem
-import com.tondracek.myfarmer.productmenu.ProductMenu
-import com.tondracek.myfarmer.productmenu.ProductPrice
+import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
+import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
+import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
+import com.tondracek.myfarmer.productmenu.domain.model.ProductPrice
+import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.shop.domain.model.Shop
-import com.tondracek.myfarmer.shop.domain.model.ShopLocation
-import com.tondracek.myfarmer.shopcategory.ShopCategory
-import com.tondracek.myfarmer.shopreview.domain.model.ShopReview
+import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
+import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.systemuser.data.user0
 import com.tondracek.myfarmer.systemuser.data.user1
 import com.tondracek.myfarmer.systemuser.data.user2
@@ -17,7 +17,7 @@ import java.time.DayOfWeek
 import java.util.UUID
 
 val shop0 = Shop(
-    id = UUID.randomUUID(),
+    id = UUID.fromString("295d5f90-b45a-4df4-8785-fd2b6db4160e"),
     name = "FI MUNI",
     images = listOf(
         ImageResource("https://picsum.photos/400/300"),
@@ -53,11 +53,11 @@ val shop0 = Shop(
     reviews = emptyList(),
     menu = ProductMenu(listOf()),
     owner = user0,
-    openingHours = ShopOpeningHours.Message(""),
+    openingHours = OpeningHours.Message(""),
 )
 
 val shop1 = Shop(
-    id = UUID.randomUUID(),
+    id = UUID.fromString("ded3f207-09d3-47e7-94d0-1f48cb10ef12"),
     name = "Domácí včelařství v Jundrově",
     description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
     owner = user1,
@@ -72,8 +72,8 @@ val shop1 = Shop(
         ShopCategory("Včelařství", Color(0xFFFF9800)),
     ),
     reviews = listOf(
-        ShopReview(user0, 5, "Amazing"),
-        ShopReview(user2, 4, "Very good"),
+        Review(user0, 5, "Amazing"),
+        Review(user2, 4, "Very good"),
     ),
     menu = ProductMenu(
         listOf(
@@ -85,13 +85,13 @@ val shop1 = Shop(
             )
         )
     ),
-    openingHours = ShopOpeningHours.Message(
+    openingHours = OpeningHours.Message(
         message = "Po domluvě",
     )
 )
 
 val shop2 = Shop(
-    id = UUID.randomUUID(),
+    id = UUID.fromString("88a35777-c323-416f-8de5-265392eb1227"),
     name = "Obchod s vejci",
     images = listOf(
         ImageResource("https://picsum.photos/400/300"),
@@ -104,8 +104,8 @@ val shop2 = Shop(
         ShopCategory("Vejce", Color(0xFFBE9329)),
     ),
     reviews = listOf(
-        ShopReview(user0, 5, "Amazing"),
-        ShopReview(user1, 2, "Nuh, average"),
+        Review(user0, 5, "Amazing"),
+        Review(user1, 2, "Nuh, average"),
     ),
     menu = ProductMenu(
         listOf(
@@ -118,7 +118,7 @@ val shop2 = Shop(
         )
     ),
     owner = user2,
-    openingHours = ShopOpeningHours.Time(
+    openingHours = OpeningHours.Time(
         mapOf(
             DayOfWeek.MONDAY to "08:00 - 11:00, 13:00 - 17:00",
             DayOfWeek.TUESDAY to "16:00 - 19:00",
@@ -131,9 +131,8 @@ val shop2 = Shop(
     ),
 )
 
-
 val shop3 = Shop(
-    id = UUID.randomUUID(),
+    id = UUID.fromString("7892234a-f7dd-40dc-a528-7eec23e90589"),
     name = "Obchod s masem a mnohem více, především s extra dlouhým názvem, který jen tak nekončí, takže se musíme připravit na to, že se nám to nevejde do komponent a může nadělat paseku, když si na to nedáme pozor",
     images = listOf(
     ),
@@ -143,8 +142,8 @@ val shop3 = Shop(
         ShopCategory("Maso", Color(0xFF642000)),
     ),
     reviews = listOf(
-        ShopReview(user0, 5, "Amazing"),
-        ShopReview(user1, 2, "Nuh, average"),
+        Review(user0, 5, "Amazing"),
+        Review(user1, 2, "Nuh, average"),
     ),
     menu = ProductMenu(
         listOf(
@@ -157,7 +156,7 @@ val shop3 = Shop(
         )
     ),
     owner = user2,
-    openingHours = ShopOpeningHours.Message(
+    openingHours = OpeningHours.Message(
         message = "Po domluvě, telefon nebo sms",
     )
 )

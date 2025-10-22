@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,7 +23,7 @@ import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.ImageResource
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.Shop
-import com.tondracek.myfarmer.shopcategory.ShopCategory
+import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
 import com.tondracek.myfarmer.ui.common.image.ImageView
 import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
@@ -84,6 +83,8 @@ private fun ImagesRow(
     modifier: Modifier = Modifier,
     images: List<ImageResource>
 ) {
+    if (images.isEmpty()) return
+
     Column(
         modifier = modifier,
     ) {
@@ -93,23 +94,15 @@ private fun ImagesRow(
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
         )
-        if (images.isEmpty()) {
-            Text(
-                text = stringResource(R.string.no_pictures_found),
-                modifier = Modifier.padding(4.dp, 4.dp),
-                fontStyle = FontStyle.Italic,
-            )
-        } else {
-            LazyRow(
-                modifier = Modifier.padding(4.dp, 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                items(images) {
-                    ImageView(
-                        modifier = Modifier.height(100.dp),
-                        imageResource = it,
-                    )
-                }
+        LazyRow(
+            modifier = Modifier.padding(4.dp, 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            items(images) {
+                ImageView(
+                    modifier = Modifier.height(100.dp),
+                    imageResource = it,
+                )
             }
         }
     }

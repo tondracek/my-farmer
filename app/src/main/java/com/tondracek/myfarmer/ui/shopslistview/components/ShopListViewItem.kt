@@ -4,7 +4,7 @@ import com.tondracek.myfarmer.common.ImageResource
 import com.tondracek.myfarmer.location.model.Distance
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
-import com.tondracek.myfarmer.shopcategory.ShopCategory
+import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 
 data class ShopListViewItem(
     val id: ShopId,
