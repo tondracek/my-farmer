@@ -9,9 +9,6 @@ import com.tondracek.myfarmer.openinghours.data.toModel
 import com.tondracek.myfarmer.productmenu.data.ProductMenuEntity
 import com.tondracek.myfarmer.productmenu.data.toEntity
 import com.tondracek.myfarmer.productmenu.data.toModel
-import com.tondracek.myfarmer.review.data.ReviewEntity
-import com.tondracek.myfarmer.review.data.toEntity
-import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shopcategory.data.ShopCategoryEntity
 import com.tondracek.myfarmer.shopcategory.data.toEntity
@@ -35,12 +32,10 @@ data class ShopEntity(
     var menu: ProductMenuEntity = ProductMenuEntity(),
     var location: ShopLocationEntity = ShopLocationEntity(),
     var openingHours: OpeningHoursEntity = OpeningHoursEntity(),
-    var reviews: List<ReviewEntity> = emptyList(),
 ) : FirebaseEntity
 
 fun ShopEntity.toModel(
     owner: SystemUser,
-    reviews: List<Review>
 ) = Shop(
     id = UUID.fromString(id),
     name = name,
@@ -51,7 +46,6 @@ fun ShopEntity.toModel(
     menu = menu.toModel(),
     location = location.toModel(),
     openingHours = openingHours.toModel(),
-    reviews = reviews,
 )
 
 fun Shop.toEntity() = ShopEntity(
@@ -64,5 +58,4 @@ fun Shop.toEntity() = ShopEntity(
     menu = menu.toEntity(),
     location = location.toEntity(),
     openingHours = openingHours.toEntity(),
-    reviews = reviews.map { it.toEntity() },
 )

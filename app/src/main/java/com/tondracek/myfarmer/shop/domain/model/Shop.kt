@@ -3,7 +3,6 @@ package com.tondracek.myfarmer.shop.domain.model
 import com.tondracek.myfarmer.common.ImageResource
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
-import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
@@ -21,5 +20,4 @@ data class Shop(
     val menu: ProductMenu,
     val location: ShopLocation,
     val openingHours: OpeningHours,
-    val reviews: List<Review>,
 )

@@ -9,6 +9,7 @@ import java.util.UUID
 data class ReviewEntity(
     var id: String = "",
     var userId: String = "",
+    var shopId: String = "",
     var rating: Int = 0,
     var comment: String? = null,
 )

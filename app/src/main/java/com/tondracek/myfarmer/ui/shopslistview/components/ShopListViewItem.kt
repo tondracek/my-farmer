@@ -22,6 +22,6 @@ fun Shop.toListItem(distance: Distance?) = ShopListViewItem(
     name = name,
     categories = categories,
     distance = distance,
-    averageRating = reviews.map { it.rating }.average().takeIf { !it.isNaN() } ?: 0.0,
+    averageRating = 0.0, // TODO
     description = description,
 )

@@ -50,11 +50,12 @@ val shop0 = Shop(
         ShopCategory("Další", Color(0xFFCA6207)),
         ShopCategory("Další", Color(0xFFBE9329)),
     ),
-    reviews = emptyList(),
     menu = ProductMenu(listOf()),
     owner = user0,
     openingHours = OpeningHours.Message(""),
 )
+
+val shop0reviews = emptyList<Review>()
 
 val shop1 = Shop(
     id = UUID.fromString("ded3f207-09d3-47e7-94d0-1f48cb10ef12"),
@@ -71,10 +72,6 @@ val shop1 = Shop(
         ShopCategory("Med", Color(0xFFFFC107)),
         ShopCategory("Včelařství", Color(0xFFFF9800)),
     ),
-    reviews = listOf(
-        Review(user0, 5, "Amazing"),
-        Review(user2, 4, "Very good"),
-    ),
     menu = ProductMenu(
         listOf(
             MenuItem(
@@ -90,6 +87,11 @@ val shop1 = Shop(
     )
 )
 
+val shop1reviews = listOf(
+    Review(user0, 5, "Amazing"),
+    Review(user2, 4, "Very good"),
+)
+
 val shop2 = Shop(
     id = UUID.fromString("88a35777-c323-416f-8de5-265392eb1227"),
     name = "Obchod s vejci",
@@ -102,10 +104,6 @@ val shop2 = Shop(
     location = ShopLocation(49.205778, 16.593361),
     categories = listOf(
         ShopCategory("Vejce", Color(0xFFBE9329)),
-    ),
-    reviews = listOf(
-        Review(user0, 5, "Amazing"),
-        Review(user1, 2, "Nuh, average"),
     ),
     menu = ProductMenu(
         listOf(
@@ -131,6 +129,11 @@ val shop2 = Shop(
     ),
 )
 
+val shop2reviews = listOf(
+    Review(user0, 5, "Amazing"),
+    Review(user1, 2, "Nuh, average"),
+)
+
 val shop3 = Shop(
     id = UUID.fromString("7892234a-f7dd-40dc-a528-7eec23e90589"),
     name = "Obchod s masem a mnohem více, především s extra dlouhým názvem, který jen tak nekončí, takže se musíme připravit na to, že se nám to nevejde do komponent a může nadělat paseku, když si na to nedáme pozor",
@@ -140,10 +143,6 @@ val shop3 = Shop(
     location = ShopLocation(49.205778, 16.59),
     categories = listOf(
         ShopCategory("Maso", Color(0xFF642000)),
-    ),
-    reviews = listOf(
-        Review(user0, 5, "Amazing"),
-        Review(user1, 2, "Nuh, average"),
     ),
     menu = ProductMenu(
         listOf(
@@ -159,6 +158,11 @@ val shop3 = Shop(
     openingHours = OpeningHours.Message(
         message = "Po domluvě, telefon nebo sms",
     )
+)
+
+val shop3reviews = listOf(
+    Review(user0, 5, "Amazing"),
+    Review(user1, 2, "Nuh, average"),
 )
 
 val sampleShops: List<Shop> by lazy {
