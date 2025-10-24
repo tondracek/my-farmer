@@ -43,11 +43,23 @@ abstract class FirebaseRepository<Model, Entity : FirebaseEntity>(
     }
 
     override suspend fun update(item: Model): Boolean {
-        TODO("Not yet implemented")
+        val entity: Entity = mapper.toEntity(item)
+
+        db.collection(collectionName)
+            .document(entity.id)
+            .set(entity)
+            .await()
+
+        return true
     }
 
     override suspend fun delete(id: UUID): Boolean {
-        TODO("Not yet implemented")
+        db.collection(collectionName)
+            .document(id.toString())
+            .delete()
+            .await()
+
+        return true
     }
 
     override fun getById(id: UUID): Flow<Model?> {
