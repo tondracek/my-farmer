@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.auth.domain.flow
 
 import com.tondracek.myfarmer.auth.domain.IsLoggedInUC
-import com.tondracek.myfarmer.core.usecaseresult.UseCaseResult
+import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,12 +16,12 @@ class IsLoggedInAuthFlow @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun <T> invoke(
-        block: (UserId) -> Flow<UseCaseResult<T>>
-    ): Flow<UseCaseResult<T>> =
-        isLoggedIn().flatMapLatest { loggedInResult: UseCaseResult<SystemUser> ->
+        block: (UserId) -> Flow<UCResult<T>>
+    ): Flow<UCResult<T>> =
+        isLoggedIn().flatMapLatest { loggedInResult: UCResult<SystemUser> ->
             when (loggedInResult) {
-                is UseCaseResult.Failure -> flowOf(loggedInResult)
-                is UseCaseResult.Success -> block(loggedInResult.data.id)
+                is UCResult.Failure -> flowOf(loggedInResult)
+                is UCResult.Success -> block(loggedInResult.data.id)
             }
         }
 }

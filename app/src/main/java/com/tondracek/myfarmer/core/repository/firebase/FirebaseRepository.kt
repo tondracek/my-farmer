@@ -50,8 +50,12 @@ abstract class FirebaseRepository<Model, Entity : FirebaseEntity>(
         TODO("Not yet implemented")
     }
 
-    override fun getByID(id: UUID): Flow<Model?> {
-        TODO("Not yet implemented")
+    override fun getById(id: UUID): Flow<Model?> {
+        val docRef = db.collection(collectionName).document(id.toString())
+
+        return docRef.snapshots()
+            .map { it.toObject(entityClass) }
+            .map { entity -> entity?.let { mapper.toModel(entity) } }
     }
 
     override fun get(request: RepositoryRequest): Flow<List<Model>> {
@@ -61,9 +65,10 @@ abstract class FirebaseRepository<Model, Entity : FirebaseEntity>(
 
         return query.snapshots()
             .map {
-                it.documents.mapNotNull { doc -> doc.toObject(entityClass) }
+                it.documents
+                    .mapNotNull { doc -> doc.toObject(entityClass) }
+                    .map { entity -> mapper.toModel(entity) }
             }
-            .let(mapper::mapEntitiesFlowToModel)
     }
 
     private fun Query.applyFilters(filters: List<RequestFilter>): Query =

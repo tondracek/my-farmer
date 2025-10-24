@@ -18,7 +18,6 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
-import com.tondracek.myfarmer.ui.shopsmapview.components.ShopBottomSheet
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -26,7 +25,7 @@ import kotlinx.coroutines.delay
 fun ShopsMapView(
     modifier: Modifier = Modifier,
     state: ShopsMapViewState,
-    onShopSelected: (ShopId?) -> Unit,
+    onShopSelected: (ShopId) -> Unit,
 ) {
     val cameraPositionState = rememberCameraPositionState()
 
@@ -73,13 +72,6 @@ fun ShopsMapView(
                 }
             )
         }
-    }
-
-    if (state.selectedShop != null) {
-        ShopBottomSheet(
-            shop = state.shops.first { it.id == state.selectedShop },
-            onDismissRequest = { onShopSelected(null) }
-        )
     }
 }
 

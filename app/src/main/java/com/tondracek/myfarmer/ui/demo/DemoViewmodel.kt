@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.ui.demo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tondracek.myfarmer.core.usecaseresult.UseCaseResult
+import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.demo.domain.AddDemoUC
 import com.tondracek.myfarmer.demo.domain.GetFilteredDemosUC
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +22,8 @@ class DemoViewmodel @Inject constructor(
     val state: StateFlow<DemoScreenState> = getFilteredDemos()
         .map { result ->
             when (result) {
-                is UseCaseResult.Success -> DemoScreenState.Success(result.data)
-                is UseCaseResult.Failure -> DemoScreenState.Error(result.userError)
+                is UCResult.Success -> DemoScreenState.Success(result.data)
+                is UCResult.Failure -> DemoScreenState.Error(result.userError)
             }
         }
         .stateIn(

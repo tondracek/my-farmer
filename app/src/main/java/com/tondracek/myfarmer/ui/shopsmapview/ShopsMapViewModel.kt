@@ -6,18 +6,20 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
+import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
+import com.tondracek.myfarmer.ui.shopbottomsheet.navigateToShopBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class ShopsMapViewModel @Inject constructor(
     getAllShops: GetAllShopsUC,
+    private val navigator: AppNavigator,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ShopsMapViewState())
@@ -36,8 +38,8 @@ class ShopsMapViewModel @Inject constructor(
         initialValue = ShopsMapViewState()
     )
 
-    fun onShopSelected(shopId: ShopId?) {
-        _state.update { it.copy(selectedShop = shopId) }
+    fun onShopSelected(shopId: ShopId) {
+        navigator.navigateToShopBottomSheet(shopId)
     }
 }
 

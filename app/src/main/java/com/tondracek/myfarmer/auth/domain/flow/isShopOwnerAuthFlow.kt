@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.auth.domain.flow
 
-import com.tondracek.myfarmer.core.usecaseresult.UseCaseResult
+import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.IsShopOwnerUC
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,12 +18,12 @@ class IsShopOwnerAuthFlow @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun <T> invoke(
         shopId: ShopId,
-        block: () -> Flow<UseCaseResult<T>>
-    ): Flow<UseCaseResult<T>> = isLoggedInAuthFlow { loggedUserId ->
+        block: () -> Flow<UCResult<T>>
+    ): Flow<UCResult<T>> = isLoggedInAuthFlow { loggedUserId ->
         isShopOwner(loggedUserId, shopId).flatMapLatest { shopOwnerResult ->
             when (shopOwnerResult) {
-                is UseCaseResult.Failure -> flowOf(shopOwnerResult)
-                is UseCaseResult.Success -> block()
+                is UCResult.Failure -> flowOf(shopOwnerResult)
+                is UCResult.Success -> block()
             }
         }
     }

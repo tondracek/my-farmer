@@ -24,7 +24,7 @@ interface Repository<Model> {
 
     suspend fun delete(id: UUID): Boolean
 
-    fun getByID(id: UUID): Flow<Model?>
+    fun getById(id: UUID): Flow<Model?>
 
     fun get(request: RepositoryRequest): Flow<List<Model>>
 

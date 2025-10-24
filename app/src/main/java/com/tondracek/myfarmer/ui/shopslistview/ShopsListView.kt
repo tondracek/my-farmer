@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.location.model.km
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.ShopId
-import com.tondracek.myfarmer.ui.common.layout.LoadingScreen
+import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.core.preview.AsyncImagePreviewFix
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
@@ -27,7 +27,7 @@ fun ShopsListView(
     onNavigateToShopDetail: (ShopId) -> Unit,
 ) {
     when (state) {
-        ShopsListViewState.Loading -> LoadingScreen()
+        ShopsListViewState.Loading -> LoadingLayout()
         is ShopsListViewState.Success -> Success(
             modifier = modifier,
             state = state,

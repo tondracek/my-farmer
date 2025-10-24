@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.shop.data
 
-import com.tondracek.myfarmer.common.ImageResource
+import com.tondracek.myfarmer.common.model.ImageResource
 import com.tondracek.myfarmer.core.repository.firebase.FirebaseEntity
 import com.tondracek.myfarmer.core.repository.firebase.FirestoreCollection
 import com.tondracek.myfarmer.openinghours.data.OpeningHoursEntity
@@ -16,7 +16,6 @@ import com.tondracek.myfarmer.shopcategory.data.toModel
 import com.tondracek.myfarmer.shoplocation.data.ShopLocationEntity
 import com.tondracek.myfarmer.shoplocation.data.toEntity
 import com.tondracek.myfarmer.shoplocation.data.toModel
-import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import kotlinx.serialization.Serializable
 import java.util.UUID
 
@@ -34,13 +33,11 @@ data class ShopEntity(
     var openingHours: OpeningHoursEntity = OpeningHoursEntity(),
 ) : FirebaseEntity
 
-fun ShopEntity.toModel(
-    owner: SystemUser,
-) = Shop(
+fun ShopEntity.toModel() = Shop(
     id = UUID.fromString(id),
     name = name,
     description = description,
-    owner = owner,
+    ownerId = UUID.fromString(ownerId),
     categories = categories.map { it.toModel() },
     images = images.map { ImageResource(it) },
     menu = menu.toModel(),
@@ -52,7 +49,7 @@ fun Shop.toEntity() = ShopEntity(
     id = id.toString(),
     name = name,
     description = description,
-    ownerId = owner.id.toString(),
+    ownerId = ownerId.toString(),
     categories = categories.map { it.toEntity() },
     images = images.map { it.uri },
     menu = menu.toEntity(),

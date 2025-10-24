@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.shop.data
 
 import androidx.compose.ui.graphics.Color
-import com.tondracek.myfarmer.common.ImageResource
+import com.tondracek.myfarmer.common.model.ImageResource
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
@@ -51,7 +51,7 @@ val shop0 = Shop(
         ShopCategory("Další", Color(0xFFBE9329)),
     ),
     menu = ProductMenu(listOf()),
-    owner = user0,
+    ownerId = user0.id,
     openingHours = OpeningHours.Message(""),
 )
 
@@ -61,7 +61,7 @@ val shop1 = Shop(
     id = UUID.fromString("ded3f207-09d3-47e7-94d0-1f48cb10ef12"),
     name = "Domácí včelařství v Jundrově",
     description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
-    owner = user1,
+    ownerId = user1.id,
     images = listOf(
         ImageResource("https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Beekeeper_with_moveable_comb_hive.jpg/1024px-Beekeeper_with_moveable_comb_hive.jpg"),
         ImageResource("https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Western_honey_bee_on_a_honeycomb.jpg/1280px-Western_honey_bee_on_a_honeycomb.jpg"),
@@ -115,7 +115,7 @@ val shop2 = Shop(
             ),
         )
     ),
-    owner = user2,
+    ownerId = user2.id,
     openingHours = OpeningHours.Time(
         mapOf(
             DayOfWeek.MONDAY to "08:00 - 11:00, 13:00 - 17:00",
@@ -154,7 +154,7 @@ val shop3 = Shop(
             ),
         )
     ),
-    owner = user2,
+    ownerId = user2.id,
     openingHours = OpeningHours.Message(
         message = "Po domluvě, telefon nebo sms",
     )

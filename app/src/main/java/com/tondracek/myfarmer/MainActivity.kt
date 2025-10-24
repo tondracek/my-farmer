@@ -4,28 +4,50 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.stefanoq21.material3.navigation.ModalBottomSheetLayout
+import com.stefanoq21.material3.navigation.rememberBottomSheetNavigator
+import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.shopbottomsheet.shopBottomSheetDestination
 import com.tondracek.myfarmer.ui.shopscreen.ShopsScreenRoute
 import com.tondracek.myfarmer.ui.shopscreen.shopsScreenDestination
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+
+    @Inject
+    lateinit var navigator: AppNavigator
+
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyFarmerTheme {
-                val navController = rememberNavController()
 
-                NavHost(
-                    navController = navController,
-                    startDestination = ShopsScreenRoute
+            MyFarmerTheme {
+                val bottomSheetNavigator = rememberBottomSheetNavigator()
+                val navController = rememberNavController(bottomSheetNavigator)
+                navigator.navController = navController
+
+                ModalBottomSheetLayout(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomSheetNavigator = bottomSheetNavigator
                 ) {
-                    shopsScreenDestination()
+                    NavHost(
+                        navController = navController,
+                        startDestination = ShopsScreenRoute
+                    ) {
+                        shopsScreenDestination()
+                        shopBottomSheetDestination()
+                    }
                 }
             }
         }

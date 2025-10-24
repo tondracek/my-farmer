@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.demo.domain
 
 import com.tondracek.myfarmer.auth.domain.flow.IsShopOwnerAuthFlow
-import com.tondracek.myfarmer.core.usecaseresult.UseCaseResult
+import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.demo.data.DemoRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -18,9 +18,9 @@ class GetFilteredDemosUC @Inject constructor(
     operator fun invoke(
         names: List<String>? = null,
         index: Int? = null,
-    ): Flow<UseCaseResult<List<Demo>>> =
+    ): Flow<UCResult<List<Demo>>> =
         isShopOwnerAuthFlow(shopId = UUID.randomUUID()) {
             demoRepository.getFiltered(names, index)
-                .map { UseCaseResult.Success(it) }
+                .map { UCResult.Success(it) }
         }
 }

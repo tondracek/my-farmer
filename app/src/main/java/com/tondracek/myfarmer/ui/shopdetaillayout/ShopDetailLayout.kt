@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.shopsmapview.components
+package com.tondracek.myfarmer.ui.shopdetaillayout
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,55 +18,57 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.common.ImageResource
-import com.tondracek.myfarmer.shop.data.sampleShops
-import com.tondracek.myfarmer.shop.domain.model.Shop
+import com.tondracek.myfarmer.common.model.ImageResource
+import com.tondracek.myfarmer.shop.data.shop1
+import com.tondracek.myfarmer.shop.data.shop1reviews
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
+import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
 import com.tondracek.myfarmer.ui.common.image.ImageView
 import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShopBottomSheet(shop: Shop, onDismissRequest: () -> Unit = {}) {
-    ModalBottomSheet(onDismissRequest = onDismissRequest) {
-        Column(
+fun ShopDetailLayout(
+    state: ShopDetailState.Success,
+    onReviewsClick: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+    ) {
+        ShopName(state.name)
+
+        CategoriesRowTitle(
+            modifier = Modifier.fillMaxWidth(),
+            categories = state.categories
+        )
+
+        ImagesRow(
             modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        ) {
-            ShopName(shop)
+                .fillMaxWidth(),
+            images = state.images
+        )
 
-            CategoriesRowTitle(
-                modifier = Modifier.fillMaxWidth(),
-                categories = shop.categories
-            )
-
-            ImagesRow(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                images = shop.images
-            )
-
-            Description(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                description = shop.description
-            )
-        }
+        Description(
+            modifier = Modifier
+                .fillMaxWidth(),
+            description = state.description
+        )
     }
 }
 
+
 @Composable
-private fun ShopName(shop: Shop) {
-    if (shop.name.isNullOrBlank()) return
+private fun ShopName(shopName: String?) {
+    if (shopName.isNullOrBlank()) return
 
     Column {
         Text(
             modifier = Modifier
                 .padding(4.dp, 8.dp)
                 .fillMaxWidth(),
-            text = shop.name,
+            text = shopName,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             textAlign = TextAlign.Center
@@ -139,12 +139,18 @@ fun Description(modifier: Modifier = Modifier, description: String?) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun ShopBottomSheetPrev() {
+fun ShopDetailLayoutPrev() {
+    val shop = shop1
+
+    val owner = sampleUsers.find { it.id == shop.ownerId }!!
+    val state = shop.toShopDetailState(owner = owner, reviewsPreview = shop1reviews)
+
     MyFarmerTheme {
-        ShopBottomSheet(
-            shop = sampleShops.first()
+        ShopDetailLayout(
+            state = state,
+            onReviewsClick = {}
         )
     }
 }
