@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.shopdetaillayout
+package com.tondracek.myfarmer.ui.common.layout.shopdetaillayout
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,11 +29,12 @@ import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
 
 @Composable
 fun ShopDetailLayout(
+    modifier: Modifier = Modifier,
     state: ShopDetailState.Success,
     onReviewsClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(8.dp)
             .fillMaxWidth()
     ) {

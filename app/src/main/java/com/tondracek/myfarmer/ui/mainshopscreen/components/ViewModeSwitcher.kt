@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.shopscreen.components
+package com.tondracek.myfarmer.ui.mainshopscreen.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -30,7 +30,7 @@ import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34Dark
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34Light
 import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
-import com.tondracek.myfarmer.ui.shopscreen.ShopsViewMode
+import com.tondracek.myfarmer.ui.mainshopscreen.ShopsViewMode
 
 @Composable
 fun ViewModeSwitcher(

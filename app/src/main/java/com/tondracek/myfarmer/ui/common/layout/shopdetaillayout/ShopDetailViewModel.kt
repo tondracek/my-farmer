@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.shopdetaillayout
+package com.tondracek.myfarmer.ui.common.layout.shopdetaillayout
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

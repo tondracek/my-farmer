@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.shopscreen
+package com.tondracek.myfarmer.ui.mainshopscreen
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -12,17 +12,17 @@ import com.tondracek.myfarmer.ui.shopsmapview.ShopsMapViewModel
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object ShopsScreenRoute
+data object MainShopsScreenRoute
 
-fun NavGraphBuilder.shopsScreenDestination() {
-    composable<ShopsScreenRoute> {
+fun NavGraphBuilder.mainShopsScreenDestination() {
+    composable<MainShopsScreenRoute> {
         val shopsMapViewModel: ShopsMapViewModel = hiltViewModel()
         val shopsMapViewState by shopsMapViewModel.state.collectAsState()
 
         val shopsListViewModel: ShopsListViewModel = hiltViewModel()
         val shopsListViewState by shopsListViewModel.state.collectAsState()
 
-        ShopsScreen(
+        MainShopsScreen(
             mapView = { modifier ->
                 ShopsMapView(
                     modifier = modifier,

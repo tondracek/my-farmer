@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.location.usecase.MeasureDistanceFromMeUC
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
+import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
+import com.tondracek.myfarmer.ui.shopdetailscreen.navigateToShopDetailScreen
 import com.tondracek.myfarmer.ui.shopslistview.components.toListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +20,7 @@ import javax.inject.Inject
 class ShopsListViewModel @Inject constructor(
     measureDistanceFromMe: MeasureDistanceFromMeUC,
     getAllShops: GetAllShopsUC,
+    private val navigator: AppNavigator,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ShopsListViewState.Loading)
@@ -38,7 +41,5 @@ class ShopsListViewModel @Inject constructor(
         initialValue = ShopsListViewState.Loading
     )
 
-    fun navigateToShopDetail(shopId: ShopId) {
-        /* TODO: Navigate to shop shopId detail */
-    }
+    fun navigateToShopDetail(shopId: ShopId) = navigator.navigateToShopDetailScreen(shopId)
 }

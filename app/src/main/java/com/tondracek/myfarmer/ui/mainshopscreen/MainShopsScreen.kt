@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.shopscreen
+package com.tondracek.myfarmer.ui.mainshopscreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +21,7 @@ import com.tondracek.myfarmer.ui.common.navbar.BottomNavigationBar
 import com.tondracek.myfarmer.ui.common.topbar.FloatingTopBar
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
-import com.tondracek.myfarmer.ui.shopscreen.components.ViewModeSwitcher
+import com.tondracek.myfarmer.ui.mainshopscreen.components.ViewModeSwitcher
 import kotlinx.coroutines.launch
 
 enum class ShopsViewMode { Map, List }
@@ -33,7 +33,7 @@ private fun Int.toShopsViewMode(): ShopsViewMode =
 private val pageCount = ShopsViewMode.entries.size
 
 @Composable
-fun ShopsScreen(
+fun MainShopsScreen(
     mapView: @Composable (Modifier) -> Unit,
     listView: @Composable (Modifier) -> Unit,
 ) {
@@ -97,7 +97,7 @@ fun ShopsScreen(
 @Composable
 private fun ShopScreenPreview() {
     MyFarmerTheme {
-        ShopsScreen(
+        MainShopsScreen(
             mapView = {},
             listView = {},
         )

@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.shopdetaillayout
+package com.tondracek.myfarmer.ui.common.layout.shopdetaillayout
 
 import com.tondracek.myfarmer.common.model.ImageResource
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
