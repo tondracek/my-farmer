@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.common.layout.shopdetaillayout
+package com.tondracek.myfarmer.ui.shopbottomsheet
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -11,8 +11,9 @@ import com.tondracek.myfarmer.review.domain.usecase.GetReviewsPreviewUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailState
+import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.toShopDetailState
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import com.tondracek.myfarmer.ui.shopbottomsheet.getShopBottomSheetShopId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +27,7 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class ShopDetailViewModel @Inject constructor(
+class ShopBottomSheetViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getShopById: GetByIdUC<Shop>,
     getUserById: GetByIdUC<SystemUser>,
@@ -34,7 +35,8 @@ class ShopDetailViewModel @Inject constructor(
     private val navigator: AppNavigator
 ) : ViewModel() {
 
-    private val shopId: Flow<ShopId> = flowOf(savedStateHandle.getShopBottomSheetShopId()) // TODO
+    private val shopId: Flow<ShopId> =
+        flowOf(savedStateHandle.getShopBottomSheetShopId()) // TODO flow?
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val shop: Flow<UCResult<Shop>> =
@@ -62,7 +64,7 @@ class ShopDetailViewModel @Inject constructor(
         shop.toShopDetailState(owner, reviews)
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.Companion.WhileSubscribed(5_000),
         initialValue = ShopDetailState.Loading
     )
 

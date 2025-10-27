@@ -12,15 +12,14 @@ import androidx.navigation.toRoute
 import com.stefanoq21.material3.navigation.bottomSheet
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailLayout
 import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailState
-import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailViewModel
+import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import kotlinx.serialization.Serializable
 import java.util.UUID
 
 @Serializable
-data class ShopBottomSheetRoute(val shopId: String)
+private data class ShopBottomSheetRoute(val shopId: String)
 
 fun AppNavigator.navigateToShopBottomSheet(shopId: ShopId) =
     navigate(ShopBottomSheetRoute(shopId.toString()))
@@ -31,7 +30,7 @@ fun SavedStateHandle.getShopBottomSheetShopId(): ShopId =
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.shopBottomSheetDestination() {
     bottomSheet<ShopBottomSheetRoute> {
-        val viewmodel: ShopDetailViewModel = hiltViewModel()
+        val viewmodel: ShopBottomSheetViewModel = hiltViewModel()
         val state by viewmodel.state.collectAsState()
 
         Content(

@@ -8,17 +8,17 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.tondracek.myfarmer.shop.domain.model.ShopId
-import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailViewModel
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ShopDetailDestination(val shopId: String)
+private data class ShopDetailDestination(val shopId: String)
 
 fun AppNavigator.navigateToShopDetailScreen(shopId: ShopId) =
     navigate(ShopDetailDestination(shopId.toString()))
 
 fun SavedStateHandle.getShopDetailScreenShopId(): ShopId =
+    // TODO: this is not used, it works by accident!!!
     toRoute<ShopDetailDestination>().shopId
         .let { ShopId.fromString(it) }
 
