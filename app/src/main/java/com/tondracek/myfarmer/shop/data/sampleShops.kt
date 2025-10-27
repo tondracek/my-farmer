@@ -88,8 +88,8 @@ val shop1 = Shop(
 )
 
 val shop1reviews = listOf(
-    Review(user0, 5, "Amazing"),
-    Review(user2, 4, "Very good"),
+    Review(UUID.randomUUID(), user0.id, 5, "Amazing"),
+    Review(UUID.randomUUID(), user2.id, 4, "Very good"),
 )
 
 val shop2 = Shop(
@@ -130,8 +130,8 @@ val shop2 = Shop(
 )
 
 val shop2reviews = listOf(
-    Review(user0, 5, "Amazing"),
-    Review(user1, 2, "Nuh, average"),
+    Review(UUID.randomUUID(), user0.id, 5, "Amazing"),
+    Review(UUID.randomUUID(), user1.id, 2, "Nuh, average"),
 )
 
 val shop3 = Shop(
@@ -161,8 +161,8 @@ val shop3 = Shop(
 )
 
 val shop3reviews = listOf(
-    Review(user0, 5, "Amazing"),
-    Review(user1, 2, "Nuh, average"),
+    Review(UUID.randomUUID(), user0.id, 5, "Amazing"),
+    Review(UUID.randomUUID(), user1.id, 2, "Nuh, average"),
 )
 
 val sampleShops: List<Shop> by lazy {

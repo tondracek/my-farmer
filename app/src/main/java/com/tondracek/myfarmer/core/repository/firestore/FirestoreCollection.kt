@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.core.repository.firebase
+package com.tondracek.myfarmer.core.repository.firestore
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)

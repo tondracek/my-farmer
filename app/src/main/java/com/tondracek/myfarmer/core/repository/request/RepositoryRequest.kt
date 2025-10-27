@@ -31,3 +31,6 @@ data class RepositoryRequest(
         )
     }
 }
+
+fun repositoryRequest(block: RepositoryRequest.Builder.() -> Unit): RepositoryRequest =
+    RepositoryRequest.Builder().apply(block).build()
