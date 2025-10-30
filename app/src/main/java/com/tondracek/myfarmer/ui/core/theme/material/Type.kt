@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.core.theme
+package com.tondracek.myfarmer.ui.core.theme.material
 
 import androidx.compose.material3.Typography
 
