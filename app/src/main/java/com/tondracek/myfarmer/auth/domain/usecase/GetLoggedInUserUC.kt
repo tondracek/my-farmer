@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.auth.domain
+package com.tondracek.myfarmer.auth.domain.usecase
 
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.systemuser.data.user0
@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
-class IsLoggedInUC @Inject constructor(
+class GetLoggedInUserUC @Inject constructor(
 ) : () -> Flow<UCResult<SystemUser>> {
 
     override operator fun invoke(): Flow<UCResult<SystemUser>> = flowOf(

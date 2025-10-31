@@ -16,4 +16,6 @@
     <string name="no_products">No products</string>
     <string name="in_stock">In stock</string>
     <string name="out_of_stock">Out of stock</string>
+    <string name="profile">Profile</string>
+    <string name="my_shops">My shops</string>
 </resources>

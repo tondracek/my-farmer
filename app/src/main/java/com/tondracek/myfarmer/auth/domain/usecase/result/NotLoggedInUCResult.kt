@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.auth.domain.result
+package com.tondracek.myfarmer.auth.domain.usecase.result
 
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 

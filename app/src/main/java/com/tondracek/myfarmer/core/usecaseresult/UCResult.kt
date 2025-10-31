@@ -1,5 +1,8 @@
 package com.tondracek.myfarmer.core.usecaseresult
 
+import com.tondracek.myfarmer.core.usecaseresult.UCResult.Failure
+import com.tondracek.myfarmer.core.usecaseresult.UCResult.Success
+
 sealed interface UCResult<out T> {
 
     data class Success<T>(val data: T) : UCResult<T>
@@ -7,7 +10,7 @@ sealed interface UCResult<out T> {
     open class Failure(val userError: String, val systemError: String? = null) :
         UCResult<Nothing>
 
-    fun <R> mapSuccess(transform: (T) -> R): UCResult<R> = when (this) {
+    fun <R> map(transform: (T) -> R): UCResult<R> = when (this) {
         is Success -> Success(transform(data))
         is Failure -> this
     }
@@ -39,3 +42,13 @@ inline fun <T> UCResult<T>.getOrReturn(block: (UCResult.Failure) -> Nothing): T 
         is UCResult.Success -> data
         is UCResult.Failure -> block(this)
     }
+
+fun <T> UCResult<T>.getOrElse(defaultValue: T): T = when (this) {
+    is Success -> data
+    is Failure -> defaultValue
+}
+
+fun <T, R> UCResult<T>.getOrElse(transform: (T) -> R, defaultValue: R): R = when (this) {
+    is Success -> transform(data)
+    is Failure -> defaultValue
+}

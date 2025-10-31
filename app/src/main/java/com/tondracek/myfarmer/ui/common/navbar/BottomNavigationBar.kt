@@ -1,49 +1,33 @@
 package com.tondracek.myfarmer.ui.common.navbar
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import com.tondracek.myfarmer.R
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
 fun BottomNavigationBar() {
-    var selectedItem by remember { mutableIntStateOf(1) }
+    val viewmodel: NavBarViewModel = hiltViewModel()
+    val state by viewmodel.state.collectAsState()
 
     NavigationBar {
-        NavigationBarButton(
-            text = stringResource(R.string.recommended),
-            imageVector = Icons.Default.Star,
-            selected = selectedItem == 0,
-            onClick = { selectedItem = 0 }
-        )
-        NavigationBarButton(
-            text = stringResource(R.string.home),
-            imageVector = Icons.Default.Home,
-            selected = selectedItem == 1,
-            onClick = { selectedItem = 1 }
-        )
-        NavigationBarButton(
-            text = stringResource(R.string.settings),
-            imageVector = Icons.Default.Settings,
-            selected = selectedItem == 2,
-            onClick = { selectedItem = 2 }
-        )
+        navBarDestinations(state.loggedIn).forEachIndexed { index, item ->
+            NavigationBarButton(
+                text = item.text,
+                imageVector = item.imageVector,
+                selected = state.selectedItem == index,
+                onClick = { viewmodel.onItemSelected(index) }
+            )
+        }
     }
 }
 

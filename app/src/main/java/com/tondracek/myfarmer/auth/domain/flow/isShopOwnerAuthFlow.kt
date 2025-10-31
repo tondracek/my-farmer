@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 
 class IsShopOwnerAuthFlow @Inject constructor(
-    private val isLoggedInAuthFlow: IsLoggedInAuthFlow,
+    private val loggedInAuthFlow: LoggedInAuthFlow,
     private val isShopOwner: IsShopOwnerUC,
 ) {
 
@@ -19,7 +19,7 @@ class IsShopOwnerAuthFlow @Inject constructor(
     operator fun <T> invoke(
         shopId: ShopId,
         block: () -> Flow<UCResult<T>>
-    ): Flow<UCResult<T>> = isLoggedInAuthFlow { loggedUserId ->
+    ): Flow<UCResult<T>> = loggedInAuthFlow { loggedUserId ->
         isShopOwner(loggedUserId, shopId).flatMapLatest { shopOwnerResult ->
             when (shopOwnerResult) {
                 is UCResult.Failure -> flowOf(shopOwnerResult)
