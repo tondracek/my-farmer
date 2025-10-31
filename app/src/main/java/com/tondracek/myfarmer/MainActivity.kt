@@ -12,18 +12,34 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.stefanoq21.material3.navigation.ModalBottomSheetLayout
 import com.stefanoq21.material3.navigation.rememberBottomSheetNavigator
+import com.tondracek.myfarmer.review.data.ReviewRepository
+import com.tondracek.myfarmer.shop.data.ShopRepository
+import com.tondracek.myfarmer.shop.data.sampleReviews
+import com.tondracek.myfarmer.shop.data.sampleShops
+import com.tondracek.myfarmer.systemuser.data.UserRepository
+import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.mainshopscreen.MainShopsScreenRoute
 import com.tondracek.myfarmer.ui.mainshopscreen.mainShopsScreenDestination
 import com.tondracek.myfarmer.ui.shopbottomsheet.shopBottomSheetDestination
 import com.tondracek.myfarmer.ui.shopdetailscreen.shopDetailScreenDestination
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @Inject
+    lateinit var userRepository: UserRepository
+
+    @Inject
+    lateinit var shopRepository: ShopRepository
+
+    @Inject
+    lateinit var reviewRepository: ReviewRepository
 
     @Inject
     lateinit var navigator: AppNavigator
@@ -32,8 +48,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
 
+        setContent {
             MyFarmerTheme {
                 val bottomSheetNavigator = rememberBottomSheetNavigator()
                 val navController = rememberNavController(bottomSheetNavigator)
@@ -55,6 +71,12 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+
+        GlobalScope.launch {
+            sampleUsers.forEach { userRepository.create(it) }
+            sampleShops.forEach { shopRepository.create(it) }
+            sampleReviews.forEach { reviewRepository.create(it) }
         }
     }
 }

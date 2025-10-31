@@ -13,4 +13,6 @@
     <string name="categories">Kategorie</string>
     <string name="description">Popis</string>
     <string name="km">km</string>
+    <string name="product_menu">Menu</string>
+    <string name="no_products">Žádné produkty</string>
 </resources>

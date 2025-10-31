@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34Dark
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34Light
-import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.mainshopscreen.ShopsViewMode
 
 @Composable

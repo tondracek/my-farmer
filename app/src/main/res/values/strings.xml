@@ -12,4 +12,8 @@
     <string name="categories">Categories</string>
     <string name="description">Description</string>
     <string name="km">km</string>
+    <string name="product_menu">Menu</string>
+    <string name="no_products">No products</string>
+    <string name="in_stock">In stock</string>
+    <string name="out_of_stock">Out of stock</string>
 </resources>

@@ -15,7 +15,7 @@ import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.core.preview.AsyncImagePreviewFix
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
-import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.shopslistview.components.ShopListItemCard
 import com.tondracek.myfarmer.ui.shopslistview.components.ShopListViewItem
 import com.tondracek.myfarmer.ui.shopslistview.components.toListItem

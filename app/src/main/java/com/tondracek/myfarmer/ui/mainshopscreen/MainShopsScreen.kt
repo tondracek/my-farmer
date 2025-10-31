@@ -20,7 +20,7 @@ import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.ui.common.navbar.BottomNavigationBar
 import com.tondracek.myfarmer.ui.common.topbar.FloatingTopBar
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
-import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.mainshopscreen.components.ViewModeSwitcher
 import kotlinx.coroutines.launch
 

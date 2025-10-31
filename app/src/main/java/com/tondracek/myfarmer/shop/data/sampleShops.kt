@@ -6,6 +6,7 @@ import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.productmenu.domain.model.ProductPrice
+import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
@@ -65,7 +66,19 @@ val shop1 = Shop(
     images = listOf(
         ImageResource("https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Beekeeper_with_moveable_comb_hive.jpg/1024px-Beekeeper_with_moveable_comb_hive.jpg"),
         ImageResource("https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Western_honey_bee_on_a_honeycomb.jpg/1280px-Western_honey_bee_on_a_honeycomb.jpg"),
-        ImageResource("https://justbeehoney.co.uk/cdn/shop/articles/104740553_l2_5000x.jpg")
+        ImageResource("https://justbeehoney.co.uk/cdn/shop/articles/104740553_l2_5000x.jpg"),
+        ImageResource("https://picsum.photos/400/300"),
+        ImageResource("https://picsum.photos/200/400"),
+        ImageResource("https://picsum.photos/600/100"),
+        ImageResource("https://picsum.photos/400/301"),
+        ImageResource("https://picsum.photos/200/401"),
+        ImageResource("https://picsum.photos/600/101"),
+        ImageResource("https://picsum.photos/400/302"),
+        ImageResource("https://picsum.photos/200/402"),
+        ImageResource("https://picsum.photos/600/102"),
+        ImageResource("https://picsum.photos/400/303"),
+        ImageResource("https://picsum.photos/200/403"),
+        ImageResource("https://picsum.photos/600/103"),
     ),
     location = ShopLocation(49.209166, 16.556608),
     categories = listOf(
@@ -79,6 +92,24 @@ val shop1 = Shop(
                 description = "Kvalitní med z naší domácí produkce.",
                 price = ProductPrice("150 CZK / kg"),
                 inStock = true,
+            ),
+            MenuItem(
+                name = "Včelí vosk",
+                description = "Přírodní včelí vosk pro různé využití.",
+                price = ProductPrice("200 CZK / kg"),
+                inStock = true,
+            ),
+            MenuItem(
+                name = "Propolis",
+                description = "Léčivá pryskyřice sbíraná včelami.",
+                price = ProductPrice("300 CZK / 100 g"),
+                inStock = false,
+            ),
+            MenuItem(
+                name = "Rámky na plástve",
+                description = "Dřevěné rámky pro včelí plástve.",
+                price = ProductPrice("50 CZK / kus"),
+                inStock = true,
             )
         )
     ),
@@ -88,8 +119,14 @@ val shop1 = Shop(
 )
 
 val shop1reviews = listOf(
-    Review(UUID.randomUUID(), user0.id, 5, "Amazing"),
-    Review(UUID.randomUUID(), user2.id, 4, "Very good"),
+    Review(UUID.randomUUID(), shop1.id, user0.id, Rating(5), "Amazing"),
+    Review(UUID.randomUUID(), shop1.id, user2.id, Rating(1), "I didn't like it"),
+    Review(UUID.randomUUID(), shop1.id, user1.id, Rating(2), "ExampleReview"),
+    Review(UUID.randomUUID(), shop1.id, user1.id, Rating(2), "ExampleReview"),
+    Review(UUID.randomUUID(), shop1.id, user1.id, Rating(2), "ExampleReview"),
+    Review(UUID.randomUUID(), shop1.id, user1.id, Rating(2), "ExampleReview"),
+    Review(UUID.randomUUID(), shop1.id, user1.id, Rating(2), "ExampleReview"),
+    Review(UUID.randomUUID(), shop1.id, user1.id, Rating(2), "ExampleReview"),
 )
 
 val shop2 = Shop(
@@ -130,8 +167,8 @@ val shop2 = Shop(
 )
 
 val shop2reviews = listOf(
-    Review(UUID.randomUUID(), user0.id, 5, "Amazing"),
-    Review(UUID.randomUUID(), user1.id, 2, "Nuh, average"),
+    Review(UUID.randomUUID(), shop2.id, user0.id, Rating(5), "Amazing"),
+    Review(UUID.randomUUID(), shop2.id, user1.id, Rating(2), "Nuh, average"),
 )
 
 val shop3 = Shop(
@@ -161,10 +198,14 @@ val shop3 = Shop(
 )
 
 val shop3reviews = listOf(
-    Review(UUID.randomUUID(), user0.id, 5, "Amazing"),
-    Review(UUID.randomUUID(), user1.id, 2, "Nuh, average"),
+    Review(UUID.randomUUID(), shop3.id, user0.id, Rating(5), "Amazing"),
+    Review(UUID.randomUUID(), shop3.id, user1.id, Rating(2), "Nuh, average"),
 )
 
 val sampleShops: List<Shop> by lazy {
     listOf(shop0, shop1, shop2, shop3)
+}
+
+val sampleReviews: List<Review> by lazy {
+    listOf(shop0reviews, shop1reviews, shop2reviews, shop3reviews).flatten()
 }

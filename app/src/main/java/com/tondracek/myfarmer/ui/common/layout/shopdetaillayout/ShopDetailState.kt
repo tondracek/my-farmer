@@ -4,6 +4,7 @@ import com.tondracek.myfarmer.common.model.ImageResource
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
+import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
@@ -25,6 +26,7 @@ sealed interface ShopDetailState {
         val location: ShopLocation,
         val openingHours: OpeningHours,
         val reviewsPreview: List<Review>,
+        val averageRating: Rating,
     ) : ShopDetailState
 
     data class Error(val result: UCResult.Failure) : ShopDetailState
@@ -35,6 +37,7 @@ sealed interface ShopDetailState {
 fun Shop.toShopDetailState(
     owner: SystemUser,
     reviewsPreview: List<Review>,
+    averageRating: Rating,
 ): ShopDetailState.Success =
     ShopDetailState.Success(
         id = this.id,
@@ -47,4 +50,5 @@ fun Shop.toShopDetailState(
         location = this.location,
         openingHours = this.openingHours,
         reviewsPreview = reviewsPreview,
+        averageRating = averageRating,
     )

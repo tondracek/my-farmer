@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.ui.common.iconbutton.ProfileIconButton
 import com.tondracek.myfarmer.ui.common.iconbutton.ToggleSideMenuIconButton
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
-import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

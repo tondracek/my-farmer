@@ -23,10 +23,10 @@ class ReviewRepository @Inject constructor(
         setLimit(3)
     }.let { this.get(it) }
 
-    fun getReviews(shopId: ShopId, offset: Int, limit: Int): Flow<List<Review>> =
+    fun getReviews(shopId: ShopId, offset: Int? = null, limit: Int? = null): Flow<List<Review>> =
         repositoryRequest {
             addFilters(ReviewEntity::shopId filterEq shopId.toString())
-            setOffset(offset)
-            setLimit(limit)
+            offset?.let { setOffset(offset) }
+            limit?.let { setLimit(limit) }
         }.let { this.get(it) }
 }

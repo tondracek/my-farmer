@@ -13,4 +13,6 @@ data class MenuItem(
 
 data class ProductPrice(
     val value: String,
-)
+) {
+    override fun toString(): String = value
+}

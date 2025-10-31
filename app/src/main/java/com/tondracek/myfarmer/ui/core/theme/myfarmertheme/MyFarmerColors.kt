@@ -51,7 +51,13 @@ val farmerLightColors: MyFarmerColors = MyFarmerColors(
     surfaceContainerLow = Color(0xFFF2F5EB),
     surfaceContainer = Color(0xFFECEFE6),
     surfaceContainerHigh = Color(0xFFE6E9E0),
-    surfaceContainerHighest = Color(0xFFE0E4DA)
+    surfaceContainerHighest = Color(0xFFE0E4DA),
+
+    line = Color(0xFFE7E7E7),
+    ratingStars = Color(0xFFFFC107),
+
+    text = Color(0xFF000000),
+    textInvert = Color(0xFFFFFFFF),
 )
 
 val farmerDarkColors: MyFarmerColors = MyFarmerColors(
@@ -98,7 +104,13 @@ val farmerDarkColors: MyFarmerColors = MyFarmerColors(
     surfaceContainerLow = Color(0xFF191D17),
     surfaceContainer = Color(0xFF1D211B),
     surfaceContainerHigh = Color(0xFF272B25),
-    surfaceContainerHighest = Color(0xFF323630)
+    surfaceContainerHighest = Color(0xFF323630),
+
+    line = Color(0xFF1F1F1F),
+    ratingStars = Color(0xFFFFC107),
+
+    text = Color(0xFFFFFFFF),
+    textInvert = Color(0xFF000000),
 )
 
 @Stable
@@ -148,4 +160,10 @@ data class MyFarmerColors(
     val surfaceContainerHighest: Color,
     val surfaceContainerLow: Color,
     val surfaceContainerLowest: Color,
+
+    val line: Color,
+    val ratingStars: Color,
+
+    val text: Color,
+    val textInvert: Color,
 )

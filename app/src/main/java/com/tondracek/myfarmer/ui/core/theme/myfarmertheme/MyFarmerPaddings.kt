@@ -11,11 +11,13 @@ internal val LocalMyFarmerPaddings = staticCompositionLocalOf { myFarmerPaddings
 val myFarmerPaddings = MyFarmerPaddings(
     extraSmall = 4.dp,
     small = 8.dp,
-    smallMedium = 12.dp,
-    medium = 16.dp,
-    mediumLarge = 20.dp,
-    large = 24.dp,
+    smallMedium = 10.dp,
+    medium = 12.dp,
+    mediumLarge = 14.dp,
+    large = 16.dp,
     extraLarge = 32.dp,
+    xxL = 48.dp,
+    xxxL = 64.dp,
 )
 
 @Stable
@@ -28,4 +30,6 @@ data class MyFarmerPaddings(
     val mediumLarge: Dp,
     val large: Dp,
     val extraLarge: Dp,
+    val xxL: Dp,
+    val xxxL: Dp,
 )

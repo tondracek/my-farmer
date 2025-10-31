@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.common.usecase.GetByIdUC
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.getOrReturn
+import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.usecase.GetReviewsPreviewUC
+import com.tondracek.myfarmer.review.domain.usecase.GetShopAverageRatingUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
@@ -32,6 +34,7 @@ class ShopBottomSheetViewModel @Inject constructor(
     getShopById: GetByIdUC<Shop>,
     getUserById: GetByIdUC<SystemUser>,
     getReviewsPreview: GetReviewsPreviewUC,
+    getShopAverageRating: GetShopAverageRatingUC,
     private val navigator: AppNavigator
 ) : ViewModel() {
 
@@ -51,17 +54,23 @@ class ShopBottomSheetViewModel @Inject constructor(
     private val reviewsPreview: Flow<UCResult<List<Review>>> =
         shopId.flatMapLatest { getReviewsPreview(it) }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val averageRating: Flow<UCResult<Rating>> =
+        shopId.flatMapLatest { getShopAverageRating(it) }
+
 
     val state: StateFlow<ShopDetailState> = combine(
         shop,
         owner,
         reviewsPreview,
-    ) { shopResult, ownerResult, reviewsResult ->
+        averageRating
+    ) { shopResult, ownerResult, reviewsResult, averageRating ->
         val shop = shopResult.getOrReturn { return@combine ShopDetailState.Error(it) }
         val owner = ownerResult.getOrReturn { return@combine ShopDetailState.Error(it) }
         val reviews = reviewsResult.getOrReturn { return@combine ShopDetailState.Error(it) }
+        val averageRating = averageRating.getOrReturn { return@combine ShopDetailState.Error(it) }
 
-        shop.toShopDetailState(owner, reviews)
+        shop.toShopDetailState(owner, reviews, averageRating)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Companion.WhileSubscribed(5_000),

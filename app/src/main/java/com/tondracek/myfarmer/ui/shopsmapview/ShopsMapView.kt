@@ -17,7 +17,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.tondracek.myfarmer.shop.domain.model.ShopId
-import com.tondracek.myfarmer.ui.core.theme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalPermissionsApi::class)
