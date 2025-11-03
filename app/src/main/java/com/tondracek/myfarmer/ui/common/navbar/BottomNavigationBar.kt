@@ -6,26 +6,23 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
-fun BottomNavigationBar() {
-    val viewmodel: NavBarViewModel = hiltViewModel()
-    val state by viewmodel.state.collectAsState()
-
+fun BottomNavigationBar(
+    state: NavBarState,
+    onItemSelected: (Int) -> Unit,
+) {
     NavigationBar {
         navBarDestinations(state.loggedIn).forEachIndexed { index, item ->
             NavigationBarButton(
                 text = item.text,
                 imageVector = item.imageVector,
                 selected = state.selectedItem == index,
-                onClick = { viewmodel.onItemSelected(index) }
+                onClick = { onItemSelected(index) }
             )
         }
     }
@@ -57,6 +54,12 @@ private fun RowScope.NavigationBarButton(
 @Composable
 private fun BottomNavigationBarPreview() {
     MyFarmerTheme {
-        BottomNavigationBar()
+        BottomNavigationBar(
+            state = NavBarState(
+                selectedItem = 1,
+                loggedIn = true,
+            ),
+            onItemSelected = {}
+        )
     }
 }

@@ -9,4 +9,18 @@ data class SystemUser(
     val id: UserId,
     val name: String,
     val profilePicture: ImageResource,
+    val contactInfo: ContactInfo,
+)
+
+data class ContactInfo(
+    val phoneNumber: String?,
+    val email: String?,
+    val website: MediaLink?,
+    val facebook: MediaLink?,
+    val instagram: MediaLink?,
+)
+
+data class MediaLink(
+    val title: String,
+    val url: String,
 )

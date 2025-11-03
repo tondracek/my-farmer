@@ -12,7 +12,6 @@ import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 
-
 sealed interface ShopDetailState {
 
     data class Success(

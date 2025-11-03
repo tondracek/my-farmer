@@ -30,6 +30,10 @@ val myFarmerTypography = MyFarmerTypography(
         fontSize = 12.sp,
         fontWeight = FontWeight.W400,
     ),
+    topbarTitle = TextStyle(
+        fontSize = 18.sp,
+        fontWeight = FontWeight.W600,
+    ),
 )
 
 @Stable
@@ -41,4 +45,5 @@ data class MyFarmerTypography(
     val textLarge: TextStyle,
     val textMedium: TextStyle,
     val textSmall: TextStyle,
+    val topbarTitle: TextStyle,
 )

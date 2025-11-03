@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.shopslistview.ShopsListView
 import com.tondracek.myfarmer.ui.shopslistview.ShopsListViewModel
 import com.tondracek.myfarmer.ui.shopsmapview.ShopsMapView
@@ -13,6 +14,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data object MainShopsScreenRoute
+
+fun AppNavigator.navigateToMainShopScreen() =
+    navigate(MainShopsScreenRoute)
 
 fun NavGraphBuilder.mainShopsScreenDestination() {
     composable<MainShopsScreenRoute> {

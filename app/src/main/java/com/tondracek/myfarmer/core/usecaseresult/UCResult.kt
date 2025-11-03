@@ -37,18 +37,13 @@ sealed interface UCResult<out T> {
  * - For `UseCaseResult.Success` returns the `data` value
  * - For `UseCaseResult.Failure` applies the `block` function that can return some value
  */
-inline fun <T> UCResult<T>.getOrReturn(block: (UCResult.Failure) -> Nothing): T =
+inline fun <T> UCResult<T>.getOrReturn(block: (Failure) -> Nothing): T =
     when (this) {
-        is UCResult.Success -> data
-        is UCResult.Failure -> block(this)
+        is Success -> data
+        is Failure -> block(this)
     }
 
 fun <T> UCResult<T>.getOrElse(defaultValue: T): T = when (this) {
     is Success -> data
-    is Failure -> defaultValue
-}
-
-fun <T, R> UCResult<T>.getOrElse(transform: (T) -> R, defaultValue: R): R = when (this) {
-    is Success -> transform(data)
     is Failure -> defaultValue
 }

@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -18,8 +17,10 @@ import com.tondracek.myfarmer.shop.data.sampleReviews
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.systemuser.data.UserRepository
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
+import com.tondracek.myfarmer.ui.core.appstate.AppScaffold
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.editprofilescreen.editProfileDestination
 import com.tondracek.myfarmer.ui.mainshopscreen.MainShopsScreenRoute
 import com.tondracek.myfarmer.ui.mainshopscreen.mainShopsScreenDestination
 import com.tondracek.myfarmer.ui.shopbottomsheet.shopBottomSheetDestination
@@ -55,7 +56,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController(bottomSheetNavigator)
                 navigator.navController = navController
 
-                Surface {
+                AppScaffold {
                     ModalBottomSheetLayout(
                         modifier = Modifier.fillMaxSize(),
                         bottomSheetNavigator = bottomSheetNavigator
@@ -67,6 +68,7 @@ class MainActivity : ComponentActivity() {
                             mainShopsScreenDestination()
                             shopBottomSheetDestination()
                             shopDetailScreenDestination()
+                            editProfileDestination()
                         }
                     }
                 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Farmer</string>
+    <string name="app_name">Můj farmář</string>
     <string name="map">Mapa</string>
     <string name="list">Seznam</string>
     <string name="shops_map">Mapa Obchodů</string>

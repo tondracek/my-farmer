@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,8 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.tondracek.myfarmer.ui.common.iconbutton.ProfileIconButton
-import com.tondracek.myfarmer.ui.common.iconbutton.ToggleSideMenuIconButton
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
@@ -24,8 +23,8 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 fun FloatingTopBar(
     modifier: Modifier = Modifier,
     title: String,
-    onToggleSideMenu: () -> Unit,
-    onProfileClick: () -> Unit,
+    leftIconContent: @Composable () -> Unit = {},
+    rightIconContent: @Composable () -> Unit = {},
 ) {
     Surface(
         modifier = modifier
@@ -41,19 +40,21 @@ fun FloatingTopBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+                .padding(horizontal = 12.dp, vertical = 8.dp)
+                .heightIn(min = 48.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            ToggleSideMenuIconButton(onToggleSideMenu)
+            leftIconContent()
             Text(
                 modifier = Modifier
                     .weight(1f)
                     .animateContentSize(),
                 text = title,
                 textAlign = TextAlign.Center,
+                style = MyFarmerTheme.typography.topbarTitle,
             )
-            ProfileIconButton(onProfileClick)
+            rightIconContent()
         }
     }
 }
@@ -64,8 +65,6 @@ private fun RoundedTopBarPreview() {
     MyFarmerTheme {
         FloatingTopBar(
             title = "My Farmer",
-            onToggleSideMenu = {},
-            onProfileClick = {}
         )
     }
 }

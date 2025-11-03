@@ -4,10 +4,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -17,8 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.ui.common.navbar.BottomNavigationBar
-import com.tondracek.myfarmer.ui.common.topbar.FloatingTopBar
+import com.tondracek.myfarmer.ui.core.appstate.LocalAppUiController
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.mainshopscreen.components.ViewModeSwitcher
@@ -26,70 +25,75 @@ import kotlinx.coroutines.launch
 
 enum class ShopsViewMode { Map, List }
 
-private fun ShopsViewMode.toPage(): Int = this.ordinal
-private fun Int.toShopsViewMode(): ShopsViewMode =
+fun ShopsViewMode.toPage(): Int = this.ordinal
+fun Int.toShopsViewMode(): ShopsViewMode =
     ShopsViewMode.entries.getOrElse(this) { ShopsViewMode.Map }
-
-private val pageCount = ShopsViewMode.entries.size
 
 @Composable
 fun MainShopsScreen(
     mapView: @Composable (Modifier) -> Unit,
     listView: @Composable (Modifier) -> Unit,
 ) {
+    val appUiStateController = LocalAppUiController.current
     val coroutineScope = rememberCoroutineScope()
 
     val pagerState = rememberPagerState(
-        pageCount = { pageCount },
+        pageCount = { ShopsViewMode.entries.size },
         initialPage = ShopsViewMode.Map.toPage(),
     )
 
-    fun switchViewMode(viewMode: ShopsViewMode) = coroutineScope.launch {
-        pagerState.animateScrollToPage(viewMode.toPage())
+    val currentPage by remember {
+        derivedStateOf { pagerState.currentPage }
     }
 
-    val currentViewMode by remember {
-        derivedStateOf { pagerState.currentPage.toShopsViewMode() }
+    fun switchPage(page: Int) = coroutineScope.launch {
+        pagerState.animateScrollToPage(page)
     }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        bottomBar = { BottomNavigationBar() }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            HorizontalPager(
-                state = pagerState,
-                userScrollEnabled = false
-            ) { page ->
-                when (page.toShopsViewMode()) {
-                    ShopsViewMode.Map -> mapView(Modifier.fillMaxSize())
-                    ShopsViewMode.List -> listView(Modifier.fillMaxSize())
-                }
+    ShopsPager(
+        pagerState = pagerState,
+        mapView = mapView,
+        listView = listView,
+        onSwitchMode = { switchPage(it.toPage()) },
+        currentMode = currentPage.toShopsViewMode()
+    )
+
+    val title = when (currentPage.toShopsViewMode()) {
+        ShopsViewMode.Map -> stringResource(R.string.shops_map)
+        ShopsViewMode.List -> stringResource(R.string.shops_list)
+    }
+    LaunchedEffect(title) {
+        appUiStateController.updateTitle(title)
+    }
+}
+
+@Composable
+private fun ShopsPager(
+    pagerState: PagerState,
+    mapView: @Composable (Modifier) -> Unit,
+    listView: @Composable (Modifier) -> Unit,
+    onSwitchMode: (ShopsViewMode) -> Unit,
+    currentMode: ShopsViewMode
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        HorizontalPager(
+            state = pagerState,
+            userScrollEnabled = false
+        ) { page ->
+            when (page.toShopsViewMode()) {
+                ShopsViewMode.Map -> mapView(Modifier.fillMaxSize())
+                ShopsViewMode.List -> listView(Modifier.fillMaxSize())
             }
-
-            ViewModeSwitcher(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(16.dp),
-                selectedMode = currentViewMode,
-                onMapClick = { switchViewMode(ShopsViewMode.Map) },
-                onListClick = { switchViewMode(ShopsViewMode.List) },
-            )
-
-            FloatingTopBar(
-                modifier = Modifier.align(Alignment.TopCenter),
-                title = when (currentViewMode) {
-                    ShopsViewMode.Map -> stringResource(R.string.shops_map)
-                    ShopsViewMode.List -> stringResource(R.string.shops_list)
-                },
-                onToggleSideMenu = {},
-                onProfileClick = {}
-            )
         }
+
+        ViewModeSwitcher(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp),
+            selectedMode = currentMode,
+            onMapClick = { onSwitchMode(ShopsViewMode.Map) },
+            onListClick = { onSwitchMode(ShopsViewMode.List) },
+        )
     }
 }
 
