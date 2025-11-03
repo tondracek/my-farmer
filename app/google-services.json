@@ -12,7 +12,20 @@
           "package_name": "com.tondracek.myfarmer"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "248652196071-b1ujid57attf3tvhhmh36jplkjo5dmo3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tondracek.myfarmer",
+            "certificate_hash": "3c627cc1030ab32e5d894e0c203429b813ed97db"
+          }
+        },
+        {
+          "client_id": "248652196071-a5qg23m3stldk4innhvllcd6h2ikpfo9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBtZKhfg7BuoE5aUvBQulpmlfPj6qNs88A"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "248652196071-a5qg23m3stldk4innhvllcd6h2ikpfo9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

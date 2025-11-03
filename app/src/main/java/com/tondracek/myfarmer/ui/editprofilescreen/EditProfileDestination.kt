@@ -20,7 +20,10 @@ fun NavGraphBuilder.editProfileDestination() {
         val state by viewmodel.state.collectAsState()
 
         EditProfileScreen(
-            state = state
+            state = state,
+            onNameChange = viewmodel::onNameChange,
+            onProfilePictureChange = viewmodel::onProfilePictureChange,
+            onContactInfoChange = viewmodel::onContactInfoChange,
         )
     }
 }

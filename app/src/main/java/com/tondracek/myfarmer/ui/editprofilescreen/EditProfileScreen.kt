@@ -7,24 +7,35 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.common.model.ImageResource
-import com.tondracek.myfarmer.systemuser.domain.model.ContactInfo
-import com.tondracek.myfarmer.systemuser.domain.model.MediaLink
+import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
+import com.tondracek.myfarmer.contactinfo.domain.model.MediaLink
 import com.tondracek.myfarmer.ui.common.image.ImageView
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 
 @Composable
 fun EditProfileScreen(
-    state: EditProfileScreenState
+    state: EditProfileScreenState,
+    onNameChange: (String) -> Unit = {},
+    onProfilePictureChange: (ImageResource) -> Unit,
+    onContactInfoChange: (ContactInfo) -> Unit
 ) {
     when (state) {
-        is EditProfileScreenState.Success -> SuccessScreen(state)
+        is EditProfileScreenState.Success -> SuccessScreen(
+            state = state,
+            onNameChange = onNameChange,
+            onProfilePictureChange = onProfilePictureChange,
+            onContactInfoChange = onContactInfoChange,
+        )
+
         EditProfileScreenState.Loading -> LoadingLayout()
         is EditProfileScreenState.Error -> Text(text = state.result.userError)
     }
@@ -33,6 +44,9 @@ fun EditProfileScreen(
 @Composable
 private fun SuccessScreen(
     state: EditProfileScreenState.Success,
+    onNameChange: (String) -> Unit,
+    onProfilePictureChange: (ImageResource) -> Unit,
+    onContactInfoChange: (ContactInfo) -> Unit,
 ) {
     Column(Modifier.fillMaxSize()) {
         ImageView(
@@ -43,7 +57,34 @@ private fun SuccessScreen(
                 .clip(CircleShape),
             imageResource = state.profilePicture
         )
+        TextField(
+            value = TextFieldValue(state.profilePicture.uri ?: ""),
+            onValueChange = { onProfilePictureChange(ImageResource(uri = it.text)) },
+        )
+
+        NameField(
+            modifier = Modifier.fillMaxWidth(),
+            name = state.name,
+            onNameChange = onNameChange,
+        )
     }
+}
+
+@Composable
+private fun NameField(
+    modifier: Modifier = Modifier,
+    name: String,
+    onNameChange: (String) -> Unit,
+) {
+    val textFieldValue = TextFieldValue(text = name)
+
+    TextField(
+        modifier = modifier,
+        value = textFieldValue,
+        onValueChange = { newValue ->
+            onNameChange(newValue.text)
+        },
+    )
 }
 
 @Preview
@@ -61,7 +102,10 @@ private fun EditProfileScreenPreview() {
                     facebook = MediaLink("facebook", "fb.com/johndoe"),
                     instagram = MediaLink("instagram", "instagram.com/johndoe"),
                 )
-            )
+            ),
+            onNameChange = {},
+            onProfilePictureChange = {},
+            onContactInfoChange = {}
         )
     }
 }

@@ -18,4 +18,5 @@
     <string name="out_of_stock">Out of stock</string>
     <string name="profile">Profile</string>
     <string name="my_shops">My shops</string>
+    <string name="login">Login</string>
 </resources>

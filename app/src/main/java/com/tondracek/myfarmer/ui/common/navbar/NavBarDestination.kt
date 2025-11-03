@@ -35,6 +35,11 @@ fun navBarDestinations(loggedIn: Boolean): List<NavBarDestination> = listOfNotNu
         text = stringResource(R.string.profile),
         imageVector = Icons.Default.Person,
         onNavigate = { it.navigateToEditProfileScreen() }
-    ),
+    ).takeIf { loggedIn },
+    NavBarDestination(
+        text = stringResource(R.string.login),
+        imageVector = Icons.Default.Person,
+        onNavigate = { it.navigateToEditProfileScreen() }
+    )
 )
 
