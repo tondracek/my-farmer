@@ -12,7 +12,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.common.model.ImageResource
@@ -62,8 +61,8 @@ private fun SuccessScreen(
             imageResource = state.profilePicture
         )
         TextField(
-            value = TextFieldValue(state.profilePicture.uri ?: ""),
-            onValueChange = { onProfilePictureChange(ImageResource(uri = it.text)) },
+            value = state.profilePicture.uri ?: "",
+            onValueChange = { onProfilePictureChange(ImageResource(uri = it)) },
         )
 
         NameField(
