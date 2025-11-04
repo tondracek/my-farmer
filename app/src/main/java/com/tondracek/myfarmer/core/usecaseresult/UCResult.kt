@@ -31,6 +31,11 @@ sealed interface UCResult<out T> {
         is Success -> data
         is Failure -> null
     }
+
+    fun <R>fold(onSuccess: (T) -> R, onFailure: (Failure) -> R) = when (this) {
+        is Success -> onSuccess(data)
+        is Failure -> onFailure(this)
+    }
 }
 
 /**
@@ -46,4 +51,9 @@ inline fun <T> UCResult<T>.getOrReturn(block: (Failure) -> Nothing): T =
 fun <T> UCResult<T>.getOrElse(defaultValue: T): T = when (this) {
     is Success -> data
     is Failure -> defaultValue
+}
+
+inline fun <T> UCResult<T>.getOrElse(defaultValue: (Failure) -> T): T = when (this) {
+    is Success -> data
+    is Failure -> defaultValue(this)
 }

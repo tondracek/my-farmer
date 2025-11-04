@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.core.repository.firestore
 
+import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
@@ -63,6 +64,9 @@ class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
     }
 
     override fun get(request: RepositoryRequest): Flow<List<Model>> {
+        if (request.filters.isEmpty())
+            Log.w("FirestoreRepositoryCore", "Request doesn't have any filters set")
+
         val query: Query = db.collection(collectionName)
             .applyFilters(request.filters)
             .applySorts(request.sorts)

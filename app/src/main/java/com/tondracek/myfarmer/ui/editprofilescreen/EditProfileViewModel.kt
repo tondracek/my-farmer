@@ -1,6 +1,5 @@
 package com.tondracek.myfarmer.ui.editprofilescreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
@@ -8,13 +7,13 @@ import com.tondracek.myfarmer.common.model.ImageResource
 import com.tondracek.myfarmer.common.usecase.UpdateUC
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -31,23 +30,20 @@ class EditProfileViewModel @Inject constructor(
     private val _state: MutableStateFlow<EditProfileScreenState> =
         MutableStateFlow(EditProfileScreenState.Loading)
 
-    val state: StateFlow<EditProfileScreenState> = _state.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = EditProfileScreenState.Loading
-    )
+    val state: StateFlow<EditProfileScreenState> = _state
 
     init {
         viewModelScope.launch {
-            getLoggedInUserUC().collect {
-                _state.value = when (it) {
-                    is UCResult.Success -> it.data.toUiState()
-                    is UCResult.Failure -> EditProfileScreenState.Error(result = it)
+            getLoggedInUserUC().collectLatest { result ->
+                _state.update { prevState ->
+                    result.map {
+                        when (prevState) {
+                            is EditProfileScreenState.Success -> prevState
+                            else -> it.toUiState()
+                        }
+                    }.getOrElse { EditProfileScreenState.Error(result = it) }
                 }
-                _user.value = when (it) {
-                    is UCResult.Success -> it.data
-                    is UCResult.Failure -> null
-                }
+                _user.value = result.getOrNull()
             }
         }
     }
@@ -69,11 +65,9 @@ class EditProfileViewModel @Inject constructor(
         val currentState = _state.value as? EditProfileScreenState.Success ?: return@launch
 
         val updatedUser = currentState.toSystemUser(currentUser.id, currentUser.firebaseId)
-        when (updateUserUC(updatedUser)) {
+        when (val result = updateUserUC(updatedUser)) {
             is UCResult.Success -> navigateBack()
-            is UCResult.Failure -> {
-                Log.e("EditProfileViewModel", "Failed to update user profile")
-            }
+            is UCResult.Failure -> _state.update { EditProfileScreenState.Error(result = result) }
         }
     }
 
@@ -102,13 +96,11 @@ class EditProfileViewModel @Inject constructor(
         when (it) {
             is EditProfileScreenState.Success -> update(it)
 
-            else -> update(
-                EditProfileScreenState.Success(
-                    name = "",
-                    profilePicture = ImageResource.EMPTY,
-                    contactInfo = ContactInfo.EMPTY
-                )
-            )
+            else -> EditProfileScreenState.Success(
+                name = "",
+                profilePicture = ImageResource.EMPTY,
+                contactInfo = ContactInfo.EMPTY
+            ).let { newSuccessState -> update(newSuccessState) }
         }
     }
 
