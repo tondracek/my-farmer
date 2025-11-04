@@ -14,6 +14,7 @@ import java.util.UUID
 @FirestoreCollection("user")
 data class UserEntity(
     override var id: String = "",
+    val firebaseId: String = "",
     val name: String = "",
     val profilePicture: String? = null,
     val contactInfo: ContactInfoEntity = ContactInfoEntity(),
@@ -21,6 +22,7 @@ data class UserEntity(
 
 fun SystemUser.toEntity() = UserEntity(
     id = id.toString(),
+    firebaseId = firebaseId,
     name = name,
     profilePicture = profilePicture.uri,
     contactInfo = contactInfo.toEntity()
@@ -28,6 +30,7 @@ fun SystemUser.toEntity() = UserEntity(
 
 fun UserEntity.toModel() = SystemUser(
     id = UUID.fromString(id),
+    firebaseId = firebaseId,
     name = name,
     profilePicture = ImageResource(profilePicture),
     contactInfo = contactInfo.toModel()

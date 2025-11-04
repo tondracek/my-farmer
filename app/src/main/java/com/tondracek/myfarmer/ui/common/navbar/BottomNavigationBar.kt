@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
@@ -15,6 +16,7 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 fun BottomNavigationBar(
     state: NavBarState,
     onItemSelected: (Int) -> Unit,
+    onNavigate: (Route) -> Unit,
 ) {
     NavigationBar {
         navBarDestinations(state.loggedIn).forEachIndexed { index, item ->
@@ -22,7 +24,10 @@ fun BottomNavigationBar(
                 text = item.text,
                 imageVector = item.imageVector,
                 selected = state.selectedItem == index,
-                onClick = { onItemSelected(index) }
+                onClick = {
+                    onItemSelected(index)
+                    onNavigate(item.route)
+                }
             )
         }
     }
@@ -59,7 +64,8 @@ private fun BottomNavigationBarPreview() {
                 selectedItem = 1,
                 loggedIn = true,
             ),
-            onItemSelected = {}
+            onItemSelected = {},
+            onNavigate = {},
         )
     }
 }

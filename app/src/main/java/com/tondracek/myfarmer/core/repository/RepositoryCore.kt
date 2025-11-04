@@ -6,7 +6,7 @@ import java.util.UUID
 
 interface RepositoryCore<Model> {
 
-    suspend fun create(item: Model)
+    suspend fun create(item: Model): UUID
 
     suspend fun update(item: Model): Boolean
 

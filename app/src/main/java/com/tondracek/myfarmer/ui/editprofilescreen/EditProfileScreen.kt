@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -26,7 +27,8 @@ fun EditProfileScreen(
     state: EditProfileScreenState,
     onNameChange: (String) -> Unit = {},
     onProfilePictureChange: (ImageResource) -> Unit,
-    onContactInfoChange: (ContactInfo) -> Unit
+    onContactInfoChange: (ContactInfo) -> Unit,
+    onSaveClick: () -> Unit,
 ) {
     when (state) {
         is EditProfileScreenState.Success -> SuccessScreen(
@@ -34,6 +36,7 @@ fun EditProfileScreen(
             onNameChange = onNameChange,
             onProfilePictureChange = onProfilePictureChange,
             onContactInfoChange = onContactInfoChange,
+            onSaveClick = onSaveClick,
         )
 
         EditProfileScreenState.Loading -> LoadingLayout()
@@ -47,6 +50,7 @@ private fun SuccessScreen(
     onNameChange: (String) -> Unit,
     onProfilePictureChange: (ImageResource) -> Unit,
     onContactInfoChange: (ContactInfo) -> Unit,
+    onSaveClick: () -> Unit,
 ) {
     Column(Modifier.fillMaxSize()) {
         ImageView(
@@ -67,6 +71,8 @@ private fun SuccessScreen(
             name = state.name,
             onNameChange = onNameChange,
         )
+
+        Button(onClick = onSaveClick) { Text(text = "Save") }
     }
 }
 
@@ -76,14 +82,10 @@ private fun NameField(
     name: String,
     onNameChange: (String) -> Unit,
 ) {
-    val textFieldValue = TextFieldValue(text = name)
-
     TextField(
         modifier = modifier,
-        value = textFieldValue,
-        onValueChange = { newValue ->
-            onNameChange(newValue.text)
-        },
+        value = name,
+        onValueChange = { newValue -> onNameChange(newValue) },
     )
 }
 
@@ -105,7 +107,8 @@ private fun EditProfileScreenPreview() {
             ),
             onNameChange = {},
             onProfilePictureChange = {},
-            onContactInfoChange = {}
+            onContactInfoChange = {},
+            onSaveClick = {},
         )
     }
 }

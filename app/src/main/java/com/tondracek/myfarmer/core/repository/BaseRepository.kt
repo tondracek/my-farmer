@@ -8,7 +8,7 @@ abstract class BaseRepository<Model>(
     private val core: RepositoryCore<Model>
 ) : Repository<Model> {
 
-    override suspend fun create(item: Model) = core.create(item)
+    override suspend fun create(item: Model): UUID = core.create(item)
 
     override suspend fun update(item: Model): Boolean = core.update(item)
 

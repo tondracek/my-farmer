@@ -6,16 +6,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import kotlinx.serialization.Serializable
-
-@Serializable
-data object EditProfileRoute
+import com.tondracek.myfarmer.ui.core.navigation.Route
 
 fun AppNavigator.navigateToEditProfileScreen() =
-    navigate(EditProfileRoute)
+    navigate(Route.EditProfileScreenRoute)
 
 fun NavGraphBuilder.editProfileDestination() {
-    composable<EditProfileRoute> {
+    composable<Route.EditProfileScreenRoute> {
         val viewmodel: EditProfileViewModel = hiltViewModel()
         val state by viewmodel.state.collectAsState()
 
@@ -24,6 +21,7 @@ fun NavGraphBuilder.editProfileDestination() {
             onNameChange = viewmodel::onNameChange,
             onProfilePictureChange = viewmodel::onProfilePictureChange,
             onContactInfoChange = viewmodel::onContactInfoChange,
+            onSaveClick = viewmodel::onSaveProfile,
         )
     }
 }

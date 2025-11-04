@@ -23,3 +23,4 @@ class GetByIdUC<Model> @Inject constructor(
             }
     } ?: flowOf(NotFoundUCResult())
 }
+

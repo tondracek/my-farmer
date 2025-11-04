@@ -87,5 +87,6 @@ dependencies {
     // Firebase BOM (controls versions for all Firebase libs)
     implementation(platform(libs.firebase.bom))
 
-    implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.ui.auth)
 }

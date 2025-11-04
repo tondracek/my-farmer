@@ -24,13 +24,14 @@ class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
 
     private val db = Firebase.firestore
 
-    override suspend fun create(item: Model) {
+    override suspend fun create(item: Model): UUID {
         val entity: Entity = mapper.toEntity(item)
 
         db.collection(collectionName)
             .document(entity.id)
             .set(entity)
             .await()
+        return UUID.fromString(entity.id)
     }
 
     override suspend fun update(item: Model): Boolean {

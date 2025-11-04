@@ -17,11 +17,12 @@ import com.tondracek.myfarmer.shop.data.sampleReviews
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.systemuser.data.UserRepository
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
+import com.tondracek.myfarmer.ui.authscreen.authScreenDestination
 import com.tondracek.myfarmer.ui.core.appstate.AppScaffold
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
+import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.editprofilescreen.editProfileDestination
-import com.tondracek.myfarmer.ui.mainshopscreen.MainShopsScreenRoute
 import com.tondracek.myfarmer.ui.mainshopscreen.mainShopsScreenDestination
 import com.tondracek.myfarmer.ui.shopbottomsheet.shopBottomSheetDestination
 import com.tondracek.myfarmer.ui.shopdetailscreen.shopDetailScreenDestination
@@ -56,19 +57,20 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController(bottomSheetNavigator)
                 navigator.navController = navController
 
-                AppScaffold {
+                AppScaffold(appNavigator = navigator) {
                     ModalBottomSheetLayout(
                         modifier = Modifier.fillMaxSize(),
                         bottomSheetNavigator = bottomSheetNavigator
                     ) {
                         NavHost(
                             navController = navController,
-                            startDestination = MainShopsScreenRoute
+                            startDestination = Route.MainShopsScreenRoute
                         ) {
                             mainShopsScreenDestination()
                             shopBottomSheetDestination()
                             shopDetailScreenDestination()
                             editProfileDestination()
+                            authScreenDestination()
                         }
                     }
                 }
