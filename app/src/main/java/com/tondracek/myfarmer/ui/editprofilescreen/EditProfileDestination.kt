@@ -21,6 +21,7 @@ fun NavGraphBuilder.editProfileDestination() {
             onNameChange = viewmodel::onNameChange,
             onProfilePictureChange = viewmodel::onProfilePictureChange,
             onContactInfoChange = viewmodel::onContactInfoChange,
+            onLogout = viewmodel::onLogout,
             onSaveClick = viewmodel::onSaveProfile,
         )
     }

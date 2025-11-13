@@ -19,6 +19,7 @@ import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,22 +49,37 @@ fun MenuSection(
             verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.medium),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = stringResource(R.string.product_menu),
-                style = MyFarmerTheme.typography.textLarge,
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MyFarmerTheme.colors.primaryContainer,
+                    contentColor = MyFarmerTheme.colors.onPrimaryContainer,
+                )
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(MyFarmerTheme.paddings.medium),
+                    text = stringResource(R.string.product_menu),
+                    style = MyFarmerTheme.typography.textLarge,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = MyFarmerTheme.paddings.large),
+                color = MyFarmerTheme.colors.onSecondaryContainer
             )
+            when (menu.items.isEmpty()) {
+                true ->
+                    Text(text = stringResource(R.string.no_products))
 
-            HorizontalDivider(Modifier.padding(horizontal = MyFarmerTheme.paddings.medium))
 
-            if (menu.items.isEmpty()) {
-                Text(text = stringResource(R.string.no_products))
-            } else {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.medium),
-                ) {
-                    menu.items.forEach { menuItem ->
-                        ProductMenuItemCard(item = menuItem)
-                    }
+                false -> menu.items.forEach { menuItem ->
+                    ProductMenuItemCard(item = menuItem)
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = MyFarmerTheme.paddings.extraLarge),
+                        color = MyFarmerTheme.colors.onSecondaryContainer
+                    )
                 }
             }
         }
@@ -75,41 +91,33 @@ private fun ProductMenuItemCard(
     modifier: Modifier = Modifier,
     item: MenuItem,
 ) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MyFarmerTheme.colors.primaryContainer,
-            contentColor = MyFarmerTheme.colors.onPrimaryContainer,
-        )
+    Column(
+        modifier = Modifier.padding(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Column(
-            modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+            Text(
+                text = item.name,
+                style = MyFarmerTheme.typography.headerSmall,
+            )
+            Column(horizontalAlignment = AbsoluteAlignment.Right) {
                 Text(
-                    text = item.name,
-                    style = MyFarmerTheme.typography.headerSmall,
+                    modifier = Modifier.padding(start = MyFarmerTheme.paddings.medium),
+                    text = item.price.toString(),
+                    style = MyFarmerTheme.typography.textMedium,
                 )
-                Column(horizontalAlignment = AbsoluteAlignment.Right) {
-                    Text(
-                        modifier = Modifier.padding(start = MyFarmerTheme.paddings.medium),
-                        text = item.price.toString(),
-                        style = MyFarmerTheme.typography.textMedium,
-                    )
-                    InStockLabel(isInStock = item.inStock)
-                }
+                InStockLabel(isInStock = item.inStock)
             }
-            if (!item.description.isNullOrBlank()) {
-                Text(
-                    text = item.description,
-                )
-            }
+        }
+        if (!item.description.isNullOrBlank()) {
+            Text(
+                text = item.description,
+            )
         }
     }
 }

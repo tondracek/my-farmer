@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -49,29 +48,27 @@ fun ShopDetailLayout(
 ) {
     val scrollState = rememberScrollState()
 
-    Surface {
-        Column(
-            modifier = modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-                .verticalScroll(scrollState)
-        ) {
-            Header(state)
+    Column(
+        modifier = modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .verticalScroll(scrollState)
+    ) {
+        Header(state)
 
-            CategoriesRowTitle(categories = state.categories)
+        CategoriesRowTitle(categories = state.categories)
 
-            Description(description = state.description)
+        Description(description = state.description)
 
-            ImagesRow(images = state.images)
+        ImagesRow(images = state.images)
 
-            Spacer(modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.large))
+        Spacer(modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.large))
 
-            MenuSection(menu = state.menu)
+        MenuSection(menu = state.menu)
 
-//            ContactInfoSection( TODO
-//                state.owner.contactInfo
-//            )
-        }
+//        ContactInfoSection( TODO
+//            state.owner.contactInfo
+//        )
     }
 }
 

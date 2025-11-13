@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
                 AppScaffold(appNavigator = navigator) {
                     ModalBottomSheetLayout(
                         modifier = Modifier.fillMaxSize(),
-                        bottomSheetNavigator = bottomSheetNavigator
+                        bottomSheetNavigator = bottomSheetNavigator,
                     ) {
                         NavHost(
                             navController = navController,

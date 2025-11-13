@@ -34,7 +34,6 @@ fun MainShopsScreen(
     mapView: @Composable (Modifier) -> Unit,
     listView: @Composable (Modifier) -> Unit,
 ) {
-    val appUiStateController = LocalAppUiController.current
     val coroutineScope = rememberCoroutineScope()
 
     val pagerState = rememberPagerState(
@@ -58,13 +57,14 @@ fun MainShopsScreen(
         currentMode = currentPage.toShopsViewMode()
     )
 
+    val appUiStateController = LocalAppUiController.current
+
     val title = when (currentPage.toShopsViewMode()) {
         ShopsViewMode.Map -> stringResource(R.string.shops_map)
         ShopsViewMode.List -> stringResource(R.string.shops_list)
     }
-    LaunchedEffect(title) {
-        appUiStateController.updateTitle(title)
-    }
+    LaunchedEffect(title) { appUiStateController.updateTitle(title) }
+    LaunchedEffect(Unit) { appUiStateController.updateTopBarPadding(false) }
 }
 
 @Composable

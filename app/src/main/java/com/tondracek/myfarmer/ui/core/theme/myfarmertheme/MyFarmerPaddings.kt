@@ -15,9 +15,10 @@ val myFarmerPaddings = MyFarmerPaddings(
     medium = 12.dp,
     mediumLarge = 14.dp,
     large = 16.dp,
-    extraLarge = 32.dp,
-    xxL = 48.dp,
-    xxxL = 64.dp,
+    extraLarge = 24.dp,
+    xxL = 32.dp,
+    xxxL = 48.dp,
+    xxxxL = 64.dp,
 )
 
 @Stable
@@ -32,4 +33,5 @@ data class MyFarmerPaddings(
     val extraLarge: Dp,
     val xxL: Dp,
     val xxxL: Dp,
+    val xxxxL: Dp,
 )

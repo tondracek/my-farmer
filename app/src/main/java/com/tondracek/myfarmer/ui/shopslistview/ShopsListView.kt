@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -44,20 +43,18 @@ private fun Success(
 ) {
     val lazyListState = rememberLazyListState()
 
-    Surface {
-        LazyColumn(
-            modifier = modifier,
-            state = lazyListState,
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 96.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(state.shops) { shop: ShopListViewItem ->
-                ShopListItemCard(
-                    modifier = Modifier,
-                    shop = shop,
-                    onNavigateToShopDetail = onNavigateToShopDetail
-                )
-            }
+    LazyColumn(
+        modifier = modifier,
+        state = lazyListState,
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 96.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(state.shops) { shop: ShopListViewItem ->
+            ShopListItemCard(
+                modifier = Modifier,
+                shop = shop,
+                onNavigateToShopDetail = onNavigateToShopDetail
+            )
         }
     }
 }

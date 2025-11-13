@@ -3,17 +3,23 @@ package com.tondracek.myfarmer.ui.editprofilescreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
+import com.tondracek.myfarmer.auth.domain.usecase.IsLoggedInUC
+import com.tondracek.myfarmer.auth.domain.usecase.LogoutUC
 import com.tondracek.myfarmer.common.model.ImageResource
 import com.tondracek.myfarmer.common.usecase.UpdateUC
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.ui.authscreen.navigateToAuthScreen
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -22,7 +28,9 @@ import javax.inject.Inject
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     getLoggedInUserUC: GetLoggedInUserUC,
+    isLoggedIn: IsLoggedInUC,
     private val updateUserUC: UpdateUC<SystemUser>,
+    private val logout: LogoutUC,
     private val appNavigator: AppNavigator,
 ) : ViewModel() {
 
@@ -31,6 +39,14 @@ class EditProfileViewModel @Inject constructor(
         MutableStateFlow(EditProfileScreenState.Loading)
 
     val state: StateFlow<EditProfileScreenState> = _state
+        .onEach {
+            if (!isLoggedIn.invokeSync()) appNavigator.navigateToAuthScreen()
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = EditProfileScreenState.Loading
+        )
 
     init {
         viewModelScope.launch {
@@ -59,6 +75,8 @@ class EditProfileViewModel @Inject constructor(
     fun onContactInfoChange(newContactInfo: ContactInfo) = updateState {
         it.copy(contactInfo = newContactInfo)
     }
+
+    fun onLogout() = logout()
 
     fun onSaveProfile() = viewModelScope.launch {
         val currentUser = _user.value ?: return@launch

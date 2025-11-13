@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.ui.core.appstate
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.ui.common.navbar.BottomNavigationBar
@@ -33,14 +37,20 @@ fun AppScaffold(
     val navBarViewModel: NavBarViewModel = hiltViewModel()
     val navBarState by navBarViewModel.state.collectAsState()
 
-    var appUiState by remember { mutableStateOf(AppUiState(title = "MyFarmer")) }
+    var appUiState by remember { mutableStateOf(AppUiState()) }
     val appUiController = remember {
         object : AppUiController {
-            override fun updateTitle(title: String) {
+            override fun updateTitle(title: String) = apply {
                 appUiState = appUiState.copy(title = title)
+            }
+
+            override fun updateTopBarPadding(applyPadding: Boolean) = apply {
+                appUiState = appUiState.copy(applyTopBarPadding = applyPadding)
             }
         }
     }
+
+    val localDensity = LocalDensity.current
 
     CompositionLocalProvider(
         LocalAppUiState provides appUiState,
@@ -64,10 +74,27 @@ fun AppScaffold(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center,
             ) {
-                content()
+                var topContentPadding by remember { mutableStateOf(0.dp) }
+                val animatedTopContentPadding by animateDpAsState(
+                    if (appUiState.applyTopBarPadding) topContentPadding else 0.dp
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = animatedTopContentPadding),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    content()
+                }
 
                 FloatingTopBar(
-                    modifier = Modifier.align(Alignment.TopCenter),
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .onGloballyPositioned { coordinates ->
+                            with(localDensity) {
+                                topContentPadding = coordinates.size.height.toDp()
+                            }
+                        },
                     title = appUiState.title ?: stringResource(R.string.app_name)
                 )
             }
