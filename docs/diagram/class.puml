@@ -1,0 +1,127 @@
+@startuml
+
+skinparam backgroundColor #FFFFFF
+
+class User {
+    - id: String
+    - name: String
+    - profilePicture: Image?
+    - contactInfo: ContactInfo
+}
+
+' ----------------------------------- '
+
+class ContactInfo {
+    - phone: String?
+    - email: String?
+    - website: MediaLink?
+    - facebook: MediaLink?
+    - instagram: MediaLink?
+}
+
+User "1" *- "1" ContactInfo : contactInfo >
+
+' ----------------------------------- '
+
+class MediaLink {
+    - title: String
+    - url: String
+}
+
+ContactInfo "1" *-- "0..1" MediaLink : facebook >
+ContactInfo "1" *-- "0..1" MediaLink : instagram >
+ContactInfo "1" *-- "0..1" MediaLink : website >
+
+' ----------------------------------- '
+
+class Shop {
+    - id: UUID
+    - name: String?
+    - description: String?
+    - owner: User
+    - shopCategories: List<ShopCategory>
+    - images: List<Image>
+    - menu: Menu
+    - location: Location
+    - openingHours: OpeningHours
+}
+
+User "1" ---o "0..*" Shop : ownedBy <
+
+' ----------------------------------- '
+
+class ShopCategory {
+    - name: String
+    - color: Color
+}
+
+Shop "1" *-- "0..*" ShopCategory : categories >
+
+' ----------------------------------- '
+
+class Menu {
+    - items: List<MenuItem>
+}
+
+class MenuItem {
+    - name: String
+    - description: String?
+    - price: ProductPrice
+    - inStock: Boolean
+}
+
+class ProductPrice {
+    - price: String
+}
+
+Shop "1" *-- "1" Menu : menu >
+Menu "1" *-- "0..*" MenuItem : items >
+MenuItem "1" *-- "1" ProductPrice : productPrice >
+
+' ----------------------------------- '
+
+class OpeningHours {
+    - dayToHours: Map<DayOfWeek, String>
+}
+
+enum DayOfWeek {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+
+Shop "1" *-- "1" OpeningHours : openingHours >
+OpeningHours "1" *-- "0..*" DayOfWeek : dayToHours >
+
+' ----------------------------------- '
+
+class Location {
+    - address: String
+    - latitude: BigDecimal?
+    - longitude: BigDecimal?
+}
+
+Shop "1" *-- "1" Location : location >
+
+' ----------------------------------- '
+
+class Review {
+    - user: User
+    - shopId: UUID
+    - rating: int
+    - comment: String?
+}
+
+Shop "1" *-[hidden] "0..*" Review : reviews >
+
+' ----------------------------------- '
+
+class Image {
+    - url: String
+}
+
+@enduml
