@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
-import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailLayout
 import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailState
+import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.components.ShopDetailLayout
 import com.tondracek.myfarmer.ui.core.appstate.LocalAppUiController
 
 @Composable

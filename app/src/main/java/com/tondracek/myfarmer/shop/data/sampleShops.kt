@@ -11,58 +11,20 @@ import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
+import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.systemuser.data.user0
 import com.tondracek.myfarmer.systemuser.data.user1
 import com.tondracek.myfarmer.systemuser.data.user2
+import com.tondracek.myfarmer.ui.common.review.ReviewUiState
+import com.tondracek.myfarmer.ui.common.review.toUiState
 import java.time.DayOfWeek
 import java.util.UUID
 
 val shop0 = Shop(
-    id = UUID.fromString("295d5f90-b45a-4df4-8785-fd2b6db4160e"),
-    name = "FI MUNI",
-    images = listOf(
-        ImageResource("https://picsum.photos/400/300"),
-        ImageResource("https://picsum.photos/200/400"),
-        ImageResource("https://picsum.photos/600/100"),
-        ImageResource("https://picsum.photos/400/301"),
-        ImageResource("https://picsum.photos/200/401"),
-        ImageResource("https://picsum.photos/600/101"),
-        ImageResource("https://picsum.photos/400/302"),
-        ImageResource("https://picsum.photos/200/402"),
-        ImageResource("https://picsum.photos/600/102"),
-        ImageResource("https://picsum.photos/400/303"),
-        ImageResource("https://picsum.photos/200/403"),
-        ImageResource("https://picsum.photos/600/103"),
-    ),
-    description = "Na FI je všechno",
-    location = ShopLocation(49.209806, 16.598833),
-    categories = listOf(
-        ShopCategory("Zelenina", Color(0xFF067C06)),
-        ShopCategory("Ovoce", Color(0xFFE4560B)),
-        ShopCategory("Maso", Color(0xFF642000)),
-        ShopCategory("Mléčné výrobky", Color(0xFFCFCECA)),
-        ShopCategory("Pečivo", Color(0xFFCA6207)),
-        ShopCategory("Vejce", Color(0xFFBE9329)),
-        ShopCategory("Další", Color(0xFF0B5DE4)),
-        ShopCategory("Další", Color(0xFF067C06)),
-        ShopCategory("Další", Color(0xFFE4560B)),
-        ShopCategory("Další", Color(0xFF642000)),
-        ShopCategory("Další", Color(0xFFCFCECA)),
-        ShopCategory("Další", Color(0xFFCA6207)),
-        ShopCategory("Další", Color(0xFFBE9329)),
-    ),
-    menu = ProductMenu(listOf()),
-    ownerId = user0.id,
-    openingHours = OpeningHours.Message(""),
-)
-
-val shop0reviews = emptyList<Review>()
-
-val shop1 = Shop(
     id = UUID.fromString("ded3f207-09d3-47e7-94d0-1f48cb10ef12"),
     name = "Domácí včelařství v Jundrově",
     description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
-    ownerId = user1.id,
+    ownerId = user0.id,
     images = listOf(
         ImageResource("https://justbeehoney.co.uk/cdn/shop/articles/104740553_l2_5000x.jpg"),
         ImageResource("https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Beekeeper_with_moveable_comb_hive.jpg/1024px-Beekeeper_with_moveable_comb_hive.jpg"),
@@ -118,16 +80,57 @@ val shop1 = Shop(
     )
 )
 
-val shop1reviews = listOf(
-    Review(UUID.randomUUID(), shop1.id, user0.id, Rating(5), "Amazing"),
-    Review(UUID.randomUUID(), shop1.id, user2.id, Rating(1), "I didn't like it"),
-    Review(UUID.randomUUID(), shop1.id, user1.id, Rating(2), "ExampleReview"),
-    Review(UUID.randomUUID(), shop1.id, user1.id, Rating(2), "ExampleReview"),
-    Review(UUID.randomUUID(), shop1.id, user1.id, Rating(2), "ExampleReview"),
-    Review(UUID.randomUUID(), shop1.id, user1.id, Rating(2), "ExampleReview"),
-    Review(UUID.randomUUID(), shop1.id, user1.id, Rating(2), "ExampleReview"),
-    Review(UUID.randomUUID(), shop1.id, user1.id, Rating(2), "ExampleReview"),
+val shop0reviews = listOf(
+    Review(UUID.randomUUID(), shop0.id, user0.id, Rating(5), "Amazing"),
+    Review(UUID.randomUUID(), shop0.id, user2.id, Rating(1), "I didn't like it"),
+    Review(UUID.randomUUID(), shop0.id, user1.id, Rating(2), "ExampleReview"),
+    Review(UUID.randomUUID(), shop0.id, user1.id, Rating(2), "ExampleReview"),
+    Review(UUID.randomUUID(), shop0.id, user1.id, Rating(2), "ExampleReview"),
+    Review(UUID.randomUUID(), shop0.id, user1.id, Rating(2), "ExampleReview"),
+    Review(UUID.randomUUID(), shop0.id, user1.id, Rating(2), "ExampleReview"),
+    Review(UUID.randomUUID(), shop0.id, user1.id, Rating(2), "ExampleReview"),
 )
+
+val shop1 = Shop(
+    id = UUID.fromString("295d5f90-b45a-4df4-8785-fd2b6db4160e"),
+    name = "FI MUNI",
+    images = listOf(
+        ImageResource("https://picsum.photos/400/300"),
+        ImageResource("https://picsum.photos/200/400"),
+        ImageResource("https://picsum.photos/600/100"),
+        ImageResource("https://picsum.photos/400/301"),
+        ImageResource("https://picsum.photos/200/401"),
+        ImageResource("https://picsum.photos/600/101"),
+        ImageResource("https://picsum.photos/400/302"),
+        ImageResource("https://picsum.photos/200/402"),
+        ImageResource("https://picsum.photos/600/102"),
+        ImageResource("https://picsum.photos/400/303"),
+        ImageResource("https://picsum.photos/200/403"),
+        ImageResource("https://picsum.photos/600/103"),
+    ),
+    description = "Na FI je všechno",
+    location = ShopLocation(49.209806, 16.598833),
+    categories = listOf(
+        ShopCategory("Zelenina", Color(0xFF067C06)),
+        ShopCategory("Ovoce", Color(0xFFE4560B)),
+        ShopCategory("Maso", Color(0xFF642000)),
+        ShopCategory("Mléčné výrobky", Color(0xFFCFCECA)),
+        ShopCategory("Pečivo", Color(0xFFCA6207)),
+        ShopCategory("Vejce", Color(0xFFBE9329)),
+        ShopCategory("Další", Color(0xFF0B5DE4)),
+        ShopCategory("Další", Color(0xFF067C06)),
+        ShopCategory("Další", Color(0xFFE4560B)),
+        ShopCategory("Další", Color(0xFF642000)),
+        ShopCategory("Další", Color(0xFFCFCECA)),
+        ShopCategory("Další", Color(0xFFCA6207)),
+        ShopCategory("Další", Color(0xFFBE9329)),
+    ),
+    menu = ProductMenu(listOf()),
+    ownerId = user1.id,
+    openingHours = OpeningHours.Message(""),
+)
+
+val shop1reviews = emptyList<Review>()
 
 val shop2 = Shop(
     id = UUID.fromString("88a35777-c323-416f-8de5-265392eb1227"),
@@ -208,4 +211,8 @@ val sampleShops: List<Shop> by lazy {
 
 val sampleReviews: List<Review> by lazy {
     listOf(shop0reviews, shop1reviews, shop2reviews, shop3reviews).flatten()
+}
+val sampleReviewsUI: List<ReviewUiState> = sampleReviews.mapNotNull { review ->
+    val author = sampleUsers.find { it.id == review.userId } ?: return@mapNotNull null
+    review.toUiState(author)
 }

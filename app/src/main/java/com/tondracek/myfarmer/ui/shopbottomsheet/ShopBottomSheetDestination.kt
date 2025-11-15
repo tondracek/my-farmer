@@ -12,8 +12,8 @@ import androidx.navigation.toRoute
 import com.stefanoq21.material3.navigation.bottomSheet
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
-import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailLayout
 import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailState
+import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.components.ShopDetailLayout
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import kotlinx.serialization.Serializable
 import java.util.UUID

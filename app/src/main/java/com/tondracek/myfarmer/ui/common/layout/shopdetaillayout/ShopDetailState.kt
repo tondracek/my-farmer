@@ -5,12 +5,12 @@ import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.review.domain.model.Rating
-import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.ui.common.review.ReviewUiState
 
 sealed interface ShopDetailState {
 
@@ -24,7 +24,7 @@ sealed interface ShopDetailState {
         val menu: ProductMenu,
         val location: ShopLocation,
         val openingHours: OpeningHours,
-        val reviewsPreview: List<Review>,
+        val reviewsPreview: List<ReviewUiState>,
         val averageRating: Rating,
     ) : ShopDetailState
 
@@ -35,7 +35,7 @@ sealed interface ShopDetailState {
 
 fun Shop.toShopDetailState(
     owner: SystemUser,
-    reviewsPreview: List<Review>,
+    reviewsPreview: List<ReviewUiState>,
     averageRating: Rating,
 ): ShopDetailState.Success =
     ShopDetailState.Success(

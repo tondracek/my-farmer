@@ -2,6 +2,13 @@ package com.tondracek.myfarmer.ui.core.theme.myfarmertheme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.LocalMyFarmerColors
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.LocalMyFarmerPaddings
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.LocalMyFarmerTypography
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.farmerDarkColors
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.farmerLightColors
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.myFarmerPaddings
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.myFarmerTypography
 
 enum class MyFarmerThemeVariant {
     LIGHT,

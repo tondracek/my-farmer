@@ -5,11 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.core.navigation.Route
-
-fun AppNavigator.navigateToEditProfileScreen() =
-    navigate(Route.EditProfileScreenRoute)
 
 fun NavGraphBuilder.editProfileDestination() {
     composable<Route.EditProfileScreenRoute> {

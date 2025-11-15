@@ -15,4 +15,7 @@ sealed interface Route {
 
     @Serializable
     data object AuthScreenRoute : Route
+
+    @Serializable
+    data class ShopBottomSheetRoute(val shopId: String)
 }

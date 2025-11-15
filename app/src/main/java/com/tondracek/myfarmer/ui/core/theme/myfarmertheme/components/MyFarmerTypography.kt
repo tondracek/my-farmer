@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.core.theme.myfarmertheme
+package com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable

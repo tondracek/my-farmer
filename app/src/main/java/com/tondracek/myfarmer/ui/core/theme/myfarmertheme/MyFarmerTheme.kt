@@ -10,6 +10,14 @@ import androidx.compose.ui.platform.LocalContext
 import com.tondracek.myfarmer.ui.core.theme.material.AppTypography
 import com.tondracek.myfarmer.ui.core.theme.material.materialDarkScheme
 import com.tondracek.myfarmer.ui.core.theme.material.materialLightScheme
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.LocalMyFarmerColors
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.LocalMyFarmerPaddings
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.LocalMyFarmerTypography
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.MyFarmerCardColors
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.MyFarmerColors
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.MyFarmerPaddings
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.MyFarmerTypography
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.myFarmerCardColors
 
 data object MyFarmerTheme {
     val colors: MyFarmerColors
@@ -23,6 +31,10 @@ data object MyFarmerTheme {
     val paddings: MyFarmerPaddings
         @Composable
         get() = LocalMyFarmerPaddings.current
+
+    val cardColors: MyFarmerCardColors
+        @Composable
+        get() = myFarmerCardColors
 }
 
 @Composable

@@ -13,14 +13,15 @@ class GetByIdUC<Model> @Inject constructor(
     private val repository: Repository<Model>,
 ) {
 
-    operator fun invoke(id: UUID?): Flow<UCResult<Model>> = id?.let {
-        repository.getById(id)
-            .map {
-                when (it) {
-                    null -> NotFoundUCResult()
-                    else -> UCResult.Success(it)
-                }
+    operator fun invoke(id: UUID?): Flow<UCResult<Model>> = when (id == null) {
+        false -> repository.getById(id).map {
+            when (it == null) {
+                false -> UCResult.Success(it)
+                true -> NotFoundUCResult()
             }
-    } ?: flowOf(NotFoundUCResult())
+        }
+
+        true -> flowOf(NotFoundUCResult())
+    }
 }
 

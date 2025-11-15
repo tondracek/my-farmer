@@ -15,4 +15,11 @@
     <string name="km">km</string>
     <string name="product_menu">Menu</string>
     <string name="no_products">Žádné produkty</string>
+    <string name="click_here">Klikni zde</string>
+    <string name="contact_info">Kontaktní údaje</string>
+    <string name="profile">Profil</string>
+    <string name="my_shops">Moje obchody</string>
+    <string name="login">Přihlásit</string>
+    <string name="edit_profile">Upravit profil</string>
+    <string name="in_stock">Skladem</string>
 </resources>

@@ -1,10 +1,9 @@
-package com.tondracek.myfarmer.ui.common.layout.shopdetaillayout
+package com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,17 +25,17 @@ import androidx.compose.ui.unit.sp
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.model.ImageResource
 import com.tondracek.myfarmer.review.domain.model.Rating
-import com.tondracek.myfarmer.shop.data.sampleReviews
-import com.tondracek.myfarmer.shop.data.shop1
-import com.tondracek.myfarmer.shop.data.shop2
+import com.tondracek.myfarmer.shop.data.sampleReviewsUI
+import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
 import com.tondracek.myfarmer.ui.common.image.ImageView
-import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.components.MenuSection
+import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailState
+import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.toShopDetailState
 import com.tondracek.myfarmer.ui.common.rating.RatingStars
 import com.tondracek.myfarmer.ui.common.user.UserPreviewCard
-import com.tondracek.myfarmer.ui.core.preview.AsyncImagePreviewFix
+import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewDark
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
@@ -52,9 +51,12 @@ fun ShopDetailLayout(
         modifier = modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .verticalScroll(scrollState)
+            .verticalScroll(scrollState),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Header(state)
+        Header(state = state)
+
+        HorizontalDivider(modifier = Modifier.padding(MyFarmerTheme.paddings.medium))
 
         CategoriesRowTitle(categories = state.categories)
 
@@ -62,22 +64,32 @@ fun ShopDetailLayout(
 
         ImagesRow(images = state.images)
 
-        Spacer(modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.large))
+        MenuSection(
+            modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.small),
+            menu = state.menu
+        )
 
-        MenuSection(menu = state.menu)
+        ContactInfoSection(contactInfo = state.owner.contactInfo)
 
-//        ContactInfoSection( TODO
-//            state.owner.contactInfo
-//        )
+        OpeningHoursSection(
+            modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.small),
+            openingHours = state.openingHours,
+        )
+
+        ReviewsPreviewSection(
+            modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.small),
+            reviews = state.reviewsPreview,
+            onReviewsClick = onReviewsClick,
+        )
     }
 }
 
-
 @Composable
 private fun Header(
+    modifier: Modifier = Modifier,
     state: ShopDetailState.Success,
 ) {
-    Column(Modifier.fillMaxWidth()) {
+    Column(modifier.fillMaxWidth()) {
         if (!state.name.isNullOrBlank())
             Text(
                 modifier = Modifier
@@ -99,8 +111,6 @@ private fun Header(
 
             RatingStars(rating = state.averageRating)
         }
-
-        HorizontalDivider(modifier = Modifier.padding(MyFarmerTheme.paddings.medium))
     }
 }
 
@@ -152,9 +162,11 @@ private fun CategoriesRowTitle(modifier: Modifier = Modifier, categories: List<S
 private fun Description(modifier: Modifier = Modifier, description: String?) {
     if (description.isNullOrBlank()) return
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
         Text(
-            modifier = Modifier.padding(0.dp, 4.dp),
             text = stringResource(R.string.description),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
@@ -166,23 +178,21 @@ private fun Description(modifier: Modifier = Modifier, description: String?) {
 @Preview
 @Composable
 private fun ShopDetailLayoutPrev() {
-    val shop = shop1
+    val shop = shop0
 
     val owner = sampleUsers.find { it.id == shop.ownerId }!!
-    val reviews = sampleReviews.filter { it.shopId == shop.id }
+    val reviews = sampleReviewsUI.take(3)
     val state = shop.toShopDetailState(
         owner = owner,
         reviewsPreview = reviews,
         averageRating = Rating(3)
     )
 
-    MyFarmerTheme {
-        AsyncImagePreviewFix {
-            ShopDetailLayout(
-                state = state,
-                onReviewsClick = {}
-            )
-        }
+    MyFarmerPreview {
+        ShopDetailLayout(
+            state = state,
+            onReviewsClick = {}
+        )
     }
 }
 
@@ -190,22 +200,20 @@ private fun ShopDetailLayoutPrev() {
 @PreviewDark
 @Composable
 private fun ShopDetailLayoutPrev0() {
-    val shop = shop2
+    val shop = shop0
 
     val owner = sampleUsers.find { it.id == shop.ownerId }!!
-    val reviews = sampleReviews.filter { it.shopId == shop.id }
+    val reviews = sampleReviewsUI.take(3)
     val state = shop.toShopDetailState(
         owner = owner,
         reviewsPreview = reviews,
         averageRating = Rating(3)
     )
 
-    MyFarmerTheme {
-        AsyncImagePreviewFix {
-            ShopDetailLayout(
-                state = state,
-                onReviewsClick = {}
-            )
-        }
+    MyFarmerPreview {
+        ShopDetailLayout(
+            state = state,
+            onReviewsClick = {}
+        )
     }
 }
