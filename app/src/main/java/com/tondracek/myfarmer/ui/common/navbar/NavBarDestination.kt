@@ -26,7 +26,7 @@ fun navBarDestinations(loggedIn: Boolean): List<NavBarDestination> = listOfNotNu
     NavBarDestination(
         text = stringResource(R.string.home),
         imageVector = Icons.Default.Home,
-        route = Route.MainShopsScreenRoute,
+        route = Route.MainShopsRoute,
     ),
     NavBarDestination(
         text = stringResource(R.string.profile),

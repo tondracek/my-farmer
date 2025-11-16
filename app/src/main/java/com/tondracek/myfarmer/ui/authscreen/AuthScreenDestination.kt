@@ -9,12 +9,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.core.navigation.Route
-import com.tondracek.myfarmer.ui.mainshopscreen.navigateToMainShopScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-
-fun AppNavigator.navigateToAuthScreen() =
-    navigate(Route.AuthScreenRoute)
 
 fun NavGraphBuilder.authScreenDestination() {
     composable<Route.AuthScreenRoute> {
@@ -35,7 +31,7 @@ class AuthScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
     fun navigateToMainShopsScreen() =
-        appNavigator.navigateToMainShopScreen()
+        appNavigator.navigate(Route.MainShopsRoute)
 
     fun showError(context: Context, message: String) =
         Toast.makeText(

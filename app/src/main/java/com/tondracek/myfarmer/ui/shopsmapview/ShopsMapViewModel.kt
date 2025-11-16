@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import com.tondracek.myfarmer.ui.shopbottomsheet.navigateToShopBottomSheet
+import com.tondracek.myfarmer.ui.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,7 +39,7 @@ class ShopsMapViewModel @Inject constructor(
     )
 
     fun onShopSelected(shopId: ShopId) {
-        navigator.navigateToShopBottomSheet(shopId)
+        navigator.navigate(Route.ShopBottomSheetRoute(shopId.toString()))
     }
 }
 

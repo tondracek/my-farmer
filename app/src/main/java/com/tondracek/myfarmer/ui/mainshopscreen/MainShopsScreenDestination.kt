@@ -12,7 +12,7 @@ import com.tondracek.myfarmer.ui.shopsmapview.ShopsMapView
 import com.tondracek.myfarmer.ui.shopsmapview.ShopsMapViewModel
 
 fun NavGraphBuilder.mainShopsScreenDestination() {
-    composable<Route.MainShopsScreenRoute> {
+    composable<Route.MainShopsRoute> {
         val shopsMapViewModel: ShopsMapViewModel = hiltViewModel()
         val shopsMapViewState by shopsMapViewModel.state.collectAsState()
 

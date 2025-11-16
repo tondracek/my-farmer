@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -41,18 +40,15 @@ class ShopDetailViewModel @Inject constructor(
     private val navigator: AppNavigator
 ) : ViewModel() {
 
-    private val shopId: Flow<ShopId> =
-        flowOf(savedStateHandle.getShopDetailScreenShopId()) // TODO flow?
+    private val shopId: ShopId = savedStateHandle.getShopDetailScreenShopId()
 
-    private val shop: Flow<UCResult<Shop>> =
-        shopId.flatMapLatest { getShopById(it) }
+    private val shop: Flow<UCResult<Shop>> = getShopById(shopId)
 
     private val owner: Flow<UCResult<SystemUser>> =
         shop.mapNotNull { it.getOrNull() }
             .flatMapLatest { getUserById(it.ownerId) }
 
-    private val reviewsPreview: Flow<UCResult<List<Review>>> =
-        shopId.flatMapLatest { getReviewsPreview(it) }
+    private val reviewsPreview: Flow<UCResult<List<Review>>> = getReviewsPreview(shopId)
 
     private val reviewAuthors: Flow<UCResult<List<SystemUser>>> =
         reviewsPreview.mapNotNull { it.getOrNull() }
@@ -61,8 +57,7 @@ class ShopDetailViewModel @Inject constructor(
                 getUsersByIds(authorIds)
             }
 
-    private val averageRating: Flow<UCResult<Rating>> =
-        shopId.flatMapLatest { getShopAverageRating(it) }
+    private val averageRating: Flow<UCResult<Rating>> = getShopAverageRating(shopId)
 
     val state: StateFlow<ShopDetailState> = combineUCResults(
         shop,

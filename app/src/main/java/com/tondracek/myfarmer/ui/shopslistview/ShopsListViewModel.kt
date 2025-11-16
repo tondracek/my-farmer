@@ -6,7 +6,7 @@ import com.tondracek.myfarmer.location.usecase.MeasureDistanceFromMeUC
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import com.tondracek.myfarmer.ui.shopdetailscreen.navigateToShopDetailScreen
+import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.shopslistview.components.toListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,5 +41,6 @@ class ShopsListViewModel @Inject constructor(
         initialValue = ShopsListViewState.Loading
     )
 
-    fun navigateToShopDetail(shopId: ShopId) = navigator.navigateToShopDetailScreen(shopId)
+    fun navigateToShopDetail(shopId: ShopId) =
+        navigator.navigate(Route.ShopDetailRoute(shopId.toString()))
 }

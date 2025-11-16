@@ -15,19 +15,15 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 @Composable
 fun BottomNavigationBar(
     state: NavBarState,
-    onItemSelected: (Int) -> Unit,
     onNavigate: (Route) -> Unit,
 ) {
     NavigationBar {
-        navBarDestinations(state.loggedIn).forEachIndexed { index, item ->
+        navBarDestinations(state.loggedIn).forEach {
             NavigationBarButton(
-                text = item.text,
-                imageVector = item.imageVector,
-                selected = state.selectedItem == index,
-                onClick = {
-                    onItemSelected(index)
-                    onNavigate(item.route)
-                }
+                text = it.text,
+                imageVector = it.imageVector,
+                selected = state.currentRoute == it.route,
+                onClick = { onNavigate(it.route) }
             )
         }
     }
@@ -61,10 +57,9 @@ private fun BottomNavigationBarPreview() {
     MyFarmerTheme {
         BottomNavigationBar(
             state = NavBarState(
-                selectedItem = 1,
+                currentRoute = Route.MainShopsRoute,
                 loggedIn = true,
             ),
-            onItemSelected = {},
             onNavigate = {},
         )
     }

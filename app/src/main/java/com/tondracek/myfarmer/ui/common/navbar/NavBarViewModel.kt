@@ -7,11 +7,11 @@ import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,28 +20,26 @@ class NavBarViewModel @Inject constructor(
     private val navigator: AppNavigator,
 ) : ViewModel() {
 
-    val selectedItem: MutableStateFlow<Int> = MutableStateFlow(0)
+    val currentRoute: Flow<Route?> = navigator.getCurrentRoute()
 
     val state: StateFlow<NavBarState> = combine(
-        selectedItem,
+        currentRoute,
         isLoggedInUC(),
-    ) { selectedItem, loggedInResult ->
+    ) { currentRoute, loggedInResult ->
         val loggedIn = loggedInResult.getOrElse(false)
 
         NavBarState(
-            selectedItem = selectedItem,
+            currentRoute = currentRoute,
             loggedIn = loggedIn,
         )
     }.stateIn(
         scope = viewModelScope,
-        started = kotlinx.coroutines.flow.SharingStarted.Lazily,
+        started = SharingStarted.Lazily,
         initialValue = NavBarState(
-            selectedItem = selectedItem.value,
+            currentRoute = null,
             loggedIn = false,
         ),
     )
-
-    fun onItemSelected(index: Int) = selectedItem.update { index }
 
     fun onNavigate(route: Route) = navigator.navigate(route)
 }

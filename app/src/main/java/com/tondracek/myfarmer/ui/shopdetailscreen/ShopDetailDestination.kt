@@ -8,22 +8,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.tondracek.myfarmer.shop.domain.model.ShopId
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import kotlinx.serialization.Serializable
-
-@Serializable
-private data class ShopDetailDestination(val shopId: String)
-
-fun AppNavigator.navigateToShopDetailScreen(shopId: ShopId) =
-    navigate(ShopDetailDestination(shopId.toString()))
+import com.tondracek.myfarmer.ui.core.navigation.Route
 
 fun SavedStateHandle.getShopDetailScreenShopId(): ShopId =
-    // TODO: this is not used, it works by accident!!!
-    toRoute<ShopDetailDestination>().shopId
+    toRoute<Route.ShopDetailRoute>().shopId
         .let { ShopId.fromString(it) }
 
 fun NavGraphBuilder.shopDetailScreenDestination() {
-    composable<ShopDetailDestination> {
+    composable<Route.ShopDetailRoute> {
         val viewmodel: ShopDetailViewModel = hiltViewModel()
         val state by viewmodel.state.collectAsState()
 

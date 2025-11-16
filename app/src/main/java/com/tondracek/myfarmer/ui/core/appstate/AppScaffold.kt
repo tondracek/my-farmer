@@ -24,14 +24,11 @@ import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.ui.common.navbar.BottomNavigationBar
 import com.tondracek.myfarmer.ui.common.navbar.NavBarViewModel
 import com.tondracek.myfarmer.ui.common.topbar.FloatingTopBar
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import com.tondracek.myfarmer.ui.core.navigation.LocalAppNavigator
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
 fun AppScaffold(
     modifier: Modifier = Modifier,
-    appNavigator: AppNavigator,
     content: @Composable BoxScope.() -> Unit,
 ) {
     val navBarViewModel: NavBarViewModel = hiltViewModel()
@@ -55,7 +52,6 @@ fun AppScaffold(
     CompositionLocalProvider(
         LocalAppUiState provides appUiState,
         LocalAppUiController provides appUiController,
-        LocalAppNavigator provides appNavigator,
     ) {
         Scaffold(
             modifier = modifier,
@@ -63,7 +59,6 @@ fun AppScaffold(
             bottomBar = {
                 BottomNavigationBar(
                     state = navBarState,
-                    onItemSelected = navBarViewModel::onItemSelected,
                     onNavigate = navBarViewModel::onNavigate
                 )
             }

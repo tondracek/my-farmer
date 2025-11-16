@@ -1,10 +1,8 @@
 package com.tondracek.myfarmer.ui.shopdetailscreen
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
+import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailState
 import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.components.ShopDetailLayout
@@ -27,9 +25,6 @@ fun ShopDetailScreen(
         }
 
         is ShopDetailState.Loading -> LoadingLayout()
-        is ShopDetailState.Error -> Text(
-            modifier = Modifier.fillMaxSize(),
-            text = "TODO :)"
-        )
+        is ShopDetailState.Error -> ErrorLayout(text = "TODO :)")
     }
 }

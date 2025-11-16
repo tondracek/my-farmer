@@ -11,8 +11,8 @@ import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
-import com.tondracek.myfarmer.ui.authscreen.navigateToAuthScreen
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
+import com.tondracek.myfarmer.ui.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -40,7 +40,7 @@ class EditProfileViewModel @Inject constructor(
 
     val state: StateFlow<EditProfileScreenState> = _state
         .onEach {
-            if (!isLoggedIn.invokeSync()) appNavigator.navigateToAuthScreen()
+            if (!isLoggedIn.invokeSync()) appNavigator.navigate(Route.AuthScreenRoute)
         }
         .stateIn(
             scope = viewModelScope,
