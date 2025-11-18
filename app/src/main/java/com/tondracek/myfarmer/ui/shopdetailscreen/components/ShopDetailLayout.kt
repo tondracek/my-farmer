@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.components
+package com.tondracek.myfarmer.ui.shopdetailscreen.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +38,10 @@ import com.tondracek.myfarmer.ui.common.user.UserPreviewCard
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewDark
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.ContactInfoSection
+import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.MenuSection
+import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.OpeningHoursSection
+import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.ReviewsPreviewSection
 
 @Composable
 fun ShopDetailLayout(

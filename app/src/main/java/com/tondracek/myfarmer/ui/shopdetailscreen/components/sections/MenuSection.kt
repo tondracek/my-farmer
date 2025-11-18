@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.components
+package com.tondracek.myfarmer.ui.shopdetailscreen.components.sections
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +26,7 @@ import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.ui.core.preview.PreviewDark
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.shopdetailscreen.components.sectionlayout.ShopDetailSectionLayout
 
 @Composable
 fun MenuSection(
@@ -37,16 +38,18 @@ fun MenuSection(
         title = stringResource(R.string.product_menu),
     ) {
         when (menu.items.isEmpty()) {
-            true -> Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(MyFarmerTheme.paddings.small),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = stringResource(R.string.no_products))
+            true -> item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(MyFarmerTheme.paddings.small),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = stringResource(R.string.no_products))
+                }
             }
 
-            false -> menu.items.map { menuItem -> ProductMenuItemCard(item = menuItem) }
+            false -> items(menu.items) { menuItem -> ProductMenuItemCard(item = menuItem) }
         }
     }
 }
@@ -95,7 +98,7 @@ private fun InStockLabel(
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         Text(
             text = when (isInStock) {

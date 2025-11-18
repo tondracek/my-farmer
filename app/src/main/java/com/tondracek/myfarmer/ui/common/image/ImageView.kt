@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
@@ -17,7 +18,8 @@ import com.tondracek.myfarmer.common.model.ImageResource
 @Composable
 fun ImageView(
     modifier: Modifier = Modifier,
-    imageResource: ImageResource?
+    imageResource: ImageResource?,
+    contentScale: ContentScale = ContentScale.Fit,
 ) {
     var openImageDialog by remember { mutableStateOf(false) }
 
@@ -25,7 +27,8 @@ fun ImageView(
         modifier = modifier.clickable { openImageDialog = true },
         model = imageResource?.uri,
         contentDescription = null,
-        placeholder = painterResource(R.drawable.ic_launcher_foreground)
+        placeholder = painterResource(R.drawable.ic_launcher_foreground),
+        contentScale = contentScale,
     )
 
     if (openImageDialog) {

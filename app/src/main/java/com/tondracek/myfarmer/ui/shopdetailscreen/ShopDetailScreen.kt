@@ -5,8 +5,8 @@ import androidx.compose.runtime.LaunchedEffect
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailState
-import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.components.ShopDetailLayout
 import com.tondracek.myfarmer.ui.core.appstate.LocalAppUiController
+import com.tondracek.myfarmer.ui.shopdetailscreen.components.ShopDetailLayout
 
 @Composable
 fun ShopDetailScreen(

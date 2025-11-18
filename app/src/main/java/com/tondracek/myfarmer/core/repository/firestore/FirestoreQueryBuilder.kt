@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.core.repository.firestore
 
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.tondracek.myfarmer.core.repository.request.AscendingSort
 import com.tondracek.myfarmer.core.repository.request.DescendingSort
@@ -45,4 +46,10 @@ object FirestoreQueryBuilder {
                 is DescendingSort<*> -> query.orderBy(sort.field.name, Query.Direction.DESCENDING)
             }
         }
+
+    fun Query.applyLimit(limit: Int?): Query =
+        limit?.let { this.limit(it.toLong()) } ?: this
+
+    fun Query.applyOffset(startAfter: DocumentSnapshot?): Query =
+        startAfter?.let { this.startAfter(startAfter) } ?: this
 }

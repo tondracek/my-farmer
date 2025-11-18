@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.components
+package com.tondracek.myfarmer.ui.shopdetailscreen.components.sections
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

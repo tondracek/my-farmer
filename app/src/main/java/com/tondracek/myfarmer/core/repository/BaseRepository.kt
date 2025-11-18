@@ -10,9 +10,9 @@ abstract class BaseRepository<Model>(
 
     override suspend fun create(item: Model): UUID = core.create(item)
 
-    override suspend fun update(item: Model): Boolean = core.update(item)
+    override suspend fun update(item: Model) = core.update(item)
 
-    override suspend fun delete(id: UUID): Boolean = core.delete(id)
+    override suspend fun delete(id: UUID) = core.delete(id)
 
     override fun getById(id: UUID): Flow<Model?> = core.getById(id)
 

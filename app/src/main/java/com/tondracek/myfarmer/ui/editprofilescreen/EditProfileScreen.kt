@@ -1,13 +1,24 @@
 package com.tondracek.myfarmer.ui.editprofilescreen
 
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -15,18 +26,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
-import com.tondracek.myfarmer.contactinfo.domain.model.MediaLink
+import com.tondracek.myfarmer.systemuser.data.user0
 import com.tondracek.myfarmer.ui.common.image.ImageView
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.core.appstate.LocalAppUiController
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
 fun EditProfileScreen(
@@ -47,8 +60,39 @@ fun EditProfileScreen(
             onSaveClick = onSaveClick,
         )
 
+        EditProfileScreenState.SavedSuccessfully -> SavedSuccessfullyLayout()
         EditProfileScreenState.Loading -> LoadingLayout()
-        is EditProfileScreenState.Error -> ErrorLayout(text = state.result.userError)
+        is EditProfileScreenState.Error -> ErrorLayout(error = state.result)
+    }
+}
+
+@Composable
+private fun SavedSuccessfullyLayout(modifier: Modifier = Modifier) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Card(
+            modifier = modifier,
+            colors = MyFarmerTheme.cardColors.secondary,
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Icon(
+                    modifier = Modifier.size(48.dp),
+                    imageVector = Icons.Default.CheckCircle,
+                    contentDescription = null,
+                    tint = MyFarmerTheme.colors.success,
+                )
+                Text(
+                    text = "Profile saved successfully!",
+                    style = MyFarmerTheme.typography.textLarge,
+                )
+            }
+        }
     }
 }
 
@@ -61,11 +105,22 @@ private fun SuccessScreen(
     onLogout: () -> Unit,
     onSaveClick: () -> Unit,
 ) {
-    Column(Modifier.fillMaxSize()) {
-        Box(
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .scrollable(state = scrollState, orientation = Orientation.Vertical),
+    ) {
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.CenterEnd
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = "You are logged in as ${state.name}",
+                style = MyFarmerTheme.typography.headerMedium
+            )
             Button(onClick = onLogout) {
                 Text(text = "Logout")
             }
@@ -96,15 +151,15 @@ private fun ProfilePicture(
     state: EditProfileScreenState.Success,
     onProfilePictureChange: (ImageResource) -> Unit,
 ) {
-    Column {
-
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         ImageView(
             modifier = Modifier
-                .widthIn(max = 400.dp)
+                .widthIn(max = 200.dp)
                 .fillMaxWidth()
                 .aspectRatio(1f)
                 .clip(CircleShape),
-            imageResource = state.profilePicture
+            imageResource = state.profilePicture,
+            contentScale = ContentScale.Crop,
         )
         TextField(
             value = state.profilePicture.uri ?: "",
@@ -131,17 +186,23 @@ private fun NameField(
 private fun EditProfileScreenPreview() {
     MyFarmerPreview {
         EditProfileScreen(
-            state = EditProfileScreenState.Success(
-                name = "JohnDoe",
-                profilePicture = ImageResource(null),
-                contactInfo = ContactInfo(
-                    email = "john@doe.com",
-                    phoneNumber = "+1234567890",
-                    website = MediaLink("website", "www.johndoe.com"),
-                    facebook = MediaLink("facebook", "fb.com/johndoe"),
-                    instagram = MediaLink("instagram", "instagram.com/johndoe"),
-                )
-            ),
+            state = user0.toUiState(),
+            onNameChange = {},
+            onProfilePictureChange = {},
+            onContactInfoChange = {},
+            onLogout = {},
+            onSaveClick = {},
+        )
+    }
+}
+
+
+@Preview
+@Composable
+private fun EditProfileSavedScreenPreview() {
+    MyFarmerPreview {
+        EditProfileScreen(
+            state = EditProfileScreenState.SavedSuccessfully,
             onNameChange = {},
             onProfilePictureChange = {},
             onContactInfoChange = {},

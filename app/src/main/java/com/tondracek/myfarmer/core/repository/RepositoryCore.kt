@@ -8,9 +8,9 @@ interface RepositoryCore<Model> {
 
     suspend fun create(item: Model): UUID
 
-    suspend fun update(item: Model): Boolean
+    suspend fun update(item: Model)
 
-    suspend fun delete(id: UUID): Boolean
+    suspend fun delete(id: UUID)
 
     fun getById(id: UUID): Flow<Model?>
 

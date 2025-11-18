@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.components
+package com.tondracek.myfarmer.ui.shopdetailscreen.components.sections
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -15,8 +15,8 @@ import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.shopdetailscreen.components.sectionlayout.ShopDetailSectionLayout
 import java.time.DayOfWeek
-
 
 @Composable
 fun OpeningHoursSection(
@@ -31,14 +31,16 @@ fun OpeningHoursSection(
         title = stringResource(R.string.opening_hours),
     ) {
         when (openingHours) {
-            is OpeningHours.Message -> openingHours.message?.let {
+            is OpeningHours.Message -> itemNotNull(openingHours.message) {
                 Text(
                     text = it,
                     modifier = Modifier.padding(8.dp)
                 )
             }
 
-            is OpeningHours.Time -> openingHours.dayToHours.forEach { dayHours ->
+            is OpeningHours.Time -> items(
+                openingHours.dayToHours.toList().sortedBy { it.first.ordinal }
+            ) { dayHours ->
                 OpeningHoursItem(dayHours = dayHours)
             }
         }
@@ -48,7 +50,7 @@ fun OpeningHoursSection(
 @Composable
 private fun OpeningHoursItem(
     modifier: Modifier = Modifier,
-    dayHours: Map.Entry<DayOfWeek, String>,
+    dayHours: Pair<DayOfWeek, String>,
 ) {
     Row(
         modifier = modifier
@@ -58,11 +60,11 @@ private fun OpeningHoursItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = getDayOfWeekString(dayHours.key),
+            text = getDayOfWeekString(dayHours.first),
             style = MyFarmerTheme.typography.textMedium,
         )
         Text(
-            text = dayHours.value,
+            text = dayHours.second,
             style = MyFarmerTheme.typography.textMedium,
         )
     }
