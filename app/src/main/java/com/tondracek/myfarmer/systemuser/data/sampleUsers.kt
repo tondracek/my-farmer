@@ -2,7 +2,6 @@ package com.tondracek.myfarmer.systemuser.data
 
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
-import com.tondracek.myfarmer.contactinfo.domain.model.MediaLink
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import java.util.UUID
 
@@ -14,9 +13,9 @@ val user0 = SystemUser(
     contactInfo = ContactInfo(
         phoneNumber = "+1234567890",
         email = "john@doe.com",
-        website = MediaLink("website", "example.com"),
-        facebook = MediaLink("facebook", "fb.com/johndoe"),
-        instagram = MediaLink("instagram", "insta.com/johndoe"),
+        website = "example.com",
+        facebookLink = "fb.com/johndoe",
+        instagramLink = "instagram.com/johndoe",
     )
 )
 
@@ -29,8 +28,8 @@ val user1 = SystemUser(
         phoneNumber = null,
         email = "jane.smith@email.com",
         website = null,
-        facebook = null,
-        instagram = null,
+        facebookLink = null,
+        instagramLink = null,
     )
 )
 
@@ -43,8 +42,8 @@ val user2 = SystemUser(
         phoneNumber = null,
         email = null,
         website = null,
-        facebook = null,
-        instagram = null,
+        facebookLink = null,
+        instagramLink = null,
     )
 )
 

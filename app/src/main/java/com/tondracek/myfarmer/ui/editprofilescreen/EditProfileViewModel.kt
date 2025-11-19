@@ -92,7 +92,7 @@ class EditProfileViewModel @Inject constructor(
         when (updateResult) {
             is UCResult.Success -> run {
                 _state.update { EditProfileScreenState.SavedSuccessfully }
-                delay(5.seconds)
+                delay(3.seconds)
                 loadData()
             }
 

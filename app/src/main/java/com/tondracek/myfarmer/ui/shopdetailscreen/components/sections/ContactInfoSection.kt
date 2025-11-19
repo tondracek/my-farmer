@@ -55,20 +55,20 @@ fun ContactInfoSection(
         }
         contactInfo.website?.let { website ->
             OpenLinkItem(
-                title = website.title,
-                url = website.url,
+                title = "Website",
+                url = website,
             )
         }
-        contactInfo.facebook?.let { facebook ->
+        contactInfo.facebookLink?.let { facebook ->
             OpenLinkItem(
-                title = facebook.title,
-                url = facebook.url,
+                title = "Facebook",
+                url = facebook,
             )
         }
-        contactInfo.instagram?.let { instagram ->
+        contactInfo.instagramLink?.let { instagram ->
             OpenLinkItem(
-                title = contactInfo.instagram.title,
-                url = contactInfo.instagram.url,
+                title = "Instagram",
+                url = instagram,
             )
         }
     }

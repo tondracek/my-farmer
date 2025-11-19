@@ -3,22 +3,17 @@ package com.tondracek.myfarmer.contactinfo.domain.model
 data class ContactInfo(
     val phoneNumber: String?,
     val email: String?,
-    val website: MediaLink?,
-    val facebook: MediaLink?,
-    val instagram: MediaLink?,
+    val website: String?,
+    val facebookLink: String?,
+    val instagramLink: String?,
 ) {
     companion object {
         val EMPTY = ContactInfo(
             phoneNumber = null,
             email = null,
             website = null,
-            facebook = null,
-            instagram = null,
+            facebookLink = null,
+            instagramLink = null,
         )
     }
 }
-
-data class MediaLink(
-    val title: String,
-    val url: String,
-)

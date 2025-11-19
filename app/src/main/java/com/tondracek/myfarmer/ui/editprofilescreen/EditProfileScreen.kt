@@ -1,21 +1,23 @@
 package com.tondracek.myfarmer.ui.editprofilescreen
 
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -35,6 +37,7 @@ import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.core.appstate.LocalAppUiController
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.editprofilescreen.components.ContactInfoEdit
 import com.tondracek.myfarmer.ui.editprofilescreen.components.ProfilePictureEdit
 
 @Composable
@@ -129,36 +132,53 @@ private fun SuccessScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .scrollable(state = scrollState, orientation = Orientation.Vertical),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Center)
+                .verticalScroll(state = scrollState),
         ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = "You are logged in as ${state.name}",
-                style = MyFarmerTheme.typography.headerMedium
-            )
-            Button(onClick = onLogout) {
-                Text(text = "Logout")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = "You are logged in as ${state.name}",
+                    style = MyFarmerTheme.typography.headerMedium
+                )
+                Button(onClick = onLogout) {
+                    Text(text = "Logout")
+                }
             }
+            ProfilePictureEdit(
+                state = state,
+                onProfilePictureChange = onProfilePictureChange,
+            )
+
+            NameField(
+                modifier = Modifier.fillMaxWidth(),
+                name = state.name,
+                onNameChange = onNameChange,
+            )
+
+            HorizontalDivider(Modifier.padding(horizontal = MyFarmerTheme.paddings.large))
+
+            ContactInfoEdit(
+                contactInfo = state.contactInfo,
+                onContactInfoChange = onContactInfoChange,
+            )
+
+            Spacer(Modifier.height(64.dp))
         }
-        ProfilePictureEdit(
-            state = state,
-            onProfilePictureChange = onProfilePictureChange,
-        )
-
-        NameField(
-            modifier = Modifier.fillMaxWidth(),
-            name = state.name,
-            onNameChange = onNameChange,
-        )
-
-        Button(onClick = onSaveClick) { Text(text = "Save") }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(MyFarmerTheme.paddings.medium),
+            onClick = onSaveClick
+        ) { Text(text = "Save") }
     }
 
     val appUiController = LocalAppUiController.current
@@ -174,11 +194,20 @@ private fun NameField(
     name: String,
     onNameChange: (String) -> Unit,
 ) {
-    TextField(
-        modifier = modifier,
-        value = name,
-        onValueChange = { newValue -> onNameChange(newValue) },
-    )
+    Column(
+        modifier = Modifier.padding(MyFarmerTheme.paddings.medium),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Text(
+            text = "Edit your name:",
+            style = MyFarmerTheme.typography.textMedium,
+        )
+        TextField(
+            modifier = modifier,
+            value = name,
+            onValueChange = { newValue -> onNameChange(newValue) },
+        )
+    }
 }
 
 @Preview
