@@ -42,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -90,4 +91,5 @@ dependencies {
 
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.ui.auth)
+    implementation(libs.firebase.storage)
 }

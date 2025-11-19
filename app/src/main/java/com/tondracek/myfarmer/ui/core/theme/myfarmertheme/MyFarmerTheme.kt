@@ -35,6 +35,10 @@ data object MyFarmerTheme {
     val cardColors: MyFarmerCardColors
         @Composable
         get() = myFarmerCardColors
+
+    val iconButtonColors: MyFarmerIconButtonColors
+        @Composable
+        get() = myFarmerIconButtonColors
 }
 
 @Composable

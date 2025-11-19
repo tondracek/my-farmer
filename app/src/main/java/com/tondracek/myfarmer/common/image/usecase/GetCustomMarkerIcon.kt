@@ -1,10 +1,12 @@
 package com.tondracek.myfarmer.common.image.usecase
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.scale
@@ -21,9 +23,10 @@ class GetCustomMarkerIcon @Inject constructor(
 ) {
 
     suspend operator fun invoke(imageUrl: String?): BitmapDescriptor {
-        val drawable = fetchCustomMarkerImage(context, imageUrl, R.drawable.ic_launcher_foreground)
+        val drawable: Drawable =
+            fetchCustomMarkerImage(context, imageUrl, R.drawable.baseline_store_48)
 
-        val imageBitmap = (drawable as BitmapDrawable).bitmap
+        val imageBitmap: Bitmap = drawable.toBitmapSafely()
 
         val height = 220
         val width = 150
@@ -53,5 +56,22 @@ class GetCustomMarkerIcon @Inject constructor(
         }
 
         return BitmapDescriptorFactory.fromBitmap(output)
+    }
+
+    private fun Drawable.toBitmapSafely(): Bitmap {
+        if (this is BitmapDrawable) return this.bitmap
+
+        val bitmap = createBitmap(
+            intrinsicWidth.takeIf { it > 0 } ?: 1,
+            intrinsicHeight.takeIf { it > 0 } ?: 1
+        )
+
+        val canvas = Canvas(bitmap)
+
+        val xOffset = canvas.width / 10
+        val yOffset = canvas.height / 10
+        setBounds(xOffset, yOffset, canvas.width - xOffset, canvas.height - yOffset)
+        draw(canvas)
+        return bitmap
     }
 }

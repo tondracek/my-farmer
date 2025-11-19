@@ -84,16 +84,19 @@ class EditProfileViewModel @Inject constructor(
 
     fun onSaveProfile() = viewModelScope.launch {
         val currentState = _state.value as? EditProfileScreenState.Success ?: return@launch
+        val updateUser = currentState.toSystemUser()
 
-        val updatedUser = currentState.toSystemUser()
-        when (val result = updateUserUC(updatedUser)) {
+        _state.update { EditProfileScreenState.UpdatingProfile }
+        val updateResult = updateUserUC(updateUser)
+
+        when (updateResult) {
             is UCResult.Success -> run {
                 _state.update { EditProfileScreenState.SavedSuccessfully }
                 delay(5.seconds)
                 loadData()
             }
 
-            is UCResult.Failure -> _state.update { EditProfileScreenState.Error(result = result) }
+            is UCResult.Failure -> _state.update { EditProfileScreenState.Error(result = updateResult) }
         }
     }
 

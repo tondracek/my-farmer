@@ -15,6 +15,8 @@ sealed interface EditProfileScreenState {
         val contactInfo: ContactInfo,
     ) : EditProfileScreenState
 
+    data object UpdatingProfile : EditProfileScreenState
+
     data object SavedSuccessfully : EditProfileScreenState
 
     data object Loading : EditProfileScreenState

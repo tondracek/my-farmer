@@ -2,7 +2,7 @@
 accompanistPermissions = "0.37.3"
 agp = "8.13.1"
 coilCompose = "3.3.0"
-firebaseBom = "34.5.0"
+firebaseBom = "34.6.0"
 firebaseUiAuth = "9.1.1"
 googleServices = "4.4.4"
 kotlin = "2.2.21"
@@ -37,6 +37,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+firebase-storage = { module = "com.google.firebase:firebase-storage" }
 firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version.ref = "firebaseUiAuth" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

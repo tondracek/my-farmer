@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.core.usecaseresult
 
+import android.util.Log
 import com.tondracek.myfarmer.core.usecaseresult.UCResult.Failure
 import com.tondracek.myfarmer.core.usecaseresult.UCResult.Success
 
@@ -7,8 +8,11 @@ sealed interface UCResult<out T> {
 
     data class Success<T>(val data: T) : UCResult<T>
 
-    open class Failure(val userError: String, val systemError: String? = null) :
-        UCResult<Nothing>
+    open class Failure(val userError: String, val systemError: String? = null) : UCResult<Nothing> {
+        init {
+            Log.e(this.javaClass.name, systemError, null)
+        }
+    }
 
     fun <R> map(transform: (T) -> R): UCResult<R> = when (this) {
         is Success -> Success(transform(data))
@@ -32,7 +36,7 @@ sealed interface UCResult<out T> {
         is Failure -> null
     }
 
-    fun <R>fold(onSuccess: (T) -> R, onFailure: (Failure) -> R) = when (this) {
+    fun <R> fold(onSuccess: (T) -> R, onFailure: (Failure) -> R) = when (this) {
         is Success -> onSuccess(data)
         is Failure -> onFailure(this)
     }
