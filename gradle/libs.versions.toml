@@ -26,6 +26,7 @@ hiltNavigationCompose = "1.3.0"
 composeFoundation = "1.9.4"
 playServicesLocation = "21.3.0"
 material3Navigation = "1.0.5"
+exifinterface = "1.4.1"
 
 [libraries]
 # Firebase – versions managed by BOM
@@ -69,6 +70,7 @@ androidx-compose-pager = { group = "androidx.compose.foundation", name = "founda
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

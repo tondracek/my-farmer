@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
 import com.tondracek.myfarmer.common.image.data.PhotoStorage
 import com.tondracek.myfarmer.common.image.data.PhotoStorageFolder
+import com.tondracek.myfarmer.common.image.data.Quality
 import com.tondracek.myfarmer.common.usecase.result.UpdateFailedUCResult
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.systemuser.data.UserRepository
@@ -41,7 +42,8 @@ class UpdateUserUC @Inject constructor(
                 photoStorage.uploadPhoto(
                     imageResource = this.profilePicture,
                     name = this.id.toString(),
-                    folder = PhotoStorageFolder.PROFILE_PICTURES
+                    folder = PhotoStorageFolder.PROFILE_PICTURES,
+                    quality = Quality.HD
                 ).let { this.copy(profilePicture = it) }
             }
         }
