@@ -1,0 +1,57 @@
+package com.tondracek.myfarmer.common.image.usecase
+
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.drawable.BitmapDrawable
+import androidx.compose.ui.graphics.toArgb
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.scale
+import androidx.core.graphics.withClip
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.tondracek.myfarmer.R
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.farmerDarkColors
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+
+class GetCustomMarkerIcon @Inject constructor(
+    @param:ApplicationContext private val context: Context,
+) {
+
+    suspend operator fun invoke(imageUrl: String?): BitmapDescriptor {
+        val drawable = fetchCustomMarkerImage(context, imageUrl, R.drawable.ic_launcher_foreground)
+
+        val imageBitmap = (drawable as BitmapDrawable).bitmap
+
+        val height = 220
+        val width = 150
+        val output = createBitmap(width, height)
+        val canvas = Canvas(output)
+
+        val imageSize = width
+
+        // Location Icon Path
+        val anchorPath = Path().apply {
+            addArc(0f, 0f, imageSize.toFloat(), imageSize.toFloat(), 180f, 360f)
+            moveTo(canvas.width / 2f, canvas.height.toFloat())
+            lineTo(0f, imageSize.toFloat() / 2f)
+            lineTo(canvas.width.toFloat(), imageSize.toFloat() / 2f)
+        }
+
+        canvas.drawPath(anchorPath, Paint().apply {
+            color = farmerDarkColors.primaryContainer.toArgb()
+            style = Paint.Style.FILL
+        })
+
+        canvas.withClip(
+            Path().apply { addCircle(width * .5f, width * .5f, width * .4f, Path.Direction.CW) }
+        ) {
+            val scaledBitmap = imageBitmap.scale(imageSize, imageSize)
+            canvas.drawBitmap(scaledBitmap, 0f, 0f, Paint().apply { isAntiAlias = true })
+        }
+
+        return BitmapDescriptorFactory.fromBitmap(output)
+    }
+}

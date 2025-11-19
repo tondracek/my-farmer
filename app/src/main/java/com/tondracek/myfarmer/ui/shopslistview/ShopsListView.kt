@@ -11,10 +11,10 @@ import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.location.model.km
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
-import com.tondracek.myfarmer.ui.core.preview.AsyncImagePreviewFix
+import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
-import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.shopslistview.components.ShopListItemCard
 import com.tondracek.myfarmer.ui.shopslistview.components.ShopListViewItem
 import com.tondracek.myfarmer.ui.shopslistview.components.toListItem
@@ -26,12 +26,14 @@ fun ShopsListView(
     onNavigateToShopDetail: (ShopId) -> Unit,
 ) {
     when (state) {
-        ShopsListViewState.Loading -> LoadingLayout()
         is ShopsListViewState.Success -> Success(
             modifier = modifier,
             state = state,
             onNavigateToShopDetail = onNavigateToShopDetail
         )
+
+        ShopsListViewState.Loading -> LoadingLayout()
+        is ShopsListViewState.Error -> ErrorLayout(error = state.error)
     }
 }
 
@@ -62,15 +64,13 @@ private fun Success(
 @PreviewApi34
 @Composable
 private fun ShopsListViewPreview() {
-    MyFarmerTheme {
-        AsyncImagePreviewFix {
-            ShopsListView(
-                modifier = Modifier,
-                state = ShopsListViewState.Success(
-                    shops = sampleShops.map { it.toListItem(2.5.km) }
-                ),
-                onNavigateToShopDetail = {},
-            )
-        }
+    MyFarmerPreview {
+        ShopsListView(
+            modifier = Modifier,
+            state = ShopsListViewState.Success(
+                shops = sampleShops.map { it.toListItem(2.5.km) }
+            ),
+            onNavigateToShopDetail = {},
+        )
     }
 }

@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.ui.shopslistview
 
+import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.ui.shopslistview.components.ShopListViewItem
 
 sealed class ShopsListViewState {
@@ -7,5 +8,9 @@ sealed class ShopsListViewState {
 
     data class Success(
         val shops: List<ShopListViewItem> = emptyList()
+    ) : ShopsListViewState()
+
+    data class Error(
+        val error: UCResult.Failure
     ) : ShopsListViewState()
 }

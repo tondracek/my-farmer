@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.tondracek.myfarmer.common.image.model.GetBitmapDescriptorFromUrlUC
+import com.tondracek.myfarmer.common.image.usecase.GetCustomMarkerIcon
 import com.tondracek.myfarmer.common.usecase.GetByIdsUC
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.combineUCResults
@@ -34,7 +34,7 @@ import javax.inject.Inject
 class ShopsMapViewModel @Inject constructor(
     getAllShops: GetAllShopsUC,
     getByIdsUC: GetByIdsUC<SystemUser>,
-    getBitmapDescriptorFromUrl: GetBitmapDescriptorFromUrlUC,
+    getCustomMarkerIcon: GetCustomMarkerIcon,
     private val navigator: AppNavigator,
 ) : ViewModel() {
 
@@ -53,7 +53,7 @@ class ShopsMapViewModel @Inject constructor(
             val descriptors = coroutineScope {
                 list.map { user ->
                     async {
-                        user.id to getBitmapDescriptorFromUrl(user.profilePicture.uri)
+                        user.id to getCustomMarkerIcon(user.profilePicture.uri)
                     }
                 }.awaitAll().toMap()
             }

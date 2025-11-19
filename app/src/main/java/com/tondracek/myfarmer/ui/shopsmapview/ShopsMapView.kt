@@ -69,7 +69,8 @@ fun ShopsMapView(
                 onClick = {
                     onShopSelected(shop.id)
                     return@Marker false
-                }
+                },
+                icon = shop.markerIcon,
             )
         }
     }

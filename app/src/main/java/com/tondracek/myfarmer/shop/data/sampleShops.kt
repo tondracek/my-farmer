@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.shop.data
 
 import androidx.compose.ui.graphics.Color
-import com.tondracek.myfarmer.common.model.ImageResource
+import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu

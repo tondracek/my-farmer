@@ -1,11 +1,26 @@
 package com.tondracek.myfarmer.ui.shopsmapview
 
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.LatLngBounds
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 
 data class ShopsMapViewState(
     val initialCameraBounds: LatLngBounds? = null,
-    val shops: Set<Shop> = emptySet(),
-    val selectedShop: ShopId? = null,
+    val shops: Set<ShopMapItem> = emptySet(),
+)
+
+data class ShopMapItem(
+    val id: ShopId,
+    val name: String?,
+    val location: ShopLocation,
+    val markerIcon: BitmapDescriptor?
+)
+
+fun Shop.toShopMapItem(markerIcon: BitmapDescriptor?) = ShopMapItem(
+    id = this.id,
+    name = this.name,
+    location = this.location,
+    markerIcon = markerIcon,
 )

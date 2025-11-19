@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.ui.editprofilescreen
 
-import com.tondracek.myfarmer.common.model.ImageResource
+import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser

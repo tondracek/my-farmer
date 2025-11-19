@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.systemuser.domain.model
 
-import com.tondracek.myfarmer.common.model.ImageResource
+import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import java.util.UUID
 

@@ -14,8 +14,6 @@ import com.tondracek.myfarmer.review.domain.usecase.GetShopAverageRatingUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
-import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailState
-import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.toShopDetailState
 import com.tondracek.myfarmer.ui.common.review.toUiState
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel

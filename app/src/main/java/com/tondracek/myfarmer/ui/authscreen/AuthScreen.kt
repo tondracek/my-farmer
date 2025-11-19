@@ -23,7 +23,7 @@ fun FirebaseUiLoginScreen(onSuccess: () -> Unit, onError: (String) -> Unit) {
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
 //            .setLogo(R.drawable.ic_my_logo)
-            .setTheme(R.style.Theme_MyFarmer)
+            .setTheme(R.style.Theme_MyFarmer_FirebaseAuth)
             .build()
     }
 

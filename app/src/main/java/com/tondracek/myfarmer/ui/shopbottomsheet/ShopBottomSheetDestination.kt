@@ -12,8 +12,8 @@ import com.stefanoq21.material3.navigation.bottomSheet
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
-import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailState
 import com.tondracek.myfarmer.ui.core.navigation.Route
+import com.tondracek.myfarmer.ui.shopdetailscreen.ShopDetailState
 import com.tondracek.myfarmer.ui.shopdetailscreen.components.ShopDetailLayout
 import java.util.UUID
 

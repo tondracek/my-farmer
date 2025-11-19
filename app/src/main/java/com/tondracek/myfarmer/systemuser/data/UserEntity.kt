@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.systemuser.data
 
-import com.tondracek.myfarmer.common.model.ImageResource
+import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.data.ContactInfoEntity
 import com.tondracek.myfarmer.contactinfo.data.toEntity
 import com.tondracek.myfarmer.contactinfo.data.toModel

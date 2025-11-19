@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.shop.domain.model
 
-import com.tondracek.myfarmer.common.model.ImageResource
+import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory

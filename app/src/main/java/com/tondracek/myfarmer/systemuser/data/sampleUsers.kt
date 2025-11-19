@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.systemuser.data
 
-import com.tondracek.myfarmer.common.model.ImageResource
+import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.contactinfo.domain.model.MediaLink
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser

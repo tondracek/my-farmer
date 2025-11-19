@@ -1,6 +1,6 @@
-package com.tondracek.myfarmer.ui.common.layout.shopdetaillayout
+package com.tondracek.myfarmer.ui.shopdetailscreen
 
-import com.tondracek.myfarmer.common.model.ImageResource
+import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu

@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.common.model
+package com.tondracek.myfarmer.common.image.model
 
 data class ImageResource(
     val uri: String?,

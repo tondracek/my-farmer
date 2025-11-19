@@ -21,7 +21,7 @@ import com.tondracek.myfarmer.systemuser.data.user1
 import com.tondracek.myfarmer.systemuser.data.user2
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.ui.common.image.ImageView
-import com.tondracek.myfarmer.ui.core.preview.AsyncImagePreviewFix
+import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewDark
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
@@ -64,32 +64,26 @@ fun UserPreviewCard(
 @Preview
 @Composable
 private fun UserPreviewCardPreview() {
-    AsyncImagePreviewFix {
-        MyFarmerTheme {
-            UserPreviewCard(
-                modifier = Modifier.widthIn(max = 150.dp),
-                user = user2
-            )
-        }
+    MyFarmerPreview {
+        UserPreviewCard(
+            modifier = Modifier.widthIn(max = 150.dp),
+            user = user2
+        )
     }
 }
 
 @Preview
 @Composable
 private fun UserPreviewCardPreview0() {
-    AsyncImagePreviewFix {
-        MyFarmerTheme {
-            UserPreviewCard(user = user2)
-        }
+    MyFarmerPreview {
+        UserPreviewCard(user = user2)
     }
 }
 
 @PreviewDark
 @Composable
 private fun UserPreviewCardPreview1() {
-    AsyncImagePreviewFix {
-        MyFarmerTheme {
-            UserPreviewCard(user = user1)
-        }
+    MyFarmerPreview {
+        UserPreviewCard(user = user1)
     }
 }

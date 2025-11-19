@@ -21,9 +21,8 @@ import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
 import com.tondracek.myfarmer.ui.common.image.ImageView
-import com.tondracek.myfarmer.ui.core.preview.AsyncImagePreviewFix
+import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
-import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
 fun ShopListItemCard(
@@ -84,12 +83,10 @@ fun ShopListItemCard(
 @PreviewApi34
 @Composable
 private fun ShopListItemCardPreview() {
-    MyFarmerTheme {
-        AsyncImagePreviewFix {
-            ShopListItemCard(
-                shop = sampleShops.first().toListItem(3.5.km),
-                onNavigateToShopDetail = {}
-            )
-        }
+    MyFarmerPreview {
+        ShopListItemCard(
+            shop = sampleShops.first().toListItem(3.5.km),
+            onNavigateToShopDetail = {}
+        )
     }
 }

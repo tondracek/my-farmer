@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.common.model.ImageResource
+import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.sampleReviewsUI
 import com.tondracek.myfarmer.shop.data.shop0
@@ -31,17 +31,17 @@ import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
 import com.tondracek.myfarmer.ui.common.image.ImageView
-import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.ShopDetailState
-import com.tondracek.myfarmer.ui.common.layout.shopdetaillayout.toShopDetailState
 import com.tondracek.myfarmer.ui.common.rating.RatingStars
 import com.tondracek.myfarmer.ui.common.user.UserPreviewCard
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewDark
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.shopdetailscreen.ShopDetailState
 import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.ContactInfoSection
 import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.MenuSection
 import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.OpeningHoursSection
 import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.ReviewsPreviewSection
+import com.tondracek.myfarmer.ui.shopdetailscreen.toShopDetailState
 
 @Composable
 fun ShopDetailLayout(

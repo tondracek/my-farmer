@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.ui.shopslistview.components
 
-import com.tondracek.myfarmer.common.model.ImageResource
+import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.location.model.Distance
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId

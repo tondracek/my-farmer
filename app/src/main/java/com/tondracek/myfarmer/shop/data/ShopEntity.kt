@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.shop.data
 
-import com.tondracek.myfarmer.common.model.ImageResource
+import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollection
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity

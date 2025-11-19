@@ -3,9 +3,7 @@
 
     <style name="Theme.MyFarmer" parent="android:Theme.Material.Light.NoActionBar" />
 
-    <style name="Theme.MyFarmer.FirebaseAuth" parent="Theme.Material3.Light">
-
-        <!-- Remove Bar -->
+    <style name="Theme.MyFarmer.FirebaseAuth" parent="Theme.Material3.Dark">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBar">false</item>
@@ -45,7 +43,7 @@
         <!-- Error -->
         <item name="colorError">@color/mf_error</item>
         <item name="colorOnError">@color/mf_onError</item>
-
     </style>
+
 
 </resources>
