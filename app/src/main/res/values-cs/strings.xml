@@ -17,9 +17,18 @@
     <string name="no_products">Žádné produkty</string>
     <string name="click_here">Klikni zde</string>
     <string name="contact_info">Kontaktní údaje</string>
+    <string name="out_of_stock">Není skladem</string>
     <string name="profile">Profil</string>
     <string name="my_shops">Moje obchody</string>
     <string name="login">Přihlásit</string>
     <string name="edit_profile">Upravit profil</string>
     <string name="in_stock">Skladem</string>
+    <string name="opening_hours">Otevírací doba</string>
+    <string name="monday">Pondělí</string>
+    <string name="tuesday">Úterý</string>
+    <string name="wednesday">Středa</string>
+    <string name="thursday">Čtvrtek</string>
+    <string name="friday">Pátek</string>
+    <string name="saturday">Sobota</string>
+    <string name="sunday">Neděle</string>
 </resources>
