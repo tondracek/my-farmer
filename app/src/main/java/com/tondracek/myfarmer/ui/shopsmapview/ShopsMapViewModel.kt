@@ -6,13 +6,12 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.tondracek.myfarmer.common.image.usecase.GetCustomMarkerIcon
-import com.tondracek.myfarmer.common.usecase.GetByIdsUC
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.combineUCResults
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
-import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.systemuser.domain.usecase.GetUsersByIdsUC
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ShopsMapViewModel @Inject constructor(
     getAllShops: GetAllShopsUC,
-    getByIdsUC: GetByIdsUC<SystemUser>,
+    getUsersByIdsUC: GetUsersByIdsUC,
     getCustomMarkerIcon: GetCustomMarkerIcon,
     private val navigator: AppNavigator,
 ) : ViewModel() {
@@ -46,7 +45,7 @@ class ShopsMapViewModel @Inject constructor(
             val shops = it.getOrNull() ?: return@map emptyList<ShopId>()
             shops.map { shop -> shop.ownerId }
         }
-        .flatMapLatest { getByIdsUC(it) }
+        .flatMapLatest { getUsersByIdsUC(it) }
         .transform { result ->
             val list = result.getOrNull() ?: emptyList()
 

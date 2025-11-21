@@ -3,8 +3,6 @@ package com.tondracek.myfarmer.ui.shopbottomsheet
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tondracek.myfarmer.common.usecase.GetByIdUC
-import com.tondracek.myfarmer.common.usecase.GetByIdsUC
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.combineUCResults
 import com.tondracek.myfarmer.review.domain.model.Rating
@@ -13,7 +11,10 @@ import com.tondracek.myfarmer.review.domain.usecase.GetReviewsPreviewUC
 import com.tondracek.myfarmer.review.domain.usecase.GetShopAverageRatingUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.shop.domain.usecase.GetShopByIdUC
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.systemuser.domain.usecase.GetUserByIdUC
+import com.tondracek.myfarmer.systemuser.domain.usecase.GetUsersByIdsUC
 import com.tondracek.myfarmer.ui.common.review.toUiState
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.shopdetailscreen.ShopDetailState
@@ -32,9 +33,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ShopBottomSheetViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    getShopById: GetByIdUC<Shop>,
-    getUserById: GetByIdUC<SystemUser>,
-    getUsersByIds: GetByIdsUC<SystemUser>,
+    getShopById: GetShopByIdUC,
+    getUserById: GetUserByIdUC,
+    getUsersByIds: GetUsersByIdsUC,
     getReviewsPreview: GetReviewsPreviewUC,
     getShopAverageRating: GetShopAverageRatingUC,
     private val navigator: AppNavigator
