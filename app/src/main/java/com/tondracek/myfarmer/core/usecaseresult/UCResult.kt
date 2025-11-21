@@ -1,8 +1,6 @@
 package com.tondracek.myfarmer.core.usecaseresult
 
 import android.util.Log
-import com.tondracek.myfarmer.core.usecaseresult.UCResult.Failure
-import com.tondracek.myfarmer.core.usecaseresult.UCResult.Success
 
 sealed interface UCResult<out T> {
 
@@ -46,18 +44,18 @@ sealed interface UCResult<out T> {
  * - For `UseCaseResult.Success` returns the `data` value
  * - For `UseCaseResult.Failure` applies the `block` function that can return some value
  */
-inline fun <T> UCResult<T>.getOrReturn(block: (Failure) -> Nothing): T =
+inline fun <T> UCResult<T>.getOrReturn(block: (UCResult.Failure) -> Nothing): T =
     when (this) {
-        is Success -> data
-        is Failure -> block(this)
+        is UCResult.Success -> data
+        is UCResult.Failure -> block(this)
     }
 
 fun <T> UCResult<T>.getOrElse(defaultValue: T): T = when (this) {
-    is Success -> data
-    is Failure -> defaultValue
+    is UCResult.Success -> data
+    is UCResult.Failure -> defaultValue
 }
 
-inline fun <T> UCResult<T>.getOrElse(defaultValue: (Failure) -> T): T = when (this) {
-    is Success -> data
-    is Failure -> defaultValue(this)
+inline fun <T> UCResult<T>.getOrElse(defaultValue: (UCResult.Failure) -> T): T = when (this) {
+    is UCResult.Success -> data
+    is UCResult.Failure -> defaultValue(this)
 }

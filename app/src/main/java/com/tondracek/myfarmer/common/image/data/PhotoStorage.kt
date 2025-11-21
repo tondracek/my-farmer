@@ -11,6 +11,9 @@ import androidx.core.net.toUri
 import androidx.exifinterface.media.ExifInterface
 import com.google.firebase.storage.FirebaseStorage
 import com.tondracek.myfarmer.common.image.model.ImageResource
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 import java.util.UUID
@@ -18,11 +21,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.min
 
-enum class PhotoStorageFolder(val path: String) {
-    PROFILE_PICTURES("profile_pictures"),
-    SHOP_PHOTOS("shop_photos"),
-    NONE(""),
-}
 
 enum class Quality {
     FULL,
@@ -34,42 +32,46 @@ enum class Quality {
 class PhotoStorage @Inject constructor(
     private val context: Context,
 ) {
-
     private val storage = FirebaseStorage.getInstance()
 
     suspend fun uploadPhoto(
         imageResource: ImageResource,
         name: String = UUID.randomUUID().toString(),
-        folder: PhotoStorageFolder = PhotoStorageFolder.NONE,
+        folder: PhotoStorageFolder = PhotoStorageFolder.None,
         quality: Quality = Quality.FULL,
     ): ImageResource {
         val localUri = imageResource.uri ?: return ImageResource.EMPTY
 
-        // Load bitmap
         val bitmap = loadBitmapFromUri(localUri.toUri()) ?: return ImageResource.EMPTY
-
-        // Resize based on quality
         val resizedBitmap = resizeBitmapForQuality(bitmap, quality)
-
-        // Compress JPEG
         val bytes = compressBitmap(resizedBitmap)
 
-        // Storage path
         val fileName = "$name.jpg"
-        val storagePath = when (folder) {
-            PhotoStorageFolder.NONE -> fileName
-            else -> "${folder.path}/$fileName"
-        }
+        val storagePath = folder.getPath(fileName)
 
         val ref = storage.reference.child(storagePath)
 
-        // Upload compressed bytes
         ref.putBytes(bytes).await()
 
-        // Get download URL
         val downloadUrl = ref.downloadUrl.await()?.toString()
-
         return downloadUrl?.let { ImageResource(it) } ?: ImageResource.EMPTY
+    }
+
+    suspend fun uploadPhotos(
+        imageResources: Collection<Pair<String, ImageResource>>,
+        folder: PhotoStorageFolder = PhotoStorageFolder.None,
+        quality: Quality = Quality.FULL,
+    ): List<ImageResource> = coroutineScope {
+        imageResources.map {
+            async {
+                uploadPhoto(
+                    imageResource = it.second,
+                    name = it.first,
+                    folder = folder,
+                    quality = quality
+                )
+            }
+        }.awaitAll()
     }
 
     suspend fun deletePhoto(imageResource: ImageResource) =

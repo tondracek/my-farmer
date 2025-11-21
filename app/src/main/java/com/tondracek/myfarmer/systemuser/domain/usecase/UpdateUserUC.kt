@@ -42,7 +42,7 @@ class UpdateUserUC @Inject constructor(
                 photoStorage.uploadPhoto(
                     imageResource = this.profilePicture,
                     name = this.id.toString(),
-                    folder = PhotoStorageFolder.PROFILE_PICTURES,
+                    folder = PhotoStorageFolder.ProfilePictures,
                     quality = Quality.HD
                 ).let { this.copy(profilePicture = it) }
             }

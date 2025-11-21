@@ -19,14 +19,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 
-
-data class LastDocumentSnapshotForPagination(
-    val snapshot: DocumentSnapshot?,
-    val position: Int,
-    val request: RepositoryRequest,
-    val requestTimestamp: Long = System.currentTimeMillis()
-)
-
 class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
     private val mapper: EntityMapper<Model, Entity>,
     private val entityClass: Class<Entity>,
