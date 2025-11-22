@@ -32,7 +32,7 @@ class CreateShopViewModel @Inject constructor(
         currentStep.previous()
     }
 
-    suspend fun finishCreation() = _state.updateCreatingSuspend {
+    suspend fun submitCreating() = _state.updateCreatingSuspend {
         when (val result = createShop(it.shopInput)) {
             is UCResult.Success<Unit> -> CreateShopState.Finished
             is UCResult.Failure -> CreateShopState.Error(result)
