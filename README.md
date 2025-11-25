@@ -33,6 +33,7 @@
     - přepnutí mezi zobrazení
 - každý obchod má název, popis, otevírací dobu (pravidelná/po domluvě), kontakt, nabídku (tabulka -
   název, cena, foto, počet na skladě?
+- TODO: v ChatGPT "Overleaf - ACTIVE" chatu jsou vygenerovaný požadavky
 
 **Nefunkční požadavky**:
 
