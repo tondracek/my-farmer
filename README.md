@@ -24,6 +24,7 @@
 
 **Funkční požadavky**
 
+- Uživatel si může vytvořit účet a upravovat své kontaktní údaje, profilový obrázek a jméno
 - každý uživatel může být jak zákazník, tak prodejce
 - uživatel (prodejce) může vytvořit libovolný počet obchodů
 - uživatel (zákazník) si může obchody zobrazit na mapě nebo seznamu
