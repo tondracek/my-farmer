@@ -21,6 +21,7 @@ import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.editprofilescreen.editProfileDestination
 import com.tondracek.myfarmer.ui.mainshopscreen.mainShopsScreenDestination
+import com.tondracek.myfarmer.ui.myshopsscreen.myShopsScreenDestination
 import com.tondracek.myfarmer.ui.shopbottomsheet.shopBottomSheetDestination
 import com.tondracek.myfarmer.ui.shopdetailscreen.shopDetailScreenDestination
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,6 +67,7 @@ class MainActivity : ComponentActivity() {
                             shopDetailScreenDestination()
                             editProfileDestination()
                             authScreenDestination()
+                            myShopsScreenDestination()
                         }
                     }
                 }

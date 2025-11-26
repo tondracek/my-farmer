@@ -4,36 +4,37 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import com.tondracek.myfarmer.ui.core.navigation.Route
+import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 import com.tondracek.myfarmer.ui.shopslistview.ShopsListView
 import com.tondracek.myfarmer.ui.shopslistview.ShopsListViewModel
 import com.tondracek.myfarmer.ui.shopsmapview.ShopsMapView
 import com.tondracek.myfarmer.ui.shopsmapview.ShopsMapViewModel
 
-fun NavGraphBuilder.mainShopsScreenDestination() {
-    composable<Route.MainShopsRoute> {
-        val shopsMapViewModel: ShopsMapViewModel = hiltViewModel()
-        val shopsMapViewState by shopsMapViewModel.state.collectAsState()
+fun NavGraphBuilder.mainShopsScreenDestination() = routeDestination<Route.MainShopsRoute>(
+    applyTopBarPadding = false,
+) {
 
-        val shopsListViewModel: ShopsListViewModel = hiltViewModel()
-        val shopsListViewState by shopsListViewModel.state.collectAsState()
+    val shopsMapViewModel: ShopsMapViewModel = hiltViewModel()
+    val shopsMapViewState by shopsMapViewModel.state.collectAsState()
 
-        MainShopsScreen(
-            mapView = { modifier ->
-                ShopsMapView(
-                    modifier = modifier,
-                    state = shopsMapViewState,
-                    onShopSelected = shopsMapViewModel::onShopSelected,
-                )
-            },
-            listView = { modifier ->
-                ShopsListView(
-                    modifier = modifier,
-                    state = shopsListViewState,
-                    onNavigateToShopDetail = shopsListViewModel::navigateToShopDetail,
-                )
-            }
-        )
-    }
+    val shopsListViewModel: ShopsListViewModel = hiltViewModel()
+    val shopsListViewState by shopsListViewModel.state.collectAsState()
+
+    MainShopsScreen(
+        mapView = { modifier ->
+            ShopsMapView(
+                modifier = modifier,
+                state = shopsMapViewState,
+                onShopSelected = shopsMapViewModel::onShopSelected,
+            )
+        },
+        listView = { modifier ->
+            ShopsListView(
+                modifier = modifier,
+                state = shopsListViewState,
+                onNavigateToShopDetail = shopsListViewModel::navigateToShopDetail,
+            )
+        }
+    )
 }

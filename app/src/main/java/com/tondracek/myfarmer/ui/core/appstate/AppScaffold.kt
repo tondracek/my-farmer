@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,26 +32,19 @@ fun AppScaffold(
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit,
 ) {
+    val localDensity = LocalDensity.current
+
     val navBarViewModel: NavBarViewModel = hiltViewModel()
     val navBarState by navBarViewModel.state.collectAsState()
 
-    var appUiState by remember { mutableStateOf(AppUiState()) }
-    val appUiController = remember {
-        object : AppUiController {
-            override fun updateTitle(title: String) = apply {
-                appUiState = appUiState.copy(title = title)
-            }
+    val appUiController = remember { AppUiController() }
+    val appUiState by appUiController.state.collectAsState()
 
-            override fun updateTopBarPadding(applyPadding: Boolean) = apply {
-                appUiState = appUiState.copy(applyTopBarPadding = applyPadding)
-            }
-        }
+    LaunchedEffect(appUiState) {
+        println("UPDATEEEE - AppScaffold - LaunchedEffect - appUiState changed: $appUiState")
     }
 
-    val localDensity = LocalDensity.current
-
     CompositionLocalProvider(
-        LocalAppUiState provides appUiState,
         LocalAppUiController provides appUiController,
     ) {
         Scaffold(

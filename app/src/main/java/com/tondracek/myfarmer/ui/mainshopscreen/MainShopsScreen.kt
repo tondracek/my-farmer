@@ -64,7 +64,6 @@ fun MainShopsScreen(
         ShopsViewMode.List -> stringResource(R.string.shops_list)
     }
     LaunchedEffect(title) { appUiStateController.updateTitle(title) }
-    LaunchedEffect(Unit) { appUiStateController.updateTopBarPadding(false) }
 }
 
 @Composable

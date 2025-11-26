@@ -21,16 +21,14 @@ fun SavedStateHandle.getShopBottomSheetShopId(): ShopId =
     UUID.fromString(toRoute<Route.ShopBottomSheetRoute>().shopId)
 
 @OptIn(ExperimentalMaterial3Api::class)
-fun NavGraphBuilder.shopBottomSheetDestination() {
-    bottomSheet<Route.ShopBottomSheetRoute> { route ->
-        val viewmodel: ShopBottomSheetViewModel = hiltViewModel()
-        val state by viewmodel.state.collectAsState()
+fun NavGraphBuilder.shopBottomSheetDestination() = bottomSheet<Route.ShopBottomSheetRoute> {
+    val viewmodel: ShopBottomSheetViewModel = hiltViewModel()
+    val state by viewmodel.state.collectAsState()
 
-        Content(
-            state = state,
-            navigateToReviews = viewmodel::navigateToReviews,
-        )
-    }
+    Content(
+        state = state,
+        navigateToReviews = viewmodel::navigateToReviews,
+    )
 }
 
 @Composable
