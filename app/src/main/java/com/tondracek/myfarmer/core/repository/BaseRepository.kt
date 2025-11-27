@@ -17,4 +17,6 @@ abstract class BaseRepository<Model>(
     override fun getById(id: UUID): Flow<Model?> = core.getById(id)
 
     override fun get(request: RepositoryRequest): Flow<List<Model>> = core.get(request)
+
+    override fun getAll(): Flow<List<Model>> = core.getAll()
 }

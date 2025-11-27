@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
@@ -99,7 +100,7 @@ fun MyShopsListItemView(
 private fun MyShopsListItemViewPreview() {
     MyFarmerPreview(useSurface = false) {
         MyShopsListItemView(
-            shop = shop0.toMyShopsListItem(),
+            shop = shop0.toMyShopsListItem(Rating.ZERO),
             onShopClick = {},
             onUpdateShopClick = {},
             onDeleteShopClick = {}

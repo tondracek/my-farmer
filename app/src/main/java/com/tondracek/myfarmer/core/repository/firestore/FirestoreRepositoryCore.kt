@@ -96,4 +96,15 @@ class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
                     .lastOrNull()
             }
         }
+
+    override fun getAll(): Flow<List<Model>> {
+        val query: Query = db.collection(collectionName)
+
+        return query.snapshots()
+            .map {
+                it.documents
+                    .mapNotNull { doc -> doc.toObject(entityClass) }
+                    .map { entity -> mapper.toModel(entity) }
+            }
+    }
 }

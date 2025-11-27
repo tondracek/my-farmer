@@ -28,19 +28,25 @@ sealed interface Route {
     data class ShopDetailRoute(val shopId: String) : Route
 
     @Serializable
-    data object CreateShopRoute : Route
+    data class ShopReviews(val shopId: String) : Route
 
     @Serializable
-    data class UpdateShopRoute(val shopId: String) : Route
+    data object CreateShop : Route
+
+    @Serializable
+    data class UpdateShop(val shopId: String) : Route
 
     companion object {
-        private val allRoutes = listOf(
+        private val allRoutes = setOf(
             MainShopsRoute::class,
             MyShopsRoute::class,
             EditProfileScreenRoute::class,
             AuthScreenRoute::class,
             ShopBottomSheetRoute::class,
             ShopDetailRoute::class,
+            ShopReviews::class,
+            CreateShop::class,
+            UpdateShop::class,
         )
 
         fun getRouteClass(route: NavBackStackEntry): KClass<out Route>? =

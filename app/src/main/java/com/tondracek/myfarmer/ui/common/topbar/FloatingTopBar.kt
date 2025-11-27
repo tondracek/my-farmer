@@ -31,7 +31,6 @@ fun FloatingTopBar(
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 8.dp),
         shape = RoundedCornerShape(64.dp),
-        /* TODO: create a custom color scheme based on Material3 */
         color = customTopBarColors().containerColor,
         contentColor = customTopBarColors().titleContentColor,
         tonalElevation = 4.dp,

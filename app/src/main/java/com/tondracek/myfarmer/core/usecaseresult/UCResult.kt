@@ -3,7 +3,10 @@ package com.tondracek.myfarmer.core.usecaseresult
 import android.util.Log
 import com.tondracek.myfarmer.core.usecaseresult.UCResult.Failure
 import com.tondracek.myfarmer.core.usecaseresult.UCResult.Success
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 sealed interface UCResult<out T> {
@@ -11,6 +14,9 @@ sealed interface UCResult<out T> {
     data class Success<T>(val data: T) : UCResult<T>
 
     open class Failure(val userError: String, val systemError: String? = null) : UCResult<Nothing> {
+        constructor(userError: String, throwable: Throwable)
+                : this(userError = userError, systemError = throwable.message)
+
         init {
             Log.e(this.javaClass.name, systemError, null)
         }
@@ -71,8 +77,14 @@ inline fun <T> UCResult<T>.getOrElse(defaultValue: (Failure) -> T): T = when (th
 
 fun <T, R> Flow<UCResult<T>>.mapFlowUCSuccess(transform: (T) -> R): Flow<UCResult<R>> =
     this.map { result ->
+        result.mapSuccess { transform(it) }
+    }
+
+@OptIn(ExperimentalCoroutinesApi::class)
+fun <T, R> Flow<UCResult<T>>.flatMapSuccess(transform: (T) -> Flow<R>): Flow<UCResult<R>> =
+    this.flatMapLatest { result ->
         when (result) {
-            is Success -> Success(transform(result.data))
-            is Failure -> result
+            is Success -> transform(result.data).map { Success(it) }
+            is Failure -> flowOf(result)
         }
     }

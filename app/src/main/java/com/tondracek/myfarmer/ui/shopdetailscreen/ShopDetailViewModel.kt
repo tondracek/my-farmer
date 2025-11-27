@@ -17,6 +17,7 @@ import com.tondracek.myfarmer.systemuser.domain.usecase.GetUserByIdUC
 import com.tondracek.myfarmer.systemuser.domain.usecase.GetUsersByIdsUC
 import com.tondracek.myfarmer.ui.common.review.toUiState
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
+import com.tondracek.myfarmer.ui.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -77,9 +78,7 @@ class ShopDetailViewModel @Inject constructor(
         initialValue = ShopDetailState.Loading
     )
 
-    fun navigateToReviews() {
-        TODO()
-    }
+    fun navigateToReviews() = navigator.navigate(Route.ShopReviews(shopId.toString()))
 
     fun navigateBack() = navigator.navigateBack()
 }

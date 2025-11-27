@@ -7,7 +7,7 @@ import com.tondracek.myfarmer.common.image.data.Quality
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.getOrReturn
-import com.tondracek.myfarmer.core.usecaseresult.runCatchingUCResult
+import com.tondracek.myfarmer.core.usecaseresult.toUCResult
 import com.tondracek.myfarmer.shop.data.ShopRepository
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
@@ -23,7 +23,7 @@ class UpdateShopUC @Inject constructor(
     private val photoStorage: PhotoStorage,
 ) {
     suspend operator fun invoke(shopId: ShopId, input: ShopInput): UCResult<Unit> =
-        runCatchingUCResult("An error occurred while updating shop") {
+        toUCResult("An error occurred while updating shop") {
             val user = getLoggedInUser().first().getOrReturn { return it }
 
             val originalShop = shopRepository.getById(shopId).first()

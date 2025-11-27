@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
+import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
@@ -99,7 +100,7 @@ private fun SuccessScreen(
 private fun MyShopsScreenSuccessPreview() {
     MyFarmerPreview {
         MyShopsScreen(
-            state = MyShopsState.Success(sampleShops.map { it.toMyShopsListItem() }),
+            state = MyShopsState.Success(sampleShops.map { it.toMyShopsListItem(Rating.ZERO) }),
             onShopClick = {},
             onUpdateShopClick = {},
             onDeleteShopClick = {},

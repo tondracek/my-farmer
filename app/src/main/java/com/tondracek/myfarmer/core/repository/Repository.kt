@@ -28,4 +28,5 @@ interface Repository<Model> {
 
     fun get(request: RepositoryRequest): Flow<List<Model>>
 
+    fun getAll(): Flow<List<Model>>
 }

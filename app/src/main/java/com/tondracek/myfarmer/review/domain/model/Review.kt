@@ -13,3 +13,6 @@ data class Review(
     val rating: Rating,
     val comment: String?,
 )
+
+fun Collection<Review>.toAverageRating(): Rating =
+    this.map { it.rating }.averageRating()

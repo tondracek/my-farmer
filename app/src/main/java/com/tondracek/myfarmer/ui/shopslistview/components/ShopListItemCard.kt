@@ -17,10 +17,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.location.model.km
-import com.tondracek.myfarmer.shop.data.sampleShops
+import com.tondracek.myfarmer.review.domain.model.Rating
+import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
 import com.tondracek.myfarmer.ui.common.image.ImageView
+import com.tondracek.myfarmer.ui.common.rating.RatingStars
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 
@@ -46,25 +48,13 @@ fun ShopListItemCard(
                     imageResource = shop.image
                 )
                 Column {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (!shop.name.isNullOrBlank())
-                            Text(
-                                modifier = Modifier.weight(1f),
-                                text = shop.name,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-
-                        if (shop.distance != null)
-                            Text(
-                                text = shop.distance.toString(),
-                                style = MaterialTheme.typography.labelMedium
-                            )
-                    }
+                    if (!shop.name.isNullOrBlank())
+                        Text(
+                            text = shop.name,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.titleMedium
+                        )
 
                     if (!shop.description.isNullOrBlank())
                         Text(
@@ -73,6 +63,20 @@ fun ShopListItemCard(
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.bodyMedium
                         )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RatingStars(rating = shop.averageRating)
+
+                        if (shop.distance != null)
+                            Text(
+                                text = shop.distance.toString(),
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                    }
                 }
             }
             CategoriesRow(shop.categories)
@@ -85,7 +89,7 @@ fun ShopListItemCard(
 private fun ShopListItemCardPreview() {
     MyFarmerPreview {
         ShopListItemCard(
-            shop = sampleShops.first().toListItem(3.5.km),
+            shop = shop0.toListItem(3.5.km, Rating(3)),
             onNavigateToShopDetail = {}
         )
     }

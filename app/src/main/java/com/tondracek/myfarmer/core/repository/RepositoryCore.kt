@@ -15,4 +15,6 @@ interface RepositoryCore<Model> {
     fun getById(id: UUID): Flow<Model?>
 
     fun get(request: RepositoryRequest): Flow<List<Model>>
+
+    fun getAll(): Flow<List<Model>>
 }

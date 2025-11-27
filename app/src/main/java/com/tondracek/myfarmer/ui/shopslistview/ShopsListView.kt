@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.tondracek.myfarmer.location.model.km
+import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
@@ -72,11 +73,16 @@ private fun SuccessLayout(
 @Composable
 private fun ShopsListViewPreview() {
     MyFarmerPreview {
+        val shops = sampleShops.map {
+            it.toListItem(
+                distance = 2.5.km,
+                averageRating = Rating.ZERO
+            )
+        }
+
         ShopsListView(
             modifier = Modifier,
-            state = ShopsListViewState.Success(
-                shops = sampleShops.map { it.toListItem(2.5.km) }
-            ),
+            state = ShopsListViewState.Success(shops = shops),
             onNavigateToShopDetail = {},
             onNavigateBack = {},
         )
