@@ -31,4 +31,6 @@
     <string name="friday">Pátek</string>
     <string name="saturday">Sobota</string>
     <string name="sunday">Neděle</string>
+    <string name="shop_detail">Detail obchodu</string>
+    <string name="create_shop_title">Vytváření obchodu</string>
 </resources>

@@ -42,5 +42,5 @@ sealed interface CreateShopState {
 
     data object Loading : CreateShopState
 
-    data class Error(val error: UCResult.Failure) : CreateShopState
+    data class Error(val failure: UCResult.Failure) : CreateShopState
 }

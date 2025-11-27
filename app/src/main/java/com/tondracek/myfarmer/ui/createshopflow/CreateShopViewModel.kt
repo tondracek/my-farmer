@@ -9,6 +9,7 @@ import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.usecase.CreateShopUC
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
+import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateShopViewModel @Inject constructor(
-    private val createShop: CreateShopUC
+    private val createShop: CreateShopUC,
+    private val navigator: AppNavigator,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<CreateShopState>(CreateShopState.Creating.initial())
@@ -31,6 +33,9 @@ class CreateShopViewModel @Inject constructor(
     fun goToPreviousStep() = _state.updateCreating { currentStep ->
         currentStep.previous()
     }
+
+    fun navigateBack() =
+        navigator.navigateBack()
 
     suspend fun submitCreating() = _state.updateCreatingSuspend {
         when (val result = createShop(it.shopInput)) {
