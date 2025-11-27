@@ -77,10 +77,10 @@ val farmerDarkColors: MyFarmerColors = MyFarmerColors(
     onTertiaryContainer = Color(0xFFBCEBF0),
 
     success = Color(0xFF81C784),
-    error = Color(0xFFFFB4AB),
-    onError = Color(0xFF690005),
-    errorContainer = Color(0xFF93000A),
-    onErrorContainer = Color(0xFFFFDAD6),
+    error = Color(0xFF93000A),
+    onError = Color(0xFFFFDAD6),
+    errorContainer = Color(0xFFFFB4AB),
+    onErrorContainer = Color(0xFF690005),
 
     background = Color(0xFF10140F),
     onBackground = Color(0xFFE0E4DA),

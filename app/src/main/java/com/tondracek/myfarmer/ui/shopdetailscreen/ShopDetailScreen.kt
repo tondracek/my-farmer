@@ -11,6 +11,7 @@ import com.tondracek.myfarmer.ui.shopdetailscreen.components.ShopDetailLayout
 fun ShopDetailScreen(
     state: ShopDetailState,
     navigateToReviews: () -> Unit,
+    onNavigateBack: () -> Unit,
 ) {
     val appUiController = LocalAppUiController.current
 
@@ -24,6 +25,9 @@ fun ShopDetailScreen(
         }
 
         is ShopDetailState.Loading -> LoadingLayout()
-        is ShopDetailState.Error -> ErrorLayout(text = "TODO :)")
+        is ShopDetailState.Error -> ErrorLayout(
+            failure = state.result,
+            onNavigateBack = onNavigateBack
+        )
     }
 }

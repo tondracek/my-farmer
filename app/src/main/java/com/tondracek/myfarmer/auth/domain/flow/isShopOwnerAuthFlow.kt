@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
-
+@Deprecated("isShopOwner() not implemented")
 class IsShopOwnerAuthFlow @Inject constructor(
     private val loggedInAuthFlow: LoggedInAuthFlow,
     private val isShopOwner: IsShopOwnerUC,

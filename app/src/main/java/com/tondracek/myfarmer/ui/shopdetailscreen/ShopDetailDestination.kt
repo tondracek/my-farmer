@@ -24,5 +24,6 @@ fun NavGraphBuilder.shopDetailScreenDestination() = routeDestination<Route.ShopD
     ShopDetailScreen(
         state = state,
         navigateToReviews = viewmodel::navigateToReviews,
+        onNavigateBack = viewmodel::navigateBack,
     )
 }

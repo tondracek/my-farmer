@@ -45,4 +45,6 @@ class ShopsListViewModel @Inject constructor(
 
     fun navigateToShopDetail(shopId: ShopId) =
         navigator.navigate(Route.ShopDetailRoute(shopId.toString()))
+
+    fun navigateBack() = navigator.navigateBack()
 }

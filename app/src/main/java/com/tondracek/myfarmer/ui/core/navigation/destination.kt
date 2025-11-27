@@ -6,12 +6,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.tondracek.myfarmer.ui.core.appstate.APP_UI_STATE_APPLY_TOP_BAR_PADDING_DEFAULT
 import com.tondracek.myfarmer.ui.core.appstate.AppUiState
 import com.tondracek.myfarmer.ui.core.appstate.LocalAppUiController
 
 inline fun <reified T : Route> NavGraphBuilder.routeDestination(
     @StringRes titleId: Int? = null,
-    applyTopBarPadding: Boolean? = null,
+    applyTopBarPadding: Boolean = APP_UI_STATE_APPLY_TOP_BAR_PADDING_DEFAULT,
     crossinline content: @Composable () -> Unit
 ) = composable<T> {
     val appUiState = getAppUiState(

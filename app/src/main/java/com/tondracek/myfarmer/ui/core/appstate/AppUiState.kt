@@ -34,7 +34,9 @@ class AppUiController {
     }
 }
 
+const val APP_UI_STATE_APPLY_TOP_BAR_PADDING_DEFAULT: Boolean = true
+
 data class AppUiState(
     val title: String? = null,
-    val applyTopBarPadding: Boolean = true,
+    val applyTopBarPadding: Boolean = APP_UI_STATE_APPLY_TOP_BAR_PADDING_DEFAULT,
 )

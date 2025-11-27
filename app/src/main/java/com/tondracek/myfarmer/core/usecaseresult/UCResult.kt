@@ -1,6 +1,10 @@
 package com.tondracek.myfarmer.core.usecaseresult
 
 import android.util.Log
+import com.tondracek.myfarmer.core.usecaseresult.UCResult.Failure
+import com.tondracek.myfarmer.core.usecaseresult.UCResult.Success
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 sealed interface UCResult<out T> {
 
@@ -12,7 +16,7 @@ sealed interface UCResult<out T> {
         }
     }
 
-    fun <R> map(transform: (T) -> R): UCResult<R> = when (this) {
+    fun <R> mapSuccess(transform: (T) -> R): UCResult<R> = when (this) {
         is Success -> Success(transform(data))
         is Failure -> this
     }
@@ -38,24 +42,37 @@ sealed interface UCResult<out T> {
         is Success -> onSuccess(data)
         is Failure -> onFailure(this)
     }
+
+    fun getOrThrow() = when (this) {
+        is Success -> data
+        is Failure -> throw Throwable(systemError)
+    }
 }
 
 /**
  * - For `UseCaseResult.Success` returns the `data` value
  * - For `UseCaseResult.Failure` applies the `block` function that can return some value
  */
-inline fun <T> UCResult<T>.getOrReturn(block: (UCResult.Failure) -> Nothing): T =
+inline fun <T> UCResult<T>.getOrReturn(block: (Failure) -> Nothing): T =
     when (this) {
-        is UCResult.Success -> data
-        is UCResult.Failure -> block(this)
+        is Success -> data
+        is Failure -> block(this)
     }
 
 fun <T> UCResult<T>.getOrElse(defaultValue: T): T = when (this) {
-    is UCResult.Success -> data
-    is UCResult.Failure -> defaultValue
+    is Success -> data
+    is Failure -> defaultValue
 }
 
-inline fun <T> UCResult<T>.getOrElse(defaultValue: (UCResult.Failure) -> T): T = when (this) {
-    is UCResult.Success -> data
-    is UCResult.Failure -> defaultValue(this)
+inline fun <T> UCResult<T>.getOrElse(defaultValue: (Failure) -> T): T = when (this) {
+    is Success -> data
+    is Failure -> defaultValue(this)
 }
+
+fun <T, R> Flow<UCResult<T>>.mapFlowUCSuccess(transform: (T) -> R): Flow<UCResult<R>> =
+    this.map { result ->
+        when (result) {
+            is Success -> Success(transform(result.data))
+            is Failure -> result
+        }
+    }

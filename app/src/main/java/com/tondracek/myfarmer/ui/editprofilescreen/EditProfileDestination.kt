@@ -21,5 +21,6 @@ fun NavGraphBuilder.editProfileDestination() = routeDestination<Route.EditProfil
         onContactInfoChange = viewmodel::onContactInfoChange,
         onLogout = viewmodel::onLogout,
         onSaveClick = viewmodel::onSaveProfile,
+        onNavigateBack = viewmodel::navigateBack,
     )
 }

@@ -38,7 +38,7 @@ class ShopsMapViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _shops: Flow<UCResult<Set<Shop>>> = getAllShops()
-        .map { it.map { shopsList -> shopsList.toSet() } }
+        .map { it.mapSuccess { shopsList -> shopsList.toSet() } }
 
     private val _shopMarkerIcons: Flow<UCResult<Map<ShopId, BitmapDescriptor?>>> = _shops
         .map {

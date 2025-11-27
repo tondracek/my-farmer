@@ -13,10 +13,16 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+/**
+ * Gets the currently logged-in user
+ * @return [UCResult.Success] with [SystemUser] if logged in,
+ *         [NotLoggedInUCResult] if no user is logged in
+ */
 class GetLoggedInUserUC @Inject constructor(
     private val authRepository: FirebaseAuthRepository,
     private val userRepository: UserRepository,
 ) : () -> Flow<UCResult<SystemUser>> {
+
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override operator fun invoke(): Flow<UCResult<SystemUser>> =

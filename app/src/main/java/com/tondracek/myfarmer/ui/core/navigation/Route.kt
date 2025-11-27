@@ -27,6 +27,12 @@ sealed interface Route {
     @Serializable
     data class ShopDetailRoute(val shopId: String) : Route
 
+    @Serializable
+    data object CreateShopRoute : Route
+
+    @Serializable
+    data class UpdateShopRoute(val shopId: String) : Route
+
     companion object {
         private val allRoutes = listOf(
             MainShopsRoute::class,

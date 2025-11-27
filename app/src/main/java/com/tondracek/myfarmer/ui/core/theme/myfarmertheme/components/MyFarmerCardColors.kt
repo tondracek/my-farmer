@@ -9,6 +9,7 @@ data class MyFarmerCardColors(
     val base: CardColors,
     val primary: CardColors,
     val secondary: CardColors,
+    val error: CardColors,
 )
 
 val myFarmerCardColors
@@ -21,5 +22,9 @@ val myFarmerCardColors
         secondary = CardDefaults.cardColors(
             containerColor = MyFarmerTheme.colors.secondaryContainer,
             contentColor = MyFarmerTheme.colors.onSecondaryContainer
+        ),
+        error = CardDefaults.cardColors(
+            containerColor = MyFarmerTheme.colors.errorContainer,
+            contentColor = MyFarmerTheme.colors.onErrorContainer
         ),
     )

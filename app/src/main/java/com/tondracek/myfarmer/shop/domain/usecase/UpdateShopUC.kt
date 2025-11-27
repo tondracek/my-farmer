@@ -1,0 +1,65 @@
+package com.tondracek.myfarmer.shop.domain.usecase
+
+import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
+import com.tondracek.myfarmer.common.image.data.PhotoStorage
+import com.tondracek.myfarmer.common.image.data.PhotoStorageFolder
+import com.tondracek.myfarmer.common.image.data.Quality
+import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.core.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.usecaseresult.getOrReturn
+import com.tondracek.myfarmer.core.usecaseresult.runCatchingUCResult
+import com.tondracek.myfarmer.shop.data.ShopRepository
+import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.shop.domain.model.ShopInput
+import com.tondracek.myfarmer.shop.domain.model.toShop
+import com.tondracek.myfarmer.shop.domain.result.NotShopOwnerUCResult
+import kotlinx.coroutines.flow.first
+import java.util.UUID
+import javax.inject.Inject
+
+class UpdateShopUC @Inject constructor(
+    private val getLoggedInUser: GetLoggedInUserUC,
+    private val shopRepository: ShopRepository,
+    private val photoStorage: PhotoStorage,
+) {
+    suspend operator fun invoke(shopId: ShopId, input: ShopInput): UCResult<Unit> =
+        runCatchingUCResult("An error occurred while updating shop") {
+            val user = getLoggedInUser().first().getOrReturn { return it }
+
+            val originalShop = shopRepository.getById(shopId).first()
+                ?: return ShopNotFoundUCResult(shopId)
+
+            if (originalShop.ownerId != user.id)
+                return NotShopOwnerUCResult(user.id, shopId)
+
+            val updatedShop = input.toShop(
+                shopId = shopId,
+                ownerId = originalShop.ownerId
+            ).getOrReturn { return it }
+            shopRepository.update(updatedShop)
+
+            uploadNewPhotos(
+                shopId = shopId,
+                originalImages = originalShop.images.toSet(),
+                newImages = input.images.toSet()
+            )
+
+            return UCResult.Success(Unit)
+        }
+
+    private suspend fun uploadNewPhotos(
+        shopId: ShopId,
+        originalImages: Set<ImageResource>,
+        newImages: Set<ImageResource>,
+    ) {
+        val imagesToDelete = originalImages - newImages
+        val imagesToUpload = newImages - originalImages
+
+        photoStorage.deletePhotos(imagesToDelete)
+        photoStorage.uploadPhotos(
+            imageResources = imagesToUpload.map { UUID.randomUUID().toString() to it },
+            folder = PhotoStorageFolder.ShopPhotos(shopId),
+            quality = Quality.FULL_HD,
+        )
+    }
+}

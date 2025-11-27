@@ -85,6 +85,11 @@ class PhotoStorage @Inject constructor(
                 Log.e("PHOTO_STORAGE", "Failed to delete photo at ${imageResource.uri}", it)
             }
 
+    suspend fun deletePhotos(imageResources: Collection<ImageResource>) = coroutineScope {
+        imageResources.map { imageResource ->
+            async { deletePhoto(imageResource) }
+        }.awaitAll()
+    }
 
     /* HELPERS */
 

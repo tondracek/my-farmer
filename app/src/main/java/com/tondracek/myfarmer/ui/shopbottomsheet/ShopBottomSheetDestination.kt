@@ -28,6 +28,7 @@ fun NavGraphBuilder.shopBottomSheetDestination() = bottomSheet<Route.ShopBottomS
     Content(
         state = state,
         navigateToReviews = viewmodel::navigateToReviews,
+        onNavigateBack = viewmodel::navigateBack
     )
 }
 
@@ -35,6 +36,7 @@ fun NavGraphBuilder.shopBottomSheetDestination() = bottomSheet<Route.ShopBottomS
 private fun Content(
     state: ShopDetailState,
     navigateToReviews: () -> Unit,
+    onNavigateBack: () -> Unit,
 ) {
     when (state) {
         is ShopDetailState.Success -> ShopDetailLayout(
@@ -43,6 +45,9 @@ private fun Content(
         )
 
         ShopDetailState.Loading -> LoadingLayout()
-        is ShopDetailState.Error -> ErrorLayout(text = state.result.userError)
+        is ShopDetailState.Error -> ErrorLayout(
+            failure = state.result,
+            onNavigateBack = onNavigateBack
+        )
     }
 }

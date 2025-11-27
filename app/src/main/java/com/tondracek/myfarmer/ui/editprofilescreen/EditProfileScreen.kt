@@ -44,6 +44,7 @@ fun EditProfileScreen(
     onContactInfoChange: (ContactInfo) -> Unit,
     onLogout: () -> Unit,
     onSaveClick: () -> Unit,
+    onNavigateBack: () -> Unit,
 ) {
     when (state) {
         is EditProfileScreenState.Success -> SuccessScreen(
@@ -58,7 +59,10 @@ fun EditProfileScreen(
         EditProfileScreenState.UpdatingProfile -> UpdatingProfileLayout()
         EditProfileScreenState.SavedSuccessfully -> SavedSuccessfullyLayout()
         EditProfileScreenState.Loading -> LoadingLayout()
-        is EditProfileScreenState.Error -> ErrorLayout(error = state.result)
+        is EditProfileScreenState.Error -> ErrorLayout(
+            failure = state.result,
+            onNavigateBack = onNavigateBack,
+        )
     }
 }
 
@@ -211,6 +215,7 @@ private fun EditProfileScreenPreview() {
             onContactInfoChange = {},
             onLogout = {},
             onSaveClick = {},
+            onNavigateBack = {},
         )
     }
 }
@@ -226,6 +231,7 @@ private fun EditProfileUpdatingScreenPreview() {
             onContactInfoChange = {},
             onLogout = {},
             onSaveClick = {},
+            onNavigateBack = {},
         )
     }
 }
@@ -241,6 +247,7 @@ private fun EditProfileSavedScreenPreview() {
             onContactInfoChange = {},
             onLogout = {},
             onSaveClick = {},
+            onNavigateBack = {},
         )
     }
 }

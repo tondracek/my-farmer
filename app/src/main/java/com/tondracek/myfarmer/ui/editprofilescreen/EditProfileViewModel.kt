@@ -100,6 +100,10 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
+    fun navigateBack() = appNavigator.navigateBack()
+
+    /* PRIVATE HELPERS */
+
     private fun updateState(update: (EditProfileScreenState.Success) -> EditProfileScreenState) =
         _state.update {
             when (it) {
@@ -113,7 +117,7 @@ class EditProfileViewModel @Inject constructor(
 
         _state.update { prevState: EditProfileScreenState ->
             loggedUser
-                .map { it.toUiState() }
+                .mapSuccess { it.toUiState() }
                 .getOrElse { EditProfileScreenState.Error(result = it) }
         }
     }

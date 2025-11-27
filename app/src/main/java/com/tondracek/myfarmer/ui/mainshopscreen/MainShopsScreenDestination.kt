@@ -34,6 +34,7 @@ fun NavGraphBuilder.mainShopsScreenDestination() = routeDestination<Route.MainSh
                 modifier = modifier,
                 state = shopsListViewState,
                 onNavigateToShopDetail = shopsListViewModel::navigateToShopDetail,
+                onNavigateBack = shopsListViewModel::navigateBack
             )
         }
     )

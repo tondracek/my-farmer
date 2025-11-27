@@ -10,13 +10,26 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
 fun MyFarmerPreview(
-    content: @Composable () -> Unit
+    useSurface: Boolean = true,
+    content: @Composable () -> Unit,
 ) {
     MyFarmerTheme {
-        Surface(
-            color = MyFarmerTheme.colors.surfaceContainer
-        ) {
-            AsyncImagePreviewFix {
+        when (useSurface) {
+            true -> Surface(
+                color = MyFarmerTheme.colors.surfaceContainer
+            ) {
+                AsyncImagePreviewFix {
+                    val appUiController = remember { AppUiController() }
+
+                    CompositionLocalProvider(
+                        LocalAppUiController provides appUiController,
+                    ) {
+                        content()
+                    }
+                }
+            }
+
+            false -> AsyncImagePreviewFix {
                 val appUiController = remember { AppUiController() }
 
                 CompositionLocalProvider(
