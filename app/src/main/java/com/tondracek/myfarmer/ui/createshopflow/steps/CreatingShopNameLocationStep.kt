@@ -151,6 +151,7 @@ fun PickLocationMap(
 
             val latLng = LatLng(location.latitude, location.longitude)
             zoomToLocation(latLng)
+            onLocationSelected(ShopLocation(latLng))
         }
     }
 
