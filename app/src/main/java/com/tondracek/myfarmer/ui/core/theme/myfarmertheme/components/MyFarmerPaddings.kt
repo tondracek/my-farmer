@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -18,7 +19,8 @@ val myFarmerPaddings = MyFarmerPaddings(
     extraLarge = 48.dp,
     xxL = 64.dp,
 
-    topBarMargin = 96.dp
+    topBarMargin = 96.dp,
+    bottomButtons = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
 )
 
 @Stable
@@ -33,5 +35,6 @@ data class MyFarmerPaddings(
     val extraLarge: Dp,
     val xxL: Dp,
 
-    val topBarMargin: Dp
+    val topBarMargin: Dp,
+    val bottomButtons: PaddingValues,
 )

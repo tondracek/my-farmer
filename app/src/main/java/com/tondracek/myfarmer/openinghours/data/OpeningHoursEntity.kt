@@ -21,7 +21,7 @@ fun OpeningHoursEntity.toModel(): OpeningHours = when (this.type) {
         dayToHours = this.dayToHours!!.mapKeys { DayOfWeek.valueOf(it.key) }
     )
 
-    OpeningHoursType.MESSAGE.code -> OpeningHours.Message(message = this.message)
+    OpeningHoursType.MESSAGE.code -> OpeningHours.Message(message = this.message ?: "")
 
     else -> throw IllegalArgumentException("Unknown OpeningHours type: ${this.type}")
 }

@@ -53,7 +53,7 @@ fun UserPreviewCard(
             Text(
                 modifier = Modifier.padding(horizontal = MyFarmerTheme.paddings.extraSmall),
                 text = user.name,
-                style = MyFarmerTheme.typography.headerSmall,
+                style = MyFarmerTheme.typography.titleSmall,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )

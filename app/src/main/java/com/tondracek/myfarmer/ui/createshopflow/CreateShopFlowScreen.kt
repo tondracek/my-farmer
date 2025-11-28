@@ -8,6 +8,9 @@ import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
+import com.tondracek.myfarmer.ui.createshopflow.steps.CreatingShopCategoriesMenuStep
+import com.tondracek.myfarmer.ui.createshopflow.steps.CreatingShopNameLocationStep
+import com.tondracek.myfarmer.ui.createshopflow.steps.CreatingShopReviewAndSubmitStep
 
 @Composable
 fun CreateShopFlowScreen(
@@ -21,13 +24,13 @@ fun CreateShopFlowScreen(
     onUpdateLocation: (ShopLocation) -> Unit,
     onUpdateOpeningHours: (OpeningHours) -> Unit,
     onUpdateMenu: (ProductMenu) -> Unit,
-    onSubmitCreating: suspend () -> Unit,
+    onSubmitCreating: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     when (state) {
         is CreateShopState.Creating -> when (state.step) {
             CreateShopState.Creating.CreateShopStateCreatingStep.NAME_LOCATION -> CreatingShopNameLocationStep(
-                state = state,
+                shopInput = state.shopInput,
                 onUpdateName = onUpdateName,
                 onUpdateLocation = onUpdateLocation,
                 onNextStep = onNextStep,
@@ -35,7 +38,7 @@ fun CreateShopFlowScreen(
             )
 
             CreateShopState.Creating.CreateShopStateCreatingStep.CATEGORIES_MENU -> CreatingShopCategoriesMenuStep(
-                state = state,
+                shopInput = state.shopInput,
                 onUpdateCategories = onUpdateCategories,
                 onUpdateMenu = onUpdateMenu,
                 onNextStep = onNextStep,
@@ -58,7 +61,7 @@ fun CreateShopFlowScreen(
             )
 
             CreateShopState.Creating.CreateShopStateCreatingStep.REVIEW_AND_SUBMIT -> CreatingShopReviewAndSubmitStep(
-                state = state,
+                state = state.shopInput,
                 onSubmitCreating = onSubmitCreating,
                 onPreviousStep = onPreviousStep,
             )
@@ -69,7 +72,33 @@ fun CreateShopFlowScreen(
             onNavigateBack = onNavigateBack
         )
 
-        CreateShopState.Finished -> CraetingShopFinishedScreen()
+        CreateShopState.Finished -> CreatingShopFinishedScreen()
         CreateShopState.Loading -> LoadingLayout()
     }
+}
+
+@Composable
+fun CreatingShopFinishedScreen() {
+    TODO("Not yet implemented")
+}
+
+@Composable
+fun CreatingShopOpeningHoursStep(
+    state: CreateShopState.Creating,
+    onUpdateOpeningHours: (OpeningHours) -> Unit,
+    onNextStep: () -> Unit,
+    onPreviousStep: () -> Unit
+) {
+    TODO("Not yet implemented")
+}
+
+@Composable
+fun CreatingShopPhotosDescriptionStep(
+    state: CreateShopState.Creating,
+    onUpdateDescription: (String) -> Unit,
+    onUpdateImages: (List<ImageResource>) -> Unit,
+    onNextStep: () -> Unit,
+    onPreviousStep: () -> Unit
+) {
+    TODO("Not yet implemented")
 }

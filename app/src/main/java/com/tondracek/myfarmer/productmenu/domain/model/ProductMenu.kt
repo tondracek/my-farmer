@@ -10,7 +10,7 @@ data class ProductMenu(
 
 data class MenuItem(
     val name: String,
-    val description: String?,
+    val description: String,
     val price: ProductPrice,
     val inStock: Boolean,
 )

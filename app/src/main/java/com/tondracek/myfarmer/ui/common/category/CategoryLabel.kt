@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
+import com.tondracek.myfarmer.ui.common.color.contrastColor
 
 @Composable
 fun CategoryLabel(category: ShopCategory) {
@@ -27,10 +28,6 @@ fun CategoryLabel(category: ShopCategory) {
     }
 }
 
-private fun contrastColor(color: Color): Color {
-    val luminance = (0.299 * color.red + 0.587 * color.green + 0.114 * color.blue)
-    return if (luminance > 0.5) Color.Black else Color.White
-}
 
 @Preview
 @Composable

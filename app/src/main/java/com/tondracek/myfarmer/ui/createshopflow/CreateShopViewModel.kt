@@ -1,6 +1,7 @@
 package com.tondracek.myfarmer.ui.createshopflow
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
@@ -14,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,10 +39,12 @@ class CreateShopViewModel @Inject constructor(
     fun navigateBack() =
         navigator.navigateBack()
 
-    suspend fun submitCreating() = _state.updateCreatingSuspend {
-        when (val result = createShop(it.shopInput)) {
-            is UCResult.Success<Unit> -> CreateShopState.Finished
-            is UCResult.Failure -> CreateShopState.Error(result)
+    fun submitCreating() = viewModelScope.launch {
+        _state.updateCreatingSuspend {
+            when (val result = createShop(it.shopInput)) {
+                is UCResult.Success<Unit> -> CreateShopState.Finished
+                is UCResult.Failure -> CreateShopState.Error(result)
+            }
         }
     }
 

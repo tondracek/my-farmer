@@ -5,13 +5,19 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import com.tondracek.myfarmer.ui.common.color.contrastColor
 
 data class MyFarmerButtonColors(
     val base: ButtonColors,
     val primary: ButtonColors,
     val secondary: ButtonColors,
     val tertiary: ButtonColors,
+
     val error: ButtonColors,
+    val success: ButtonColors,
+
+    val custom: @Composable (containerColor: Color) -> ButtonColors,
 )
 
 val myFarmerButtonColors
@@ -33,6 +39,16 @@ val myFarmerButtonColors
             containerColor = MyFarmerTheme.colors.error,
             contentColor = MyFarmerTheme.colors.onError,
         ),
+        success = ButtonDefaults.buttonColors(
+            containerColor = MyFarmerTheme.colors.success,
+            contentColor = MyFarmerTheme.colors.onSuccess,
+        ),
+        custom = { containerColor ->
+            ButtonDefaults.buttonColors(
+                containerColor = containerColor,
+                contentColor = contrastColor(containerColor)
+            )
+        }
     )
 
 data class MyFarmerIconButtonColors(

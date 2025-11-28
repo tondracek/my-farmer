@@ -10,11 +10,11 @@ import androidx.compose.ui.unit.sp
 internal val LocalMyFarmerTypography = staticCompositionLocalOf { myFarmerTypography }
 
 val myFarmerTypography = MyFarmerTypography(
-    headerMedium = TextStyle(
+    titleMedium = TextStyle(
         fontSize = 24.sp,
         fontWeight = FontWeight.W700,
     ),
-    headerSmall = TextStyle(
+    titleSmall = TextStyle(
         fontSize = 20.sp,
         fontWeight = FontWeight.W500,
     ),
@@ -39,8 +39,8 @@ val myFarmerTypography = MyFarmerTypography(
 @Stable
 @Immutable
 data class MyFarmerTypography(
-    val headerMedium: TextStyle,
-    val headerSmall: TextStyle,
+    val titleMedium: TextStyle,
+    val titleSmall: TextStyle,
 
     val textLarge: TextStyle,
     val textMedium: TextStyle,

@@ -146,7 +146,7 @@ private fun SuccessScreen(
                 Text(
                     modifier = Modifier.weight(1f),
                     text = "You are logged in as ${state.name}",
-                    style = MyFarmerTheme.typography.headerMedium
+                    style = MyFarmerTheme.typography.titleMedium
                 )
                 Button(onClick = onLogout) {
                     Text(text = "Logout")

@@ -87,7 +87,7 @@ private fun SuccessScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(androidx.compose.ui.Alignment.BottomCenter)
-                .padding(MyFarmerTheme.paddings.medium),
+                .padding(MyFarmerTheme.paddings.bottomButtons),
             onClick = onCreateShopClick,
         ) {
             Text(text = "Create Shop")

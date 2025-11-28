@@ -1,9 +1,9 @@
-package com.tondracek.myfarmer.ui.shopdetailscreen.components
+package com.tondracek.myfarmer.ui.createshopflow.steps
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,63 +26,62 @@ import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.sampleReviewsUI
 import com.tondracek.myfarmer.shop.data.shop0
+import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
 import com.tondracek.myfarmer.ui.common.image.ImageView
-import com.tondracek.myfarmer.ui.common.rating.RatingStars
-import com.tondracek.myfarmer.ui.common.user.UserPreviewCard
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewDark
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
-import com.tondracek.myfarmer.ui.shopdetailscreen.ShopDetailState
-import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.ContactInfoSection
+import com.tondracek.myfarmer.ui.createshopflow.components.NavigationButtons
+import com.tondracek.myfarmer.ui.shopdetailscreen.components.ShopDetailLayout
 import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.MenuSection
 import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.OpeningHoursSection
-import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.ReviewsPreviewSection
 import com.tondracek.myfarmer.ui.shopdetailscreen.toShopDetailState
 
+
 @Composable
-fun ShopDetailLayout(
+fun CreatingShopReviewAndSubmitStep(
     modifier: Modifier = Modifier,
-    state: ShopDetailState.Success,
-    onReviewsClick: () -> Unit,
+    state: ShopInput,
+    onSubmitCreating: () -> Unit,
+    onPreviousStep: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
-    Column(
-        modifier = modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        Header(state = state)
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxSize()
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Header(state = state)
 
-        HorizontalDivider(modifier = Modifier.padding(MyFarmerTheme.paddings.medium))
+            HorizontalDivider(modifier = Modifier.padding(MyFarmerTheme.paddings.medium))
 
-        CategoriesRowTitle(categories = state.categories)
+            CategoriesRowTitle(categories = state.categories)
 
-        Description(description = state.description)
+            Description(description = state.description)
 
-        ImagesRow(images = state.images)
+            ImagesRow(images = state.images)
 
-        MenuSection(
-            modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.small),
-            menu = state.menu
-        )
+            MenuSection(
+                modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.small),
+                menu = state.menu
+            )
 
-        ContactInfoSection(contactInfo = state.owner.contactInfo)
+            OpeningHoursSection(
+                modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.small),
+                openingHours = state.openingHours,
+            )
+        }
 
-        OpeningHoursSection(
-            modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.small),
-            openingHours = state.openingHours,
-        )
-
-        ReviewsPreviewSection(
-            modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.small),
-            reviews = state.reviewsPreview,
-            onReviewsClick = onReviewsClick,
+        NavigationButtons(
+            onNext = onSubmitCreating,
+            onPrevious = onPreviousStep
         )
     }
 }
@@ -91,31 +89,17 @@ fun ShopDetailLayout(
 @Composable
 private fun Header(
     modifier: Modifier = Modifier,
-    state: ShopDetailState.Success,
+    state: ShopInput,
 ) {
-    Column(modifier.fillMaxWidth()) {
-        if (!state.name.isNullOrBlank())
-            Text(
-                modifier = Modifier
-                    .padding(vertical = MyFarmerTheme.paddings.large)
-                    .fillMaxWidth(),
-                text = state.name,
-                style = MyFarmerTheme.typography.titleMedium,
-                textAlign = TextAlign.Center
-            )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                UserPreviewCard(user = state.owner)
-            }
-
-            RatingStars(rating = state.averageRating)
-        }
-    }
+    if (state.name.isNotBlank())
+        Text(
+            modifier = modifier
+                .padding(vertical = MyFarmerTheme.paddings.large)
+                .fillMaxWidth(),
+            text = state.name,
+            style = MyFarmerTheme.typography.titleMedium,
+            textAlign = TextAlign.Center
+        )
 }
 
 @Composable

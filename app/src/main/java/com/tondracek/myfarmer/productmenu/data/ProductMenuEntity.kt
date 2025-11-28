@@ -13,7 +13,7 @@ data class ProductMenuEntity(
 @Serializable
 data class MenuItemEntity(
     var name: String = "",
-    var description: String? = null,
+    var description: String = "",
     var price: ProductPriceEntity = ProductPriceEntity(),
     var inStock: Boolean = true,
 )

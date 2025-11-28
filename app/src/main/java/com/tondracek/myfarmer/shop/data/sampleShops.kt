@@ -44,8 +44,8 @@ val shop0 = Shop(
     ),
     location = ShopLocation(49.209166, 16.556608),
     categories = listOf(
-        ShopCategory("Med", Color(0xFFFFC107)),
-        ShopCategory("Včelařství", Color(0xFFFF9800)),
+        ShopCategory(name = "Med", color = Color(0xFFFFC107)),
+        ShopCategory(name = "Včelařství", color = Color(0xFFFF9800)),
     ),
     menu = ProductMenu(
         listOf(
@@ -159,19 +159,19 @@ val shop1 = Shop(
     description = "Na FI je všechno",
     location = ShopLocation(49.209806, 16.598833),
     categories = listOf(
-        ShopCategory("Zelenina", Color(0xFF067C06)),
-        ShopCategory("Ovoce", Color(0xFFE4560B)),
-        ShopCategory("Maso", Color(0xFF642000)),
-        ShopCategory("Mléčné výrobky", Color(0xFFCFCECA)),
-        ShopCategory("Pečivo", Color(0xFFCA6207)),
-        ShopCategory("Vejce", Color(0xFFBE9329)),
-        ShopCategory("Další", Color(0xFF0B5DE4)),
-        ShopCategory("Další", Color(0xFF067C06)),
-        ShopCategory("Další", Color(0xFFE4560B)),
-        ShopCategory("Další", Color(0xFF642000)),
-        ShopCategory("Další", Color(0xFFCFCECA)),
-        ShopCategory("Další", Color(0xFFCA6207)),
-        ShopCategory("Další", Color(0xFFBE9329)),
+        ShopCategory(name = "Zelenina", color = Color(0xFF067C06)),
+        ShopCategory(name = "Ovoce", color = Color(0xFFE4560B)),
+        ShopCategory(name = "Maso", color = Color(0xFF642000)),
+        ShopCategory(name = "Mléčné výrobky", color = Color(0xFFCFCECA)),
+        ShopCategory(name = "Pečivo", color = Color(0xFFCA6207)),
+        ShopCategory(name = "Vejce", color = Color(0xFFBE9329)),
+        ShopCategory(name = "Další", color = Color(0xFF0B5DE4)),
+        ShopCategory(name = "Další", color = Color(0xFF067C06)),
+        ShopCategory(name = "Další", color = Color(0xFFE4560B)),
+        ShopCategory(name = "Další", color = Color(0xFF642000)),
+        ShopCategory(name = "Další", color = Color(0xFFCFCECA)),
+        ShopCategory(name = "Další", color = Color(0xFFCA6207)),
+        ShopCategory(name = "Další", color = Color(0xFFBE9329)),
     ),
     menu = ProductMenu(listOf()),
     ownerId = user1.id,
@@ -191,7 +191,7 @@ val shop2 = Shop(
     description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
     location = ShopLocation(49.205778, 16.593361),
     categories = listOf(
-        ShopCategory("Vejce", Color(0xFFBE9329)),
+        ShopCategory(name = "Vejce", color = Color(0xFFBE9329)),
     ),
     menu = ProductMenu(
         listOf(
@@ -242,7 +242,7 @@ val shop3 = Shop(
     description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
     location = ShopLocation(49.205778, 16.59),
     categories = listOf(
-        ShopCategory("Maso", Color(0xFF642000)),
+        ShopCategory(name = "Maso", color = Color(0xFF642000)),
     ),
     menu = ProductMenu(
         listOf(

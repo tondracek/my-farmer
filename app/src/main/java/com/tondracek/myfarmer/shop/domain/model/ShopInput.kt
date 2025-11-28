@@ -14,16 +14,16 @@ data class ShopInput(
     val description: String = "",
     val categories: List<ShopCategory> = emptyList(),
     val images: List<ImageResource> = emptyList(),
-    val menu: ProductMenu? = null,
+    val menu: ProductMenu = ProductMenu.Empty,
     val location: ShopLocation? = null,
-    val openingHours: OpeningHours? = null,
+    val openingHours: OpeningHours = OpeningHours.Empty,
 )
 
 fun ShopInput.toShop(
     shopId: ShopId,
     ownerId: UUID,
 ): UCResult<Shop> {
-    if (this.menu == null || this.location == null || this.openingHours == null)
+    if (this.location == null)
         return MissingShopInputDataUCResult
 
     return Shop(
