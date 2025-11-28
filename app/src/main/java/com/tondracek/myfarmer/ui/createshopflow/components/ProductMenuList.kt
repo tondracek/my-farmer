@@ -58,6 +58,7 @@ private fun MenuItem(
                     .weight(1f)
                     .padding(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

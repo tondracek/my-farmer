@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
+import com.tondracek.myfarmer.ui.common.openinghours.getDayOfWeekString
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.shopdetailscreen.components.sectionlayout.ShopDetailSectionLayout
@@ -68,17 +69,6 @@ private fun OpeningHoursItem(
             style = MyFarmerTheme.typography.textMedium,
         )
     }
-}
-
-@Composable
-private fun getDayOfWeekString(dayOfWeek: DayOfWeek) = when (dayOfWeek) {
-    DayOfWeek.MONDAY -> stringResource(R.string.monday)
-    DayOfWeek.TUESDAY -> stringResource(R.string.tuesday)
-    DayOfWeek.WEDNESDAY -> stringResource(R.string.wednesday)
-    DayOfWeek.THURSDAY -> stringResource(R.string.thursday)
-    DayOfWeek.FRIDAY -> stringResource(R.string.friday)
-    DayOfWeek.SATURDAY -> stringResource(R.string.saturday)
-    DayOfWeek.SUNDAY -> stringResource(R.string.sunday)
 }
 
 @Preview

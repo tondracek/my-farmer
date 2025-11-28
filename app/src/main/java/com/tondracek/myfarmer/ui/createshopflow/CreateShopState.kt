@@ -33,8 +33,8 @@ sealed interface CreateShopState {
         }
 
         companion object {
-            fun initial() =
-                Creating(shopInput = ShopInput(), step = CreateShopStateCreatingStep.NAME_LOCATION)
+            fun initial(shopInput: ShopInput = ShopInput()) =
+                Creating(shopInput = shopInput, step = CreateShopStateCreatingStep.NAME_LOCATION)
         }
     }
 

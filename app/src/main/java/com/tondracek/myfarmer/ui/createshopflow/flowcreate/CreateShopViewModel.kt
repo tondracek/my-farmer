@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.createshopflow
+package com.tondracek.myfarmer.ui.createshopflow.flowcreate
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,12 +11,15 @@ import com.tondracek.myfarmer.shop.domain.usecase.CreateShopUC
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
+import com.tondracek.myfarmer.ui.createshopflow.CreateShopState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class CreateShopViewModel @Inject constructor(
@@ -40,12 +43,24 @@ class CreateShopViewModel @Inject constructor(
         navigator.navigateBack()
 
     fun submitCreating() = viewModelScope.launch {
-        _state.updateCreatingSuspend {
-            when (val result = createShop(it.shopInput)) {
-                is UCResult.Success<Unit> -> CreateShopState.Finished
+        val currentState = _state.value
+        if (currentState !is CreateShopState.Creating) return@launch
+
+        val shopInput = currentState.shopInput
+        _state.update { CreateShopState.Loading }
+
+        val result = createShop(shopInput)
+        _state.update {
+            when (result) {
+                is UCResult.Success -> {
+                    CreateShopState.Finished
+                }
+
                 is UCResult.Failure -> CreateShopState.Error(result)
             }
         }
+        delay(4.seconds)
+        navigateBack()
     }
 
     /* UPDATE METHODS */

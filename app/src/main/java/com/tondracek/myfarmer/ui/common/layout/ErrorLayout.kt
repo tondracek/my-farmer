@@ -1,19 +1,12 @@
 package com.tondracek.myfarmer.ui.common.layout
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,30 +22,25 @@ fun ErrorLayout(
     failure: UCResult.Failure,
     onNavigateBack: () -> Unit,
 ) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    CardMessageLayout(
+        modifier = modifier,
+        cardColors = MyFarmerTheme.cardColors.error
     ) {
-        Card(colors = MyFarmerTheme.cardColors.error) {
-            Column(
-                modifier = Modifier.padding(MyFarmerTheme.paddings.medium),
-                verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Icon(
-                    modifier = Modifier.size(48.dp),
-                    imageVector = Icons.Default.Error,
-                    contentDescription = "Error Icon",
-                    tint = MyFarmerTheme.colors.error,
-                )
-                Text(
-                    modifier = Modifier.widthIn(max = 270.dp),
-                    text = failure.userError,
-                    textAlign = TextAlign.Center,
-                )
-                GoBackButton(onNavigateBack = onNavigateBack)
-            }
-        }
+        Icon(
+            modifier = Modifier.size(48.dp),
+            imageVector = Icons.Default.Error,
+            contentDescription = "Error Icon",
+            tint = MyFarmerTheme.colors.error,
+        )
+        Text(
+            modifier = Modifier.widthIn(max = 270.dp),
+            text = failure.userError,
+            textAlign = TextAlign.Center,
+        )
+        GoBackButton(
+            onNavigateBack = onNavigateBack,
+            buttonColors = MyFarmerTheme.buttonColors.error
+        )
     }
 }
 

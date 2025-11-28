@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +18,7 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 @Composable
 fun GoBackButton(
     text: String = "Go Back",
-    buttonColors: ButtonColors = MyFarmerTheme.buttonColors.primary,
+    buttonColors: ButtonColors = ButtonDefaults.buttonColors(),
     onNavigateBack: () -> Unit,
 ) {
     Button(

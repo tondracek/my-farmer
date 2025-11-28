@@ -15,7 +15,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.systemuser.data.user0
+import com.tondracek.myfarmer.ui.common.layout.CardMessageLayout
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
@@ -68,56 +68,28 @@ fun EditProfileScreen(
 
 @Composable
 private fun UpdatingProfileLayout(modifier: Modifier = Modifier) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Card(
-            modifier = modifier,
-            colors = MyFarmerTheme.cardColors.secondary,
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                CircularProgressIndicator(modifier = Modifier.size(48.dp))
-                Text(
-                    text = "Updating profile, please wait!",
-                    style = MyFarmerTheme.typography.textLarge,
-                )
-            }
-        }
+    CardMessageLayout(modifier = modifier) {
+        CircularProgressIndicator(modifier = Modifier.size(48.dp))
+        Text(
+            text = "Updating profile, please wait!",
+            style = MyFarmerTheme.typography.textLarge,
+        )
     }
 }
 
 @Composable
 private fun SavedSuccessfullyLayout(modifier: Modifier = Modifier) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Card(
-            modifier = modifier,
-            colors = MyFarmerTheme.cardColors.secondary,
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                Icon(
-                    modifier = Modifier.size(48.dp),
-                    imageVector = Icons.Default.CheckCircle,
-                    contentDescription = null,
-                    tint = MyFarmerTheme.colors.success,
-                )
-                Text(
-                    text = "Profile saved successfully!",
-                    style = MyFarmerTheme.typography.textLarge,
-                )
-            }
-        }
+    CardMessageLayout(modifier = modifier) {
+        Icon(
+            modifier = Modifier.size(48.dp),
+            imageVector = Icons.Default.CheckCircle,
+            contentDescription = "Success icon",
+            tint = MyFarmerTheme.colors.success,
+        )
+        Text(
+            text = "Profile saved successfully!",
+            style = MyFarmerTheme.typography.textLarge,
+        )
     }
 }
 
