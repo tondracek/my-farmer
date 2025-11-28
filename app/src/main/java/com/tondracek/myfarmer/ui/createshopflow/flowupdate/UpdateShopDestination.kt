@@ -36,7 +36,7 @@ fun NavGraphBuilder.updateShopDestination() = routeDestination<Route.UpdateShop>
         onUpdateLocation = viewModel::updateLocation,
         onUpdateOpeningHours = viewModel::updateOpeningHours,
         onUpdateMenu = viewModel::updateMenu,
-        onSubmitCreating = viewModel::submitCreating,
+        onSubmitCreating = viewModel::submitUpdating,
         onNavigateBack = viewModel::navigateBack
     )
 }

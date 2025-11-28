@@ -24,7 +24,7 @@ fun OpeningHoursSection(
     modifier: Modifier = Modifier,
     openingHours: OpeningHours,
 ) {
-    if (openingHours is OpeningHours.Message && openingHours.message.isNullOrEmpty())
+    if (openingHours is OpeningHours.Message && openingHours.message.isEmpty())
         return
 
     ShopDetailSectionLayout(

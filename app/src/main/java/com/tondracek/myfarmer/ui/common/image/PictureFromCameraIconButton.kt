@@ -48,6 +48,7 @@ fun PictureFromCameraIconButton(
 
 
     IconButton(
+        modifier = modifier,
         colors = MyFarmerTheme.iconButtonColors.primary,
         onClick = {
             cameraLauncherUri = context.createTempPictureUri()

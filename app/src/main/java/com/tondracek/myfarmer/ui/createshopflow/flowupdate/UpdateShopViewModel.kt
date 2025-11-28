@@ -17,12 +17,14 @@ import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.createshopflow.CreateShopState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class UpdateShopViewModel @Inject constructor(
@@ -66,14 +68,22 @@ class UpdateShopViewModel @Inject constructor(
     fun navigateBack() =
         navigator.navigateBack()
 
-    fun submitCreating() = viewModelScope.launch {
-        _state.updateCreatingSuspend {
-            val result = updateShop(shopId = shopId, input = it.shopInput)
+    fun submitUpdating() = viewModelScope.launch {
+        val currentState = _state.value
+        if (currentState !is CreateShopState.Creating) return@launch
+
+        val shopInput = currentState.shopInput
+        _state.update { CreateShopState.Loading }
+
+        val result = updateShop(shopId = shopId, input = shopInput)
+        _state.update {
             when (result) {
-                is UCResult.Success<Unit> -> CreateShopState.Finished
+                is UCResult.Success -> CreateShopState.Finished
                 is UCResult.Failure -> CreateShopState.Error(result)
             }
         }
+        delay(4.seconds)
+        navigateBack()
     }
 
     /* UPDATE METHODS */
@@ -106,15 +116,6 @@ class UpdateShopViewModel @Inject constructor(
     }
 
     /* PRIVATE HELPERS */
-
-    suspend fun MutableStateFlow<CreateShopState>.updateCreatingSuspend(
-        update: suspend (CreateShopState.Creating) -> CreateShopState
-    ) = this.update {
-        when (it) {
-            is CreateShopState.Creating -> update(it)
-            else -> it
-        }
-    }
 
     fun MutableStateFlow<CreateShopState>.updateCreating(
         update: (CreateShopState.Creating) -> CreateShopState

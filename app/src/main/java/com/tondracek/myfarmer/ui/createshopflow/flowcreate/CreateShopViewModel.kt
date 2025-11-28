@@ -52,10 +52,7 @@ class CreateShopViewModel @Inject constructor(
         val result = createShop(shopInput)
         _state.update {
             when (result) {
-                is UCResult.Success -> {
-                    CreateShopState.Finished
-                }
-
+                is UCResult.Success -> CreateShopState.Finished
                 is UCResult.Failure -> CreateShopState.Error(result)
             }
         }
@@ -93,15 +90,6 @@ class CreateShopViewModel @Inject constructor(
     }
 
     /* PRIVATE HELPERS */
-
-    suspend fun MutableStateFlow<CreateShopState>.updateCreatingSuspend(
-        update: suspend (CreateShopState.Creating) -> CreateShopState
-    ) = this.update {
-        when (it) {
-            is CreateShopState.Creating -> update(it)
-            else -> it
-        }
-    }
 
     fun MutableStateFlow<CreateShopState>.updateCreating(
         update: (CreateShopState.Creating) -> CreateShopState
