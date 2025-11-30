@@ -4,8 +4,10 @@ import com.tondracek.myfarmer.auth.data.FirebaseAuthRepository
 import com.tondracek.myfarmer.core.di.RepositoryCoreFactory
 import com.tondracek.myfarmer.core.repository.BaseRepository
 import com.tondracek.myfarmer.core.repository.request.filterEq
+import com.tondracek.myfarmer.core.repository.request.filterIn
 import com.tondracek.myfarmer.core.repository.request.repositoryRequest
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -37,4 +39,10 @@ class UserRepository @Inject constructor(
                 else -> getUserByFirebaseId(it)
             }
         }
+
+    fun getByIds(userIds: List<UserId>) = get(
+        repositoryRequest {
+            addFilter(UserEntity::id filterIn userIds.map { it.toString() })
+        }
+    )
 }

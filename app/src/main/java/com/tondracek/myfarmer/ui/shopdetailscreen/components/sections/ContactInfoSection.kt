@@ -38,7 +38,7 @@ fun ContactInfoSection(
     ) {
         Text(
             text = stringResource(R.string.contact_info),
-            style = MyFarmerTheme.typography.titleSmall,
+            style = MyFarmerTheme.typography.titleMedium,
         )
 
         contactInfo.phoneNumber?.let { phoneNumber ->

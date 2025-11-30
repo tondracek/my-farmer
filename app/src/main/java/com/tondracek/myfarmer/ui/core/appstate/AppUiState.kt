@@ -11,32 +11,43 @@ val LocalAppUiController = compositionLocalOf<AppUiController> {
 
 class AppUiController {
 
-    private val _state = MutableStateFlow(AppUiState())
+    private val _state = MutableStateFlow(AppUiState.Initial)
     val state: StateFlow<AppUiState> = _state
 
     fun updateTitle(title: String): AppUiController = apply {
         _state.update { it.copy(title = title) }
-        println("UPDATEEEEEEEEEEEEEEE!!!")
     }
 
     fun updateTopBarPadding(applyPadding: Boolean): AppUiController = apply {
         _state.update { it.copy(applyTopBarPadding = applyPadding) }
-        println("UPDATEEEEEEEEEEEEEEE!")
     }
 
     fun apply(appUiState: AppUiState) = apply {
         _state.update {
             it.copy(
-                title = appUiState.title ?: it.title,
-                applyTopBarPadding = appUiState.applyTopBarPadding
+                title = appUiState.title,
+                applyTopBarPadding = appUiState.applyTopBarPadding,
+                showTopBar = appUiState.showTopBar,
             )
         }
     }
 }
 
-const val APP_UI_STATE_APPLY_TOP_BAR_PADDING_DEFAULT: Boolean = true
-
 data class AppUiState(
-    val title: String? = null,
-    val applyTopBarPadding: Boolean = APP_UI_STATE_APPLY_TOP_BAR_PADDING_DEFAULT,
-)
+    val title: String?,
+    val applyTopBarPadding: Boolean,
+    val showTopBar: Boolean,
+) {
+    companion object {
+
+        val INITIAL_TITLE: String? = null
+        const val INITIAL_APPLY_TOP_BAR_PADDING: Boolean = true
+        const val INITIAL_SHOW_TOP_BAR: Boolean = true
+
+        val Initial = AppUiState(
+            title = INITIAL_TITLE,
+            applyTopBarPadding = INITIAL_APPLY_TOP_BAR_PADDING,
+            showTopBar = INITIAL_SHOW_TOP_BAR,
+        )
+    }
+}

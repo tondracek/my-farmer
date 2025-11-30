@@ -24,6 +24,7 @@ import com.tondracek.myfarmer.ui.createshopflow.flowupdate.updateShopDestination
 import com.tondracek.myfarmer.ui.editprofilescreen.editProfileDestination
 import com.tondracek.myfarmer.ui.mainshopscreen.mainShopsScreenDestination
 import com.tondracek.myfarmer.ui.myshopsscreen.myShopsScreenDestination
+import com.tondracek.myfarmer.ui.reviewscreen.shopReviewsScreenDestination
 import com.tondracek.myfarmer.ui.shopbottomsheet.shopBottomSheetDestination
 import com.tondracek.myfarmer.ui.shopdetailscreen.shopDetailScreenDestination
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,8 +66,11 @@ class MainActivity : ComponentActivity() {
                             startDestination = Route.MainShopsRoute
                         ) {
                             mainShopsScreenDestination()
+
                             shopBottomSheetDestination()
                             shopDetailScreenDestination()
+                            shopReviewsScreenDestination()
+
                             editProfileDestination()
                             authScreenDestination()
                             myShopsScreenDestination()

@@ -29,7 +29,7 @@ fun DescriptionSection(
                         .fillMaxWidth()
                         .padding(MyFarmerTheme.paddings.medium),
                     text = "Shop description",
-                    style = MyFarmerTheme.typography.titleSmall,
+                    style = MyFarmerTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
                 )
             }

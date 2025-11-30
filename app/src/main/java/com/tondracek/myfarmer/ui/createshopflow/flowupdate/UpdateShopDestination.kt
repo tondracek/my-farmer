@@ -2,6 +2,7 @@ package com.tondracek.myfarmer.ui.createshopflow.flowupdate
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavGraphBuilder
@@ -19,7 +20,7 @@ fun SavedStateHandle.getUpdateShopScreenShopId(): ShopId =
         .let { UUID.fromString(it) }
 
 fun NavGraphBuilder.updateShopDestination() = routeDestination<Route.UpdateShop>(
-    titleId = R.string.update_shop_title
+    title = { stringResource(R.string.update_shop_title) },
 ) {
     val viewModel: UpdateShopViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()

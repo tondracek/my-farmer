@@ -2,6 +2,7 @@ package com.tondracek.myfarmer.ui.shopdetailscreen
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavGraphBuilder
@@ -16,7 +17,7 @@ fun SavedStateHandle.getShopDetailScreenShopId(): ShopId =
         .let { ShopId.fromString(it) }
 
 fun NavGraphBuilder.shopDetailScreenDestination() = routeDestination<Route.ShopDetailRoute>(
-    titleId = R.string.shop_detail
+    title = { stringResource(R.string.shop_detail) }
 ) {
     val viewmodel: ShopDetailViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()

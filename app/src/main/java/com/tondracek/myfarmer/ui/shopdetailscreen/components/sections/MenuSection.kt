@@ -66,7 +66,7 @@ private fun ProductMenuItemCard(
         ) {
             Text(
                 text = item.name,
-                style = MyFarmerTheme.typography.titleSmall,
+                style = MyFarmerTheme.typography.titleMedium,
             )
             Column(horizontalAlignment = AbsoluteAlignment.Right) {
                 Text(

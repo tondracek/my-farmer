@@ -14,7 +14,10 @@ import kotlinx.coroutines.flow.map
  * @param block The block of code to execute.
  * @return A [UCResult] representing the outcome of the block execution.
  */
-inline fun <T> toUCResult(userError: String, block: () -> T): UCResult<T> =
+inline fun <T> toUCResult(
+    userError: String = "Unexpected error occurred.",
+    block: () -> T
+): UCResult<T> =
     runCatching { block() }.fold(
         onSuccess = { UCResult.Success(it) },
         onFailure = { e ->
@@ -23,6 +26,12 @@ inline fun <T> toUCResult(userError: String, block: () -> T): UCResult<T> =
                 systemError = e.message ?: "Unknown error: $e",
             )
         }
+    )
+
+inline fun <T> toUCResult(failure: UCResult.Failure, block: () -> T): UCResult<T> =
+    runCatching { block() }.fold(
+        onSuccess = { UCResult.Success(it) },
+        onFailure = { e -> failure }
     )
 
 /**
@@ -46,3 +55,10 @@ fun <T> Flow<T>.toUCResult(
                 )
             )
         }
+
+fun <T> Flow<T>.toUCResult(
+    failure: UCResult.Failure,
+): Flow<UCResult<T>> =
+    this
+        .map { UCResult.Success(it) as UCResult<T> }
+        .catch { e -> emit(failure) }

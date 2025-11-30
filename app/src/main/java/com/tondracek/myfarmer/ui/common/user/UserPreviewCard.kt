@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,14 +29,12 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 fun UserPreviewCard(
     modifier: Modifier = Modifier,
     user: SystemUser,
+    colors: CardColors = MyFarmerTheme.cardColors.primary,
 ) {
     Card(
         modifier = modifier,
         shape = CircleShape,
-        colors = CardDefaults.cardColors(
-            containerColor = MyFarmerTheme.colors.primaryContainer,
-            contentColor = MyFarmerTheme.colors.onPrimaryContainer,
-        )
+        colors = colors,
     ) {
         Row(
             modifier = Modifier.padding(4.dp),
@@ -53,7 +51,7 @@ fun UserPreviewCard(
             Text(
                 modifier = Modifier.padding(horizontal = MyFarmerTheme.paddings.extraSmall),
                 text = user.name,
-                style = MyFarmerTheme.typography.titleSmall,
+                style = MyFarmerTheme.typography.titleMedium,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -67,7 +65,7 @@ private fun UserPreviewCardPreview() {
     MyFarmerPreview {
         UserPreviewCard(
             modifier = Modifier.widthIn(max = 150.dp),
-            user = user2
+            user = user2,
         )
     }
 }

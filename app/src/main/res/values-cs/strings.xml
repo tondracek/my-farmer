@@ -34,4 +34,5 @@
     <string name="shop_detail">Detail obchodu</string>
     <string name="create_shop_title">Vytváření obchodu</string>
     <string name="update_shop_title">Úprava obchodu</string>
+    <string name="shop_reviews">Recenze obchodu</string>
 </resources>

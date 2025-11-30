@@ -1,23 +1,23 @@
 package com.tondracek.myfarmer.ui.core.navigation
 
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.tondracek.myfarmer.ui.core.appstate.APP_UI_STATE_APPLY_TOP_BAR_PADDING_DEFAULT
+import com.tondracek.myfarmer.ui.core.appstate.AppUiController
 import com.tondracek.myfarmer.ui.core.appstate.AppUiState
 import com.tondracek.myfarmer.ui.core.appstate.LocalAppUiController
 
 inline fun <reified T : Route> NavGraphBuilder.routeDestination(
-    @StringRes titleId: Int? = null,
-    applyTopBarPadding: Boolean = APP_UI_STATE_APPLY_TOP_BAR_PADDING_DEFAULT,
-    crossinline content: @Composable () -> Unit
+    crossinline title: @Composable () -> String? = { AppUiState.INITIAL_TITLE },
+    applyTopBarPadding: Boolean = AppUiState.INITIAL_APPLY_TOP_BAR_PADDING,
+    showTopBar: Boolean = AppUiState.INITIAL_SHOW_TOP_BAR,
+    crossinline content: @Composable (appUiController: AppUiController) -> Unit
 ) = composable<T> {
-    val appUiState = getAppUiState(
-        titleId = titleId,
+    val appUiState = AppUiState(
+        title = title(),
         applyTopBarPadding = applyTopBarPadding,
+        showTopBar = showTopBar
     )
 
     val appUiController = LocalAppUiController.current
@@ -25,21 +25,5 @@ inline fun <reified T : Route> NavGraphBuilder.routeDestination(
         appUiController.apply(appUiState)
     }
 
-    content()
-}
-
-@Composable
-fun getAppUiState(
-    titleId: Int? = null,
-    applyTopBarPadding: Boolean? = null,
-) = AppUiState().let { base ->
-    val title = titleId?.let { stringResource(id = it) }
-        ?: base.title
-    val applyTopBarPadding = applyTopBarPadding
-        ?: base.applyTopBarPadding
-
-    AppUiState(
-        title = title,
-        applyTopBarPadding = applyTopBarPadding
-    )
+    content(appUiController)
 }

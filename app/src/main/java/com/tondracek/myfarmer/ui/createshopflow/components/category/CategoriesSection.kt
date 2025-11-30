@@ -40,7 +40,7 @@ fun CategoriesSection(
                         .fillMaxWidth()
                         .padding(MyFarmerTheme.paddings.medium),
                     text = "Product categories",
-                    style = MyFarmerTheme.typography.titleSmall,
+                    style = MyFarmerTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
                 )
             }

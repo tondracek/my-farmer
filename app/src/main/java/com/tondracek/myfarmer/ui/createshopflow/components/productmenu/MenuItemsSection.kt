@@ -43,7 +43,7 @@ fun MenuItemsSection(
                         .fillMaxWidth()
                         .padding(MyFarmerTheme.paddings.medium),
                     text = "Product menu",
-                    style = MyFarmerTheme.typography.titleSmall,
+                    style = MyFarmerTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
                 )
             }

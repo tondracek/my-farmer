@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,10 +39,6 @@ fun AppScaffold(
     val appUiController = remember { AppUiController() }
     val appUiState by appUiController.state.collectAsState()
 
-    LaunchedEffect(appUiState) {
-        println("UPDATEEEE - AppScaffold - LaunchedEffect - appUiState changed: $appUiState")
-    }
-
     CompositionLocalProvider(
         LocalAppUiController provides appUiController,
     ) {
@@ -65,7 +60,10 @@ fun AppScaffold(
             ) {
                 var topContentPadding by remember { mutableStateOf(0.dp) }
                 val animatedTopContentPadding by animateDpAsState(
-                    if (appUiState.applyTopBarPadding) topContentPadding else 0.dp
+                    when (appUiState.applyTopBarPadding && appUiState.showTopBar) {
+                        true -> topContentPadding
+                        false -> 0.dp
+                    }
                 )
                 Box(
                     modifier = Modifier
@@ -76,16 +74,17 @@ fun AppScaffold(
                     content()
                 }
 
-                FloatingTopBar(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .onGloballyPositioned { coordinates ->
-                            with(localDensity) {
-                                topContentPadding = coordinates.size.height.toDp()
-                            }
-                        },
-                    title = appUiState.title ?: stringResource(R.string.app_name)
-                )
+                if (appUiState.showTopBar)
+                    FloatingTopBar(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .onGloballyPositioned { coordinates ->
+                                with(localDensity) {
+                                    topContentPadding = coordinates.size.height.toDp()
+                                }
+                            },
+                        title = appUiState.title ?: stringResource(R.string.app_name)
+                    )
             }
         }
     }

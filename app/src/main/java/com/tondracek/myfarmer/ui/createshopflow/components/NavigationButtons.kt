@@ -1,12 +1,10 @@
 package com.tondracek.myfarmer.ui.createshopflow.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.tondracek.myfarmer.ui.common.button.ButtonRow
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
@@ -16,10 +14,7 @@ fun NavigationButtons(
     onPrevious: () -> Unit,
     submitMode: Boolean = false,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.medium)
-    ) {
+    ButtonRow(modifier = modifier) {
         Button(
             modifier = Modifier.weight(1f),
             colors = MyFarmerTheme.buttonColors.tertiary,

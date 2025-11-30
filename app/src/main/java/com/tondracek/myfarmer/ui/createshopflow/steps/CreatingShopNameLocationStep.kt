@@ -96,7 +96,7 @@ private fun Content(
                             .fillMaxWidth()
                             .padding(MyFarmerTheme.paddings.medium),
                         text = "Select shop's location",
-                        style = MyFarmerTheme.typography.titleSmall,
+                        style = MyFarmerTheme.typography.titleMedium,
                         textAlign = TextAlign.Center
                     )
                 }

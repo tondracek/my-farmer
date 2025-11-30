@@ -13,31 +13,26 @@ fun MyFarmerPreview(
     useSurface: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    @Composable
+    fun view() {
+        AsyncImagePreviewFix {
+            val appUiController = remember { AppUiController() }
+
+            CompositionLocalProvider(
+                LocalAppUiController provides appUiController,
+            ) {
+                content()
+            }
+        }
+    }
+
     MyFarmerTheme {
         when (useSurface) {
-            true -> Surface(
-                color = MyFarmerTheme.colors.surfaceContainer
-            ) {
-                AsyncImagePreviewFix {
-                    val appUiController = remember { AppUiController() }
-
-                    CompositionLocalProvider(
-                        LocalAppUiController provides appUiController,
-                    ) {
-                        content()
-                    }
-                }
+            true -> Surface(color = MyFarmerTheme.colors.surfaceContainer) {
+                view()
             }
 
-            false -> AsyncImagePreviewFix {
-                val appUiController = remember { AppUiController() }
-
-                CompositionLocalProvider(
-                    LocalAppUiController provides appUiController,
-                ) {
-                    content()
-                }
-            }
+            false -> view()
         }
     }
 }

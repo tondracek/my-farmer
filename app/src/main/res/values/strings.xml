@@ -33,4 +33,5 @@
     <string name="shop_detail">Shop detail</string>
     <string name="create_shop_title">Creating a shop</string>
     <string name="update_shop_title">Updating a shop</string>
+    <string name="shop_reviews">Shop reviews</string>
 </resources>
