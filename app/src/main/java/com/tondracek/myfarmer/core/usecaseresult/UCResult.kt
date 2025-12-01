@@ -18,7 +18,7 @@ sealed interface UCResult<out T> {
                 : this(userError = userError, systemError = throwable.message)
 
         init {
-            Log.e(this.javaClass.name, systemError, null)
+            logFailure()
         }
     }
 
@@ -53,6 +53,22 @@ sealed interface UCResult<out T> {
         is Success -> data
         is Failure -> throw Throwable(systemError)
     }
+}
+
+private fun Failure.logFailure() {
+    val tag = "❌ UCResultFailure ❌"
+    val border = "========================================="
+
+    Log.e(
+        tag,
+        """
+            $border
+            ❌ FAILURE in ${this.javaClass.simpleName}
+            ❌ USER ERROR: $userError
+            ❌ SYSTEM ERROR: ${systemError ?: "null"}
+            $border
+        """.trimIndent()
+    )
 }
 
 /**

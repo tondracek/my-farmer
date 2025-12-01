@@ -36,6 +36,9 @@ sealed interface Route {
     @Serializable
     data class UpdateShop(val shopId: String) : Route
 
+    @Serializable
+    data object AddCategoryDialog : Route
+
     companion object {
         private val allRoutes = setOf(
             MainShopsRoute::class,
@@ -47,6 +50,7 @@ sealed interface Route {
             ShopReviews::class,
             CreateShop::class,
             UpdateShop::class,
+            AddCategoryDialog::class,
         )
 
         fun getRouteClass(route: NavBackStackEntry): KClass<out Route>? =

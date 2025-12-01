@@ -19,6 +19,7 @@ import com.tondracek.myfarmer.ui.core.appstate.AppScaffold
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.createshopflow.components.addcategorydialog.addCategoryDialogDestination
 import com.tondracek.myfarmer.ui.createshopflow.flowcreate.createShopDestination
 import com.tondracek.myfarmer.ui.createshopflow.flowupdate.updateShopDestination
 import com.tondracek.myfarmer.ui.editprofilescreen.editProfileDestination
@@ -67,7 +68,6 @@ class MainActivity : ComponentActivity() {
                         ) {
                             mainShopsScreenDestination()
 
-                            shopBottomSheetDestination()
                             shopDetailScreenDestination()
                             shopReviewsScreenDestination()
 
@@ -77,6 +77,10 @@ class MainActivity : ComponentActivity() {
 
                             createShopDestination()
                             updateShopDestination()
+
+                            shopBottomSheetDestination()
+
+                            addCategoryDialogDestination()
                         }
                     }
                 }

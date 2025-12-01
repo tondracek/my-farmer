@@ -24,6 +24,7 @@ fun NavGraphBuilder.createShopDestination() = routeDestination<Route.CreateShop>
         onPreviousStep = viewModel::goToPreviousStep,
         onUpdateName = viewModel::updateName,
         onUpdateDescription = viewModel::updateDescription,
+        onOpenAddCategoryDialog = viewModel::onOpenAddCategoryDialog,
         onUpdateCategories = viewModel::updateCategories,
         onUpdateImages = viewModel::updateImages,
         onUpdateLocation = viewModel::updateLocation,

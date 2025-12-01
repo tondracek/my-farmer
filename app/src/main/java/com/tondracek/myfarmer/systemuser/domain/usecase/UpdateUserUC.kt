@@ -36,9 +36,7 @@ class UpdateUserUC @Inject constructor(
         when (original.profilePicture == this.profilePicture) {
             true -> this
             false -> {
-                println("DELETING...")
                 photoStorage.deletePhoto(original.profilePicture)
-                println("UPLOADING...")
                 photoStorage.uploadPhoto(
                     imageResource = this.profilePicture,
                     name = this.id.toString(),

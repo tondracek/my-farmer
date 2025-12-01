@@ -24,7 +24,6 @@ class GetShopReviewsWithAuthorsUC @Inject constructor(
         val reviews: Flow<List<Review>> = reviewRepository.getReviews(shopId)
         val authors: Flow<List<SystemUser>> = reviews.flatMapLatest { reviewList ->
             val authorIds = reviewList.map { it.userId }.distinct()
-            println(authorIds)
             userRepository.getByIds(authorIds)
         }
 

@@ -25,6 +25,7 @@ fun CreateShopFlowScreen(
     onPreviousStep: () -> Unit,
     onUpdateName: (String) -> Unit,
     onUpdateDescription: (String) -> Unit,
+    onOpenAddCategoryDialog: () -> Unit,
     onUpdateCategories: (List<ShopCategory>) -> Unit,
     onUpdateImages: (List<ImageResource>) -> Unit,
     onUpdateLocation: (ShopLocation) -> Unit,
@@ -45,6 +46,7 @@ fun CreateShopFlowScreen(
 
             CreateShopState.Creating.CreateShopStateCreatingStep.CATEGORIES_MENU -> CreatingShopCategoriesMenuStep(
                 shopInput = state.shopInput,
+                onOpenAddCategoryDialog = onOpenAddCategoryDialog,
                 onUpdateCategories = onUpdateCategories,
                 onUpdateMenu = onUpdateMenu,
                 onNextStep = onNextStep,

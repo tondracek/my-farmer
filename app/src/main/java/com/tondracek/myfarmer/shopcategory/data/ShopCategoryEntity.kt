@@ -17,6 +17,11 @@ fun ShopCategoryEntity.toModel() = ShopCategory(
 )
 
 fun ShopCategory.toEntity() = ShopCategoryEntity(
-    name = name,
+    name = normalizeWord(name),
     colorArgb = color.toArgb()
 )
+
+fun normalizeWord(input: String): String {
+    if (input.isEmpty()) return input
+    return input.substring(0, 1).uppercase() + input.substring(1).lowercase()
+}

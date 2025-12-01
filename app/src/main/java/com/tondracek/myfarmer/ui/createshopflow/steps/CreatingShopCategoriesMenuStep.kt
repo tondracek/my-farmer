@@ -21,14 +21,13 @@ import com.tondracek.myfarmer.ui.createshopflow.components.productmenu.MenuItems
 @Composable
 fun CreatingShopCategoriesMenuStep(
     shopInput: ShopInput,
+    onOpenAddCategoryDialog: () -> Unit,
     onUpdateCategories: (List<ShopCategory>) -> Unit,
     onUpdateMenu: (ProductMenu) -> Unit,
     onNextStep: () -> Unit,
     onPreviousStep: () -> Unit,
 ) {
-
     Column(modifier = Modifier.fillMaxSize()) {
-
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -37,6 +36,7 @@ fun CreatingShopCategoriesMenuStep(
         ) {
             CategoriesSection(
                 categories = shopInput.categories,
+                onOpenAddCategoryDialog = onOpenAddCategoryDialog,
                 onUpdateCategories = onUpdateCategories,
             )
 
@@ -62,6 +62,7 @@ private fun CreatingShopCategoriesMenuStepPreview() {
 
         CreatingShopCategoriesMenuStep(
             shopInput = shopInput,
+            onOpenAddCategoryDialog = {},
             onUpdateCategories = {},
             onUpdateMenu = {},
             onNextStep = {},

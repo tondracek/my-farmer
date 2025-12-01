@@ -10,15 +10,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.ui.common.color.contrastColor
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
 fun CategoryLabel(category: ShopCategory) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = category.color,
-            contentColor = contrastColor(category.color)
-        ),
+        colors = MyFarmerTheme.cardColors.custom(category.color),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Text(

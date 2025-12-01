@@ -13,9 +13,13 @@ import com.tondracek.myfarmer.shop.domain.model.toShopInput
 import com.tondracek.myfarmer.shop.domain.usecase.GetShopByIdUC
 import com.tondracek.myfarmer.shop.domain.usecase.UpdateShopUC
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
+import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategorySerializable
+import com.tondracek.myfarmer.shopcategory.domain.model.toDomain
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
+import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.createshopflow.CreateShopState
+import com.tondracek.myfarmer.ui.createshopflow.components.addcategorydialog.NEW_CATEGORY_DIALOG_VALUE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -94,6 +98,17 @@ class UpdateShopViewModel @Inject constructor(
     fun updateDescription(description: String) = _state.updateShopInput {
         it.copy(description = description)
     }
+
+    fun onOpenAddCategoryDialog() =
+        navigator.navigateForResult<ShopCategorySerializable>(
+            route = Route.AddCategoryDialog,
+            key = NEW_CATEGORY_DIALOG_VALUE,
+            onResult = { newCategory ->
+                _state.updateShopInput { shopInput ->
+                    shopInput.copy(categories = shopInput.categories + newCategory.toDomain())
+                }
+            }
+        )
 
     fun updateCategories(categories: List<ShopCategory>) = _state.updateShopInput {
         it.copy(categories = categories)

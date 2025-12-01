@@ -9,10 +9,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
@@ -21,10 +17,9 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 @Composable
 fun CategoriesSection(
     categories: List<ShopCategory>,
+    onOpenAddCategoryDialog: () -> Unit,
     onUpdateCategories: (List<ShopCategory>) -> Unit,
 ) {
-    var showAddCategoryDialog by remember { mutableStateOf(false) }
-
     Card(
         colors = MyFarmerTheme.cardColors.primary,
         shape = RoundedCornerShape(MyFarmerTheme.paddings.medium * 1.5f),
@@ -53,20 +48,9 @@ fun CategoriesSection(
                 }
             )
 
-            Button(onClick = { showAddCategoryDialog = true }) {
+            Button(onClick = onOpenAddCategoryDialog) {
                 Text("Add category")
             }
         }
-    }
-
-    if (showAddCategoryDialog) {
-        AddCategoryDialog(
-            onAdd = {
-                val newCategories = categories + it
-                onUpdateCategories(newCategories)
-                showAddCategoryDialog = false
-            },
-            onDismiss = { showAddCategoryDialog = false }
-        )
     }
 }
