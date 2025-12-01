@@ -59,7 +59,7 @@ class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
         val docRef = db.collection(collectionName).document(id.toString())
 
         return docRef.snapshots()
-            .map { it.toObject(entityClass) }
+            .map { it.toObjectWithId(entityClass) }
             .map { entity -> entity?.let { mapper.toModel(it) } }
     }
 
@@ -78,7 +78,7 @@ class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
         return query.snapshots()
             .map {
                 it.documents
-                    .mapNotNull { doc -> doc.toObject(entityClass) }
+                    .mapNotNull { doc -> doc.toObjectWithId(entityClass) }
                     .map { entity -> mapper.toModel(entity) }
             }
     }
@@ -103,8 +103,13 @@ class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
         return query.snapshots()
             .map {
                 it.documents
-                    .mapNotNull { doc -> doc.toObject(entityClass) }
+                    .mapNotNull { doc -> doc.toObjectWithId(entityClass) }
                     .map { entity -> mapper.toModel(entity) }
             }
     }
+}
+
+private fun <Entity : FirestoreEntity> DocumentSnapshot.toObjectWithId(entityClass: Class<Entity>): Entity? {
+    return this.toObject(entityClass)
+        ?.also { it.id = this.id }
 }
