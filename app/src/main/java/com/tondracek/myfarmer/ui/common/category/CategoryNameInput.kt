@@ -34,7 +34,8 @@ data class CategoryNameInputState(
 fun CategoryNameInput(
     modifier: Modifier = Modifier,
     state: CategoryNameInputState,
-    onNameChanged: (String) -> Unit
+    onNameChanged: (String) -> Unit,
+    onSuggestionClicked: (String) -> Unit = onNameChanged,
 ) {
     Column(modifier = modifier) {
         OutlinedTextField(
@@ -53,7 +54,7 @@ fun CategoryNameInput(
             state.suggestions.forEach { suggestion ->
                 SuggestionChip(
                     name = suggestion.name,
-                    onClick = { onNameChanged(suggestion.name) }
+                    onClick = { onSuggestionClicked(suggestion.name) }
                 )
             }
         }

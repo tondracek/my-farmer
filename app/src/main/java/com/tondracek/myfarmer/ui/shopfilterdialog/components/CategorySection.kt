@@ -59,6 +59,7 @@ internal fun CategorySection(
         CategoryNameInput(
             state = categoryNameInputState,
             onNameChanged = onCategoryFilterInputChange,
+            onSuggestionClicked = { onSelectedCategoriesAdd(it) }
         )
         Button(onClick = {
             onSelectedCategoriesAdd(categoryNameInputState.categoryName)
