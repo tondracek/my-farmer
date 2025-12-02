@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.shopslistview
+package com.tondracek.myfarmer.ui.mainshopscreen.shopslistview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,13 +10,18 @@ import com.tondracek.myfarmer.review.domain.usecase.GetAverageRatingsByShopUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
+import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
+import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
+import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.core.navigation.Route
-import com.tondracek.myfarmer.ui.shopslistview.components.toListItem
+import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.toListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -25,10 +30,16 @@ class ShopsListViewModel @Inject constructor(
     getAverageRatingsByShopUC: GetAverageRatingsByShopUC,
     measureDistanceFromMe: MeasureDistanceFromMeUC,
     getAllShops: GetAllShopsUC,
+    getShopFilters: GetShopFiltersUC,
     private val navigator: AppNavigator,
 ) : ViewModel() {
 
-    private val shops: Flow<UCResult<List<Shop>>> = getAllShops()
+    private val filters: StateFlow<ShopFilters> =
+        getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val shops: Flow<UCResult<List<Shop>>> = filters
+        .flatMapLatest { getAllShops(filters = it) }
 
     private val averageRatings: Flow<UCResult<Map<ShopId, Rating>>> = getAverageRatingsByShopUC()
 

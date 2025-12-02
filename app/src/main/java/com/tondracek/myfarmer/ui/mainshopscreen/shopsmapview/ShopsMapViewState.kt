@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.shopsmapview
+package com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview
 
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.LatLngBounds

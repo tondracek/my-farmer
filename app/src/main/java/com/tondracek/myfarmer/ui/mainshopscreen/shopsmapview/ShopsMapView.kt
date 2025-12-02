@@ -1,6 +1,7 @@
-package com.tondracek.myfarmer.ui.shopsmapview
+package com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview
 
 import android.Manifest
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -61,7 +62,8 @@ fun ShopsMapView(
             zoomControlsEnabled = false,
             rotationGesturesEnabled = false,
             tiltGesturesEnabled = false,
-        )
+        ),
+        contentPadding = PaddingValues(vertical = MyFarmerTheme.paddings.xxL)
     ) {
         state.shops.forEach { shop ->
             Marker(

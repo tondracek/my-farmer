@@ -28,6 +28,7 @@ import com.tondracek.myfarmer.ui.myshopsscreen.myShopsScreenDestination
 import com.tondracek.myfarmer.ui.reviewscreen.shopReviewsScreenDestination
 import com.tondracek.myfarmer.ui.shopbottomsheet.shopBottomSheetDestination
 import com.tondracek.myfarmer.ui.shopdetailscreen.shopDetailScreenDestination
+import com.tondracek.myfarmer.ui.shopfilterdialog.shopsFilterDialogDestination
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -81,6 +82,7 @@ class MainActivity : ComponentActivity() {
                             shopBottomSheetDestination()
 
                             addCategoryDialogDestination()
+                            shopsFilterDialogDestination()
                         }
                     }
                 }

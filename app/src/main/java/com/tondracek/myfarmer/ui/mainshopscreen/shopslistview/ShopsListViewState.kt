@@ -1,7 +1,7 @@
-package com.tondracek.myfarmer.ui.shopslistview
+package com.tondracek.myfarmer.ui.mainshopscreen.shopslistview
 
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.ui.shopslistview.components.ShopListViewItem
+import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.ShopListViewItem
 
 sealed class ShopsListViewState {
     data object Loading : ShopsListViewState()

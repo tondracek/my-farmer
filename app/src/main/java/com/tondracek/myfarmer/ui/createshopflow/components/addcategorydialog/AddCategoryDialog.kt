@@ -1,7 +1,6 @@
 package com.tondracek.myfarmer.ui.createshopflow.components.addcategorydialog
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,13 +8,9 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -37,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
+import com.tondracek.myfarmer.ui.common.category.CategoryNameInput
+import com.tondracek.myfarmer.ui.common.category.CategoryNameInputState
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
@@ -87,9 +83,11 @@ fun AddCategoryDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 CategoryNameInput(
-                    state = state,
-                    onNameChanged = onCategoryNameChange,
-                    onSuggestionClicked = { onCategoryNameChange(it) }
+                    state = CategoryNameInputState(
+                        categoryName = state.categoryName,
+                        suggestions = state.suggestions,
+                    ),
+                    onNameChanged = onCategoryNameChange
                 )
                 ColorPicker(
                     availableColors = availableColors,
@@ -114,54 +112,6 @@ fun AddCategoryDialog(
             TextButton(onClick = onDismiss) { Text("Cancel") }
         }
     )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun CategoryNameInput(
-    state: AddCategoryDialogState,
-    onNameChanged: (String) -> Unit,
-    onSuggestionClicked: (String) -> Unit
-) {
-    Column {
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = state.categoryName,
-            onValueChange = { onNameChanged(it) },
-            label = { Text("Name") },
-            singleLine = true,
-        )
-        Row(
-            modifier = Modifier.horizontalScroll(state = rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("Suggestions:")
-            state.suggestions.forEach { suggestion ->
-                SuggestionChip(
-                    name = suggestion.name,
-                    onClick = { onSuggestionClicked(suggestion.name) }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun SuggestionChip(
-    name: String,
-    onClick: () -> Unit
-) {
-    Card(
-        colors = MyFarmerTheme.cardColors.primary,
-        elevation = CardDefaults.cardElevation(4.dp),
-        onClick = onClick,
-    ) {
-        Text(
-            modifier = Modifier.padding(8.dp, 0.dp),
-            text = name
-        )
-    }
 }
 
 @Composable

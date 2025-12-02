@@ -1,17 +1,20 @@
-package com.tondracek.myfarmer.ui.shopsmapview
+package com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.tondracek.myfarmer.common.image.usecase.GetCustomMarkerIcon
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.combineUCResults
+import com.tondracek.myfarmer.core.usecaseresult.mapFlowUCSuccess
+import com.tondracek.myfarmer.map.GetMapViewInitialCameraBoundsUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
+import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
+import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
 import com.tondracek.myfarmer.systemuser.domain.usecase.GetUsersByIdsUC
+import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,11 +37,17 @@ class ShopsMapViewModel @Inject constructor(
     getAllShops: GetAllShopsUC,
     getUsersByIdsUC: GetUsersByIdsUC,
     getCustomMarkerIcon: GetCustomMarkerIcon,
+    getShopFilters: GetShopFiltersUC,
+    private val getInitialCameraBounds: GetMapViewInitialCameraBoundsUC,
     private val navigator: AppNavigator,
 ) : ViewModel() {
 
-    private val _shops: Flow<UCResult<Set<Shop>>> = getAllShops()
-        .map { it.mapSuccess { shopsList -> shopsList.toSet() } }
+    private val filters: StateFlow<ShopFilters> =
+        getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
+
+    private val _shops: Flow<UCResult<Set<Shop>>> = filters
+        .flatMapLatest { getAllShops(filters = it) }
+        .mapFlowUCSuccess { shopsList -> shopsList.toSet() }
 
     private val _shopMarkerIcons: Flow<UCResult<Map<ShopId, BitmapDescriptor?>>> = _shops
         .map {
@@ -72,7 +81,7 @@ class ShopsMapViewModel @Inject constructor(
 
         ShopsMapViewState(
             shops = shopUiItems,
-            initialCameraBounds = getLatLngBounds(shops.map { it.location.toLatLng() })
+            initialCameraBounds = getInitialCameraBounds(shops.map { it.location.toLatLng() })
         )
     }.stateIn(
         scope = viewModelScope,
@@ -83,12 +92,4 @@ class ShopsMapViewModel @Inject constructor(
     fun onShopSelected(shopId: ShopId) {
         navigator.navigate(Route.ShopBottomSheetRoute(shopId.toString()))
     }
-}
-
-private fun getLatLngBounds(locations: Collection<LatLng>): LatLngBounds? {
-    if (locations.isEmpty()) return null
-
-    val builder = LatLngBounds.builder()
-    locations.forEach { builder.include(it) }
-    return builder.build()
 }

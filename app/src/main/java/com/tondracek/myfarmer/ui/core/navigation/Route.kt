@@ -39,6 +39,9 @@ sealed interface Route {
     @Serializable
     data object AddCategoryDialog : Route
 
+    @Serializable
+    data class ShopFilterDialog(val filterRepositoryKey: String) : Route
+
     companion object {
         private val allRoutes = setOf(
             MainShopsRoute::class,

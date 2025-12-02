@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.shopslistview.components
+package com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components
 
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.location.model.Distance

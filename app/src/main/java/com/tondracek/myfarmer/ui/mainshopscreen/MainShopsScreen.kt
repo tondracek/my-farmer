@@ -1,11 +1,17 @@
 package com.tondracek.myfarmer.ui.mainshopscreen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -31,8 +37,10 @@ fun Int.toShopsViewMode(): ShopsViewMode =
 
 @Composable
 fun MainShopsScreen(
+    state: MainShopsScreenState,
     mapView: @Composable (Modifier) -> Unit,
     listView: @Composable (Modifier) -> Unit,
+    onOpenFiltersDialog: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -49,12 +57,14 @@ fun MainShopsScreen(
         pagerState.animateScrollToPage(page)
     }
 
-    ShopsPager(
+    MainShopsScreenWrapper(
+        state = state,
         pagerState = pagerState,
         mapView = mapView,
         listView = listView,
         onSwitchMode = { switchPage(it.toPage()) },
-        currentMode = currentPage.toShopsViewMode()
+        currentMode = currentPage.toShopsViewMode(),
+        onOpenFiltersDialog = onOpenFiltersDialog,
     )
 
     val appUiStateController = LocalAppUiController.current
@@ -67,12 +77,14 @@ fun MainShopsScreen(
 }
 
 @Composable
-private fun ShopsPager(
+private fun MainShopsScreenWrapper(
+    state: MainShopsScreenState,
     pagerState: PagerState,
     mapView: @Composable (Modifier) -> Unit,
     listView: @Composable (Modifier) -> Unit,
     onSwitchMode: (ShopsViewMode) -> Unit,
-    currentMode: ShopsViewMode
+    currentMode: ShopsViewMode,
+    onOpenFiltersDialog: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
@@ -85,14 +97,28 @@ private fun ShopsPager(
             }
         }
 
-        ViewModeSwitcher(
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp),
-            selectedMode = currentMode,
-            onMapClick = { onSwitchMode(ShopsViewMode.Map) },
-            onListClick = { onSwitchMode(ShopsViewMode.List) },
-        )
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.extraSmall)
+        ) {
+            Surface(
+                shape = CircleShape,
+                color = MyFarmerTheme.colors.surfaceContainer,
+            ) {
+                Button(
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                    onClick = onOpenFiltersDialog
+                ) { Text("Open filters") }
+            }
+            ViewModeSwitcher(
+                selectedMode = currentMode,
+                onMapClick = { onSwitchMode(ShopsViewMode.Map) },
+                onListClick = { onSwitchMode(ShopsViewMode.List) },
+            )
+        }
     }
 }
 
@@ -101,8 +127,10 @@ private fun ShopsPager(
 private fun ShopScreenPreview() {
     MyFarmerTheme {
         MainShopsScreen(
+            state = MainShopsScreenState(),
             mapView = {},
             listView = {},
+            onOpenFiltersDialog = {},
         )
     }
 }

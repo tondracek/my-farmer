@@ -3,11 +3,11 @@ package com.tondracek.myfarmer.ui.createshopflow.components.addcategorydialog
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tondracek.myfarmer.common.util.fuzzyScore
 import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shopcategory.domain.model.toSerializable
+import com.tondracek.myfarmer.shopcategory.domain.usecase.GetCategorySuggestionsUC
 import com.tondracek.myfarmer.shopcategory.domain.usecase.GetMostPopularCategoriesUC
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +26,7 @@ const val NEW_CATEGORY_DIALOG_VALUE = "new_category"
 @HiltViewModel
 class AddCategoryViewModel @Inject constructor(
     getMostPopularCategories: GetMostPopularCategoriesUC,
+    getCategorySuggestions: GetCategorySuggestionsUC,
     private val navigator: AppNavigator,
 ) : ViewModel() {
 
@@ -38,26 +39,16 @@ class AddCategoryViewModel @Inject constructor(
     private val selectedColor: MutableStateFlow<Color> =
         MutableStateFlow(Color.White)
 
-    private val suggestions: StateFlow<List<CategoryPopularity>> =
-        combine(mostPopularCategories, inputCategoryName) { popular, input ->
-            when (input.isBlank()) {
-                true -> popular
-                false -> (popular + CategoryPopularity(input, Int.MAX_VALUE))
-                    .map { it to fuzzyScore(input, it.name) }
-                    .filter { (_, score) -> score > 0 }
-                    .sortedWith(
-                        compareByDescending<Pair<CategoryPopularity, Int>> { (popularity, _) -> popularity.count }
-                            .thenByDescending { (_, score) -> score }
-                    )
-                    .distinctBy { (popularity, _) -> popularity.name }
-                    .take(6)
-                    .map { (categoryPopularity, _) -> categoryPopularity }
-            }
-        }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            emptyList()
-        )
+    private val suggestions: StateFlow<List<CategoryPopularity>> = combine(
+        mostPopularCategories,
+        inputCategoryName
+    ) { popular, input ->
+        getCategorySuggestions(input, popular)
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5_000),
+        emptyList()
+    )
 
     val state: StateFlow<AddCategoryDialogState> = combine(
         suggestions,

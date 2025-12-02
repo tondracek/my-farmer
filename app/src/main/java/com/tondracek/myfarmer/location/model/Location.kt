@@ -16,4 +16,6 @@ data class Location(
         latitude = latLng.latitude,
         longitude = latLng.longitude
     )
+
+    fun toLatLng(): LatLng = LatLng(latitude, longitude)
 }

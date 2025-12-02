@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.shopslistview
+package com.tondracek.myfarmer.ui.mainshopscreen.shopslistview
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,9 +16,9 @@ import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
-import com.tondracek.myfarmer.ui.shopslistview.components.ShopListItemCard
-import com.tondracek.myfarmer.ui.shopslistview.components.ShopListViewItem
-import com.tondracek.myfarmer.ui.shopslistview.components.toListItem
+import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.ShopListItemCard
+import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.ShopListViewItem
+import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.toListItem
 
 @Composable
 fun ShopsListView(

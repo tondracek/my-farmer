@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.shopslistview.components
+package com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

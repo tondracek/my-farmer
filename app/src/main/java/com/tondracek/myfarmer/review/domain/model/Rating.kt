@@ -7,7 +7,11 @@ import kotlin.math.roundToInt
  */
 data class Rating(
     val stars: Int,
-) {
+) : Comparable<Rating> {
+
+    override fun compareTo(other: Rating): Int =
+        this.stars.compareTo(other.stars)
+
     companion object {
         val ZERO = Rating(0)
     }

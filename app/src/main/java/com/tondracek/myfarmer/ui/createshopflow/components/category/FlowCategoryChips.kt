@@ -54,10 +54,10 @@ private fun CategoryChip(
         ) {
             Text(text = category.name)
             Icon(
+                modifier = Modifier.clickable { onRemove() },
                 imageVector = Icons.Default.Close,
                 contentDescription = "Remove category",
                 tint = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.clickable { onRemove() }
             )
         }
     }
