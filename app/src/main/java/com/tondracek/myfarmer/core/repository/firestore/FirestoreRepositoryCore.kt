@@ -20,8 +20,8 @@ import kotlinx.coroutines.tasks.await
 import java.util.UUID
 
 class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
-    private val mapper: EntityMapper<Model, Entity>,
-    private val entityClass: Class<Entity>,
+    val mapper: EntityMapper<Model, Entity>,
+    val entityClass: Class<Entity>,
 ) : RepositoryCore<Model> {
 
     val collectionName: String = entityClass.getAnnotation(FirestoreCollection::class.java)?.name

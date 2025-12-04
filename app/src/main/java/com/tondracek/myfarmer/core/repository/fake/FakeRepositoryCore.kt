@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 import java.util.UUID
 
 class FakeRepositoryCore<Model, Entity : RepositoryEntity<*>>(
-    private val mapper: EntityMapper<Model, Entity>,
+    val mapper: EntityMapper<Model, Entity>,
     private val getUUID: Entity.() -> UUID,
 ) : RepositoryCore<Model> {
 
