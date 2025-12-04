@@ -50,9 +50,11 @@ object FirestoreQueryBuilder {
             }
         }
 
-    fun Query.applyLimit(limit: Int?): Query =
-        limit?.let { this.limit(it.toLong()) } ?: this
+    fun Query.applyLimit(limit: Int?): Query = apply {
+        limit?.let { this.limit(it.toLong()) }
+    }
 
-    fun Query.applyOffset(startAfter: DocumentSnapshot?): Query =
-        startAfter?.let { this.startAfter(startAfter) } ?: this
+    fun Query.applyOffset(startAfter: DocumentSnapshot?): Query = apply {
+        startAfter?.let { this.startAfter(startAfter) }
+    }
 }
