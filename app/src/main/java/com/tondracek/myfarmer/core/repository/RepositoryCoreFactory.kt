@@ -1,6 +1,5 @@
-package com.tondracek.myfarmer.core.di
+package com.tondracek.myfarmer.core.repository
 
-import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreRepositoryCore
 import javax.inject.Inject

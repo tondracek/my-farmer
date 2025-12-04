@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.review.data
 
-import com.tondracek.myfarmer.core.di.RepositoryCoreFactory
 import com.tondracek.myfarmer.core.repository.BaseRepository
+import com.tondracek.myfarmer.core.repository.RepositoryCoreFactory
 import com.tondracek.myfarmer.core.repository.request.filterEq
 import com.tondracek.myfarmer.core.repository.request.repositoryRequest
 import com.tondracek.myfarmer.review.domain.model.Review
