@@ -42,8 +42,11 @@ object FirestoreQueryBuilder {
     fun Query.applySorts(sorts: List<RequestSort>): Query =
         sorts.fold(this) { query, sort ->
             when (sort) {
-                is AscendingSort<*> -> query.orderBy(sort.field.name, Query.Direction.ASCENDING)
-                is DescendingSort<*> -> query.orderBy(sort.field.name, Query.Direction.DESCENDING)
+                is AscendingSort<*, *> ->
+                    query.orderBy(sort.field.name, Query.Direction.ASCENDING)
+
+                is DescendingSort<*, *> ->
+                    query.orderBy(sort.field.name, Query.Direction.DESCENDING)
             }
         }
 

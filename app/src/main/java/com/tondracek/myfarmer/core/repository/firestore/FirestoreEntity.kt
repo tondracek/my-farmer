@@ -1,5 +1,5 @@
 package com.tondracek.myfarmer.core.repository.firestore
 
-interface FirestoreEntity {
-    var id: String
-}
+import com.tondracek.myfarmer.core.repository.RepositoryEntity
+
+interface FirestoreEntity : RepositoryEntity<String>

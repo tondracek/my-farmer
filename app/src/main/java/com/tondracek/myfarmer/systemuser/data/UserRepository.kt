@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.systemuser.data
 
 import com.tondracek.myfarmer.auth.data.FirebaseAuthRepository
 import com.tondracek.myfarmer.core.repository.BaseRepository
-import com.tondracek.myfarmer.core.repository.RepositoryCoreFactory
+import com.tondracek.myfarmer.core.repository.RepositoryCore
 import com.tondracek.myfarmer.core.repository.request.filterEq
 import com.tondracek.myfarmer.core.repository.request.filterIn
 import com.tondracek.myfarmer.core.repository.request.repositoryRequest
@@ -19,9 +19,8 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor(
     private val authRepository: FirebaseAuthRepository,
-    factory: RepositoryCoreFactory,
-    mapper: UserEntityMapper,
-) : BaseRepository<SystemUser>(factory.create(mapper, UserEntity::class.java)) {
+    core: RepositoryCore<SystemUser>,
+) : BaseRepository<SystemUser>(core) {
 
     fun getUserByFirebaseId(firebaseId: String): Flow<SystemUser?> =
         get(repositoryRequest {
