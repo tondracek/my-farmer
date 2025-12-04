@@ -7,4 +7,80 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!--  My Farmer Colors  -->
+
+    <!-- Primary -->
+    <color name="mf_primary">#3C6838</color>
+    <color name="mf_onPrimary">#FFFFFF</color>
+    <color name="mf_primaryContainer">#BDF0B3</color>
+    <color name="mf_onPrimaryContainer">#255023</color>
+
+    <!-- Secondary -->
+    <color name="mf_secondary">#53634E</color>
+    <color name="mf_onSecondary">#FFFFFF</color>
+    <color name="mf_secondaryContainer">#D6E8CE</color>
+    <color name="mf_onSecondaryContainer">#3B4B38</color>
+
+    <!-- Tertiary -->
+    <color name="mf_tertiary">#38656A</color>
+    <color name="mf_onTertiary">#FFFFFF</color>
+    <color name="mf_tertiaryContainer">#BCEBF0</color>
+    <color name="mf_onTertiaryContainer">#1E4D52</color>
+
+    <!-- Success -->
+    <color name="mf_success">#4CAF50</color>
+
+    <!-- Error -->
+    <color name="mf_error">#BA1A1A</color>
+    <color name="mf_onError">#FFFFFF</color>
+    <color name="mf_errorContainer">#FFDAD6</color>
+    <color name="mf_onErrorContainer">#93000A</color>
+
+    <!-- Background -->
+    <color name="mf_background">#F7FBF1</color>
+    <color name="mf_onBackground">#191D17</color>
+
+    <!-- Surface -->
+    <color name="mf_surface">#F7FBF1</color>
+    <color name="mf_onSurface">#191D17</color>
+
+    <color name="mf_surfaceVariant">#DEE5D8</color>
+    <color name="mf_onSurfaceVariant">#424940</color>
+
+    <!-- Surface Tint -->
+    <color name="mf_surfaceTint">#3C6838</color>
+
+    <!-- Outline -->
+    <color name="mf_outline">#73796F</color>
+    <color name="mf_outlineVariant">#C2C8BD</color>
+
+    <!-- Scrim -->
+    <color name="mf_scrim">#000000</color>
+
+    <!-- Inverse colors -->
+    <color name="mf_inverseSurface">#2D322B</color>
+    <color name="mf_inverseOnSurface">#EFF2E9</color>
+    <color name="mf_inversePrimary">#A2D399</color>
+
+    <!-- Containers -->
+    <color name="mf_surfaceDim">#D8DBD2</color>
+    <color name="mf_surfaceBright">#F7FBF1</color>
+
+    <color name="mf_surfaceContainerLowest">#FFFFFF</color>
+    <color name="mf_surfaceContainerLow">#F2F5EB</color>
+    <color name="mf_surfaceContainer">#ECEFE6</color>
+    <color name="mf_surfaceContainerHigh">#E6E9E0</color>
+    <color name="mf_surfaceContainerHighest">#E0E4DA</color>
+
+    <!-- Line -->
+    <color name="mf_line">#E7E7E7</color>
+
+    <!-- Rating Stars -->
+    <color name="mf_ratingStars">#FFC107</color>
+
+    <!-- Text -->
+    <color name="mf_text">#000000</color>
+    <color name="mf_textInvert">#FFFFFF</color>
+
 </resources>
