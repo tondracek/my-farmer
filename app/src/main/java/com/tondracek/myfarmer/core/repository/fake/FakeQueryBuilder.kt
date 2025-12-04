@@ -67,7 +67,7 @@ object FakeQueryBuilder {
         }
 
     fun <Entity> Collection<Entity>.applySorts(sorts: List<RequestSort>): Collection<Entity> =
-        sorts.fold(this) { list: Collection<Entity>, sort: RequestSort ->
+        sorts.asReversed().fold(this) { list: Collection<Entity>, sort: RequestSort ->
             when (sort) {
                 is AscendingSort<*, *> ->
                     list.sortedBy { entity ->
