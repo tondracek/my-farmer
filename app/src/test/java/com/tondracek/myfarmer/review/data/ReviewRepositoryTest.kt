@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Test
 import java.util.UUID
 
@@ -17,14 +16,9 @@ class ReviewRepositoryTest {
     val userId: UUID = UUID.randomUUID()
 
     val reviewRepository: ReviewRepository = ReviewRepository(
-        factory = FakeRepositoryCoreFactory<ReviewEntity>(getUUID = { UUID.fromString(this.id) }),
-        mapper = ReviewMapper(),
+        core = FakeRepositoryCoreFactory<ReviewEntity> { UUID.fromString(this.id) }
+            .create(ReviewMapper(), ReviewEntity::class.java)
     )
-
-    @Before
-    fun setup() {
-
-    }
 
     private suspend fun insert(review: Review) {
         reviewRepository.create(review)
