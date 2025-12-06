@@ -15,23 +15,25 @@ ksp = "2.2.20-2.0.3"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
-lifecycleRuntimeKtx = "2.9.4"
-activityCompose = "1.11.0"
-composeBom = "2025.11.00"
-mapsCompose = "6.12.1"
+lifecycleRuntimeKtx = "2.10.0"
+activityCompose = "1.12.1"
+composeBom = "2025.12.00"
+mapsCompose = "6.12.2"
 material = "1.13.0"
 materialIconsExtended = "1.7.8"
 mockitoCore = "5.20.0"
 mockitoInline = "5.2.0"
+mockitoKotlin = "2.2.0"
 mockk = "1.14.6"
 navigation = "2.9.6"
 serialization = "1.9.0"
 hiltNavigationCompose = "1.3.0"
-composeFoundation = "1.9.4"
+composeFoundation = "1.10.0"
 playServicesLocation = "21.3.0"
 material3Navigation = "1.0.5"
-exifinterface = "1.4.1"
+exifinterface = "1.4.2"
 junitJupiter = "6.0.1"
+timberVersion = "5.0.1"
 truth = "1.4.5"
 turbine = "1.2.1"
 
@@ -47,6 +49,7 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-storage = { module = "com.google.firebase:firebase-storage" }
 firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version.ref = "firebaseUiAuth" }
+jakewharton-timber = { module = "com.jakewharton.timber:timber", version.ref = "timberVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -79,6 +82,7 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
+mockito-kotlin = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mockitoKotlin" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }

@@ -59,9 +59,11 @@ dependencies {
     testImplementation(libs.turbine)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
+    testImplementation(libs.jakewharton.timber)
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.inline)
-
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -103,4 +105,6 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.ui.auth)
     implementation(libs.firebase.storage)
+
+    implementation(libs.jakewharton.timber)
 }
