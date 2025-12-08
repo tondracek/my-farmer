@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
-@Deprecated("isShopOwner() not implemented")
 class IsShopOwnerAuthFlow @Inject constructor(
     private val loggedInAuthFlow: LoggedInAuthFlow,
     private val isShopOwner: IsShopOwnerUC,
@@ -18,7 +17,7 @@ class IsShopOwnerAuthFlow @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun <T> invoke(
         shopId: ShopId,
-        block: () -> Flow<UCResult<T>>
+        block: () -> Flow<UCResult<T>>,
     ): Flow<UCResult<T>> = loggedInAuthFlow { loggedUserId ->
         isShopOwner(loggedUserId, shopId).flatMapLatest { shopOwnerResult ->
             when (shopOwnerResult) {

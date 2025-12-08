@@ -1,6 +1,5 @@
 package com.tondracek.myfarmer.core.repository.firestore
 
-import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
@@ -14,9 +13,11 @@ import com.tondracek.myfarmer.core.repository.firestore.FirestoreQueryBuilder.ap
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreQueryBuilder.applySorts
 import com.tondracek.myfarmer.core.repository.request.RepositoryRequest
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import java.util.UUID
 
 class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
@@ -63,9 +64,9 @@ class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
             .map { entity -> entity?.let { mapper.toModel(it) } }
     }
 
-    override fun get(request: RepositoryRequest): Flow<List<Model>> {
+    override fun get(request: RepositoryRequest): Flow<List<Model>> = flow {
         if (request.filters.isEmpty())
-            Log.w("FirestoreRepositoryCore", "Request doesn't have any filters set")
+            Timber.w("Request doesn't have any filters set")
 
         val startAfter: DocumentSnapshot? = getStartAfter(request)
 
@@ -75,26 +76,26 @@ class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
             .applyOffset(startAfter)
             .applyLimit(request.limit)
 
-        return query.snapshots()
-            .map {
-                it.documents
-                    .mapNotNull { doc -> doc.toObjectWithId(entityClass) }
-                    .map { entity -> mapper.toModel(entity) }
-            }
+        emitAll(
+            query.snapshots()
+                .map {
+                    it.documents
+                        .mapNotNull { doc -> doc.toObjectWithId(entityClass) }
+                        .map { entity -> mapper.toModel(entity) }
+                }
+        )
     }
 
-    private fun getStartAfter(request: RepositoryRequest): DocumentSnapshot? =
+    private suspend fun getStartAfter(request: RepositoryRequest): DocumentSnapshot? =
         request.offset?.let { offset ->
-            runBlocking {
-                db.collection(collectionName)
-                    .applyFilters(request.filters)
-                    .applySorts(request.sorts)
-                    .limit(offset.toLong())
-                    .get()
-                    .await()
-                    .documents
-                    .lastOrNull()
-            }
+            db.collection(collectionName)
+                .applyFilters(request.filters)
+                .applySorts(request.sorts)
+                .limit(offset.toLong())
+                .get()
+                .await()
+                .documents
+                .lastOrNull()
         }
 
     override fun getAll(): Flow<List<Model>> {

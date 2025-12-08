@@ -5,6 +5,7 @@ import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.shop.data.ShopRepository
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.result.NotShopOwnerUCResult
+import com.tondracek.myfarmer.shop.domain.result.ShopNotFoundUCResult
 import com.tondracek.myfarmer.systemuser.data.UserRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -27,8 +28,3 @@ class DeleteShopUC @Inject constructor(
             .let { UCResult.Success(Unit) }
     }
 }
-
-data class ShopNotFoundUCResult(private val shopId: ShopId) : UCResult.Failure(
-    userError = "Shop not found",
-    systemError = "Shop with id $shopId was not found in the repository",
-)

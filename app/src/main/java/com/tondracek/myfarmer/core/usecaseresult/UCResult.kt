@@ -1,6 +1,5 @@
 package com.tondracek.myfarmer.core.usecaseresult
 
-import android.util.Log
 import com.tondracek.myfarmer.core.usecaseresult.UCResult.Failure
 import com.tondracek.myfarmer.core.usecaseresult.UCResult.Success
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -8,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 
 sealed interface UCResult<out T> {
 
@@ -15,7 +15,7 @@ sealed interface UCResult<out T> {
 
     open class Failure(val userError: String, val systemError: String? = null) : UCResult<Nothing> {
         constructor(userError: String, throwable: Throwable)
-                : this(userError = userError, systemError = throwable.message)
+                : this(userError, throwable.message ?: "Unknown error $throwable")
 
         init {
             logFailure()
@@ -24,6 +24,11 @@ sealed interface UCResult<out T> {
 
     fun <R> mapSuccess(transform: (T) -> R): UCResult<R> = when (this) {
         is Success -> Success(transform(data))
+        is Failure -> this
+    }
+
+    fun <R> mapSuccessFlat(transform: (T) -> UCResult<R>): UCResult<R> = when (this) {
+        is Success -> transform(data)
         is Failure -> this
     }
 
@@ -56,11 +61,9 @@ sealed interface UCResult<out T> {
 }
 
 private fun Failure.logFailure() {
-    val tag = "❌ UCResultFailure ❌"
     val border = "========================================="
 
-    Log.e(
-        tag,
+    Timber.e(
         """
             $border
             ❌ FAILURE in ${this.javaClass.simpleName}
@@ -94,6 +97,11 @@ inline fun <T> UCResult<T>.getOrElse(defaultValue: (Failure) -> T): T = when (th
 fun <T, R> Flow<UCResult<T>>.mapFlowUCSuccess(transform: (T) -> R): Flow<UCResult<R>> =
     this.map { result ->
         result.mapSuccess { transform(it) }
+    }
+
+fun <T, R> Flow<UCResult<T>>.mapFlowUCSuccessFlat(transform: (T) -> UCResult<R>): Flow<UCResult<R>> =
+    this.map { result ->
+        result.mapSuccessFlat { transform(it) }
     }
 
 @OptIn(ExperimentalCoroutinesApi::class)

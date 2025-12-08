@@ -13,6 +13,7 @@ import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShop
 import com.tondracek.myfarmer.shop.domain.result.NotShopOwnerUCResult
+import com.tondracek.myfarmer.shop.domain.result.ShopNotFoundUCResult
 import kotlinx.coroutines.flow.first
 import java.util.UUID
 import javax.inject.Inject

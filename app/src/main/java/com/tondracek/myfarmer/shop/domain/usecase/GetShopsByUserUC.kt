@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 class GetShopsByUserUC @Inject constructor(
     private val getLoggedInUserUC: GetLoggedInUserUC,
-    private val shopRepository: ShopRepository
+    private val shopRepository: ShopRepository,
 ) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -25,10 +25,9 @@ class GetShopsByUserUC @Inject constructor(
         getLoggedInUserUC().flatMapLatest { user: UCResult<SystemUser> ->
             val userId: UserId = user.getOrThrow().id
 
-            shopRepository.get(
-                repositoryRequest {
-                    addFilter(ShopEntity::ownerId filterEq userId.toString())
-                }
-            )
+            val request = repositoryRequest {
+                addFilter(ShopEntity::ownerId filterEq userId.toString())
+            }
+            shopRepository.get(request)
         }.toUCResult(userError = "Failed to load user's shops.")
 }

@@ -16,14 +16,14 @@ data class TestModel(
     val id: UUID,
     val name: String,
     val rating: Int,
-    val price: Double
+    val price: Double,
 )
 
 data class TestEntity(
     override var id: String = "",
     val name: String,
     val rating: Int,
-    val price: Double
+    val price: Double,
 ) : RepositoryEntity<String>
 
 class TestMapper : EntityMapper<TestModel, TestEntity> {
@@ -118,6 +118,12 @@ class FakeRepositoryCoreTest {
         val result = repo.getAll().first()
 
         assertThat(result.map { it.name }).containsExactly("A", "B")
+    }
+
+    @Test
+    fun `getAll returns empty list when no items`() = runTest {
+        val result = repo.getAll().first()
+        assertThat(result).isEmpty()
     }
 
     @Test

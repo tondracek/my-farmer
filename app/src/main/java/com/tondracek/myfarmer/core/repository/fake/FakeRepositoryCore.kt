@@ -45,6 +45,7 @@ class FakeRepositoryCore<Model, Entity : RepositoryEntity<*>>(
 
     override fun get(request: RepositoryRequest): Flow<List<Model>> {
         val flows: List<Flow<Any>> = items.values.map { it as Flow<Any> }
+        if (flows.isEmpty()) return flowOf(emptyList())
 
         @Suppress("UNCHECKED_CAST")
         return combine(flows) { array ->
@@ -59,6 +60,7 @@ class FakeRepositoryCore<Model, Entity : RepositoryEntity<*>>(
 
     override fun getAll(): Flow<List<Model>> {
         val flows: List<Flow<Any>> = items.values.map { it as Flow<Any> }
+        if (flows.isEmpty()) return flowOf(emptyList())
 
         @Suppress("UNCHECKED_CAST")
         return combine(flows) { array ->
