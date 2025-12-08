@@ -14,8 +14,8 @@ class FakeRepositoryCoreFactoryTest {
     )
 
     data class FakeEntity(
-        override var id: String,
-        val name: String
+        override val id: String,
+        val name: String,
     ) : RepositoryEntity<String>
 
     class FakeMapper : EntityMapper<FakeModel, FakeEntity> {
