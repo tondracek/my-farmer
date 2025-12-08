@@ -1,63 +1,52 @@
 package com.tondracek.myfarmer.core.repository.firestore
 
-import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.snapshots
 import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.RepositoryCore
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreQueryBuilder.applyFilters
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreQueryBuilder.applyLimit
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreQueryBuilder.applyOffset
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreQueryBuilder.applySorts
+import com.tondracek.myfarmer.core.repository.firestore.firestoreclient.FirestoreClient
 import com.tondracek.myfarmer.core.repository.request.RepositoryRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import java.util.UUID
 
 class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
     val mapper: EntityMapper<Model, Entity>,
     val entityClass: Class<Entity>,
+    val firestore: FirestoreClient,
 ) : RepositoryCore<Model> {
 
-    val collectionName: String = entityClass.getAnnotation(FirestoreCollection::class.java)?.name
-        ?: error("Class ${entityClass.simpleName} must be annotated with @FirestoreCollection")
-
-    private val db = Firebase.firestore
+    val collectionName: String =
+        entityClass.getAnnotation(FirestoreCollectionName::class.java)?.name
+            ?: error("Class ${entityClass.simpleName} must be annotated with @FirestoreCollection")
 
     override suspend fun create(item: Model): UUID {
         val entity: Entity = mapper.toEntity(item)
 
-        db.collection(collectionName)
+        firestore.collection(collectionName)
             .document(entity.id)
             .set(entity)
-            .await()
         return UUID.fromString(entity.id)
     }
 
     override suspend fun update(item: Model) {
         val entity: Entity = mapper.toEntity(item)
 
-        db.collection(collectionName)
+        firestore.collection(collectionName)
             .document(entity.id)
             .set(entity)
-            .await()
     }
 
     override suspend fun delete(id: UUID) {
-        db.collection(collectionName)
+        firestore.collection(collectionName)
             .document(id.toString())
             .delete()
-            .await()
     }
 
     override fun getById(id: UUID): Flow<Model?> {
-        val docRef = db.collection(collectionName).document(id.toString())
+        val docRef = firestore.collection(collectionName).document(id.toString())
 
         return docRef.snapshots()
             .map { it.toObjectWithId(entityClass) }
@@ -70,7 +59,7 @@ class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
 
         val startAfter: DocumentSnapshot? = getStartAfter(request)
 
-        val query: Query = db.collection(collectionName)
+        val query = firestore.collection(collectionName)
             .applyFilters(request.filters)
             .applySorts(request.sorts)
             .applyOffset(startAfter)
@@ -88,18 +77,17 @@ class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
 
     private suspend fun getStartAfter(request: RepositoryRequest): DocumentSnapshot? =
         request.offset?.let { offset ->
-            db.collection(collectionName)
+            firestore.collection(collectionName)
                 .applyFilters(request.filters)
                 .applySorts(request.sorts)
-                .limit(offset.toLong())
+                .applyLimit(offset)
                 .get()
-                .await()
                 .documents
                 .lastOrNull()
         }
 
     override fun getAll(): Flow<List<Model>> {
-        val query: Query = db.collection(collectionName)
+        val query = firestore.collection(collectionName)
 
         return query.snapshots()
             .map {

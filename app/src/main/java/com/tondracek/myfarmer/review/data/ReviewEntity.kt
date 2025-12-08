@@ -1,10 +1,10 @@
 package com.tondracek.myfarmer.review.data
 
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollection
+import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollectionName
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
 import kotlinx.serialization.Serializable
 
-@FirestoreCollection("review")
+@FirestoreCollectionName("review")
 @Serializable
 data class ReviewEntity(
     override var id: String = "",
