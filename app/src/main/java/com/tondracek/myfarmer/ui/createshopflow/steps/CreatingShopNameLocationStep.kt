@@ -143,15 +143,16 @@ fun PickLocationMap(
     }
     val isPermissionGranted = permission.status.isGranted
     LaunchedEffect(isPermissionGranted) {
-        if (!isPermissionGranted)
-            return@LaunchedEffect
+        when {
+            !isPermissionGranted -> {}
+            location != null -> zoomToLocation(location.toLatLng())
+            else -> locationClient.lastLocation.addOnSuccessListener { newLocation: Location? ->
+                if (newLocation == null) return@addOnSuccessListener
 
-        locationClient.lastLocation.addOnSuccessListener { location: Location? ->
-            if (location == null) return@addOnSuccessListener
-
-            val latLng = LatLng(location.latitude, location.longitude)
-            zoomToLocation(latLng)
-            onLocationSelected(ShopLocation(latLng))
+                val latLng = LatLng(newLocation.latitude, newLocation.longitude)
+                zoomToLocation(latLng)
+                onLocationSelected(ShopLocation(latLng))
+            }
         }
     }
 

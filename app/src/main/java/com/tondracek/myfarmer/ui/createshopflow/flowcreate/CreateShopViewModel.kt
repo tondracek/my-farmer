@@ -31,7 +31,9 @@ class CreateShopViewModel @Inject constructor(
     private val navigator: AppNavigator,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<CreateShopState>(CreateShopState.Creating.initial())
+    private val _state = MutableStateFlow<CreateShopState>(
+        CreateShopState.Loading
+    )
 
     val state: StateFlow<CreateShopState> = _state
 
