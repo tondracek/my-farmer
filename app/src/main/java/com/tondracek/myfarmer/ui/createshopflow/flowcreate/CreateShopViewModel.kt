@@ -32,7 +32,7 @@ class CreateShopViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<CreateShopState>(
-        CreateShopState.Loading
+        CreateShopState.Creating.initial(shopInput = ShopInput())
     )
 
     val state: StateFlow<CreateShopState> = _state
