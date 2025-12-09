@@ -111,7 +111,7 @@ private fun MainShopsScreenWrapper(
                 Button(
                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                     onClick = onOpenFiltersDialog
-                ) { Text("Open filters") }
+                ) { Text(stringResource(R.string.open_filters)) }
             }
             ViewModeSwitcher(
                 selectedMode = currentMode,

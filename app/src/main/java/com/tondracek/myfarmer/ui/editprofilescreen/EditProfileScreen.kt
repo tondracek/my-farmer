@@ -23,8 +23,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.systemuser.data.user0
@@ -71,7 +73,7 @@ private fun UpdatingProfileLayout(modifier: Modifier = Modifier) {
     CardMessageLayout(modifier = modifier) {
         CircularProgressIndicator(modifier = Modifier.size(48.dp))
         Text(
-            text = "Updating profile, please wait!",
+            text = stringResource(R.string.updating_profile_please_wait),
             style = MyFarmerTheme.typography.textLarge,
         )
     }
@@ -87,7 +89,7 @@ private fun SavedSuccessfullyLayout(modifier: Modifier = Modifier) {
             tint = MyFarmerTheme.colors.success,
         )
         Text(
-            text = "Profile saved successfully!",
+            text = stringResource(R.string.profile_saved_successfully),
             style = MyFarmerTheme.typography.textLarge,
         )
     }
@@ -117,11 +119,11 @@ private fun SuccessScreen(
             ) {
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = "You are logged in as ${state.name}",
+                    text = stringResource(R.string.you_are_logged_in_as, state.name),
                     style = MyFarmerTheme.typography.titleMedium
                 )
                 Button(onClick = onLogout) {
-                    Text(text = "Logout")
+                    Text(text = stringResource(R.string.logout))
                 }
             }
             ProfilePictureEdit(

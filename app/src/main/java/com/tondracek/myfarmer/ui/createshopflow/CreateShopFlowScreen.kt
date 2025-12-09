@@ -1,6 +1,8 @@
 package com.tondracek.myfarmer.ui.createshopflow
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
@@ -82,8 +84,8 @@ fun CreateShopFlowScreen(
 
         CreateShopState.Finished -> CardSuccessMessageLayout(
             title = when (createShopFlowMode) {
-                CreateShopFlowMode.CREATE -> "Shop created successfully!"
-                CreateShopFlowMode.UPDATE -> "Shop updated successfully!"
+                CreateShopFlowMode.CREATE -> stringResource(R.string.shop_created_successfully)
+                CreateShopFlowMode.UPDATE -> stringResource(R.string.shop_updated_successfully)
             }
         )
 

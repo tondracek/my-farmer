@@ -16,7 +16,7 @@ class DeleteShopUC @Inject constructor(
     private val userRepository: UserRepository,
     private val shopRepository: ShopRepository,
     private val photoStorage: PhotoStorage,
-    ) {
+) {
     suspend operator fun invoke(shopId: ShopId): UCResult<Unit> = toUCResult(
         "An error occurred while deleting shop"
     ) {

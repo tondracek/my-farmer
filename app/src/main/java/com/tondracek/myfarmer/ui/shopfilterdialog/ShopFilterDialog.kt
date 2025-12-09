@@ -17,8 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.location.model.Distance
 import com.tondracek.myfarmer.location.model.km
 import com.tondracek.myfarmer.review.domain.model.Rating
@@ -51,7 +53,7 @@ fun ShopFilterDialog(
         title = {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Edit shop filters",
+                text = stringResource(R.string.edit_shop_filters),
                 textAlign = TextAlign.Center
             )
         },
@@ -59,7 +61,10 @@ fun ShopFilterDialog(
             var openedSection by remember { mutableStateOf<Int?>(null) }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 FilterSection(
-                    hiddenText = "Category filters: ${state.filters.categories.size}",
+                    hiddenText = stringResource(
+                        R.string.category_filters,
+                        state.filters.categories.size
+                    ),
                     opened = openedSection == 1,
                     onClick = { openedSection = 1 }
                 ) {
@@ -75,12 +80,13 @@ fun ShopFilterDialog(
                 CustomHorizontalDivider()
 
                 FilterSection(
-                    hiddenText = "Distance filter: ${
-                        when (state.filters.maxDistanceKm) {
-                            null -> "No filter"
-                            else -> "${state.filters.maxDistanceKm}"
-                        }
-                    }",
+                    hiddenText = when (state.filters.maxDistanceKm) {
+                        null -> stringResource(R.string.distance_filter_no_filter)
+                        else -> stringResource(
+                            R.string.distance_filter,
+                            state.filters.maxDistanceKm
+                        )
+                    },
                     opened = openedSection == 2,
                     onClick = { openedSection = 2 }
                 ) {
@@ -93,7 +99,10 @@ fun ShopFilterDialog(
                 CustomHorizontalDivider()
 
                 FilterSection(
-                    hiddenText = "Minimum rating filter: ${state.filters.minRating.stars} stars",
+                    hiddenText = stringResource(
+                        R.string.minimum_rating_filter_stars,
+                        state.filters.minRating.stars
+                    ),
                     opened = openedSection == 3,
                     onClick = { openedSection = 3 }
                 ) {

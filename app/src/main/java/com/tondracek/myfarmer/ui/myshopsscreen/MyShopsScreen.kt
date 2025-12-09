@@ -13,7 +13,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.sampleShops
@@ -90,7 +92,7 @@ private fun SuccessScreen(
                 .padding(MyFarmerTheme.paddings.bottomButtons),
             onClick = onCreateShopClick,
         ) {
-            Text(text = "Create Shop")
+            Text(text = stringResource(R.string.create_shop))
         }
     }
 }

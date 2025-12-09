@@ -34,4 +34,17 @@
     <string name="create_shop_title">Creating a shop</string>
     <string name="update_shop_title">Updating a shop</string>
     <string name="shop_reviews">Shop reviews</string>
+    <string name="shop_created_successfully">Shop created successfully!</string>
+    <string name="shop_updated_successfully">Shop updated successfully!</string>
+    <string name="updating_profile_please_wait">Updating profile, please wait!</string>
+    <string name="profile_saved_successfully">Profile saved successfully!</string>
+    <string name="you_are_logged_in_as">You are logged in as %1$s</string>
+    <string name="logout">Logout</string>
+    <string name="open_filters">Open filters</string>
+    <string name="create_shop">Create Shop</string>
+    <string name="edit_shop_filters">Edit shop filters</string>
+    <string name="category_filters">Category filters: %1$d</string>
+    <string name="distance_filter">Distance filter: %1$s</string>
+    <string name="distance_filter_no_filter">Distance filter: No filter</string>
+    <string name="minimum_rating_filter_stars">Minimum rating filter: %1$d stars</string>
 </resources>
