@@ -1,6 +1,7 @@
 package com.tondracek.myfarmer.shopcategory.data
 
 import com.tondracek.myfarmer.core.repository.BaseRepository
+import com.tondracek.myfarmer.core.repository.IdMapper
 import com.tondracek.myfarmer.core.repository.RepositoryCore
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
@@ -14,5 +15,6 @@ class CategoryPopularityRepository @Inject constructor(
     mapper: CategoryPopularityMapper,
 ) : BaseRepository<CategoryPopularity, CategoryPopularityId, CategoryPopularityEntity, FirestoreEntityId>(
     core = core,
-    mapper = mapper,
+    entityMapper = mapper,
+    idMapper = IdMapper.StringToString,
 )

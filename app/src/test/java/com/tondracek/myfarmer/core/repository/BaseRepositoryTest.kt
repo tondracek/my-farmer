@@ -20,13 +20,14 @@ class BaseRepositoryTest {
 
     @Mock
     lateinit var core: RepositoryCore<TestEntity, String>
-    val mapper = TestMapper()
-
     lateinit var repo: BaseRepository<TestModel, UUID, TestEntity, String>
+
+    val mapper = TestMapper()
+    val idMapper = IdMapper.UUIDtoString
 
     @Before
     fun setup() {
-        repo = TestBaseRepository(core, mapper)
+        repo = TestBaseRepository(core, mapper, idMapper)
     }
 
     @Test
@@ -57,7 +58,7 @@ class BaseRepositoryTest {
     @Test
     fun `delete delegates to core`() = runTest {
         val id = UUID.randomUUID()
-        val entityId = mapper.toEntityId(id)
+        val entityId = idMapper.toEntityId(id)
 
         whenever(core.delete(entityId)).thenReturn(Unit)
 
@@ -69,7 +70,7 @@ class BaseRepositoryTest {
     @Test
     fun `getById delegates to core`() = runTest {
         val id = UUID.randomUUID()
-        val entityId = mapper.toEntityId(id)
+        val entityId = idMapper.toEntityId(id)
         val model = TestModel(id = id, value = "abc")
 
         val value = flowOf(mapper.toEntity(model))
@@ -121,7 +122,7 @@ class BaseRepositoryTest {
         var value: String = ""
     ) : FirestoreEntity
 
-    class TestMapper : EntityMapper.UUIDtoString<TestModel, TestEntity> {
+    class TestMapper : EntityMapper<TestModel, TestEntity> {
 
         override fun toEntity(model: TestModel) =
             TestEntity(id = model.id.toString(), value = model.value)
@@ -133,5 +134,10 @@ class BaseRepositoryTest {
     class TestBaseRepository(
         core: RepositoryCore<TestEntity, String>,
         mapper: TestMapper,
-    ) : BaseRepository<TestModel, UUID, TestEntity, String>(core, mapper)
+        idMapper: IdMapper<UUID, String>
+    ) : BaseRepository<TestModel, UUID, TestEntity, String>(
+        core = core,
+        entityMapper = mapper,
+        idMapper = idMapper,
+    )
 }

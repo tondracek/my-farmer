@@ -1,6 +1,7 @@
 package com.tondracek.myfarmer.review.data
 
 import com.tondracek.myfarmer.core.repository.BaseRepository
+import com.tondracek.myfarmer.core.repository.IdMapper
 import com.tondracek.myfarmer.core.repository.RepositoryCore
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.core.repository.request.filterEq
@@ -16,7 +17,11 @@ import javax.inject.Singleton
 class ReviewRepository @Inject constructor(
     core: RepositoryCore<ReviewEntity, FirestoreEntityId>,
     mapper: ReviewMapper,
-) : BaseRepository<Review, ReviewId, ReviewEntity, FirestoreEntityId>(core, mapper) {
+) : BaseRepository<Review, ReviewId, ReviewEntity, FirestoreEntityId>(
+    core = core,
+    entityMapper = mapper,
+    idMapper = IdMapper.UUIDtoFirestore,
+) {
 
     fun getReviewsPreview(shopId: ShopId): Flow<List<Review>> = repositoryRequest {
         addFilters(ReviewEntity::shopId filterEq shopId.toString())

@@ -37,7 +37,7 @@ data class ShopEntity(
 ) : FirestoreEntity
 
 @Singleton
-class ShopMapper @Inject constructor() : EntityMapper.UUIDtoFirestore<Shop, ShopEntity> {
+class ShopMapper @Inject constructor() : EntityMapper<Shop, ShopEntity> {
 
     override fun toEntity(model: Shop) = ShopEntity(
         id = model.id.toString(),

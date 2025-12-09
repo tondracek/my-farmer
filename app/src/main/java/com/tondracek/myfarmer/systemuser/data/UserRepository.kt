@@ -2,6 +2,7 @@ package com.tondracek.myfarmer.systemuser.data
 
 import com.tondracek.myfarmer.auth.data.FirebaseAuthRepository
 import com.tondracek.myfarmer.core.repository.BaseRepository
+import com.tondracek.myfarmer.core.repository.IdMapper
 import com.tondracek.myfarmer.core.repository.RepositoryCore
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.core.repository.request.filterEq
@@ -22,7 +23,11 @@ class UserRepository @Inject constructor(
     mapper: UserEntityMapper,
     core: RepositoryCore<UserEntity, FirestoreEntityId>,
     private val authRepository: FirebaseAuthRepository,
-) : BaseRepository<SystemUser, UserId, UserEntity, String>(core, mapper) {
+) : BaseRepository<SystemUser, UserId, UserEntity, String>(
+    core = core,
+    entityMapper = mapper,
+    idMapper = IdMapper.UUIDtoFirestore,
+) {
 
     fun getUserByFirebaseId(firebaseId: String): Flow<SystemUser?> =
         get(repositoryRequest {

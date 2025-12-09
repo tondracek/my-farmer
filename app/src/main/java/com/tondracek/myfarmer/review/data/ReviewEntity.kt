@@ -21,7 +21,7 @@ data class ReviewEntity(
 ) : FirestoreEntity
 
 @Singleton
-class ReviewMapper @Inject constructor() : EntityMapper.UUIDtoFirestore<Review, ReviewEntity> {
+class ReviewMapper @Inject constructor() : EntityMapper<Review, ReviewEntity> {
 
     override fun toModel(entity: ReviewEntity): Review = Review(
         id = UUID.fromString(entity.id),

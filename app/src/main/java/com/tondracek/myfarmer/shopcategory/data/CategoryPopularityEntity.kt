@@ -13,7 +13,7 @@ data class CategoryPopularityEntity(
 
 @Singleton
 class CategoryPopularityMapper @Inject constructor() :
-    EntityMapper.StringToString<CategoryPopularity, CategoryPopularityEntity> {
+    EntityMapper<CategoryPopularity, CategoryPopularityEntity> {
 
     override fun toEntity(model: CategoryPopularity) = CategoryPopularityEntity(
         id = model.name,

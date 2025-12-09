@@ -1,6 +1,7 @@
 package com.tondracek.myfarmer.shop.data
 
 import com.tondracek.myfarmer.core.repository.BaseRepository
+import com.tondracek.myfarmer.core.repository.IdMapper
 import com.tondracek.myfarmer.core.repository.RepositoryCore
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.shop.domain.model.Shop
@@ -14,5 +15,6 @@ class ShopRepository @Inject constructor(
     mapper: ShopMapper,
 ) : BaseRepository<Shop, ShopId, ShopEntity, FirestoreEntityId>(
     core = core,
-    mapper = mapper
+    entityMapper = mapper,
+    idMapper = IdMapper.UUIDtoFirestore,
 )

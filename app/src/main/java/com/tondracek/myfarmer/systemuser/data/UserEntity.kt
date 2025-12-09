@@ -24,8 +24,7 @@ data class UserEntity(
 ) : FirestoreEntity
 
 @Singleton
-class UserEntityMapper @Inject constructor() :
-    EntityMapper.UUIDtoFirestore<SystemUser, UserEntity> {
+class UserEntityMapper @Inject constructor() : EntityMapper<SystemUser, UserEntity> {
     override fun toEntity(model: SystemUser) =
         UserEntity(
             id = model.id.toString(),
