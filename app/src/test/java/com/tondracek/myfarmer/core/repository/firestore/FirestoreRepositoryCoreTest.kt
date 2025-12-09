@@ -137,6 +137,42 @@ class FirestoreRepositoryCoreTest {
         assertThat(result.single().value).isEqualTo("ok")
     }
 
+    @Test
+    fun `get uses startAfter when offset is provided`() = runTest {
+        val req = repositoryRequest {
+            setOffset(2)
+        }
+
+        val queryAfterFilter = mock<FirestoreQuery>()
+        val queryAfterSort = mock<FirestoreQuery>()
+        val queryAfterLimit = mock<FirestoreQuery>()
+
+        whenever(collection.applyFilters(req.filters))
+            .thenReturn(queryAfterFilter)
+            .thenReturn(query)
+
+        /* getStartAfter() PART */
+        whenever(queryAfterFilter.applySorts(req.sorts)).thenReturn(queryAfterSort)
+        whenever(queryAfterSort.applyLimit(2)).thenReturn(queryAfterLimit)
+        val queryAfterLimitSnapshot = fakeQuerySnapshot(listOf("first", "middle", "last"))
+        whenever(queryAfterLimit.get()).thenReturn(queryAfterLimitSnapshot)
+
+        /* get(request: RepositoryRequest) PART */
+        whenever(query.applySorts(req.sorts)).thenReturn(query)
+        whenever(query.applyOffset(any())).thenReturn(query)
+        whenever(query.applyLimit(null)).thenReturn(query)
+        val snapshots = flowOf(fakeQuerySnapshot(listOf("result")))
+        whenever(query.snapshots()).thenReturn(snapshots)
+
+        val result = core.get(req).first()
+
+        verify(queryAfterSort).applyLimit(2)
+        verify(queryAfterLimit).get()
+        verify(query).applyOffset(any())
+
+        assertThat(result.single().value).isEqualTo("result")
+    }
+
     @Test(expected = Exception::class)
     fun `initialization without entity annotation throws exception`() {
         FirestoreRepositoryCore(
