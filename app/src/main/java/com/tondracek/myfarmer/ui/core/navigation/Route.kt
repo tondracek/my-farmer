@@ -1,9 +1,9 @@
 package com.tondracek.myfarmer.ui.core.navigation
 
-import android.util.Log
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import kotlinx.serialization.Serializable
+import timber.log.Timber
 import kotlin.reflect.KClass
 
 @Serializable
@@ -59,6 +59,6 @@ sealed interface Route {
         fun getRouteClass(route: NavBackStackEntry): KClass<out Route>? =
             allRoutes
                 .firstOrNull { route.destination.hasRoute(it) }
-                .also { if (it == null) Log.e("Route", "Unknown route: $route") }
+                .also { if (it == null) Timber.e("Unknown route: $route") }
     }
 }

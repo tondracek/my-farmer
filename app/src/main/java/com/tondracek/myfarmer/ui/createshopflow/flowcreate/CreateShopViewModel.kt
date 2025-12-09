@@ -79,15 +79,16 @@ class CreateShopViewModel @Inject constructor(
         route = Route.AddCategoryDialog,
         key = NEW_CATEGORY_DIALOG_VALUE,
         onResult = { newCategory ->
+            val category = newCategory.toDomain()
             _state.updateShopInput { shopInput ->
-                val category = newCategory.toDomain()
-                shopInput.copy(categories = shopInput.categories + category)
+                val newCategories = (shopInput.categories + category).distinctBy(ShopCategory::name)
+                shopInput.copy(categories = newCategories)
             }
         }
     )
 
     fun updateCategories(categories: List<ShopCategory>) = _state.updateShopInput {
-        it.copy(categories = categories)
+        it.copy(categories = categories.distinctBy(ShopCategory::name))
     }
 
     fun updateImages(images: List<ImageResource>) = _state.updateShopInput {
