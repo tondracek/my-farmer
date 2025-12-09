@@ -21,7 +21,7 @@ data class MyShopsListItem(
     val name: String?,
     val description: String?,
     val categories: List<ShopCategory>,
-    val image: ImageResource?,
+    val image: ImageResource,
     val averageRating: Rating,
 )
 
@@ -29,7 +29,7 @@ fun Shop.toMyShopsListItem(
     averageRating: Rating,
 ) = MyShopsListItem(
     id = id,
-    image = images.firstOrNull(),
+    image = images.firstOrNull() ?: ImageResource.EMPTY,
     name = name,
     categories = categories,
     averageRating = averageRating,

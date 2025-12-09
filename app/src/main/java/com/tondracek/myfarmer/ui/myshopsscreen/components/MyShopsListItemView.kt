@@ -46,12 +46,12 @@ fun MyShopsListItemView(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                ImageView(
-                    modifier = Modifier
-                        .sizeIn(maxHeight = 120.dp, maxWidth = 120.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                    imageResource = shop.image
-                )
+                Box(Modifier.sizeIn(maxHeight = 120.dp, maxWidth = 120.dp)) {
+                    ImageView(
+                        modifier = Modifier.clip(RoundedCornerShape(12.dp)),
+                        imageResource = shop.image
+                    )
+                }
                 Column {
                     if (!shop.name.isNullOrBlank())
                         Text(

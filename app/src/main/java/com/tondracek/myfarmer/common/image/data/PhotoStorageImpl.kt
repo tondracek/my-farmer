@@ -43,8 +43,7 @@ class PhotoStorageImpl @Inject constructor(
 
         ref.putBytes(bytes).await()
 
-        val downloadUrl = ref.downloadUrl.await()?.toString()
-        return downloadUrl?.let { ImageResource(it) } ?: ImageResource.EMPTY
+        return ImageResource(ref.path)
     }
 
     override suspend fun uploadPhotos(
@@ -73,7 +72,7 @@ class PhotoStorageImpl @Inject constructor(
             }
             ?.onFailure {
                 Timber.e(it, "Failed to delete photo at ${imageResource.uri}")
-            }
+            } ?: Timber.e("Photo path is null for imageResource: $imageResource")
     }
 
     override suspend fun deletePhotos(imageResources: Collection<ImageResource>) {

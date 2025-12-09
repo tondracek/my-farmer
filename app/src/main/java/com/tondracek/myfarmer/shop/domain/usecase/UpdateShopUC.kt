@@ -9,6 +9,7 @@ import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.getOrReturn
 import com.tondracek.myfarmer.core.usecaseresult.toUCResult
 import com.tondracek.myfarmer.shop.data.ShopRepository
+import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShop
@@ -33,34 +34,34 @@ class UpdateShopUC @Inject constructor(
             if (originalShop.ownerId != user.id)
                 return NotShopOwnerUCResult(user.id, shopId)
 
-            val updatedShop = input.toShop(
-                shopId = shopId,
-                ownerId = originalShop.ownerId
-            ).getOrReturn { return it }
-            shopRepository.update(updatedShop)
+            val originalImages = originalShop.images
+            val updatedShop = input
+                .toShop(shopId = shopId, ownerId = originalShop.ownerId)
+                .getOrReturn { return it }
+                .updatePhotos(originalImages = originalImages)
 
-            uploadNewPhotos(
-                shopId = shopId,
-                originalImages = originalShop.images.toSet(),
-                newImages = input.images.toSet()
-            )
+            shopRepository.update(updatedShop)
 
             return UCResult.Success(Unit)
         }
 
-    private suspend fun uploadNewPhotos(
-        shopId: ShopId,
-        originalImages: Set<ImageResource>,
-        newImages: Set<ImageResource>,
-    ) {
-        val imagesToDelete = originalImages - newImages
-        val imagesToUpload = newImages - originalImages
-
-        photoStorage.deletePhotos(imagesToDelete)
-        photoStorage.uploadPhotos(
-            imageResources = imagesToUpload.map { UUID.randomUUID().toString() to it },
-            folder = PhotoStorageFolder.ShopPhotos(shopId),
+    private suspend fun Shop.updatePhotos(originalImages: List<ImageResource>): Shop {
+        val photosToUpload = images.filter { it !in originalImages }
+        val uploadedPhotos = photoStorage.uploadPhotos(
+            imageResources = photosToUpload.map { UUID.randomUUID().toString() to it },
+            folder = PhotoStorageFolder.ShopPhotos(this.id),
             quality = Quality.FULL_HD,
         )
+
+        val photosToDelete = originalImages.filter { it !in images }
+        val photosToKeep = originalImages.filter { it in images }
+        photoStorage.deletePhotos(photosToDelete)
+
+        println("Photos to upload: $photosToUpload")
+        println("Photos to delete: $photosToDelete")
+
+        val newImages = photosToKeep + uploadedPhotos
+
+        return this.copy(images = newImages)
     }
 }

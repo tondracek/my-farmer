@@ -32,8 +32,8 @@ class CreateShopUC @Inject constructor(
             .let { UCResult.Success(Unit) }
     }
 
-    suspend fun Shop.updatePhotos(shopId: ShopId): Shop = this.apply {
-        this.images
+    suspend fun Shop.updatePhotos(shopId: ShopId): Shop = this.copy(
+        images = this.images
             .map { UUID.randomUUID().toString() to it }
             .let {
                 photoStorage.uploadPhotos(
@@ -42,5 +42,5 @@ class CreateShopUC @Inject constructor(
                     quality = Quality.FULL_HD,
                 )
             }
-    }
+    )
 }

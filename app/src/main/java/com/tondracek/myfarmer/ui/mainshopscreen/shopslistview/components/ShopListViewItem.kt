@@ -12,14 +12,14 @@ data class ShopListViewItem(
     val name: String?,
     val description: String?,
     val categories: List<ShopCategory>,
-    val image: ImageResource?,
+    val image: ImageResource,
     val distance: Distance?,
     val averageRating: Rating,
 )
 
 fun Shop.toListItem(distance: Distance?, averageRating: Rating) = ShopListViewItem(
     id = id,
-    image = images.firstOrNull(),
+    image = images.firstOrNull() ?: ImageResource.EMPTY,
     name = name,
     categories = categories,
     distance = distance,
