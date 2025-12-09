@@ -29,8 +29,8 @@ class DeleteShopUC @Inject constructor(
         if (shop.ownerId != currentUser.id)
             return NotShopOwnerUCResult(currentUser.id, shopId)
 
-        val imagesToDelete = shop.images
+        val photosToDelete = shop.images
         shopRepository.delete(shopId)
-        photoStorage.deletePhotos(imagesToDelete)
+        photoStorage.deletePhotos(photosToDelete)
     }
 }

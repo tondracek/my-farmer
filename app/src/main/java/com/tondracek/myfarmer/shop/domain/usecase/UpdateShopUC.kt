@@ -57,9 +57,6 @@ class UpdateShopUC @Inject constructor(
         val photosToKeep = originalImages.filter { it in images }
         photoStorage.deletePhotos(photosToDelete)
 
-        println("Photos to upload: $photosToUpload")
-        println("Photos to delete: $photosToDelete")
-
         val newImages = photosToKeep + uploadedPhotos
 
         return this.copy(images = newImages)

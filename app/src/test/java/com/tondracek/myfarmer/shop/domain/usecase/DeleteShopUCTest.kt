@@ -3,6 +3,7 @@ package com.tondracek.myfarmer.shop.domain.usecase
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
+import com.tondracek.myfarmer.common.image.data.FakePhotoStorage
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.shop.data.ShopRepository
 import com.tondracek.myfarmer.shop.data.getFakeShopRepository
@@ -37,6 +38,7 @@ class DeleteShopUCTest {
         uc = DeleteShopUC(
             userRepository = userRepository,
             shopRepository = shopRepository,
+            photoStorage = FakePhotoStorage()
         )
     }
 
