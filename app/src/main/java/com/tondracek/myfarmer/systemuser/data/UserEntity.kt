@@ -4,11 +4,14 @@ import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.data.ContactInfoEntity
 import com.tondracek.myfarmer.contactinfo.data.toEntity
 import com.tondracek.myfarmer.contactinfo.data.toModel
+import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollectionName
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import kotlinx.serialization.Serializable
 import java.util.UUID
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Serializable
 @FirestoreCollectionName("user")
@@ -20,18 +23,23 @@ data class UserEntity(
     val contactInfo: ContactInfoEntity = ContactInfoEntity(),
 ) : FirestoreEntity
 
-fun SystemUser.toEntity() = UserEntity(
-    id = id.toString(),
-    firebaseId = firebaseId,
-    name = name,
-    profilePicture = profilePicture.uri,
-    contactInfo = contactInfo.toEntity()
-)
+@Singleton
+class UserEntityMapper @Inject constructor() :
+    EntityMapper.UUIDtoFirestore<SystemUser, UserEntity> {
+    override fun toEntity(model: SystemUser) =
+        UserEntity(
+            id = model.id.toString(),
+            firebaseId = model.firebaseId,
+            name = model.name,
+            profilePicture = model.profilePicture.uri,
+            contactInfo = model.contactInfo.toEntity()
+        )
 
-fun UserEntity.toModel() = SystemUser(
-    id = UUID.fromString(id),
-    firebaseId = firebaseId,
-    name = name,
-    profilePicture = ImageResource(profilePicture),
-    contactInfo = contactInfo.toModel()
-)
+    override fun toModel(entity: UserEntity) = SystemUser(
+        id = UUID.fromString(entity.id),
+        firebaseId = entity.firebaseId,
+        name = entity.name,
+        profilePicture = ImageResource(entity.profilePicture),
+        contactInfo = entity.contactInfo.toModel()
+    )
+}

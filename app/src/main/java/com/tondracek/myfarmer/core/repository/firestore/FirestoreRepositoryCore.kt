@@ -1,59 +1,51 @@
 package com.tondracek.myfarmer.core.repository.firestore
 
 import com.google.firebase.firestore.DocumentSnapshot
-import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.RepositoryCore
 import com.tondracek.myfarmer.core.repository.firestore.firestoreclient.FirestoreClient
+import com.tondracek.myfarmer.core.repository.firestore.firestoreclient.FirestoreClientImpl
 import com.tondracek.myfarmer.core.repository.request.RepositoryRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
-import java.util.UUID
 
-class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
-    val mapper: EntityMapper<Model, Entity>,
+class FirestoreRepositoryCore<Entity : FirestoreEntity>(
     val entityClass: Class<Entity>,
-    val firestore: FirestoreClient,
-) : RepositoryCore<Model> {
+    val firestore: FirestoreClient = FirestoreClientImpl()
+) : RepositoryCore<Entity, FirestoreEntityId> {
 
     val collectionName: String =
         entityClass.getAnnotation(FirestoreCollectionName::class.java)?.name
             ?: error("Class ${entityClass.simpleName} must be annotated with @FirestoreCollection")
 
-    override suspend fun create(item: Model): UUID {
-        val entity: Entity = mapper.toEntity(item)
-
+    override suspend fun create(entity: Entity): FirestoreEntityId {
         firestore.collection(collectionName)
             .document(entity.id)
             .set(entity)
-        return UUID.fromString(entity.id)
+        return entity.id
     }
 
-    override suspend fun update(item: Model) {
-        val entity: Entity = mapper.toEntity(item)
-
+    override suspend fun update(entity: Entity) {
         firestore.collection(collectionName)
             .document(entity.id)
             .set(entity)
     }
 
-    override suspend fun delete(id: UUID) {
+    override suspend fun delete(id: FirestoreEntityId) {
         firestore.collection(collectionName)
-            .document(id.toString())
+            .document(id)
             .delete()
     }
 
-    override fun getById(id: UUID): Flow<Model?> {
-        val docRef = firestore.collection(collectionName).document(id.toString())
+    override fun getById(id: FirestoreEntityId): Flow<Entity?> {
+        val docRef = firestore.collection(collectionName).document(id)
 
-        return docRef.snapshots()
-            .map { it.toObjectWithId(entityClass) }
-            .map { entity -> entity?.let { mapper.toModel(it) } }
+        return docRef.snapshots().map { it.toObjectWithId(entityClass) }
     }
 
-    override fun get(request: RepositoryRequest): Flow<List<Model>> = flow {
+    override fun get(request: RepositoryRequest): Flow<List<Entity>> = flow {
         if (request.filters.isEmpty())
             Timber.w("Request doesn't have any filters set")
 
@@ -66,12 +58,9 @@ class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
             .applyLimit(request.limit)
 
         emitAll(
-            query.snapshots()
-                .map {
-                    it.documents
-                        .mapNotNull { doc -> doc.toObjectWithId(entityClass) }
-                        .map { entity -> mapper.toModel(entity) }
-                }
+            query.snapshots().map {
+                it.documents.mapNotNull { doc -> doc.toObjectWithId(entityClass) }
+            }
         )
     }
 
@@ -86,15 +75,12 @@ class FirestoreRepositoryCore<Model, Entity : FirestoreEntity>(
                 .lastOrNull()
         }
 
-    override fun getAll(): Flow<List<Model>> {
+    override fun getAll(): Flow<List<Entity>> {
         val query = firestore.collection(collectionName)
 
-        return query.snapshots()
-            .map {
-                it.documents
-                    .mapNotNull { doc -> doc.toObjectWithId(entityClass) }
-                    .map { entity -> mapper.toModel(entity) }
-            }
+        return query.snapshots().map {
+            it.documents.mapNotNull { doc -> doc.toObjectWithId(entityClass) }
+        }
     }
 }
 

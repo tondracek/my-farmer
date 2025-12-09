@@ -1,17 +1,12 @@
 package com.tondracek.myfarmer.core.repository.firestore
 
-import com.tondracek.myfarmer.core.repository.EntityMapper
-import com.tondracek.myfarmer.core.repository.RepositoryCoreFactory
-import com.tondracek.myfarmer.core.repository.firestore.firestoreclient.FirestoreClientImpl
+import com.tondracek.myfarmer.core.repository.RepositoryCore
 
-class FirebaseRepositoryCoreFactory<Entity : FirestoreEntity>() : RepositoryCoreFactory<Entity> {
+object FirebaseRepositoryCoreFactory {
 
-    override fun <Model> create(
-        mapper: EntityMapper<Model, Entity>,
-        entityClass: Class<Entity>
-    ): FirestoreRepositoryCore<Model, Entity> = FirestoreRepositoryCore(
-        mapper = mapper,
-        entityClass = entityClass,
-        firestore = FirestoreClientImpl()
-    )
+    inline fun <reified Entity : FirestoreEntity> create(): RepositoryCore<Entity, FirestoreEntityId> {
+        val entityClass = Entity::class.java
+
+        return FirestoreRepositoryCore(entityClass = entityClass)
+    }
 }

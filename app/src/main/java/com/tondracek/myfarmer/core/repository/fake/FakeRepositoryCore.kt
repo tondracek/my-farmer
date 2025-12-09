@@ -1,6 +1,5 @@
 package com.tondracek.myfarmer.core.repository.fake
 
-import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.RepositoryCore
 import com.tondracek.myfarmer.core.repository.RepositoryEntity
 import com.tondracek.myfarmer.core.repository.fake.FakeQueryBuilder.applyFilters
@@ -12,39 +11,32 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
-import java.util.UUID
 
-class FakeRepositoryCore<Model, Entity : RepositoryEntity<*>>(
-    val mapper: EntityMapper<Model, Entity>,
-    private val getUUID: Entity.() -> UUID,
-) : RepositoryCore<Model> {
+class FakeRepositoryCore<Entity : RepositoryEntity<ID>, ID>() : RepositoryCore<Entity, ID> {
 
-    val items: MutableMap<UUID, MutableStateFlow<Entity>> = mutableMapOf()
+    val entities: MutableMap<ID, MutableStateFlow<Entity>> = mutableMapOf()
 
-    override suspend fun create(item: Model): UUID {
-        val entity = mapper.toEntity(item)
-        val id = entity.getUUID()
-        items[id] = MutableStateFlow(entity)
+    override suspend fun create(entity: Entity): ID {
+        val id = entity.id
+        entities[id] = MutableStateFlow(entity)
         return id
     }
 
-    override suspend fun update(item: Model) {
-        val entity = mapper.toEntity(item)
-        val id = entity.getUUID()
-        items[id]?.value = entity
+    override suspend fun update(entity: Entity) {
+        val id = entity.id
+        entities[id]?.value = entity
     }
 
-    override suspend fun delete(id: UUID) {
-        items.remove(id)
+    override suspend fun delete(id: ID) {
+        entities.remove(id)
     }
 
-    override fun getById(id: UUID): Flow<Model?> {
-        return items[id]?.map { mapper.toModel(it) } ?: flowOf(null)
+    override fun getById(id: ID): Flow<Entity?> {
+        return entities[id] ?: flowOf(null)
     }
 
-    override fun get(request: RepositoryRequest): Flow<List<Model>> {
-        val flows: List<Flow<Any>> = items.values.map { it as Flow<Any> }
+    override fun get(request: RepositoryRequest): Flow<List<Entity>> {
+        val flows: List<Flow<Any>> = entities.values.map { it as Flow<Any> }
         if (flows.isEmpty()) return flowOf(emptyList())
 
         @Suppress("UNCHECKED_CAST")
@@ -54,19 +46,16 @@ class FakeRepositoryCore<Model, Entity : RepositoryEntity<*>>(
                 .applySorts(request.sorts)
                 .applyOffset(request.offset)
                 .applyLimit(request.limit)
-                .map(mapper::toModel)
         }
     }
 
-    override fun getAll(): Flow<List<Model>> {
-        val flows: List<Flow<Any>> = items.values.map { it as Flow<Any> }
+    override fun getAll(): Flow<List<Entity>> {
+        val flows: List<Flow<Any>> = entities.values.map { it as Flow<Any> }
         if (flows.isEmpty()) return flowOf(emptyList())
 
         @Suppress("UNCHECKED_CAST")
         return combine(flows) { array ->
-            array
-                .map { it as Entity }
-                .map(mapper::toModel)
+            array.map { it as Entity }
         }
     }
 }

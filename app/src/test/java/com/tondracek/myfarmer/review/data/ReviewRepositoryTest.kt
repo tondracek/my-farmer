@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.review.data
 
-import com.tondracek.myfarmer.core.repository.fake.FakeRepositoryCoreFactory
+import com.tondracek.myfarmer.core.repository.fake.FakeRepositoryCore
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.Review
 import kotlinx.coroutines.flow.first
@@ -16,8 +16,8 @@ class ReviewRepositoryTest {
     val userId: UUID = UUID.randomUUID()
 
     val reviewRepository: ReviewRepository = ReviewRepository(
-        core = FakeRepositoryCoreFactory<ReviewEntity> { UUID.fromString(this.id) }
-            .create(ReviewMapper(), ReviewEntity::class.java)
+        core = FakeRepositoryCore(),
+        mapper = ReviewMapper()
     )
 
     private suspend fun insert(review: Review) {

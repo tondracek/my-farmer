@@ -2,19 +2,18 @@ package com.tondracek.myfarmer.core.repository
 
 import com.tondracek.myfarmer.core.repository.request.RepositoryRequest
 import kotlinx.coroutines.flow.Flow
-import java.util.UUID
 
-interface RepositoryCore<Model> {
+interface RepositoryCore<Entity : RepositoryEntity<ID>, ID> {
 
-    suspend fun create(item: Model): UUID
+    suspend fun create(entity: Entity): ID
 
-    suspend fun update(item: Model)
+    suspend fun update(entity: Entity)
 
-    suspend fun delete(id: UUID)
+    suspend fun delete(id: ID)
 
-    fun getById(id: UUID): Flow<Model?>
+    fun getById(id: ID): Flow<Entity?>
 
-    fun get(request: RepositoryRequest): Flow<List<Model>>
+    fun get(request: RepositoryRequest): Flow<List<Entity>>
 
-    fun getAll(): Flow<List<Model>>
+    fun getAll(): Flow<List<Entity>>
 }

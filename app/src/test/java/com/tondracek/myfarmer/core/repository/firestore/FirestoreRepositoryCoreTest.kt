@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.check
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.firestore.firestoreclient.FirestoreClient
 import com.tondracek.myfarmer.core.repository.firestore.firestoreclient.FirestoreCollection
 import com.tondracek.myfarmer.core.repository.firestore.firestoreclient.FirestoreDocumentRef
@@ -29,7 +28,7 @@ import java.util.UUID
 @RunWith(MockitoJUnitRunner::class)
 class FirestoreRepositoryCoreTest {
 
-    private lateinit var core: FirestoreRepositoryCore<TestModel, TestEntity>
+    private lateinit var core: FirestoreRepositoryCore<TestEntity>
 
     @Mock
     lateinit var firestore: FirestoreClient
@@ -48,7 +47,6 @@ class FirestoreRepositoryCoreTest {
         whenever(firestore.collection("test")).thenReturn(collection)
 
         core = FirestoreRepositoryCore(
-            mapper = TestMapper,
             entityClass = TestEntity::class.java,
             firestore = firestore,
         )
@@ -56,9 +54,9 @@ class FirestoreRepositoryCoreTest {
 
     @Test
     fun `create writes entity to firestore`() = runTest {
-        val model = TestModel(UUID.randomUUID(), "hello")
+        val model = TestEntity(UUID.randomUUID().toString(), "hello")
 
-        whenever(collection.document(model.id.toString())).thenReturn(document)
+        whenever(collection.document(model.id)).thenReturn(document)
         whenever(document.set(any())).thenReturn(Unit)
 
         val returnedId = core.create(model)
@@ -71,9 +69,9 @@ class FirestoreRepositoryCoreTest {
 
     @Test
     fun `update writes updated entity`() = runTest {
-        val model = TestModel(UUID.randomUUID(), "updated")
+        val model = TestEntity(UUID.randomUUID().toString(), "updated")
 
-        whenever(collection.document(model.id.toString())).thenReturn(document)
+        whenever(collection.document(model.id)).thenReturn(document)
 
         core.update(model)
 
@@ -82,9 +80,9 @@ class FirestoreRepositoryCoreTest {
 
     @Test
     fun `delete removes document`() = runTest {
-        val id = UUID.randomUUID()
+        val id = UUID.randomUUID().toString()
 
-        whenever(collection.document(id.toString())).thenReturn(document)
+        whenever(collection.document(id)).thenReturn(document)
 
         core.delete(id)
 
@@ -93,10 +91,10 @@ class FirestoreRepositoryCoreTest {
 
     @Test
     fun `getById emits mapped model`() = runTest {
-        val id = UUID.randomUUID()
+        val id = UUID.randomUUID().toString()
         val snapshotFlow = MutableStateFlow(fakeSnapshot("value123"))
 
-        whenever(collection.document(id.toString())).thenReturn(document)
+        whenever(collection.document(id)).thenReturn(document)
         whenever(document.snapshots()).thenReturn(snapshotFlow)
 
         val result = core.getById(id).first()
@@ -142,7 +140,6 @@ class FirestoreRepositoryCoreTest {
     @Test(expected = Exception::class)
     fun `initialization without entity annotation throws exception`() {
         FirestoreRepositoryCore(
-            mapper = NonAnnotatedMapper,
             entityClass = NonAnnotatedEntity::class.java,
             firestore = firestore,
         )
@@ -169,30 +166,11 @@ class FirestoreRepositoryCoreTest {
 
     /* TEST DATA CLASSES */
 
-    data class TestModel(val id: UUID, val value: String)
-
     @FirestoreCollectionName("test")
     data class TestEntity(
         override var id: String = "",
         var value: String = ""
     ) : FirestoreEntity
 
-    object TestMapper : EntityMapper<TestModel, TestEntity> {
-        override fun toEntity(model: TestModel) =
-            TestEntity(id = model.id.toString(), value = model.value)
-
-        override fun toModel(entity: TestEntity) =
-            TestModel(UUID.fromString(entity.id), entity.value)
-    }
-
-
     data class NonAnnotatedEntity(override var id: String = "") : FirestoreEntity
-    data class NonAnnotatedModel(val id: String)
-    object NonAnnotatedMapper : EntityMapper<NonAnnotatedModel, NonAnnotatedEntity> {
-        override fun toEntity(model: NonAnnotatedModel) =
-            NonAnnotatedEntity(id = model.id)
-
-        override fun toModel(entity: NonAnnotatedEntity) =
-            NonAnnotatedModel(id = entity.id)
-    }
 }

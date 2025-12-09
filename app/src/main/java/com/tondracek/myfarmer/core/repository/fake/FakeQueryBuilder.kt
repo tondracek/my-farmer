@@ -13,7 +13,7 @@ import com.tondracek.myfarmer.core.repository.request.RequestSort
 
 object FakeQueryBuilder {
 
-    fun <Entity> Collection<Entity>.applyFilters(filters: List<RequestFilter>): Collection<Entity> =
+    fun <Entity> List<Entity>.applyFilters(filters: List<RequestFilter>): List<Entity> =
         filters.fold(this) { list, filter ->
             when (filter) {
                 is FilterEq<*, *> ->
@@ -66,8 +66,8 @@ object FakeQueryBuilder {
             }
         }
 
-    fun <Entity> Collection<Entity>.applySorts(sorts: List<RequestSort>): Collection<Entity> =
-        sorts.asReversed().fold(this) { list: Collection<Entity>, sort: RequestSort ->
+    fun <Entity> List<Entity>.applySorts(sorts: List<RequestSort>): List<Entity> =
+        sorts.asReversed().fold(this) { list: List<Entity>, sort: RequestSort ->
             when (sort) {
                 is AscendingSort<*, *> ->
                     list.sortedBy { entity ->
@@ -85,9 +85,9 @@ object FakeQueryBuilder {
             }
         }
 
-    fun <Entity> Collection<Entity>.applyLimit(limit: Int?): Collection<Entity> =
+    fun <Entity> List<Entity>.applyLimit(limit: Int?): List<Entity> =
         limit?.let { this.take(it) } ?: this
 
-    fun <Entity> Collection<Entity>.applyOffset(offset: Int?): Collection<Entity> =
+    fun <Entity> List<Entity>.applyOffset(offset: Int?): List<Entity> =
         offset?.let { this.drop(it) } ?: this
 }

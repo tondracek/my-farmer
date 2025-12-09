@@ -2,9 +2,11 @@ package com.tondracek.myfarmer.review.data
 
 import com.tondracek.myfarmer.core.repository.BaseRepository
 import com.tondracek.myfarmer.core.repository.RepositoryCore
+import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.core.repository.request.filterEq
 import com.tondracek.myfarmer.core.repository.request.repositoryRequest
 import com.tondracek.myfarmer.review.domain.model.Review
+import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -12,8 +14,9 @@ import javax.inject.Singleton
 
 @Singleton
 class ReviewRepository @Inject constructor(
-    core: RepositoryCore<Review>,
-) : BaseRepository<Review>(core) {
+    core: RepositoryCore<ReviewEntity, FirestoreEntityId>,
+    mapper: ReviewMapper,
+) : BaseRepository<Review, ReviewId, ReviewEntity, FirestoreEntityId>(core, mapper) {
 
     fun getReviewsPreview(shopId: ShopId): Flow<List<Review>> = repositoryRequest {
         addFilters(ReviewEntity::shopId filterEq shopId.toString())

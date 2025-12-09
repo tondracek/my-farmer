@@ -2,7 +2,6 @@ package com.tondracek.myfarmer.core.repository
 
 import com.tondracek.myfarmer.core.repository.request.RepositoryRequest
 import kotlinx.coroutines.flow.Flow
-import java.util.UUID
 
 /**
  * Generic repository interface for CRUD operations.
@@ -16,15 +15,15 @@ import java.util.UUID
  *
  * @param Model The type of the domain model managed by the repository.
  */
-interface Repository<Model> {
+interface Repository<Model, ModelId> {
 
-    suspend fun create(item: Model): UUID
+    suspend fun create(item: Model): ModelId
 
     suspend fun update(item: Model)
 
-    suspend fun delete(id: UUID)
+    suspend fun delete(id: ModelId)
 
-    fun getById(id: UUID): Flow<Model?>
+    fun getById(id: ModelId): Flow<Model?>
 
     fun get(request: RepositoryRequest): Flow<List<Model>>
 

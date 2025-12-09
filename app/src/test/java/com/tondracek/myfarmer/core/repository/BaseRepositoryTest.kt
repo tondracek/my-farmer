@@ -2,6 +2,7 @@ package com.tondracek.myfarmer.core.repository
 
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.whenever
+import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
 import com.tondracek.myfarmer.core.repository.request.RepositoryRequest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -18,76 +19,119 @@ import java.util.UUID
 class BaseRepositoryTest {
 
     @Mock
-    lateinit var core: RepositoryCore<String>  // Model = String for simplicity
+    lateinit var core: RepositoryCore<TestEntity, String>
+    val mapper = TestMapper()
 
-    private lateinit var repo: BaseRepository<String>
+    lateinit var repo: BaseRepository<TestModel, UUID, TestEntity, String>
 
     @Before
     fun setup() {
-        repo = object : BaseRepository<String>(core) {}
+        repo = TestBaseRepository(core, mapper)
     }
 
     @Test
     fun `create delegates to core`() = runTest {
-        whenever(core.create("hello")).thenReturn(UUID(0, 1))
+        val model = TestModel(value = "hello")
+        val entity = mapper.toEntity(model)
 
-        val result = repo.create("hello")
+        whenever(core.create(entity)).thenReturn(entity.id)
 
-        assertThat(result).isEqualTo(UUID(0, 1))
-        verify(core).create("hello")
+        val result = repo.create(model)
+
+        assertThat(result).isEqualTo((model.id))
+        verify(core).create(entity)
     }
 
     @Test
     fun `update delegates to core`() = runTest {
-        repo.update("hello")
+        val model = TestModel(value = "hello")
+        val entity = mapper.toEntity(model)
 
-        verify(core).update("hello")
+        whenever(core.update(entity)).thenReturn(Unit)
+
+        repo.update(model)
+
+        verify(core).update(entity)
     }
 
     @Test
     fun `delete delegates to core`() = runTest {
         val id = UUID.randomUUID()
+        val entityId = mapper.toEntityId(id)
+
+        whenever(core.delete(entityId)).thenReturn(Unit)
 
         repo.delete(id)
 
-        verify(core).delete(id)
+        verify(core).delete(entityId)
     }
 
     @Test
     fun `getById delegates to core`() = runTest {
         val id = UUID.randomUUID()
-        val flow = flowOf("abc")
+        val entityId = mapper.toEntityId(id)
+        val model = TestModel(id = id, value = "abc")
 
-        whenever(core.getById(id)).thenReturn(flow)
+        val value = flowOf(mapper.toEntity(model))
+        whenever(core.getById(entityId)).thenReturn(value)
 
         val result = repo.getById(id).first()
 
-        assertThat(result).isEqualTo("abc")
-        verify(core).getById(id)
+        assertThat(result).isEqualTo(model)
+        verify(core).getById(entityId)
     }
 
     @Test
     fun `get delegates to core`() = runTest {
         val request = RepositoryRequest()
-        val flow = flowOf(listOf("a", "b"))
+        val model = TestModel(value = "abc")
 
-        whenever(core.get(request)).thenReturn(flow)
+        val value = flowOf(listOf(mapper.toEntity(model)))
+        whenever(core.get(request)).thenReturn(value)
 
-        val result = repo.get(request).first()
+        val result: List<TestModel> = repo.get(request).first()
 
-        assertThat(result).isEqualTo(listOf("a", "b"))
+        assertThat(result).isEqualTo(listOf(model))
         verify(core).get(request)
     }
 
     @Test
     fun `getAll delegates to core`() = runTest {
-        val flow = flowOf(listOf("x", "y"))
+        val model1 = TestModel(value = "x")
+        val model2 = TestModel(value = "y")
 
-        whenever(core.getAll()).thenReturn(flow)
+        val value = flowOf(listOf(mapper.toEntity(model1), mapper.toEntity(model2)))
+        whenever(core.getAll()).thenReturn(value)
 
         val result = repo.getAll().first()
 
-        assertThat(result).isEqualTo(listOf("x", "y"))
+        assertThat(result).isEqualTo(listOf(model1, model2))
         verify(core).getAll()
     }
+
+    /* Test classes */
+
+    data class TestModel(
+        val id: UUID = UUID.randomUUID(),
+        val value: String
+    )
+
+    data class TestEntity(
+        override var id: String = "",
+        var value: String = ""
+    ) : FirestoreEntity
+
+    class TestMapper : EntityMapper.UUIDtoString<TestModel, TestEntity> {
+
+        override fun toEntity(model: TestModel) =
+            TestEntity(id = model.id.toString(), value = model.value)
+
+        override fun toModel(entity: TestEntity) =
+            TestModel(UUID.fromString(entity.id), entity.value)
+    }
+
+    class TestBaseRepository(
+        core: RepositoryCore<TestEntity, String>,
+        mapper: TestMapper,
+    ) : BaseRepository<TestModel, UUID, TestEntity, String>(core, mapper)
 }
