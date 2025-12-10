@@ -65,8 +65,8 @@ internal fun DistanceSection(
                 valueRange = min.value.toFloat()..max.value.toFloat(),
             )
 
-            if (selectedDistance != null) Text(
-                text = selectedDistance.unit.toStringTranslated(),
+            Text(
+                text = preferredUnit.toStringTranslated(),
                 style = MyFarmerTheme.typography.textSmall
             )
         }
