@@ -16,7 +16,7 @@ val myFarmerTypography = MyFarmerTypography(
     ),
     titleMedium = TextStyle(
         fontSize = 20.sp,
-        fontWeight = FontWeight.W500,
+        fontWeight = FontWeight.W600,
     ),
     titleSmall = TextStyle(
         fontSize = 16.sp,

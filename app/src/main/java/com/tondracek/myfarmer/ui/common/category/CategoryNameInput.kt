@@ -14,7 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
@@ -50,7 +52,7 @@ fun CategoryNameInput(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Suggestions:")
+            Text(stringResource(R.string.suggestions) + ":")
             state.suggestions.forEach { suggestion ->
                 SuggestionChip(
                     name = suggestion.name,

@@ -12,7 +12,7 @@ fun NavGraphBuilder.authScreenDestination() = routeDestination<Route.AuthScreenR
     val viewModel: AuthScreenViewModel = hiltViewModel()
 
     FirebaseUiLoginScreen(
-        onSuccess = viewModel::navigateToMainShopsScreen,
+        onSuccess = viewModel::navigateToProfileScreen,
         onError = { message -> viewModel.showError(context, message) }
     )
 }

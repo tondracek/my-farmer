@@ -55,10 +55,8 @@ suspend fun getImageUrl(imageResource: ImageResource): String? {
 
     val path = imageResource.uri ?: return null
 
-    println(path)
     FirebaseUrlCache.get(path)?.let { return it }
 
-    println("Fetching from Firebase Storage: $path")
     val url = Firebase.storage
         .reference
         .child(path)

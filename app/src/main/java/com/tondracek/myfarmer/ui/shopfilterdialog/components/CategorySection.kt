@@ -19,8 +19,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
 import com.tondracek.myfarmer.ui.common.category.CategoryNameInput
 import com.tondracek.myfarmer.ui.common.category.CategoryNameInputState
@@ -39,11 +41,14 @@ internal fun CategorySection(
     onSelectedCategoriesAdd: (String) -> Unit,
     onSelectedCategoriesRemove: (String) -> Unit,
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
-            text = when (selectedCategories.isEmpty()) {
-                true -> "Filtered categories"
-                false -> "No filtered categories"
+            text = when (selectedCategories.isNotEmpty()) {
+                true -> stringResource(R.string.filtered_categories) + ":"
+                false -> stringResource(R.string.no_filtered_categories)
             }
         )
         SelectedCategoriesList(
@@ -55,7 +60,7 @@ internal fun CategorySection(
 
         CustomHorizontalDivider()
 
-        Text("Add a category to filters")
+        Text(stringResource(R.string.add_category_to_filters))
         CategoryNameInput(
             state = categoryNameInputState,
             onNameChanged = onCategoryFilterInputChange,
@@ -65,7 +70,7 @@ internal fun CategorySection(
             onSelectedCategoriesAdd(categoryNameInputState.categoryName)
         }) {
             Text(
-                text = "Add category to filters",
+                text = stringResource(R.string.add_category_to_filters),
                 style = MyFarmerTheme.typography.textMedium,
             )
         }

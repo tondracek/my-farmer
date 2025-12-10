@@ -1,8 +1,10 @@
 package com.tondracek.myfarmer.location.model
 
-import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.intl.Locale
 import com.tondracek.myfarmer.R
-import java.util.Locale
+import java.text.DecimalFormatSymbols
 
 /**
  * Custom My Farmer distance data class
@@ -12,12 +14,20 @@ data class Distance(
     val unit: DistanceUnit = DistanceUnit.KM,
 ) : Comparable<Distance> {
 
-    override fun toString(): String {
-        val formatted = String.format(Locale.US, "%.2f", value.toDouble())
+    @Composable
+    fun toStringTranslated(): String {
+        val locale = Locale.current.platformLocale
+
+        val formatted = String.format(locale, "%.2f", value.toDouble())
+
+        val decimalSeparator = DecimalFormatSymbols.getInstance(locale).decimalSeparator
+        val escapedSeparator = Regex.escape(decimalSeparator.toString())
+
         val trimmed = formatted
-            .replace(Regex("0+$"), "")   // remove trailing zeros
-            .replace(Regex("\\.$"), "")  // remove trailing decimal point
-        return "$trimmed $unit"
+            .replace(Regex("0+$"), "")
+            .replace(Regex("$escapedSeparator$"), "")
+
+        return "$trimmed ${unit.toStringTranslated()}"
     }
 
     override fun compareTo(other: Distance): Int =
@@ -31,7 +41,8 @@ enum class DistanceUnit() {
     KM()
     ;
 
-    fun toString(context: Context) = when (this) {
-        KM -> context.getString(R.string.km)
+    @Composable
+    fun toStringTranslated(): String = when (this) {
+        KM -> stringResource(R.string.km)
     }
 }

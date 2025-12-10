@@ -53,4 +53,13 @@
     <string name="previous">Předchozí</string>
     <string name="submit">Potvrdit</string>
     <string name="next">Další</string>
+    <string name="filtered_categories">Filtrované kategorie</string>
+    <string name="no_filtered_categories">Žádné filtrované kategorie</string>
+    <string name="add_category_to_filters">Přidat kategorii do filtru</string>
+    <string name="reset">Reset</string>
+    <string name="clear">Vymazat</string>
+    <string name="select_filter_above_to_edit_it">Vyberte z filtrů nahoře pro jeho úpravu</string>
+    <string name="suggestions">Doporučené</string>
+    <string name="go_back">Jít zpět</string>
+    <string name="login_cancelled">Přihlašování přerušeno</string>
 </resources>

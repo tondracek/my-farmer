@@ -73,7 +73,7 @@ fun ShopListItemCard(
 
                         if (shop.distance != null)
                             Text(
-                                text = shop.distance.toString(),
+                                text = shop.distance.toStringTranslated(),
                                 style = MaterialTheme.typography.labelMedium
                             )
                     }

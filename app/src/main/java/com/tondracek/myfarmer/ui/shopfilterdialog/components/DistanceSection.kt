@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.location.model.Distance
 import com.tondracek.myfarmer.location.model.DistanceUnit
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -22,10 +24,12 @@ internal fun DistanceSection(
     selectedDistance: Distance?,
     onMaxDistanceChange: (Distance?) -> Unit
 ) {
-    val minKm = 0f
-    val maxKm = 50f
+    val preferredUnit = DistanceUnit.KM
 
-    val sliderValue = selectedDistance?.value?.toFloat() ?: minKm
+    val min = Distance(0f, preferredUnit)
+    val max = Distance(50, preferredUnit)
+
+    val sliderValue = selectedDistance?.value?.toFloat() ?: min.value.toFloat()
 
     Column(modifier = modifier.padding(16.dp)) {
         Row(
@@ -35,13 +39,13 @@ internal fun DistanceSection(
         ) {
             Text(
                 text = when (selectedDistance) {
-                    null -> "No filter for max distance"
-                    else -> "Max distance: $selectedDistance"
+                    null -> stringResource(R.string.distance_filter_no_filter)
+                    else -> "Max distance: ${selectedDistance.toStringTranslated()}."
                 },
                 style = MyFarmerTheme.typography.textSmall
             )
             Button(onClick = { onMaxDistanceChange(null) }) {
-                Text("Reset")
+                Text(stringResource(R.string.reset))
             }
         }
 
@@ -53,15 +57,18 @@ internal fun DistanceSection(
                 modifier = Modifier.weight(1f),
                 value = sliderValue,
                 onValueChange = { newValue ->
-                    when (newValue <= minKm + 0.01f) {
+                    when (newValue <= min.value.toFloat() + 0.01) {
                         true -> onMaxDistanceChange(null)
-                        false -> onMaxDistanceChange(Distance(newValue, DistanceUnit.KM))
+                        false -> onMaxDistanceChange(Distance(newValue, preferredUnit))
                     }
                 },
-                valueRange = minKm..maxKm,
+                valueRange = min.value.toFloat()..max.value.toFloat(),
             )
 
-            Text(text = "km", style = MyFarmerTheme.typography.textSmall)
+            if (selectedDistance != null) Text(
+                text = selectedDistance.unit.toStringTranslated(),
+                style = MyFarmerTheme.typography.textSmall
+            )
         }
     }
 }

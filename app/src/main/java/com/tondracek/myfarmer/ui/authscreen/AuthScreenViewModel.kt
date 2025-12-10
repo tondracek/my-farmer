@@ -13,8 +13,8 @@ class AuthScreenViewModel @Inject constructor(
     private val appNavigator: AppNavigator,
 ) : ViewModel() {
 
-    fun navigateToMainShopsScreen() =
-        appNavigator.navigate(Route.MainShopsRoute)
+    fun navigateToProfileScreen() =
+        appNavigator.navigate(Route.EditProfileScreenRoute)
 
     fun showError(context: Context, message: String) =
         Toast.makeText(
