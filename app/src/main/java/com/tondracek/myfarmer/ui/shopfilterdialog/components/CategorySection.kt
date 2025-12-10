@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -102,7 +101,6 @@ private fun SelectedCategoriesList(
                         modifier = Modifier.clickable { onCategoryRemoveClick(categoryName) },
                         imageVector = Icons.Default.Close,
                         contentDescription = "Remove category",
-                        tint = MaterialTheme.colorScheme.onPrimary,
                     )
                 }
             }

@@ -167,7 +167,7 @@ private fun ChipRow(
             .fillMaxWidth()
             .padding(vertical = MyFarmerTheme.paddings.small)
             .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.extraSmall)
+        horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small),
     ) {
         Chip(ShopFilterSection.CATEGORIES) {
             val text = stringResource(
