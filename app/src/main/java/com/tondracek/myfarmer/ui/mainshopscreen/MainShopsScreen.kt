@@ -3,13 +3,17 @@ package com.tondracek.myfarmer.ui.mainshopscreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -105,13 +109,26 @@ private fun MainShopsScreenWrapper(
             verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.extraSmall)
         ) {
             Surface(
-                shape = CircleShape,
+                shape = RoundedCornerShape(64.dp),
                 color = MyFarmerTheme.colors.surfaceContainer,
+                tonalElevation = 4.dp,
             ) {
                 Button(
-                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                    onClick = onOpenFiltersDialog
-                ) { Text(stringResource(R.string.open_filters)) }
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp),
+                    onClick = onOpenFiltersDialog,
+                ) {
+                    Row(
+                        modifier = Modifier.padding(2.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Tune,
+                            contentDescription = "Open filters icon",
+                        )
+                        Text(stringResource(R.string.open_filters))
+                    }
+                }
             }
             ViewModeSwitcher(
                 selectedMode = currentMode,

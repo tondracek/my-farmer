@@ -46,7 +46,7 @@
     <string name="category_filters">Category filters: %1$d</string>
     <string name="distance_filter">Distance filter: %1$s</string>
     <string name="distance_filter_no_filter">Distance filter: No filter</string>
-    <string name="minimum_rating_filter_stars">Minimum rating filter: %1$d stars</string>
+    <string name="minimum_rating_filter_stars">Minimum rating filter: %1$d</string>
     <string name="select_shop_s_location">Select shop\'s location</string>
     <string name="please_enter_your_shop_s_name">Please enter your shop\'s name</string>
     <string name="previous">Previous</string>
