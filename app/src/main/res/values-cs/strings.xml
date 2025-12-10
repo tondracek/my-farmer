@@ -62,4 +62,6 @@
     <string name="suggestions">Doporučené</string>
     <string name="go_back">Jít zpět</string>
     <string name="login_cancelled">Přihlašování přerušeno</string>
+    <string name="apply_filters">Použít filtry</string>
+    <string name="cancel">Zrušit</string>
 </resources>

@@ -78,10 +78,10 @@ fun ShopFilterDialog(
             )
         },
         confirmButton = {
-            Button(onClick = onApplyFiltersClick) { Text("Apply filters") }
+            Button(onClick = onApplyFiltersClick) { Text(stringResource(R.string.apply_filters)) }
         },
         dismissButton = {
-            TextButton(onClick = onCancelClick) { Text("Cancel") }
+            TextButton(onClick = onCancelClick) { Text(stringResource(R.string.cancel)) }
         }
     )
 }

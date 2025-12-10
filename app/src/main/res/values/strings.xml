@@ -61,4 +61,6 @@
     <string name="suggestions">Suggestions</string>
     <string name="go_back">Go Back</string>
     <string name="login_cancelled">Login cancelled</string>
+    <string name="apply_filters">Apply filters</string>
+    <string name="cancel">Cancel</string>
 </resources>
