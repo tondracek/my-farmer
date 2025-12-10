@@ -48,4 +48,9 @@
     <string name="distance_filter">Filtr vzdálenosti: %1$s</string>
     <string name="distance_filter_no_filter">Filtr vzdálenosti: Bez filtru</string>
     <string name="minimum_rating_filter_stars">Minimální hodnocení: %1$d hvězdiček</string>
+    <string name="select_shop_s_location">Vyberte polohu obchodu</string>
+    <string name="please_enter_your_shop_s_name">Přidejte název obchodu</string>
+    <string name="previous">Předchozí</string>
+    <string name="submit">Potvrdit</string>
+    <string name="next">Další</string>
 </resources>

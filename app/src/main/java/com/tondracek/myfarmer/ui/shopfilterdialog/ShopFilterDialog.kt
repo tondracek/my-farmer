@@ -136,14 +136,17 @@ private fun FilterSection(
                 modifier = Modifier
                     .padding(vertical = MyFarmerTheme.paddings.small)
                     .clickable(onClick = onClick),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = hiddenText,
-                    style = MyFarmerTheme.typography.titleMedium
+                    style = MyFarmerTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
                 )
                 Text(
                     text = "Click to expand ›",
-                    style = MyFarmerTheme.typography.textSmall
+                    style = MyFarmerTheme.typography.textSmall,
+                    textAlign = TextAlign.Center,
                 )
             }
         }

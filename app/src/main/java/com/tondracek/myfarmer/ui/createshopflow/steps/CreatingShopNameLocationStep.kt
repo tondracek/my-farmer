@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -33,6 +34,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -79,7 +81,7 @@ private fun Content(
             value = shopInput.name,
             onValueChange = onUpdateName,
             singleLine = true,
-            label = { Text("Please enter your shop's name") },
+            label = { Text(stringResource(R.string.please_enter_your_shop_s_name)) },
         )
 
         Card(
@@ -95,7 +97,7 @@ private fun Content(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(MyFarmerTheme.paddings.medium),
-                        text = "Select shop's location",
+                        text = stringResource(R.string.select_shop_s_location),
                         style = MyFarmerTheme.typography.titleMedium,
                         textAlign = TextAlign.Center
                     )

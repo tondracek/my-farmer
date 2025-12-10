@@ -84,7 +84,8 @@ fun CreatingShopReviewAndSubmitStep(
                 .align(androidx.compose.ui.Alignment.BottomCenter)
                 .padding(MyFarmerTheme.paddings.bottomButtons),
             onNext = onSubmitCreating,
-            onPrevious = onPreviousStep
+            onPrevious = onPreviousStep,
+            submitMode = true,
         )
     }
 }
