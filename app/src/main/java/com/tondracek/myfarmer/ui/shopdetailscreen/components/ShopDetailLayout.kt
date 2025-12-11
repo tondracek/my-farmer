@@ -1,5 +1,7 @@
 package com.tondracek.myfarmer.ui.shopdetailscreen.components
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,23 +13,31 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Navigation
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.sampleReviewsUI
 import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
+import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
 import com.tondracek.myfarmer.ui.common.image.ImageView
@@ -93,28 +103,66 @@ private fun Header(
     modifier: Modifier = Modifier,
     state: ShopDetailState.Success,
 ) {
-    Column(modifier.fillMaxWidth()) {
-        if (!state.name.isNullOrBlank())
-            Text(
-                modifier = Modifier
-                    .padding(vertical = MyFarmerTheme.paddings.large)
-                    .fillMaxWidth(),
-                text = state.name,
-                style = MyFarmerTheme.typography.titleMedium,
-                textAlign = TextAlign.Center
-            )
+    Box(modifier = modifier.fillMaxWidth()) {
+        NavigateButton(
+            modifier = Modifier.align(Alignment.TopEnd),
+            location = state.location
+        )
+        Column(Modifier.align(Alignment.Center)) {
+            if (!state.name.isNullOrBlank())
+                Text(
+                    modifier = Modifier
+                        .padding(vertical = MyFarmerTheme.paddings.large)
+                        .fillMaxWidth(),
+                    text = state.name,
+                    style = MyFarmerTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                UserPreviewCard(user = state.owner)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Box(modifier = Modifier.weight(1f)) {
+                    UserPreviewCard(user = state.owner)
+                }
+
+                RatingStars(rating = state.averageRating)
             }
-
-            RatingStars(rating = state.averageRating)
         }
+    }
+}
+
+@Composable
+private fun NavigateButton(
+    modifier: Modifier = Modifier,
+    location: ShopLocation
+) {
+    val context = LocalContext.current
+
+    IconButton(
+        modifier = modifier,
+        onClick = {
+            val uri =
+                "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}".toUri()
+            val mapIntent = Intent(Intent.ACTION_VIEW, uri).apply {
+                setPackage("com.google.android.apps.maps")
+            }
+            try {
+                context.startActivity(mapIntent)
+            } catch (_: ActivityNotFoundException) {
+                val browserUri =
+                    "https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}".toUri()
+                context.startActivity(Intent(Intent.ACTION_VIEW, browserUri))
+            }
+        },
+        colors = MyFarmerTheme.iconButtonColors.primary
+    ) {
+        Icon(
+            imageVector = Icons.Default.LocationOn,
+            contentDescription = "Navigate to shop",
+        )
     }
 }
 
