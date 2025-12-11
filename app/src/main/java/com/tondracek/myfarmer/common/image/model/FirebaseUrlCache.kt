@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.common.image
+package com.tondracek.myfarmer.common.image.model
 
 object FirebaseUrlCache {
     private const val MAX_SIZE = 100

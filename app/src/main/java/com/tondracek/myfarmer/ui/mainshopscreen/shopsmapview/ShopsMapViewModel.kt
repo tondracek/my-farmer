@@ -60,9 +60,7 @@ class ShopsMapViewModel @Inject constructor(
 
             val descriptors = coroutineScope {
                 list.map { user ->
-                    async {
-                        user.id to getCustomMarkerIcon(user.profilePicture.uri)
-                    }
+                    async { user.id to getCustomMarkerIcon(user.profilePicture) }
                 }.awaitAll().toMap()
             }
 

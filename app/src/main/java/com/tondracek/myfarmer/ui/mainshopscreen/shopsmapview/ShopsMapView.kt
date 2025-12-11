@@ -70,7 +70,7 @@ fun ShopsMapView(
         ),
         uiSettings = MapUiSettings(
             myLocationButtonEnabled = true,
-            zoomControlsEnabled = false,
+            zoomControlsEnabled = true,
             rotationGesturesEnabled = false,
             tiltGesturesEnabled = false,
         ),

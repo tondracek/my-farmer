@@ -13,11 +13,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import coil3.compose.AsyncImage
-import com.google.firebase.Firebase
-import com.google.firebase.storage.storage
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.image.model.ImageResource
-import kotlinx.coroutines.tasks.await
 
 @Composable
 fun ImageView(
@@ -28,7 +25,7 @@ fun ImageView(
     var openImageDialog by remember { mutableStateOf(false) }
 
     val model: Any? by produceState(imageResource.uri) {
-        value = getImageUrl(imageResource)
+        value = imageResource.getImageUrl()
     }
 
     AsyncImage(
@@ -48,25 +45,6 @@ fun ImageView(
             )
         }
     }
-}
-
-suspend fun getImageUrl(imageResource: ImageResource): String? {
-    if (!imageResource.isFirebaseStoragePath()) return imageResource.uri
-
-    val path = imageResource.uri ?: return null
-
-    FirebaseUrlCache.get(path)?.let { return it }
-
-    val url = Firebase.storage
-        .reference
-        .child(path)
-        .downloadUrl
-        .await()
-        .toString()
-
-    FirebaseUrlCache.put(path, url)
-
-    return url
 }
 
 @Composable

@@ -14,6 +14,7 @@ import androidx.core.graphics.withClip
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.tondracek.myfarmer.R
+import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.farmerDarkColors
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -22,7 +23,8 @@ class GetCustomMarkerIcon @Inject constructor(
     @param:ApplicationContext private val context: Context,
 ) {
 
-    suspend operator fun invoke(imageUrl: String?): BitmapDescriptor {
+    suspend operator fun invoke(imageResource: ImageResource): BitmapDescriptor {
+        val imageUrl = imageResource.getImageUrl()
         val drawable: Drawable =
             fetchCustomMarkerImage(context, imageUrl, R.drawable.baseline_store_48)
 
@@ -51,7 +53,12 @@ class GetCustomMarkerIcon @Inject constructor(
         canvas.withClip(
             Path().apply { addCircle(width * .5f, width * .5f, width * .4f, Path.Direction.CW) }
         ) {
-            val scaledBitmap = imageBitmap.scale(imageSize, imageSize)
+            val originalSize = (imageBitmap.width + imageBitmap.height) / 2
+            val ratio = originalSize.toFloat() / imageSize.toFloat()
+            val scaledBitmap = imageBitmap.scale(
+                width = (imageBitmap.width / ratio).toInt(),
+                height = (imageBitmap.height / ratio).toInt()
+            )
             canvas.drawBitmap(scaledBitmap, 0f, 0f, Paint().apply { isAntiAlias = true })
         }
 
