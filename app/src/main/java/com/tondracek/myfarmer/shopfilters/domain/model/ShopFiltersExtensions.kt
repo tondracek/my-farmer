@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.shopfilters.domain.model
 
+import com.tondracek.myfarmer.common.string.normalize
 import com.tondracek.myfarmer.location.model.Distance
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.domain.model.Shop
@@ -27,7 +28,8 @@ private suspend fun ShopFilters.matchesDistance(
 
 private fun ShopFilters.matchesCategory(shop: Shop): Boolean {
     if (categories.isEmpty()) return true
-    return shop.categories.any { it.name in categories }
+    val filterCategories = categories.map { normalize(it) }.toSet()
+    return shop.categories.any { normalize(it.name) in filterCategories }
 }
 
 private fun ShopFilters.matchesRating(

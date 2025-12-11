@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.shopcategory.domain.usecase
 
-import com.tondracek.myfarmer.common.util.fuzzyScore
+import com.tondracek.myfarmer.common.string.fuzzyScore
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
 import javax.inject.Inject
 

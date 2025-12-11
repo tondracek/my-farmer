@@ -1,6 +1,7 @@
 package com.tondracek.myfarmer.common.util
 
 import com.google.common.truth.Truth.assertThat
+import com.tondracek.myfarmer.common.string.fuzzyScore
 import org.junit.Test
 
 class FuzzyScoreTest {

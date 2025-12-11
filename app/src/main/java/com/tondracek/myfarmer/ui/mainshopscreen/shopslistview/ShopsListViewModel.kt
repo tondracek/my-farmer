@@ -15,6 +15,7 @@ import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
 import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
 import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.core.navigation.Route
+import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.ShopListViewItem
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.toListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -52,7 +53,7 @@ class ShopsListViewModel @Inject constructor(
             val distance = measureDistanceFromMe(it.location)
             val rating = ratings[it.id] ?: Rating.ZERO
             it.toListItem(distance, rating)
-        }
+        }.sortedBy(ShopListViewItem::distance)
 
         ShopsListViewState.Success(shops = shopListItems)
     }.stateIn(

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "248652196071-0p6di3e1ibgj7tf89odda4as4a36f9kg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tondracek.myfarmer",
+            "certificate_hash": "b389885f5fabbf10f6b2cde8e2a322d35910c28d"
+          }
+        },
+        {
           "client_id": "248652196071-b1ujid57attf3tvhhmh36jplkjo5dmo3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

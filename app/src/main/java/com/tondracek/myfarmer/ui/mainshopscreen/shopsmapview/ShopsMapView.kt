@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -18,8 +19,10 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -29,6 +32,14 @@ fun ShopsMapView(
     onShopSelected: (ShopId) -> Unit,
 ) {
     val cameraPositionState = rememberCameraPositionState()
+    val scope = rememberCoroutineScope()
+
+    fun zoomToShop(location: ShopLocation, zoom: Float = 15f) = scope.launch {
+        val currentZoom = cameraPositionState.position.zoom
+        if (currentZoom < zoom) cameraPositionState.animate(
+            CameraUpdateFactory.newLatLngZoom(location.toLatLng(), zoom)
+        )
+    }
 
     LaunchedEffect(state.initialCameraBounds) {
         val bounds = state.initialCameraBounds ?: return@LaunchedEffect
@@ -70,6 +81,7 @@ fun ShopsMapView(
                 state = MarkerState(shop.location.toLatLng()),
                 onClick = {
                     onShopSelected(shop.id)
+                    zoomToShop(shop.location)
                     return@Marker false
                 },
                 icon = shop.markerIcon,
