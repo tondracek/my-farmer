@@ -99,7 +99,6 @@ dependencies {
     implementation(libs.accompanist.permissions)
     implementation(libs.kotlinx.coroutines.play.services)
 
-    // Firebase BOM (controls versions for all Firebase libs)
     implementation(platform(libs.firebase.bom))
 
     implementation(libs.firebase.firestore)
