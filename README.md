@@ -24,21 +24,25 @@
 
 **Funkční požadavky**
 
-- Uživatel si může vytvořit účet a upravovat své kontaktní údaje, profilový obrázek a jméno
-- každý uživatel může být jak zákazník, tak prodejce
-- uživatel (prodejce) může vytvořit libovolný počet obchodů
-- uživatel (zákazník) si může obchody zobrazit na mapě nebo seznamu
-    - mapa - Google maps SDK, body na mapě
-    - seznam - řazení podle vzdálenosti, názvu apod.
-    - přepnutí mezi zobrazení
-- každý obchod má název, popis, otevírací dobu (pravidelná/po domluvě), kontakt, nabídku (tabulka -
-  název, cena, foto, počet na skladě?
-- TODO: v ChatGPT "Overleaf - ACTIVE" chatu jsou vygenerovaný požadavky
+- Uživatel může zobrazit obchody v~mapovém nebo seznamovém zobrazení.
+- Uživatel může filtrovat zobrazené obchody podle kategorie, vzdálenosti a průměrného hodnocení.
+- Uživatel může zobrazit detail obchodu, včetně popisu, fotografií a kontaktních údajů.
+- Uživatel může vytvořit uživatelský účet.
+- Registrovaný uživatel může vytvářet nové obchody.
+- Registrovaný uživatel může upravovat a spravovat obchody, které vytvořil.
+- Registrovaný uživatel může upravovat své kontaktní údaje zobrazované u~jeho obchodů.
+- Registrovaný uživatel může ke svým obchodům přidávat název, popis, kategorie nabízených produktů,
+  fotografie, nabídku produktů a otevírací dobu.
+- Registrovaný uživatel může vytvářet recenze obchodů ostatních uživatelů.
 
 **Nefunkční požadavky**:
 
-- při zapnutí aplikace se zobrazí úvodní obrazovka pro představení a popis (pro snadnou orientaci)
-- aplikace bude využívat cloudové služby: Firebase Auth, Firebase Firestore, ...
+- Aplikace je určena pro platformu Android.
+- Uživatelské rozhraní aplikace musí být přehledné a snadno použitelné i~pro méně technicky zdatné
+  uživatele.
+- Aplikace musí umožňovat plynulé zobrazení mapy a obchodů bez výrazných prodlev.
+- Data uložená v~aplikaci musí být přístupná pouze oprávněným uživatelům.
+- Aplikace musí být navržena tak, aby bylo možné ji dále rozšiřovat o~další funkce.
 
 **Use Case Diagram**:
 
