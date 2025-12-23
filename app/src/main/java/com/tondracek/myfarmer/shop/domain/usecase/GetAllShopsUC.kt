@@ -2,6 +2,7 @@ package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.tondracek.myfarmer.core.repository.request.repositoryRequest
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.usecaseresult.toUCResult
 import com.tondracek.myfarmer.shop.data.ShopRepository
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
@@ -20,5 +21,5 @@ class GetAllShopsUC @Inject constructor(
     ): Flow<UCResult<List<Shop>>> =
         shopRepository.get(repositoryRequest { })
             .map { applyFiltersUC(shops = it, filters = filters) }
-            .map { UCResult.Success(it) }
+            .toUCResult(userError = "Failed to load shops.")
 }

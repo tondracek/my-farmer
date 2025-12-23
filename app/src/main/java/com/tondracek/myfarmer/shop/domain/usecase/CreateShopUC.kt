@@ -20,17 +20,19 @@ class CreateShopUC @Inject constructor(
     private val shopRepository: ShopRepository,
     private val photoStorage: PhotoStorage,
 ) {
-    suspend operator fun invoke(input: ShopInput): UCResult<Unit> {
-        val user = getLoggedInUser().first().getOrReturn { return it }
 
-        val shopId = UUID.randomUUID()
-        val shop: Shop = input.toShop(shopId = shopId, ownerId = user.id)
-            .getOrReturn { return it }
-            .updatePhotos(shopId = shopId)
+    suspend operator fun invoke(input: ShopInput): UCResult<Unit> =
+        UCResult.of("An Error occurred while creating the shop.") {
+            val user = getLoggedInUser().first().getOrReturn { return it }
 
-        return shopRepository.create(shop)
-            .let { UCResult.Success(Unit) }
-    }
+            val shop: Shop = input
+                .toShop(shopId = UUID.randomUUID(), ownerId = user.id)
+                .getOrReturn { return it }
+            shopRepository.create(shop)
+
+            val shopWithPhotos = shop.updatePhotos(shop.id)
+            shopRepository.update(shopWithPhotos)
+        }
 
     suspend fun Shop.updatePhotos(shopId: ShopId): Shop = this.copy(
         images = this.images

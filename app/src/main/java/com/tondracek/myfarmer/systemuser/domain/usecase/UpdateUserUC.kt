@@ -19,18 +19,15 @@ class UpdateUserUC @Inject constructor(
 ) {
 
     suspend operator fun invoke(item: SystemUser): UCResult<Unit> =
-        runCatching { update(item) }
-            .getOrElse { UpdateFailedUCResult(it) }
+        UCResult.of(UpdateFailedUCResult()) {
+            if (auth.currentUser?.uid != item.firebaseId)
+                return NotLoggedInUCResult()
 
-    private suspend fun update(item: SystemUser): UCResult<Unit> {
-        if (auth.currentUser?.uid != item.firebaseId)
-            return NotLoggedInUCResult()
+            val original = repository.getById(item.id).first() ?: return UserNotFoundResult(item.id)
+            val updateItem = item.loadNewPhoto(original = original)
 
-        val original = repository.getById(item.id).first() ?: return UserNotFoundResult(item.id)
-        val updateItem = item.loadNewPhoto(original = original)
-
-        return UCResult.Success(repository.update(updateItem))
-    }
+            repository.update(updateItem)
+        }
 
     private suspend fun SystemUser.loadNewPhoto(original: SystemUser): SystemUser =
         when (original.profilePicture == this.profilePicture) {

@@ -40,9 +40,11 @@ class PhotoStorageImpl @Inject constructor(
         val storagePath = folder.getPath(fileName)
 
         val ref = storage.reference.child(storagePath)
+        Timber.d("Uploading photo to $storagePath")
 
         ref.putBytes(bytes).await()
 
+        Timber.d("Photo uploaded to $storagePath")
         return ImageResource(ref.path)
     }
 
@@ -64,11 +66,16 @@ class PhotoStorageImpl @Inject constructor(
     }
 
     override suspend fun deletePhoto(imageResource: ImageResource) {
+        if (!imageResource.isFirebaseStoragePath())
+            return Timber.d("ImageResource $imageResource is not a Firebase Storage path, skipping deletion.")
+
         imageResource.uri
             ?.runCatching {
+                Timber.d("Deleting photo at $this")
                 storage.reference.child(imageResource.uri)
                     .delete()
                     .await()
+                Timber.d("Photo at $this deleted successfully.")
             }
             ?.onFailure {
                 Timber.e(it, "Failed to delete photo at ${imageResource.uri}")

@@ -14,8 +14,12 @@ sealed interface UCResult<out T> {
     data class Success<T>(val data: T) : UCResult<T>
 
     open class Failure(val userError: String, val systemError: String? = null) : UCResult<Nothing> {
-        constructor(userError: String, throwable: Throwable)
-                : this(userError, throwable.message ?: "Unknown error $throwable")
+        constructor(userError: String, throwable: Throwable) : this(
+            userError,
+            throwable.message ?: "Unknown error $throwable"
+        ) {
+            Timber.e(throwable)
+        }
 
         init {
             logFailure()
@@ -57,6 +61,23 @@ sealed interface UCResult<out T> {
     fun getOrThrow() = when (this) {
         is Success -> data
         is Failure -> throw Throwable(systemError)
+    }
+
+    companion object {
+        inline fun <T> of(
+            userError: String = "Unexpected error occurred.",
+            block: () -> T,
+        ): UCResult<T> =
+            runCatching { block() }.fold(
+                onSuccess = { Success(it) },
+                onFailure = { Failure(userError = userError, throwable = it) }
+            )
+
+        inline fun <T> of(failure: Failure, block: () -> T): UCResult<T> =
+            runCatching { block() }.fold(
+                onSuccess = { Success(it) },
+                onFailure = { Failure(failure.userError, it) }
+            )
     }
 }
 

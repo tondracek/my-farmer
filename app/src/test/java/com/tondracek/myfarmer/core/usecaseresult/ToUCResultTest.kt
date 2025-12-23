@@ -19,12 +19,12 @@ class UCResultConversionTest {
     }
 
     // ---------------------------
-    // toUCResult (userError)
+    // UCResult.of(userError)
     // ---------------------------
 
     @Test
     fun `toUCResult returns Success on normal execution`() {
-        val result = toUCResult { 42 }
+        val result = UCResult.of { 42 }
 
         assertThat(result).isInstanceOf(UCResult.Success::class.java)
         assertThat((result as UCResult.Success).data).isEqualTo(42)
@@ -32,7 +32,7 @@ class UCResultConversionTest {
 
     @Test
     fun `toUCResult returns Failure on exception`() {
-        val result = toUCResult("Boom!") {
+        val result = UCResult.of("Boom!") {
             error("Oops")
         }
 
@@ -45,7 +45,7 @@ class UCResultConversionTest {
 
     @Test
     fun `toUCResult returns Failure on exception with default text`() {
-        val result = toUCResult("Boom!") {
+        val result = UCResult.of("Boom!") {
             throw Throwable()
         }
 
@@ -64,7 +64,7 @@ class UCResultConversionTest {
     fun `toUCResult failure version returns Success when block succeeds`() {
         val fallback = UCResult.Failure("Fallback")
 
-        val result = toUCResult(fallback) { 123 }
+        val result = UCResult.of(fallback) { 123 }
 
         assertThat(result).isInstanceOf(UCResult.Success::class.java)
         assertThat((result as UCResult.Success).data).isEqualTo(123)
@@ -74,9 +74,10 @@ class UCResultConversionTest {
     fun `toUCResult failure version returns provided Failure on exception`() {
         val fallback = UCResult.Failure("Provided")
 
-        val result = toUCResult(fallback) { throw IllegalStateException("Boom") }
+        val result = UCResult.of(fallback) { throw IllegalStateException("Boom") }
 
-        assertThat(result).isEqualTo(fallback)
+        assertThat(result).isInstanceOf(UCResult.Failure::class.java)
+        assertThat((result as UCResult.Failure).userError).isEqualTo(fallback.userError)
     }
 
     // ---------------------------
@@ -127,7 +128,7 @@ class UCResultConversionTest {
     fun `Flow toUCResult(failure) emits provided Failure on exception`() = runTest {
         val fallback = UCResult.Failure("Provided")
 
-        val flow = flow<String> {
+        val flow = flow {
             emit("Ok")
             throw RuntimeException("Boom")
         }.toUCResult(fallback)
