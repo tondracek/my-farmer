@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -17,7 +19,7 @@ android {
     defaultConfig {
         applicationId = "com.tondracek.myfarmer"
         minSdk = 27
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 4
         versionName = "1.2"
 
@@ -37,8 +39,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
     }
     buildFeatures {
         compose = true
@@ -78,6 +82,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.material)
+
+    ksp(libs.kotlin.metadata.jvm)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
