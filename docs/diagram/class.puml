@@ -2,35 +2,32 @@
 
 skinparam backgroundColor #FFFFFF
 
+class ImageResource {
+    - url: String
+}
+
+' ----------------------------------- '
+
 class User {
     - id: String
     - name: String
-    - profilePicture: Image?
+    - profilePicture: ImageResource?
     - contactInfo: ContactInfo
 }
+
+User "0..*" -Lo "0..1" ImageResource : profilePicture >
 
 ' ----------------------------------- '
 
 class ContactInfo {
     - phone: String?
     - email: String?
-    - website: MediaLink?
-    - facebook: MediaLink?
-    - instagram: MediaLink?
+    - website: String?
+    - facebook: String?
+    - instagram: String?
 }
 
 User "1" *- "1" ContactInfo : contactInfo >
-
-' ----------------------------------- '
-
-class MediaLink {
-    - title: String
-    - url: String
-}
-
-ContactInfo "1" *-- "0..1" MediaLink : facebook >
-ContactInfo "1" *-- "0..1" MediaLink : instagram >
-ContactInfo "1" *-- "0..1" MediaLink : website >
 
 ' ----------------------------------- '
 
@@ -40,13 +37,14 @@ class Shop {
     - description: String?
     - owner: User
     - shopCategories: List<ShopCategory>
-    - images: List<Image>
+    - images: List<ImageResource>
     - menu: Menu
     - location: Location
     - openingHours: OpeningHours
 }
 
 User "1" ---o "0..*" Shop : ownedBy <
+ImageResource "0..*" o-- "0..*" Shop : images >
 
 ' ----------------------------------- '
 
@@ -66,17 +64,12 @@ class Menu {
 class MenuItem {
     - name: String
     - description: String?
-    - price: ProductPrice
-    - inStock: Boolean
-}
-
-class ProductPrice {
     - price: String
+    - inStock: Boolean
 }
 
 Shop "1" *-- "1" Menu : menu >
 Menu "1" *-- "0..*" MenuItem : items >
-MenuItem "1" *-- "1" ProductPrice : productPrice >
 
 ' ----------------------------------- '
 
@@ -111,17 +104,12 @@ Shop "1" *-- "1" Location : location >
 
 class Review {
     - user: User
-    - shopId: UUID
+    - shop: Shop
     - rating: int
     - comment: String?
 }
 
-Shop "1" *-[hidden] "0..*" Review : reviews >
-
-' ----------------------------------- '
-
-class Image {
-    - url: String
-}
+Shop "1" *- "0..*" Review : reviews >
+User "1" *- "0..*" Review : reviews >
 
 @enduml
