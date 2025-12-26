@@ -52,19 +52,30 @@ rectangle "App" {
   }
 
   rectangle "Seller Use Cases" {
+
     usecase "Manage Shops" as ManageShops <<requires login>>
 
     usecase "Update Location" as UpdateLocation <<requires login>>
-    usecase "Update Contact Info" as UpdateContactInfo <<requires login>>
     usecase "Update Opening Hours" as UpdateOpeningHours <<requires login>>
     usecase "Manage Shop Products" as ManageShopProducts <<requires login>>
 
+    usecase "Edit Profile" as EditProfile <<requires login>>
+
+    usecase "Update Name" as UpdateName <<requires login>>
+    usecase "Update Profile Picture" as UpdateProfilePicture <<requires login>>
+    usecase "Update Contact Info" as UpdateContactInfo <<requires login>>
+
     Seller -- ManageShops
 
-    ManageShops <|-- UpdateLocation
-    ManageShops <|-- UpdateContactInfo
-    ManageShops <|-- UpdateOpeningHours
-    ManageShops <|-- ManageShopProducts
+    ManageShops <-- UpdateLocation : <<extend>>
+    ManageShops <-- UpdateOpeningHours : <<extend>>
+    ManageShops <-- ManageShopProducts : <<extend>>
+
+    Seller -- EditProfile
+
+    EditProfile <-- UpdateName : <<extend>>
+    EditProfile <-- UpdateProfilePicture : <<extend>>
+    EditProfile <-- UpdateContactInfo : <<extend>>
   }
 }
 
