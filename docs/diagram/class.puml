@@ -1,0 +1,121 @@
+@startuml
+
+skinparam backgroundColor #FFFFFF
+
+class ImageResource {
+    - url: String
+}
+
+' ----------------------------------- '
+
+class User {
+    - id: String
+    - name: String
+    - profilePicture: ImageResource?
+    - contactInfo: ContactInfo
+}
+
+User "1" -Lo "0..1" ImageResource : profilePicture >
+
+' ----------------------------------- '
+
+class ContactInfo {
+    - phone: String?
+    - email: String?
+    - website: String?
+    - facebook: String?
+    - instagram: String?
+}
+
+User "1" *- "1" ContactInfo : contactInfo >
+
+' ----------------------------------- '
+
+class Shop {
+    - id: UUID
+    - name: String?
+    - description: String?
+    - owner: User
+    - shopCategories: List<ShopCategory>
+    - images: List<ImageResource>
+    - menu: Menu
+    - location: Location
+    - openingHours: OpeningHours
+}
+
+User "1" ---o "0..*" Shop : ownedBy <
+
+Shop "1" -- "0..*" ImageResource : images >
+
+' ----------------------------------- '
+
+class ShopCategory {
+    - name: String
+    - color: Color
+}
+
+Shop "1" *-- "0..*" ShopCategory : categories >
+
+' ----------------------------------- '
+
+class Menu {
+    - items: List<MenuItem>
+}
+
+class MenuItem {
+    - name: String
+    - description: String?
+    - price: ProductPrice
+    - inStock: Boolean
+}
+
+class ProductPrice {
+    - price: String
+}
+
+Shop "1" *-- "1" Menu : menu >
+Menu "1" *-- "0..*" MenuItem : items >
+MenuItem "1" *-- "1" ProductPrice : productPrice >
+
+' ----------------------------------- '
+
+class OpeningHours {
+    - dayToHours: Map<DayOfWeek, String>
+}
+
+enum DayOfWeek {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+
+Shop "1" *-- "1" OpeningHours : openingHours >
+OpeningHours "1" *-- "0..*" DayOfWeek : dayToHours >
+
+' ----------------------------------- '
+
+class Location {
+    - address: String
+    - latitude: BigDecimal?
+    - longitude: BigDecimal?
+}
+
+Shop "1" *-- "1" Location : location >
+
+' ----------------------------------- '
+
+class Review {
+    - user: User
+    - shop: Shop
+    - rating: int
+    - comment: String?
+}
+
+Shop "1" -* "0..*" Review : reviews >
+User "1" -* "0..*" Review : reviews >
+
+@enduml
