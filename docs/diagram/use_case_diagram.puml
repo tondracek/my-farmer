@@ -3,10 +3,23 @@
 skinparam backgroundColor #FFFFFF
 left to right direction
 
+actor "User" as User
 actor "Customer" as Customer
 actor "Seller" as Seller
 
+User <|-- Customer
+User <|-- Seller
+
 rectangle "App" {
+
+  rectangle "Common Use Cases" {
+
+    usecase "Login/Register" as LoginRegisterCustomer
+    usecase "Logout" as LogoutCustomer
+
+    User -- LoginRegisterCustomer
+    User -- LogoutCustomer
+  }
 
   rectangle "Customer Use Cases" {
 
@@ -29,19 +42,13 @@ rectangle "App" {
     BrowseShopsList <-- FilterShops : <<extends>>
     BrowseShopsMap <-- FilterShops : <<extends>>
 
-    FilterShops <|-- FilterByCategory
-    FilterShops <|-- FilterByDistance
-    FilterShops <|-- FilterByRating
+    FilterShops <-- FilterByCategory : <<extends>>
+    FilterShops <-- FilterByDistance : <<extends>>
+    FilterShops <-- FilterByRating : <<extends>>
 
     Customer -- ViewShopDetails
     Customer -- RateShop
     RateShop <-- WriteReview : <<extends>>
-
-    usecase "Login/Register" as LoginRegisterCustomer
-    usecase "Logout" as LogoutCustomer
-
-    Customer -- LoginRegisterCustomer
-    Customer -- LogoutCustomer
   }
 
   rectangle "Seller Use Cases" {
@@ -58,12 +65,6 @@ rectangle "App" {
     ManageShops <|-- UpdateContactInfo
     ManageShops <|-- UpdateOpeningHours
     ManageShops <|-- ManageShopProducts
-
-    usecase "Login/Register" as LoginRegisterSeller
-    usecase "Logout" as LogoutSeller
-
-    Seller -- LoginRegisterSeller
-    Seller -- LogoutSeller
   }
 }
 
