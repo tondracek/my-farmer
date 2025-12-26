@@ -58,6 +58,7 @@ rectangle "App" {
     usecase "Update Location" as UpdateLocation <<requires login>>
     usecase "Update Opening Hours" as UpdateOpeningHours <<requires login>>
     usecase "Manage Shop Products" as ManageShopProducts <<requires login>>
+    usecase "Manage Product Categories" as ManageProductCategories <<requires login>>
 
     usecase "Edit Profile" as EditProfile <<requires login>>
 
@@ -70,6 +71,7 @@ rectangle "App" {
     ManageShops <-- UpdateLocation : <<extend>>
     ManageShops <-- UpdateOpeningHours : <<extend>>
     ManageShops <-- ManageShopProducts : <<extend>>
+    ManageShops <-- ManageProductCategories : <<extend>>
 
     Seller -- EditProfile
 
