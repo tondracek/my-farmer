@@ -9,10 +9,10 @@ actor "Seller" as Seller
 rectangle "App" {
 
   rectangle "Customer Use Cases" {
-    usecase "View Shop Details" as ViewShopDetails
 
     usecase "Browse Shops List" as BrowseShopsList
     usecase "Browse Shops Map" as BrowseShopsMap
+    usecase "View Shop Details" as ViewShopDetails
 
     usecase "Filter Shops" as FilterShops
 
@@ -20,11 +20,9 @@ rectangle "App" {
     usecase "Filter by Distance" as FilterByDistance
     usecase "Filter by Rating" as FilterByRating
 
-    usecase "Add Shop to Favorites" as AddShopToFavorites <<requires login>>
     usecase "Rate Shop" as RateShop <<requires login>>
     usecase "Write Review" as WriteReview <<requires login>>
 
-    Customer -- ViewShopDetails
     Customer -- BrowseShopsList
     Customer -- BrowseShopsMap
 
@@ -35,7 +33,7 @@ rectangle "App" {
     FilterShops <|-- FilterByDistance
     FilterShops <|-- FilterByRating
 
-    Customer -- AddShopToFavorites
+    Customer -- ViewShopDetails
     Customer -- RateShop
     RateShop <-- WriteReview : <<extends>>
 
