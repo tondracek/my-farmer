@@ -15,10 +15,22 @@ rectangle "App" {
   rectangle "Common Use Cases" {
 
     usecase "Login/Register" as LoginRegisterCustomer
-    usecase "Logout" as LogoutCustomer
+    usecase "Logout" as LogoutCustomer <<requires login>>
 
     User -- LoginRegisterCustomer
     User -- LogoutCustomer
+
+    usecase "Edit Profile" as EditProfile <<requires login>>
+
+    usecase "Update Name" as UpdateName <<requires login>>
+    usecase "Update Profile Picture" as UpdateProfilePicture <<requires login>>
+    usecase "Update Contact Info" as UpdateContactInfo <<requires login>>
+
+    User -- EditProfile
+
+    EditProfile <-- UpdateName : <<extend>>
+    EditProfile <-- UpdateProfilePicture : <<extend>>
+    EditProfile <-- UpdateContactInfo : <<extend>>
   }
 
   rectangle "Customer Use Cases" {
@@ -60,24 +72,12 @@ rectangle "App" {
     usecase "Manage Shop Products" as ManageShopProducts <<requires login>>
     usecase "Manage Product Categories" as ManageProductCategories <<requires login>>
 
-    usecase "Edit Profile" as EditProfile <<requires login>>
-
-    usecase "Update Name" as UpdateName <<requires login>>
-    usecase "Update Profile Picture" as UpdateProfilePicture <<requires login>>
-    usecase "Update Contact Info" as UpdateContactInfo <<requires login>>
-
     Seller -- ManageShops
 
     ManageShops <-- UpdateLocation : <<extend>>
     ManageShops <-- UpdateOpeningHours : <<extend>>
     ManageShops <-- ManageShopProducts : <<extend>>
     ManageShops <-- ManageProductCategories : <<extend>>
-
-    Seller -- EditProfile
-
-    EditProfile <-- UpdateName : <<extend>>
-    EditProfile <-- UpdateProfilePicture : <<extend>>
-    EditProfile <-- UpdateContactInfo : <<extend>>
   }
 }
 
