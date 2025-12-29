@@ -29,7 +29,7 @@ class ContactInfo {
     - instagram: String?
 }
 
-User "1" *- "1" ContactInfo : contactInfo >
+User "1" *-U- "1" ContactInfo : contactInfo >
 
 ' ----------------------------------- '
 
@@ -45,9 +45,9 @@ class Shop {
     - openingHours: OpeningHours
 }
 
-User "1" ---o "0..*" Shop : ownedBy <
+User "1" --o "0..*" Shop : ownedBy <
 
-Shop "1" -- "0..*" ImageResource : images >
+Shop "1" -U- "0..*" ImageResource : images >
 
 ' ----------------------------------- '
 

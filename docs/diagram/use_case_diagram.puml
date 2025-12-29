@@ -1,6 +1,8 @@
 @startuml
 
 skinparam defaultFontSize 18
+skinparam nodesep 15
+skinparam ranksep 15
 
 skinparam backgroundColor #FFFFFF
 left to right direction
