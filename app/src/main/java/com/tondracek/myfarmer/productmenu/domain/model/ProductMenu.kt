@@ -11,11 +11,11 @@ data class ProductMenu(
 data class MenuItem(
     val name: String,
     val description: String,
-    val price: ProductPrice,
+    val price: PriceLabel,
     val inStock: Boolean,
 )
 
-data class ProductPrice(
+data class PriceLabel(
     val value: String,
 ) {
     override fun toString(): String = value

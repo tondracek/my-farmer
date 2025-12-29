@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.productmenu.data
 
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
-import com.tondracek.myfarmer.productmenu.domain.model.ProductPrice
+import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,12 +14,12 @@ data class ProductMenuEntity(
 data class MenuItemEntity(
     var name: String = "",
     var description: String = "",
-    var price: ProductPriceEntity = ProductPriceEntity(),
+    var price: PriceLabelEntity = PriceLabelEntity(),
     var inStock: Boolean = true,
 )
 
 @Serializable
-data class ProductPriceEntity(
+data class PriceLabelEntity(
     var value: String = "",
 )
 
@@ -28,7 +28,7 @@ fun ProductMenuEntity.toModel() = ProductMenu(
         MenuItem(
             name = itemEntity.name,
             description = itemEntity.description,
-            price = ProductPrice(value = itemEntity.price.value),
+            price = PriceLabel(value = itemEntity.price.value),
             inStock = itemEntity.inStock,
         )
     }
@@ -39,7 +39,7 @@ fun ProductMenu.toEntity() = ProductMenuEntity(
         MenuItemEntity(
             name = menuItem.name,
             description = menuItem.description,
-            price = ProductPriceEntity(value = menuItem.price.value),
+            price = PriceLabelEntity(value = menuItem.price.value),
             inStock = menuItem.inStock,
         )
     }

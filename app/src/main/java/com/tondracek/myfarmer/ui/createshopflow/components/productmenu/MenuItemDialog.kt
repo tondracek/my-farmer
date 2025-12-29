@@ -16,7 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
-import com.tondracek.myfarmer.productmenu.domain.model.ProductPrice
+import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
 
 @Composable
 fun AddMenuItemDialog(
@@ -54,7 +54,7 @@ fun AddMenuItemDialog(
                     MenuItem(
                         name = name,
                         description = description,
-                        price = ProductPrice(price),
+                        price = PriceLabel(price),
                         inStock = inStock,
                     )
                 )
@@ -103,7 +103,7 @@ fun EditMenuItemDialog(
                     menuItem.copy(
                         name = name,
                         description = description,
-                        price = ProductPrice(price),
+                        price = PriceLabel(price),
                         inStock = inStock,
                     )
                 )

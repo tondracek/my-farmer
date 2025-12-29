@@ -5,7 +5,7 @@ import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
-import com.tondracek.myfarmer.productmenu.domain.model.ProductPrice
+import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.shop.domain.model.Shop
@@ -52,25 +52,25 @@ val shop0 = Shop(
             MenuItem(
                 name = "Med",
                 description = "Kvalitní med z naší domácí produkce.",
-                price = ProductPrice("150 CZK / kg"),
+                price = PriceLabel("150 CZK / kg"),
                 inStock = true,
             ),
             MenuItem(
                 name = "Včelí vosk",
                 description = "Přírodní včelí vosk pro různé využití.",
-                price = ProductPrice("200 CZK / kg"),
+                price = PriceLabel("200 CZK / kg"),
                 inStock = true,
             ),
             MenuItem(
                 name = "Propolis",
                 description = "Léčivá pryskyřice sbíraná včelami.",
-                price = ProductPrice("300 CZK / 100 g"),
+                price = PriceLabel("300 CZK / 100 g"),
                 inStock = false,
             ),
             MenuItem(
                 name = "Rámky na plástve",
                 description = "Dřevěné rámky pro včelí plástve.",
-                price = ProductPrice("50 CZK / kus"),
+                price = PriceLabel("50 CZK / kus"),
                 inStock = true,
             )
         )
@@ -197,7 +197,7 @@ val shop2 = Shop(
         listOf(
             MenuItem(
                 name = "Vejce",
-                price = ProductPrice("30 CZK / 10 ks"),
+                price = PriceLabel("30 CZK / 10 ks"),
                 description = "Otevřený výběh slepic",
                 inStock = true,
             ),
@@ -249,7 +249,7 @@ val shop3 = Shop(
             MenuItem(
                 name = "Vepřové maso",
                 description = "Z domácího chovu",
-                price = ProductPrice("200 CZK / kg"),
+                price = PriceLabel("200 CZK / kg"),
                 inStock = false,
             ),
         )

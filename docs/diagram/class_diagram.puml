@@ -65,17 +65,17 @@ class Menu {
 class MenuItem {
     - name: String
     - description: String?
-    - price: ProductPrice
+    - price: PriceLabel
     - inStock: Boolean
 }
 
-class ProductPrice {
+class PriceLabel {
     - price: String
 }
 
 Shop "1" *-- "1" Menu : menu >
 Menu "1" *-- "0..*" MenuItem : items >
-MenuItem "1" *-- "1" ProductPrice : productPrice >
+MenuItem "1" *-- "1" PriceLabel : priceLabel >
 
 ' ----------------------------------- '
 
