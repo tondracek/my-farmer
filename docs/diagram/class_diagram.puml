@@ -15,7 +15,7 @@ class User {
     - contactInfo: ContactInfo
 }
 
-User "1" -Lo "0..1" ImageResource : profilePicture >
+User "1" *-L "0..1" ImageResource : profilePicture >
 
 ' ----------------------------------- '
 
@@ -45,7 +45,7 @@ class Shop {
 
 User "1" --o "0..*" Shop : ownedBy <
 
-Shop "1" -U- "0..*" ImageResource : images >
+Shop "1" *-U- "0..*" ImageResource : images >
 
 ' ----------------------------------- '
 
