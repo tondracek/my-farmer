@@ -1,6 +1,5 @@
 @startuml
 
-skinparam defaultFontSize 18
 skinparam nodesep 15
 skinparam ranksep 15
 
@@ -11,8 +10,8 @@ actor "User" as User
 actor "Customer" as Customer
 actor "Seller" as Seller
 
-User <|-- Customer
-User <|-- Seller
+Customer -|> User
+Seller -|> User
 
 rectangle "App" {
 
