@@ -9,7 +9,7 @@ class ImageResource {
 ' ----------------------------------- '
 
 class User {
-    - id: String
+    - id: UUID
     - name: String
     - profilePicture: ImageResource?
     - contactInfo: ContactInfo
