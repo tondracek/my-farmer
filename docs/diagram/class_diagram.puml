@@ -1,5 +1,7 @@
 @startuml
 
+skinparam defaultFontSize 18
+
 skinparam backgroundColor #FFFFFF
 
 class ImageResource {
