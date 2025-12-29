@@ -79,22 +79,20 @@ MenuItem "1" *-- "1" PriceLabel : priceLabel >
 
 ' ----------------------------------- '
 
-class OpeningHours {
+interface OpeningHours
+
+class TimeOpeningHours {
     - dayToHours: Map<DayOfWeek, String>
 }
 
-enum DayOfWeek {
-    MONDAY
-    TUESDAY
-    WEDNESDAY
-    THURSDAY
-    FRIDAY
-    SATURDAY
-    SUNDAY
+class MessageOpeningHours {
+    - message: String
 }
 
+OpeningHours <|-- TimeOpeningHours
+OpeningHours <|-- MessageOpeningHours
+
 Shop "1" *-- "1" OpeningHours : openingHours >
-OpeningHours "1" *-- "0..*" DayOfWeek : dayToHours >
 
 ' ----------------------------------- '
 
@@ -109,6 +107,7 @@ Shop "1" *-- "1" Location : location >
 ' ----------------------------------- '
 
 class Review {
+    - id: UUID
     - user: User
     - shop: Shop
     - rating: int
