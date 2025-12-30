@@ -114,7 +114,7 @@ class Review {
     - comment: String?
 }
 
-Shop "1" *- "0..*" Review : reviews >
-Review -> User : author
+Shop "1" - "0..*" Review
+User "1" -- "0..*" Review : author
 
 @enduml
