@@ -108,13 +108,13 @@ Shop "1" *-- "1" Location : location >
 
 class Review {
     - id: UUID
-    - user: User
+    - author: User
     - shop: Shop
     - rating: int
     - comment: String?
 }
 
-Shop "1" -* "0..*" Review : reviews >
-User "1" -* "0..*" Review : reviews >
+Shop "1" *- "0..*" Review : reviews >
+Review -> User : author
 
 @enduml
