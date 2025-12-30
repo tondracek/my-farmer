@@ -1,0 +1,120 @@
+@startuml
+
+skinparam backgroundColor #FFFFFF
+
+class ImageResource {
+    - url: String
+}
+
+' ----------------------------------- '
+
+class User {
+    - id: UUID
+    - name: String
+    - profilePicture: ImageResource?
+    - contactInfo: ContactInfo
+}
+
+User "1" *-L "0..1" ImageResource : profilePicture >
+
+' ----------------------------------- '
+
+class ContactInfo {
+    - phone: String?
+    - email: String?
+    - website: String?
+    - facebook: String?
+    - instagram: String?
+}
+
+User "1" *-U- "1" ContactInfo : contactInfo >
+
+' ----------------------------------- '
+
+class Shop {
+    - id: UUID
+    - name: String?
+    - description: String?
+    - owner: User
+    - shopCategories: List<ShopCategory>
+    - images: List<ImageResource>
+    - menu: Menu
+    - location: Location
+    - openingHours: OpeningHours
+}
+
+User "1" --o "0..*" Shop : ownedBy <
+
+Shop "1" *-U- "0..*" ImageResource : images >
+
+' ----------------------------------- '
+
+class ShopCategory {
+    - name: String
+    - color: Color
+}
+
+'owned by shop, filtering done using normalized names
+Shop "1" *-- "0..*" ShopCategory : categories >
+
+' ----------------------------------- '
+
+class Menu {
+    - items: List<MenuItem>
+}
+
+class MenuItem {
+    - name: String
+    - description: String?
+    - price: PriceLabel
+    - inStock: Boolean
+}
+
+class PriceLabel {
+    - price: String
+}
+
+Shop "1" *-- "1" Menu : menu >
+Menu "1" *-- "0..*" MenuItem : items >
+MenuItem "1" *-- "1" PriceLabel : priceLabel >
+
+' ----------------------------------- '
+
+interface OpeningHours
+
+class TimeOpeningHours {
+    - dayToHours: Map<DayOfWeek, String>
+}
+
+class MessageOpeningHours {
+    - message: String
+}
+
+OpeningHours <|-- TimeOpeningHours
+OpeningHours <|-- MessageOpeningHours
+
+Shop "1" *-- "1" OpeningHours : openingHours >
+
+' ----------------------------------- '
+
+class Location {
+    - latitude: BigDecimal?
+    - longitude: BigDecimal?
+}
+
+Shop "1" *-- "1" Location : location >
+
+' ----------------------------------- '
+
+class Review {
+    - id: UUID
+    - author: User
+    - shop: Shop
+    - rating: int
+    - comment: String?
+}
+
+Shop "1" - "0..*" Review
+User "1" -- "0..*" Review : author
+
+@enduml

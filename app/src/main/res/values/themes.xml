@@ -2,4 +2,50 @@
 <resources>
 
     <style name="Theme.MyFarmer" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.MyFarmer.FirebaseAuth" parent="Theme.Material3.Light">
+
+        <!-- Remove Bar -->
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <item name="android:statusBarColor">@color/mf_surface</item>
+        <item name="android:navigationBarColor">@color/mf_surface</item>
+
+        <!-- Primary -->
+        <item name="colorPrimary">@color/mf_primary</item>
+        <item name="colorOnPrimary">@color/mf_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/mf_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/mf_onPrimaryContainer</item>
+
+        <!-- Secondary -->
+        <item name="colorSecondary">@color/mf_secondary</item>
+        <item name="colorOnSecondary">@color/mf_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/mf_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/mf_onSecondaryContainer</item>
+
+        <!-- Tertiary -->
+        <item name="colorTertiary">@color/mf_tertiary</item>
+        <item name="colorOnTertiary">@color/mf_onTertiary</item>
+
+        <!-- Background & Surface -->
+        <item name="android:colorBackground">@color/mf_background</item>
+        <item name="colorOnBackground">@color/mf_onBackground</item>
+
+        <item name="colorSurface">@color/mf_surface</item>
+        <item name="colorOnSurface">@color/mf_onSurface</item>
+        <item name="colorSurfaceVariant">@color/mf_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/mf_onSurfaceVariant</item>
+
+        <!-- Outline -->
+        <item name="colorOutline">@color/mf_outline</item>
+
+        <!-- Error -->
+        <item name="colorError">@color/mf_error</item>
+        <item name="colorOnError">@color/mf_onError</item>
+
+    </style>
+
 </resources>

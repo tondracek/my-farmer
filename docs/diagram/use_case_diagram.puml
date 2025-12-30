@@ -1,0 +1,87 @@
+@startuml
+
+skinparam nodesep 15
+skinparam ranksep 15
+
+skinparam backgroundColor #FFFFFF
+left to right direction
+
+actor "User" as User
+actor "Customer" as Customer
+actor "Seller" as Seller
+
+Customer -|> User
+Seller -|> User
+
+rectangle "App" {
+
+  rectangle "Common Use Cases" {
+
+    usecase "Login/Register" as LoginRegisterCustomer
+    usecase "Logout" as LogoutCustomer <<requires login>>
+
+    User -- LoginRegisterCustomer
+    User -- LogoutCustomer
+
+    usecase "Edit Profile" as EditProfile <<requires login>>
+
+    usecase "Update Name" as UpdateName <<requires login>>
+    usecase "Update Profile Picture" as UpdateProfilePicture <<requires login>>
+    usecase "Update Contact Info" as UpdateContactInfo <<requires login>>
+
+    User -- EditProfile
+
+    EditProfile <-- UpdateName : <<extend>>
+    EditProfile <-- UpdateProfilePicture : <<extend>>
+    EditProfile <-- UpdateContactInfo : <<extend>>
+  }
+
+  rectangle "Customer Use Cases" {
+
+    usecase "Browse Shops List" as BrowseShopsList
+    usecase "Browse Shops Map" as BrowseShopsMap
+    usecase "View Shop Details" as ViewShopDetails
+
+    usecase "Filter Shops" as FilterShops
+
+    usecase "Filter by Product Category" as FilterByCategory
+    usecase "Filter by Distance" as FilterByDistance
+    usecase "Filter by Rating" as FilterByRating
+
+    usecase "Rate Shop" as RateShop <<requires login>>
+    usecase "Write Review" as WriteReview <<requires login>>
+
+    Customer -- BrowseShopsList
+    Customer -- BrowseShopsMap
+
+    BrowseShopsList <-- FilterShops : <<extends>>
+    BrowseShopsMap <-- FilterShops : <<extends>>
+
+    FilterShops <-- FilterByCategory : <<extends>>
+    FilterShops <-- FilterByDistance : <<extends>>
+    FilterShops <-- FilterByRating : <<extends>>
+
+    Customer -- ViewShopDetails
+    Customer -- RateShop
+    RateShop <-- WriteReview : <<extends>>
+  }
+
+  rectangle "Seller Use Cases" {
+
+    usecase "Manage Shops" as ManageShops <<requires login>>
+
+    usecase "Update Location" as UpdateLocation <<requires login>>
+    usecase "Update Opening Hours" as UpdateOpeningHours <<requires login>>
+    usecase "Manage Shop Products" as ManageShopProducts <<requires login>>
+    usecase "Manage Product Categories" as ManageProductCategories <<requires login>>
+
+    Seller -- ManageShops
+
+    ManageShops <-- UpdateLocation : <<extend>>
+    ManageShops <-- UpdateOpeningHours : <<extend>>
+    ManageShops <-- ManageShopProducts : <<extend>>
+    ManageShops <-- ManageProductCategories : <<extend>>
+  }
+}
+
+@enduml

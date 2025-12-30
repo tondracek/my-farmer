@@ -1,0 +1,21 @@
+package com.tondracek.myfarmer.ui.createshopflow.components.addcategorydialog
+
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavGraphBuilder
+import com.stefanoq21.material3.navigation.bottomSheet
+import com.tondracek.myfarmer.ui.core.navigation.Route
+
+fun NavGraphBuilder.addCategoryDialogDestination() = bottomSheet<Route.AddCategoryDialog> {
+    val viewmodel: AddCategoryViewModel = hiltViewModel()
+    val state by viewmodel.state.collectAsState()
+
+    AddCategoryDialog(
+        state = state,
+        onCategoryNameChange = viewmodel::onCategoryNameChange,
+        onColorSelected = viewmodel::onColorSelected,
+        onAdd = viewmodel::onAddCategory,
+        onDismiss = viewmodel::onDismissRequest
+    )
+}
