@@ -54,6 +54,7 @@ class ShopCategory {
     - color: Color
 }
 
+'owned by shop, filtering done using normalized names
 Shop "1" *-- "0..*" ShopCategory : categories >
 
 ' ----------------------------------- '
@@ -97,7 +98,6 @@ Shop "1" *-- "1" OpeningHours : openingHours >
 ' ----------------------------------- '
 
 class Location {
-    - address: String
     - latitude: BigDecimal?
     - longitude: BigDecimal?
 }
