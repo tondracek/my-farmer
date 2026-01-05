@@ -1,9 +1,11 @@
 package com.tondracek.myfarmer.ui.mainshopscreen
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
+import com.tondracek.myfarmer.ui.core.appstate.collectEvents
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListView
@@ -19,6 +21,7 @@ fun NavGraphBuilder.mainShopsScreenDestination() = routeDestination<Route.MainSh
 
     val shopsMapViewModel: ShopsMapViewModel = hiltViewModel()
     val shopsMapViewState by shopsMapViewModel.state.collectAsState()
+    LaunchedEffect(Unit) { it.collectEvents(shopsMapViewModel.events) }
 
     val shopsListViewModel: ShopsListViewModel = hiltViewModel()
     val shopsListViewState by shopsListViewModel.state.collectAsState()

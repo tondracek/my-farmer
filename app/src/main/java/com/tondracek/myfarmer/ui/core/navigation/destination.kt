@@ -14,14 +14,14 @@ inline fun <reified T : Route> NavGraphBuilder.routeDestination(
     showTopBar: Boolean = AppUiState.INITIAL_SHOW_TOP_BAR,
     crossinline content: @Composable (appUiController: AppUiController) -> Unit
 ) = composable<T> {
+    val appUiController = LocalAppUiController.current
+
     val appUiState = AppUiState(
         title = title(),
         applyTopBarPadding = applyTopBarPadding,
         showTopBar = showTopBar
     )
-
-    val appUiController = LocalAppUiController.current
-    LaunchedEffect(Unit) {
+    LaunchedEffect(appUiState) {
         appUiController.apply(appUiState)
     }
 

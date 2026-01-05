@@ -6,8 +6,11 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +28,7 @@ import com.tondracek.myfarmer.ui.common.navbar.BottomNavigationBar
 import com.tondracek.myfarmer.ui.common.navbar.NavBarViewModel
 import com.tondracek.myfarmer.ui.common.topbar.FloatingTopBar
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.core.uievents.MyFarmerSnackBar
 
 @Composable
 fun AppScaffold(
@@ -39,6 +43,14 @@ fun AppScaffold(
     val appUiController = remember { AppUiController() }
     val appUiState by appUiController.state.collectAsState()
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        appUiController.errors.collect { errorMessage ->
+            snackbarHostState.showSnackbar(errorMessage)
+        }
+    }
+
     CompositionLocalProvider(
         LocalAppUiController provides appUiController,
     ) {
@@ -49,6 +61,13 @@ fun AppScaffold(
                 BottomNavigationBar(
                     state = navBarState,
                     onNavigate = navBarViewModel::onNavigate
+                )
+            },
+            snackbarHost = {
+                SnackbarHost(
+                    modifier = Modifier.padding(16.dp),
+                    hostState = snackbarHostState,
+                    snackbar = { MyFarmerSnackBar(snackbarData = it) }
                 )
             }
         ) { innerPadding ->

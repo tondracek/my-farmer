@@ -39,6 +39,9 @@ data class MyFarmerCardColors(
     }
 }
 
+@Composable
+fun Color.toCardColors(): CardColors = MyFarmerTheme.cardColors.custom(this)
+
 val myFarmerCardColors
     @Composable get() = MyFarmerCardColors(
         base = CardDefaults.cardColors(),
