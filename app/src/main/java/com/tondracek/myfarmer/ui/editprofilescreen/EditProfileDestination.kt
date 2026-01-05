@@ -9,9 +9,9 @@ import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 
-fun NavGraphBuilder.editProfileDestination() = routeDestination<Route.EditProfileScreenRoute>(
-    title = { stringResource(R.string.edit_profile) }
-) {
+fun NavGraphBuilder.editProfileDestination() = routeDestination<Route.EditProfileScreenRoute>({
+    title = stringResource(R.string.edit_profile)
+}) {
     val viewmodel: EditProfileViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()
 

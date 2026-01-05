@@ -13,9 +13,9 @@ import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListViewModel
 import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapView
 import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapViewModel
 
-fun NavGraphBuilder.mainShopsScreenDestination() = routeDestination<Route.MainShopsRoute>(
-    applyTopBarPadding = false,
-) {
+fun NavGraphBuilder.mainShopsScreenDestination() = routeDestination<Route.MainShopsRoute>({
+    applyTopBarPadding = false
+}) {
     val mainShopsScreenViewModel: MainShopsScreenViewModel = hiltViewModel()
     val mainShopsScreenViewState by mainShopsScreenViewModel.state.collectAsState()
 

@@ -19,9 +19,9 @@ fun SavedStateHandle.getUpdateShopScreenShopId(): ShopId =
     toRoute<Route.UpdateShop>().shopId
         .let { UUID.fromString(it) }
 
-fun NavGraphBuilder.updateShopDestination() = routeDestination<Route.UpdateShop>(
-    title = { stringResource(R.string.update_shop_title) },
-) {
+fun NavGraphBuilder.updateShopDestination() = routeDestination<Route.UpdateShop>({
+    title = stringResource(R.string.update_shop_title)
+}) {
     val viewModel: UpdateShopViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 

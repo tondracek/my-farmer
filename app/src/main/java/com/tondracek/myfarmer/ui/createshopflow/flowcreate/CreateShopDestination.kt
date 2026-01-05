@@ -11,9 +11,9 @@ import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 import com.tondracek.myfarmer.ui.createshopflow.CreateShopFlowMode
 import com.tondracek.myfarmer.ui.createshopflow.CreateShopFlowScreen
 
-fun NavGraphBuilder.createShopDestination() = routeDestination<Route.CreateShop>(
-    title = { stringResource(R.string.create_shop_title) },
-) {
+fun NavGraphBuilder.createShopDestination() = routeDestination<Route.CreateShop>({
+    title = stringResource(R.string.create_shop_title)
+}) {
     val viewModel: CreateShopViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 

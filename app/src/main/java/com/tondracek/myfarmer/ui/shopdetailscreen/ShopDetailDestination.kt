@@ -16,9 +16,9 @@ fun SavedStateHandle.getShopDetailScreenShopId(): ShopId =
     toRoute<Route.ShopDetailRoute>().shopId
         .let { ShopId.fromString(it) }
 
-fun NavGraphBuilder.shopDetailScreenDestination() = routeDestination<Route.ShopDetailRoute>(
-    title = { stringResource(R.string.shop_detail) }
-) {
+fun NavGraphBuilder.shopDetailScreenDestination() = routeDestination<Route.ShopDetailRoute>({
+    title = stringResource(R.string.shop_detail)
+}) {
     val viewmodel: ShopDetailViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()
 

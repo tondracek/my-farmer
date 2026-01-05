@@ -9,10 +9,10 @@ import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 
-fun NavGraphBuilder.myShopsScreenDestination() = routeDestination<Route.MyShopsRoute>(
-    title = { stringResource(R.string.my_shops) },
-    applyTopBarPadding = false,
-) {
+fun NavGraphBuilder.myShopsScreenDestination() = routeDestination<Route.MyShopsRoute>({
+    title = stringResource(R.string.my_shops)
+    applyTopBarPadding = false
+}) {
     val viewModel: MyShopsViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 

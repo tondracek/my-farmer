@@ -54,6 +54,7 @@ sealed interface Route {
             CreateShop::class,
             UpdateShop::class,
             AddCategoryDialog::class,
+            ShopFilterDialog::class,
         )
 
         fun getRouteClass(route: NavBackStackEntry): KClass<out Route>? =

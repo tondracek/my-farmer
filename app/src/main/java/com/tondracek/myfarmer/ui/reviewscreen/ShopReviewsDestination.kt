@@ -14,9 +14,9 @@ fun SavedStateHandle.getReviewsScreenShopId(): UUID =
     this.toRoute<Route.ShopReviews>()
         .let { UUID.fromString(it.shopId) }
 
-fun NavGraphBuilder.shopReviewsScreenDestination() = routeDestination<Route.ShopReviews>(
-    showTopBar = false,
-) {
+fun NavGraphBuilder.shopReviewsScreenDestination() = routeDestination<Route.ShopReviews>({
+    showTopBar = false
+}) {
     val viewmodel: ShopReviewsViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()
 
