@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.common.image.usecase
+package com.tondracek.myfarmer.ui.common.map.marker
 
 import android.content.Context
 import android.graphics.drawable.Drawable

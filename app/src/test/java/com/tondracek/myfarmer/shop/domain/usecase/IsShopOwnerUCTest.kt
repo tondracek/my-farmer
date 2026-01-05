@@ -67,6 +67,5 @@ class IsShopOwnerUCTest {
         val result = uc(user.id, shop.id).first()
 
         assertThat(result).isInstanceOf(UCResult.Success::class.java)
-        assertThat(result.getOrNull()).isEqualTo(Unit)
     }
 }

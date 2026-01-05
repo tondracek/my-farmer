@@ -83,7 +83,7 @@ class UCResultExtensionsTest {
     fun `mapFlowUCSuccess maps Success values`() = runTest {
         val flow = flowOf(UCResult.Success(2))
 
-        val mapped = flow.mapFlowUCSuccess { it * 3 }.first()
+        val mapped = flow.mapSuccessFlow { it * 3 }.first()
 
         assertThat((mapped as UCResult.Success).data).isEqualTo(6)
     }
@@ -93,26 +93,7 @@ class UCResultExtensionsTest {
         val failure = UCResult.Failure("Oops")
         val flow: Flow<UCResult<*>> = flowOf(failure)
 
-        val mapped = flow.mapFlowUCSuccess { it.toString() }.first()
-
-        assertThat(mapped).isEqualTo(failure)
-    }
-
-    @Test
-    fun `mapFlowUCSuccessFlat maps Success values`() = runTest {
-        val flow = flowOf(UCResult.Success(2))
-
-        val mapped = flow.mapFlowUCSuccessFlat { UCResult.Success("Hello") }.first()
-
-        assertThat((mapped as UCResult.Success).data).isEqualTo("Hello")
-    }
-
-    @Test
-    fun `mapFlowUCSuccessFlat passes through Failure`() = runTest {
-        val failure = UCResult.Failure("Oops")
-        val flow: Flow<UCResult<*>> = flowOf(failure)
-
-        val mapped = flow.mapFlowUCSuccessFlat { UCResult.Success("Hello") }.first()
+        val mapped = flow.mapSuccessFlow { it.toString() }.first()
 
         assertThat(mapped).isEqualTo(failure)
     }
@@ -122,7 +103,7 @@ class UCResultExtensionsTest {
         val flow = flowOf(UCResult.Success(3))
 
         val output = flow.flatMapSuccess { value ->
-            flowOf(value * 4)
+            flowOf(UCResult.of(value * 4))
         }.first()
 
         assertThat((output as UCResult.Success).data).isEqualTo(12)
@@ -133,7 +114,7 @@ class UCResultExtensionsTest {
         val failure = UCResult.Failure("Broken")
         val flow = flowOf(failure)
 
-        val output = flow.flatMapSuccess { flowOf(99) }.first()
+        val output = flow.flatMapSuccess { flowOf(UCResult.of(99)) }.first()
 
         assertThat(output).isEqualTo(failure)
     }
@@ -143,7 +124,11 @@ class UCResultExtensionsTest {
         val flow = flowOf(UCResult.Success(2))
 
         val output = flow.flatMapSuccess { value ->
-            flowOf(value, value + 1, value + 2)
+            flowOf(
+                UCResult.of(value),
+                UCResult.of(value + 1),
+                UCResult.of(value + 2)
+            )
         }.toList()
 
         assertThat(output.map { (it as UCResult.Success).data })

@@ -15,11 +15,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
+import com.tondracek.myfarmer.ui.common.map.marker.ShopIconMarker
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -77,14 +76,13 @@ fun ShopsMapView(
         contentPadding = PaddingValues(vertical = MyFarmerTheme.paddings.xxL)
     ) {
         state.shops.forEach { shop ->
-            Marker(
-                state = MarkerState(shop.location.toLatLng()),
+            ShopIconMarker(
+                shop = shop,
                 onClick = {
                     onShopSelected(shop.id)
                     zoomToShop(shop.location)
-                    return@Marker false
-                },
-                icon = shop.markerIcon,
+                    return@ShopIconMarker true
+                }
             )
         }
     }

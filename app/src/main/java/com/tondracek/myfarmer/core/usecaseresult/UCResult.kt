@@ -64,6 +64,8 @@ sealed interface UCResult<out T> {
     }
 
     companion object {
+        fun <T> of(data: T): UCResult<T> = Success(data)
+
         inline fun <T> of(
             userError: String = "Unexpected error occurred.",
             block: () -> T,
@@ -115,21 +117,19 @@ inline fun <T> UCResult<T>.getOrElse(defaultValue: (Failure) -> T): T = when (th
     is Failure -> defaultValue(this)
 }
 
-fun <T, R> Flow<UCResult<T>>.mapFlowUCSuccess(transform: (T) -> R): Flow<UCResult<R>> =
+fun <T, R> Flow<UCResult<T>>.mapSuccessFlow(transform: suspend (T) -> R): Flow<UCResult<R>> =
     this.map { result ->
-        result.mapSuccess { transform(it) }
-    }
-
-fun <T, R> Flow<UCResult<T>>.mapFlowUCSuccessFlat(transform: (T) -> UCResult<R>): Flow<UCResult<R>> =
-    this.map { result ->
-        result.mapSuccessFlat { transform(it) }
+        when (result) {
+            is Success -> UCResult.of { transform(result.data) }
+            is Failure -> result
+        }
     }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-fun <T, R> Flow<UCResult<T>>.flatMapSuccess(transform: (T) -> Flow<R>): Flow<UCResult<R>> =
+fun <T, R> Flow<UCResult<T>>.flatMapSuccess(transform: (T) -> Flow<UCResult<R>>): Flow<UCResult<R>> =
     this.flatMapLatest { result ->
         when (result) {
-            is Success -> transform(result.data).map { Success(it) }
+            is Success -> transform(result.data)
             is Failure -> flowOf(result)
         }
     }

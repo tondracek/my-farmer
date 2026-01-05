@@ -44,7 +44,7 @@ fun AppScaffold(
     ) {
         Scaffold(
             modifier = modifier,
-            containerColor = MyFarmerTheme.colors.surfaceContainer,
+            containerColor = MyFarmerTheme.colors.surface,
             bottomBar = {
                 BottomNavigationBar(
                     state = navBarState,
