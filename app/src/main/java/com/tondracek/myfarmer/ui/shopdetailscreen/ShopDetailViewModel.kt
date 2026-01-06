@@ -16,16 +16,17 @@ import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.usecase.GetUserByIdUC
 import com.tondracek.myfarmer.systemuser.domain.usecase.GetUsersByIdsUC
 import com.tondracek.myfarmer.ui.common.review.toUiState
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import com.tondracek.myfarmer.ui.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -37,7 +38,6 @@ class ShopDetailViewModel @Inject constructor(
     getUsersByIds: GetUsersByIdsUC,
     getReviewsPreview: GetReviewsPreviewUC,
     getShopAverageRating: GetShopAverageRatingUC,
-    private val navigator: AppNavigator
 ) : ViewModel() {
 
     private val shopId: ShopId = savedStateHandle.getShopDetailScreenShopId()
@@ -78,7 +78,19 @@ class ShopDetailViewModel @Inject constructor(
         initialValue = ShopDetailState.Loading
     )
 
-    fun navigateToReviews() = navigator.navigate(Route.ShopReviews(shopId.toString()))
+    private val _effects = MutableSharedFlow<ShopDetailEffect>(extraBufferCapacity = 1)
+    val effects: SharedFlow<ShopDetailEffect> = _effects
 
-    fun navigateBack() = navigator.navigateBack()
+    fun navigateToReviews() = viewModelScope.launch {
+        _effects.emit(ShopDetailEffect.NavigateToReviews(shopId))
+    }
+
+    fun navigateBack() = viewModelScope.launch {
+        _effects.emit(ShopDetailEffect.NavigateBack)
+    }
+}
+
+sealed interface ShopDetailEffect {
+    object NavigateBack : ShopDetailEffect
+    data class NavigateToReviews(val shopId: ShopId) : ShopDetailEffect
 }

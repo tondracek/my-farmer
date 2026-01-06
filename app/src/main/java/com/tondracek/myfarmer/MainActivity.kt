@@ -13,7 +13,6 @@ import com.stefanoq21.material3.navigation.ModalBottomSheetLayout
 import com.stefanoq21.material3.navigation.rememberBottomSheetNavigator
 import com.tondracek.myfarmer.ui.authscreen.authScreenDestination
 import com.tondracek.myfarmer.ui.core.appstate.AppScaffold
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.createshopflow.components.addcategorydialog.addCategoryDialogDestination
@@ -28,13 +27,9 @@ import com.tondracek.myfarmer.ui.shopdetailscreen.shopDetailScreenDestination
 import com.tondracek.myfarmer.ui.shopfilterdialog.shopsFilterDialogDestination
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    @Inject
-    lateinit var navigator: AppNavigator
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,9 +43,8 @@ class MainActivity : ComponentActivity() {
             MyFarmerTheme {
                 val bottomSheetNavigator = rememberBottomSheetNavigator()
                 val navController = rememberNavController(bottomSheetNavigator)
-                navigator.navController = navController
 
-                AppScaffold {
+                AppScaffold(navController) {
                     ModalBottomSheetLayout(
                         modifier = Modifier.fillMaxSize(),
                         bottomSheetNavigator = bottomSheetNavigator,
@@ -61,20 +55,20 @@ class MainActivity : ComponentActivity() {
                         ) {
                             mainShopsScreenDestination(navController)
 
-                            shopDetailScreenDestination()
-                            shopReviewsScreenDestination()
+                            shopDetailScreenDestination(navController)
+                            shopReviewsScreenDestination(navController)
 
-                            editProfileDestination()
-                            authScreenDestination()
-                            myShopsScreenDestination()
+                            editProfileDestination(navController)
+                            authScreenDestination(navController)
+                            myShopsScreenDestination(navController)
 
                             createShopDestination(navController)
-                            updateShopDestination()
+                            updateShopDestination(navController)
 
-                            shopBottomSheetDestination()
+                            shopBottomSheetDestination(navController)
 
                             addCategoryDialogDestination(navController)
-                            shopsFilterDialogDestination()
+                            shopsFilterDialogDestination(navController)
                         }
                     }
                 }

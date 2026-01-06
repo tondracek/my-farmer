@@ -13,9 +13,10 @@ import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.usecase.GetShopByIdUC
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.ui.common.review.toUiState
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -29,7 +30,6 @@ class ShopReviewsViewModel @Inject constructor(
     getShopById: GetShopByIdUC,
     getShopReviewsWithAuthorsUC: GetShopReviewsWithAuthorsUC,
     private val createShopReview: CreateShopReviewUC,
-    private val navigator: AppNavigator,
 ) : ViewModel() {
 
     val shopId: UUID = savedStateHandle.getReviewsScreenShopId()
@@ -53,6 +53,9 @@ class ShopReviewsViewModel @Inject constructor(
         initialValue = ShopReviewsScreenState.Loading
     )
 
+    private val _effects = MutableSharedFlow<ShopReviewsEffect>(extraBufferCapacity = 1)
+    val effects: SharedFlow<ShopReviewsEffect> = _effects
+
     fun onSubmitReview(reviewInput: ReviewInput) = viewModelScope.launch {
         createShopReview(
             shopId = shopId,
@@ -60,6 +63,11 @@ class ShopReviewsViewModel @Inject constructor(
         )
     }
 
-    fun onNavigateBack() =
-        navigator.navigateBack()
+    fun onNavigateBack() = viewModelScope.launch {
+        _effects.emit(ShopReviewsEffect.NavigateBack)
+    }
+}
+
+sealed interface ShopReviewsEffect {
+    object NavigateBack : ShopReviewsEffect
 }

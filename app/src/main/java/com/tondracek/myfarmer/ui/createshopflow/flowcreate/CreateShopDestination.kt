@@ -15,7 +15,8 @@ import com.tondracek.myfarmer.ui.core.navigation.navigateForResult
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 import com.tondracek.myfarmer.ui.createshopflow.CreateShopFlowMode
 import com.tondracek.myfarmer.ui.createshopflow.CreateShopFlowScreen
-import com.tondracek.myfarmer.ui.createshopflow.components.addcategorydialog.NEW_CATEGORY_DIALOG_VALUE
+import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowEffect
+import com.tondracek.myfarmer.ui.createshopflow.NEW_CATEGORY_DIALOG_VALUE
 
 fun NavGraphBuilder.createShopDestination(
     navController: NavController,
@@ -28,8 +29,8 @@ fun NavGraphBuilder.createShopDestination(
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                CreateShopEffect.NavigateBack -> navController.navigateUp()
-                CreateShopEffect.OpenAddCategoryDialog -> {
+                CreateUpdateShopFlowEffect.NavigateBack -> navController.navigateUp()
+                CreateUpdateShopFlowEffect.OpenAddCategoryDialog -> {
                     navController.navigateForResult<ShopCategorySerializable>(
                         route = Route.AddCategoryDialog,
                         key = NEW_CATEGORY_DIALOG_VALUE,

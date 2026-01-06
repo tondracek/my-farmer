@@ -23,22 +23,48 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.ui.common.navbar.BottomNavigationBar
+import com.tondracek.myfarmer.ui.common.navbar.NavBarEffect
+import com.tondracek.myfarmer.ui.common.navbar.NavBarState
 import com.tondracek.myfarmer.ui.common.navbar.NavBarViewModel
 import com.tondracek.myfarmer.ui.common.topbar.FloatingTopBar
+import com.tondracek.myfarmer.ui.core.navigation.getCurrentRoute
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.core.uievents.MyFarmerSnackBar
+import kotlinx.coroutines.flow.combine
 
 @Composable
 fun AppScaffold(
-    modifier: Modifier = Modifier,
+    navController: NavController,
     content: @Composable BoxScope.() -> Unit,
 ) {
     val localDensity = LocalDensity.current
 
     val navBarViewModel: NavBarViewModel = hiltViewModel()
-    val navBarState by navBarViewModel.state.collectAsState()
+    val navBarState by combine(
+        navController.getCurrentRoute(),
+        navBarViewModel.isLoggedIn
+    ) { currentRoute, isLoggedIn ->
+        NavBarState(
+            currentRoute = currentRoute,
+            isLoggedIn = isLoggedIn,
+        )
+    }.collectAsState(
+        initial = NavBarState(
+            currentRoute = null,
+            isLoggedIn = false,
+        )
+    )
+
+    LaunchedEffect(Unit) {
+        navBarViewModel.effects.collect { effect ->
+            when (effect) {
+                is NavBarEffect.Navigate -> navController.navigate(effect.route)
+            }
+        }
+    }
 
     val appUiController = remember { AppUiController() }
     val appUiState by appUiController.state.collectAsState()
@@ -55,7 +81,6 @@ fun AppScaffold(
         LocalAppUiController provides appUiController,
     ) {
         Scaffold(
-            modifier = modifier,
             containerColor = MyFarmerTheme.colors.surface,
             bottomBar = {
                 BottomNavigationBar(

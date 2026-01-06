@@ -18,7 +18,7 @@ fun BottomNavigationBar(
     onNavigate: (Route) -> Unit,
 ) {
     NavigationBar {
-        navBarDestinations(state.loggedIn).forEach {
+        navBarDestinations(state.isLoggedIn).forEach {
             NavigationBarButton(
                 text = it.text,
                 imageVector = it.imageVector,
@@ -58,7 +58,7 @@ private fun BottomNavigationBarPreview() {
         BottomNavigationBar(
             state = NavBarState(
                 currentRoute = Route.MainShopsRoute,
-                loggedIn = true,
+                isLoggedIn = true,
             ),
             onNavigate = {},
         )

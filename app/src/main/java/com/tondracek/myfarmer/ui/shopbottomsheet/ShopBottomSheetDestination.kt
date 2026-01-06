@@ -2,10 +2,12 @@ package com.tondracek.myfarmer.ui.shopbottomsheet
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.stefanoq21.material3.navigation.bottomSheet
@@ -21,9 +23,23 @@ fun SavedStateHandle.getShopBottomSheetShopId(): ShopId =
     UUID.fromString(toRoute<Route.ShopBottomSheetRoute>().shopId)
 
 @OptIn(ExperimentalMaterial3Api::class)
-fun NavGraphBuilder.shopBottomSheetDestination() = bottomSheet<Route.ShopBottomSheetRoute> {
+fun NavGraphBuilder.shopBottomSheetDestination(
+    navController: NavController,
+) = bottomSheet<Route.ShopBottomSheetRoute> {
     val viewmodel: ShopBottomSheetViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewmodel.effects.collect { event ->
+            when (event) {
+                ShopBottomSheetEffect.NavigateBack ->
+                    navController.navigateUp()
+
+                is ShopBottomSheetEffect.NavigateToReviews ->
+                    navController.navigate(Route.ShopReviews(shopId = event.shopId.toString()))
+            }
+        }
+    }
 
     Content(
         state = state,

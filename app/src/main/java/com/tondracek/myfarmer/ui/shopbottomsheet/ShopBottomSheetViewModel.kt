@@ -16,18 +16,19 @@ import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.usecase.GetUserByIdUC
 import com.tondracek.myfarmer.systemuser.domain.usecase.GetUsersByIdsUC
 import com.tondracek.myfarmer.ui.common.review.toUiState
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.shopdetailscreen.ShopDetailState
 import com.tondracek.myfarmer.ui.shopdetailscreen.toShopDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -39,7 +40,6 @@ class ShopBottomSheetViewModel @Inject constructor(
     getUsersByIds: GetUsersByIdsUC,
     getReviewsPreview: GetReviewsPreviewUC,
     getShopAverageRating: GetShopAverageRatingUC,
-    private val navigator: AppNavigator
 ) : ViewModel() {
 
     private val shopId: ShopId = savedStateHandle.getShopBottomSheetShopId()
@@ -80,7 +80,20 @@ class ShopBottomSheetViewModel @Inject constructor(
         initialValue = ShopDetailState.Loading
     )
 
-    fun navigateToReviews() = navigator.navigate(Route.ShopReviews(shopId.toString()))
+    private val _effects = MutableSharedFlow<ShopBottomSheetEffect>(extraBufferCapacity = 1)
+    val effects: SharedFlow<ShopBottomSheetEffect> = _effects
 
-    fun navigateBack() = navigator.navigateBack()
+    fun navigateToReviews() = viewModelScope.launch {
+        _effects.emit(ShopBottomSheetEffect.NavigateToReviews(shopId))
+    }
+
+    fun navigateBack() = viewModelScope.launch {
+        _effects.emit(ShopBottomSheetEffect.NavigateBack)
+    }
+}
+
+sealed interface ShopBottomSheetEffect {
+    data class NavigateToReviews(val shopId: ShopId) : ShopBottomSheetEffect
+
+    object NavigateBack : ShopBottomSheetEffect
 }

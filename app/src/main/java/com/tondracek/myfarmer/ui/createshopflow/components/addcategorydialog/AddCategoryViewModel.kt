@@ -21,8 +21,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val NEW_CATEGORY_DIALOG_VALUE = "new_category"
-
 @HiltViewModel
 class AddCategoryViewModel @Inject constructor(
     getMostPopularCategories: GetMostPopularCategoriesUC,

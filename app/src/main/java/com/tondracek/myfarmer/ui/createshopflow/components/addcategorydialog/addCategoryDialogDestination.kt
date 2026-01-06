@@ -10,6 +10,7 @@ import com.stefanoq21.material3.navigation.bottomSheet
 import com.tondracek.myfarmer.shopcategory.domain.model.toSerializable
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.setResult
+import com.tondracek.myfarmer.ui.createshopflow.NEW_CATEGORY_DIALOG_VALUE
 
 fun NavGraphBuilder.addCategoryDialogDestination(
     navController: NavController

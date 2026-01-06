@@ -21,9 +21,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -69,7 +69,7 @@ class ShopsListViewModel @Inject constructor(
     )
 
     private val _effects = MutableSharedFlow<ShopsListViewEffect>(extraBufferCapacity = 1)
-    val effects = _effects.asSharedFlow()
+    val effects: SharedFlow<ShopsListViewEffect> = _effects
 
     fun openShopDetail(shopId: ShopId) = viewModelScope.launch {
         _effects.emit(ShopsListViewEffect.OpenShopDetail(shopId))

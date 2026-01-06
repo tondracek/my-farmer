@@ -3,10 +3,10 @@ package com.tondracek.myfarmer.ui.createshopflow
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 
-sealed interface CreateShopState {
+sealed interface CreateUpdateShopFlowState {
 
     data class Creating(val shopInput: ShopInput, val step: CreateShopStateCreatingStep) :
-        CreateShopState {
+        CreateUpdateShopFlowState {
 
         enum class CreateShopStateCreatingStep {
             NAME_LOCATION,
@@ -16,7 +16,7 @@ sealed interface CreateShopState {
             REVIEW_AND_SUBMIT
         }
 
-        fun next(): CreateShopState = when (this.step) {
+        fun next(): CreateUpdateShopFlowState = when (this.step) {
             CreateShopStateCreatingStep.NAME_LOCATION -> this.copy(step = CreateShopStateCreatingStep.CATEGORIES_MENU)
             CreateShopStateCreatingStep.CATEGORIES_MENU -> this.copy(step = CreateShopStateCreatingStep.PHOTOS_DESCRIPTION)
             CreateShopStateCreatingStep.PHOTOS_DESCRIPTION -> this.copy(step = CreateShopStateCreatingStep.OPENING_HOURS)
@@ -38,9 +38,9 @@ sealed interface CreateShopState {
         }
     }
 
-    data object Finished : CreateShopState
+    data object Finished : CreateUpdateShopFlowState
 
-    data object Loading : CreateShopState
+    data object Loading : CreateUpdateShopFlowState
 
-    data class Error(val failure: UCResult.Failure) : CreateShopState
+    data class Error(val failure: UCResult.Failure) : CreateUpdateShopFlowState
 }

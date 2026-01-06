@@ -12,10 +12,11 @@ import com.tondracek.myfarmer.shopcategory.domain.usecase.GetMostPopularCategori
 import com.tondracek.myfarmer.shopfilters.data.ShopFilterRepositoryFactory
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
 import com.tondracek.myfarmer.ui.common.category.CategoryNameInputState
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -32,7 +33,6 @@ class ShopFilterDialogViewModel @Inject constructor(
     filterRepositoryFactory: ShopFilterRepositoryFactory,
     getMostPopularCategoriesUC: GetMostPopularCategoriesUC,
     getCategorySuggestionsUC: GetCategorySuggestionsUC,
-    private val appNavigator: AppNavigator,
 ) : ViewModel() {
 
     val filterRepositoryKey = savedStateHandle.getShopFilterRepositoryKey()
@@ -69,6 +69,9 @@ class ShopFilterDialogViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = ShopFilterDialogState.Initial
     )
+
+    private val _effects = MutableSharedFlow<ShopFilterDialogEffect>(extraBufferCapacity = 1)
+    val effects: SharedFlow<ShopFilterDialogEffect> = _effects
 
     init {
         viewModelScope.launch {
@@ -107,8 +110,14 @@ class ShopFilterDialogViewModel @Inject constructor(
 
     fun onApplyFiltersClick() = viewModelScope.launch {
         filterRepository.updateFilters(filters.value)
-        appNavigator.navigateBack()
+        _effects.emit(ShopFilterDialogEffect.GoBack)
     }
 
-    fun onCancelClick() = appNavigator.navigateBack()
+    fun onCancelClick() = viewModelScope.launch {
+        _effects.emit(ShopFilterDialogEffect.GoBack)
+    }
+}
+
+sealed interface ShopFilterDialogEffect {
+    data object GoBack : ShopFilterDialogEffect
 }
