@@ -1,7 +1,12 @@
 package com.tondracek.myfarmer.ui.core.navigation
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -18,6 +23,17 @@ fun NavController.getCurrentRoute(): Flow<Route?> = this
         Route.getRouteClass(it)
             ?.let { routeClass -> it.toRoute(routeClass) }
     }
+
+@Composable
+fun NavController.isInNavGraph(navGraph: NavGraph): Boolean {
+    val navBackStackEntry by this.currentBackStackEntryAsState()
+
+    return navBackStackEntry
+        ?.destination
+        ?.hierarchy
+        ?.any { it.hasRoute(navGraph::class) }
+        ?: false
+}
 
 inline fun <reified T> NavController.navigateForResult(
     route: Route,

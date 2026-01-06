@@ -13,6 +13,7 @@ import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategorySerializable
 import com.tondracek.myfarmer.shopcategory.domain.model.toDomain
+import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.navigateForResult
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
@@ -28,9 +29,7 @@ fun SavedStateHandle.getUpdateShopScreenShopId(): ShopId =
 
 fun NavGraphBuilder.updateShopDestination(
     navController: NavController,
-) = routeDestination<Route.UpdateShop>({
-    title = stringResource(R.string.update_shop_title)
-}) {
+) = routeDestination<Route.UpdateShop> {
     val viewModel: UpdateShopViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 
@@ -52,20 +51,24 @@ fun NavGraphBuilder.updateShopDestination(
         }
     }
 
-    CreateShopFlowScreen(
-        state = state,
-        createShopFlowMode = CreateShopFlowMode.UPDATE,
-        onNextStep = viewModel::goToNextStep,
-        onPreviousStep = viewModel::goToPreviousStep,
-        onUpdateName = viewModel::updateName,
-        onUpdateDescription = viewModel::updateDescription,
-        onOpenAddCategoryDialog = viewModel::onOpenAddCategoryDialog,
-        onUpdateCategories = viewModel::updateCategories,
-        onUpdateImages = viewModel::updateImages,
-        onUpdateLocation = viewModel::updateLocation,
-        onUpdateOpeningHours = viewModel::updateOpeningHours,
-        onUpdateMenu = viewModel::updateMenu,
-        onSubmitCreating = viewModel::submitUpdating,
-        onNavigateBack = viewModel::navigateBack
-    )
+    ScreenScaffold(
+        title = stringResource(R.string.update_shop_title)
+    ) {
+        CreateShopFlowScreen(
+            state = state,
+            createShopFlowMode = CreateShopFlowMode.UPDATE,
+            onNextStep = viewModel::goToNextStep,
+            onPreviousStep = viewModel::goToPreviousStep,
+            onUpdateName = viewModel::updateName,
+            onUpdateDescription = viewModel::updateDescription,
+            onOpenAddCategoryDialog = viewModel::onOpenAddCategoryDialog,
+            onUpdateCategories = viewModel::updateCategories,
+            onUpdateImages = viewModel::updateImages,
+            onUpdateLocation = viewModel::updateLocation,
+            onUpdateOpeningHours = viewModel::updateOpeningHours,
+            onUpdateMenu = viewModel::updateMenu,
+            onSubmitCreating = viewModel::submitUpdating,
+            onNavigateBack = viewModel::navigateBack
+        )
+    }
 }

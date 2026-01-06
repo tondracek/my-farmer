@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -27,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.ui.core.appstate.LocalAppUiController
+import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -61,22 +60,22 @@ fun MainShopsScreen(
         pagerState.animateScrollToPage(page)
     }
 
-    MainShopsScreenWrapper(
-        pagerState = pagerState,
-        mapView = mapView,
-        listView = listView,
-        onSwitchMode = { switchPage(it.toPage()) },
-        currentMode = currentPage.toShopsViewMode(),
-        onOpenFiltersDialog = onOpenFiltersDialog,
-    )
-
-    val appUiStateController = LocalAppUiController.current
-
-    val title = when (currentPage.toShopsViewMode()) {
-        ShopsViewMode.Map -> stringResource(R.string.shops_map)
-        ShopsViewMode.List -> stringResource(R.string.shops_list)
+    ScreenScaffold(
+        title = when (currentPage.toShopsViewMode()) {
+            ShopsViewMode.Map -> stringResource(R.string.shops_map)
+            ShopsViewMode.List -> stringResource(R.string.shops_list)
+        },
+        applyTopBarPadding = false,
+    ) {
+        MainShopsScreenWrapper(
+            pagerState = pagerState,
+            mapView = mapView,
+            listView = listView,
+            onSwitchMode = { switchPage(it.toPage()) },
+            currentMode = currentPage.toShopsViewMode(),
+            onOpenFiltersDialog = onOpenFiltersDialog,
+        )
     }
-    LaunchedEffect(title) { appUiStateController.updateTitle(title) }
 }
 
 @Composable

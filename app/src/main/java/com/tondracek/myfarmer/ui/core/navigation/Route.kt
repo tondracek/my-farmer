@@ -7,6 +7,23 @@ import timber.log.Timber
 import kotlin.reflect.KClass
 
 @Serializable
+sealed interface NavGraph {
+
+    @Serializable
+    data object MainFlow : NavGraph {
+
+        @Serializable
+        data object MyShops : NavGraph
+
+        @Serializable
+        data object Home : NavGraph
+
+        @Serializable
+        data object Profile : NavGraph
+    }
+}
+
+@Serializable
 sealed interface Route {
 
     @Serializable

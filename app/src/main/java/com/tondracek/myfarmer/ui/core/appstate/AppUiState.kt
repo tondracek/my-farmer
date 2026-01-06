@@ -2,10 +2,7 @@ package com.tondracek.myfarmer.ui.core.appstate
 
 import androidx.compose.runtime.compositionLocalOf
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.update
 
 val LocalAppUiController = compositionLocalOf<AppUiController> {
     error("AppUiController not provided")
@@ -13,50 +10,10 @@ val LocalAppUiController = compositionLocalOf<AppUiController> {
 
 class AppUiController {
 
-    private val _state = MutableStateFlow(AppUiState())
-    val state: StateFlow<AppUiState> = _state
-
-    fun updateTitle(title: String?) = _state.update {
-        it.copy(title = title)
-    }
-
-    fun updateTopBarPadding(applyPadding: Boolean) = _state.update {
-        it.copy(applyTopBarPadding = applyPadding)
-    }
-
-    fun updateShowTopBar(showTopBar: Boolean) = _state.update {
-        it.copy(showTopBar = showTopBar)
-    }
-
-    fun apply(uiState: AppUiState) = _state.update { uiState }
-
     private val _errors = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val errors = _errors.asSharedFlow()
 
     fun showError(message: String) {
         _errors.tryEmit(message)
     }
-}
-
-data class AppUiState(
-    val title: String? = null,
-    val applyTopBarPadding: Boolean = true,
-    val showTopBar: Boolean = true,
-)
-
-class AppUiStateScope() {
-    private val _appUiState: MutableStateFlow<AppUiState> = MutableStateFlow(AppUiState())
-    val appUiState: StateFlow<AppUiState> = _appUiState
-
-    var title: String?
-        get() = title
-        set(value) = _appUiState.update { it.copy(title = value) }
-
-    var applyTopBarPadding: Boolean
-        get() = applyTopBarPadding
-        set(value) = _appUiState.update { it.copy(applyTopBarPadding = value) }
-
-    var showTopBar: Boolean
-        get() = showTopBar
-        set(value) = _appUiState.update { it.copy(showTopBar = value) }
 }

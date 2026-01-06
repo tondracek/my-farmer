@@ -19,9 +19,7 @@ import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapViewModel
 
 fun NavGraphBuilder.mainShopsScreenDestination(
     navController: NavController,
-) = routeDestination<Route.MainShopsRoute>({
-    applyTopBarPadding = false
-}) { appUiController ->
+) = routeDestination<Route.MainShopsRoute> { appUiController ->
     val mainShopsScreenViewModel: MainShopsScreenViewModel = hiltViewModel()
     LaunchedEffect(Unit) {
         mainShopsScreenViewModel.effects.collect { event ->
@@ -91,7 +89,7 @@ private fun ShopsMapViewSection(
         shopsMapViewModel.effects.collect { event ->
             when (event) {
                 is ShopsMapViewEvent.OpenShopDetail ->
-                    navController.navigate(Route.ShopDetailRoute(event.shopId.toString()))
+                    navController.navigate(Route.ShopBottomSheetRoute(event.shopId.toString()))
 
                 is ShopsMapViewEvent.ShowError ->
                     appUiController.showError(event.message)

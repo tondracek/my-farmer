@@ -8,15 +8,14 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import com.tondracek.myfarmer.R
+import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 
 fun NavGraphBuilder.myShopsScreenDestination(
     navController: NavController,
-) = routeDestination<Route.MyShopsRoute>({
-    title = stringResource(R.string.my_shops)
-    applyTopBarPadding = false
-}) { appUiController ->
+) = routeDestination<Route.MyShopsRoute> { appUiController ->
+
     val viewModel: MyShopsViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 
@@ -38,12 +37,18 @@ fun NavGraphBuilder.myShopsScreenDestination(
         }
     }
 
-    MyShopsScreen(
-        state = state,
-        onShopClick = viewModel::navigateToShopDetail,
-        onUpdateShopClick = viewModel::navigateToUpdateShop,
-        onDeleteShopClick = viewModel::deleteShop,
-        onCreateShopClick = viewModel::navigateToCreateShop,
-        onNavigateBack = viewModel::navigateBack,
-    )
+    ScreenScaffold(
+        title = stringResource(R.string.my_shops),
+        showTopBar = true,
+        applyTopBarPadding = false,
+    ) {
+        MyShopsScreen(
+            state = state,
+            onShopClick = viewModel::navigateToShopDetail,
+            onUpdateShopClick = viewModel::navigateToUpdateShop,
+            onDeleteShopClick = viewModel::deleteShop,
+            onCreateShopClick = viewModel::navigateToCreateShop,
+            onNavigateBack = viewModel::navigateBack,
+        )
+    }
 }

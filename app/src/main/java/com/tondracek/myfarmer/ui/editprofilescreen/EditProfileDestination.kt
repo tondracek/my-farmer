@@ -8,14 +8,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import com.tondracek.myfarmer.R
+import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 
 fun NavGraphBuilder.editProfileDestination(
     navController: NavController,
-) = routeDestination<Route.EditProfileScreenRoute>({
-    title = stringResource(R.string.edit_profile)
-}) {
+) = routeDestination<Route.EditProfileScreenRoute> {
     val viewmodel: EditProfileViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()
 
@@ -28,13 +27,17 @@ fun NavGraphBuilder.editProfileDestination(
         }
     }
 
-    EditProfileScreen(
-        state = state,
-        onNameChange = viewmodel::onNameChange,
-        onProfilePictureChange = viewmodel::onProfilePictureChange,
-        onContactInfoChange = viewmodel::onContactInfoChange,
-        onLogout = viewmodel::onLogout,
-        onSaveClick = viewmodel::onSaveProfile,
-        onNavigateBack = viewmodel::navigateBack,
-    )
+    ScreenScaffold(
+        title = stringResource(R.string.edit_profile)
+    ) {
+        EditProfileScreen(
+            state = state,
+            onNameChange = viewmodel::onNameChange,
+            onProfilePictureChange = viewmodel::onProfilePictureChange,
+            onContactInfoChange = viewmodel::onContactInfoChange,
+            onLogout = viewmodel::onLogout,
+            onSaveClick = viewmodel::onSaveProfile,
+            onNavigateBack = viewmodel::navigateBack,
+        )
+    }
 }

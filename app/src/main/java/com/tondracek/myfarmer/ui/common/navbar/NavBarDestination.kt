@@ -39,4 +39,3 @@ fun navBarDestinations(loggedIn: Boolean): List<NavBarDestination> = listOfNotNu
         route = Route.AuthScreenRoute,
     ).takeIf { !loggedIn }
 )
-

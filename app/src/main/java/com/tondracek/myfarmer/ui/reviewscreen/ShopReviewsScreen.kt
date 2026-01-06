@@ -1,7 +1,6 @@
 package com.tondracek.myfarmer.ui.reviewscreen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,9 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,16 +17,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.review.domain.model.ReviewInput
 import com.tondracek.myfarmer.shop.data.sampleReviewsUI
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.common.review.ReviewCard
+import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.reviewscreen.components.CreateShopReviewBottomSheet
@@ -61,15 +57,17 @@ private fun Content(
     onSubmitReview: (reviewInput: ReviewInput) -> Unit,
 ) {
     var showNewReviewBottomSheet by remember { mutableStateOf(false) }
-    val density = LocalDensity.current
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        var verticalPadding by remember { mutableStateOf(128.dp) }
+    ScreenScaffold(
+        title = state.shopName ?: stringResource(R.string.app_name)
+    ) {
 
         LazyColumn(
-            modifier = Modifier.padding(horizontal = MyFarmerTheme.paddings.medium),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = MyFarmerTheme.paddings.medium),
             state = rememberLazyListState(),
-            contentPadding = PaddingValues(vertical = verticalPadding),
+            contentPadding = PaddingValues(bottom = MyFarmerTheme.paddings.xxL),
             verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
         ) {
             items(state.reviews) { review ->
@@ -77,30 +75,6 @@ private fun Content(
                     review = review,
                     colors = MyFarmerTheme.cardColors.secondary,
                 )
-            }
-        }
-
-        state.shopName?.let {
-            Box(modifier = Modifier.onGloballyPositioned {
-                verticalPadding = with(density) { (it.size.height.toDp()) }
-            }) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(MyFarmerTheme.paddings.small)
-                        .align(Alignment.TopCenter),
-                    colors = MyFarmerTheme.cardColors.primary,
-                    shape = RoundedCornerShape(32.dp)
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(MyFarmerTheme.paddings.large),
-                        text = state.shopName,
-                        textAlign = TextAlign.Center,
-                        style = MyFarmerTheme.typography.titleMedium,
-                    )
-                }
             }
         }
 
