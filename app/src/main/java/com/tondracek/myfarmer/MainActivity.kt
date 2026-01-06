@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = Route.MainShopsRoute
                         ) {
-                            mainShopsScreenDestination()
+                            mainShopsScreenDestination(navController)
 
                             shopDetailScreenDestination()
                             shopReviewsScreenDestination()
