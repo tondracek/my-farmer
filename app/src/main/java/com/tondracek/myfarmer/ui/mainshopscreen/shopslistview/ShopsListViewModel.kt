@@ -2,7 +2,6 @@ package com.tondracek.myfarmer.ui.mainshopscreen.shopslistview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.location.usecase.MeasureDistanceFromMeUC
 import com.tondracek.myfarmer.review.domain.model.Rating
@@ -13,6 +12,9 @@ import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
 import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
 import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
+import com.tondracek.myfarmer.ui.core.uiState.UiState
+import com.tondracek.myfarmer.ui.core.uiState.asUiState
+import com.tondracek.myfarmer.ui.core.uiState.getOrReturn
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.ShopListViewItem
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.toListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +26,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -41,17 +42,19 @@ class ShopsListViewModel @Inject constructor(
         getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val shops: Flow<List<Shop>> = filters
+    private val shopsUiState: Flow<UiState<List<Shop>>> = filters
         .flatMapLatest { getAllShops(filters = it) }
-        .getOrEmitError(emptyList())
+        .asUiState(emptyList()) { _events.emit(ShopsListViewEvent.ShowError(it.userError)) }
 
     val averageRatings: Flow<Map<ShopId, Rating>> = getAverageRatingsByShopUC()
-        .getOrEmitError(emptyMap())
+        .getOrElse(emptyMap()) { _events.emit(ShopsListViewEvent.ShowError(it.userError)) }
 
     val state: StateFlow<ShopsListViewState> = combine(
-        shops,
+        shopsUiState,
         averageRatings,
-    ) { shops, ratings ->
+    ) { shopsUiState, ratings ->
+        val shops = shopsUiState.getOrReturn { return@combine ShopsListViewState.Loading }
+
         val shopListItems = shops.map {
             val distance = measureDistanceFromMe(it.location)
             val rating = ratings[it.id] ?: Rating.ZERO
@@ -67,14 +70,6 @@ class ShopsListViewModel @Inject constructor(
 
     private val _events = MutableSharedFlow<ShopsListViewEvent>(extraBufferCapacity = 1)
     val events = _events.asSharedFlow()
-
-    private fun <T> Flow<UCResult<T>>.getOrEmitError(defaultValue: T): Flow<T> =
-        this.map { result ->
-            result.getOrElse {
-                _events.tryEmit(ShopsListViewEvent.ShowError(it.userError))
-                defaultValue
-            }
-        }
 
     fun openShopDetail(shopId: ShopId) = viewModelScope.launch {
         _events.emit(ShopsListViewEvent.OpenShopDetail(shopId))
