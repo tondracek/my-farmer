@@ -14,7 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -42,7 +44,7 @@ fun MenuItemsSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(MyFarmerTheme.paddings.medium),
-                    text = "Product menu",
+                    text = stringResource(R.string.product_menu),
                     style = MyFarmerTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
                 )
@@ -60,7 +62,7 @@ fun MenuItemsSection(
             )
 
             Button(onClick = { showAddMenuItemDialog = true }) {
-                Text("Add product")
+                Text(stringResource(R.string.add_product))
             }
         }
     }

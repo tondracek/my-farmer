@@ -18,9 +18,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shop.data.shop0
@@ -36,7 +38,10 @@ fun ProductMenuList(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         if (menu.items.isEmpty()) {
-            Text("No products yet", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                text = stringResource(R.string.no_products_yet),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         } else {
             menu.items.forEach { item ->
                 MenuItem(item, onEdit, onDelete)

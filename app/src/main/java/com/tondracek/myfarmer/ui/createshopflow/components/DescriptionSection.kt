@@ -9,7 +9,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
@@ -28,7 +30,7 @@ fun DescriptionSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(MyFarmerTheme.paddings.medium),
-                    text = "Shop description",
+                    text = stringResource(R.string.shop_description),
                     style = MyFarmerTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
                 )
@@ -39,7 +41,7 @@ fun DescriptionSection(
                 value = description,
                 onValueChange = onUpdateDescription,
                 minLines = 5,
-                label = { Text("Describe your shop") }
+                label = { Text(stringResource(R.string.describe_your_shop)) }
             )
         }
     }

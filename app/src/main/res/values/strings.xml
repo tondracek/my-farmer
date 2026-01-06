@@ -12,7 +12,7 @@
     <string name="categories">Categories</string>
     <string name="description">Description</string>
     <string name="km">km</string>
-    <string name="product_menu">Menu</string>
+    <string name="product_menu">Product menu</string>
     <string name="no_products">No products</string>
     <string name="in_stock">In stock</string>
     <string name="out_of_stock">Out of stock</string>
@@ -63,4 +63,16 @@
     <string name="login_cancelled">Login cancelled</string>
     <string name="apply_filters">Apply filters</string>
     <string name="cancel">Cancel</string>
+    <string name="product_categories">Product categories</string>
+    <string name="add_product">Add product</string>
+    <string name="add_category">Add category</string>
+    <string name="no_products_yet">No products yet</string>
+    <string name="shop_photos">Shop photos</string>
+    <string name="shop_description">Shop description</string>
+    <string name="describe_your_shop">Describe your shop</string>
+    <string name="day_to_day">Day to day</string>
+    <string name="message">Message</string>
+    <string name="write_message_for_x_here">Write message for %1$s here</string>
+    <string name="enter_opening_hours_message">Enter opening hours message</string>
+    <string name="opening_hours_message_example">Example: \"Send a message before visit\", \"Call us before coming\"</string>
 </resources>

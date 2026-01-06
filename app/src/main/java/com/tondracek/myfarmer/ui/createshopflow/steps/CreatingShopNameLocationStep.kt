@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Location
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -103,13 +104,28 @@ private fun Content(
                     )
                 }
 
-                PickLocationMap(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    location = shopInput.location,
-                    onLocationSelected = onUpdateLocation
-                )
+                Box(Modifier.weight(1f)) {
+                    PickLocationMap(
+                        modifier = Modifier.fillMaxWidth(),
+                        location = shopInput.location,
+                        onLocationSelected = onUpdateLocation
+                    )
+                }
+
+                Column {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Drag your finger across the map and click to place the marker on the desired position",
+                        style = MyFarmerTheme.typography.textSmall,
+                        textAlign = TextAlign.Center,
+                    )
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Use two fingers to zoom in or zoom out",
+                        style = MyFarmerTheme.typography.textSmall,
+                        textAlign = TextAlign.Center,
+                    )
+                }
             }
         }
     }

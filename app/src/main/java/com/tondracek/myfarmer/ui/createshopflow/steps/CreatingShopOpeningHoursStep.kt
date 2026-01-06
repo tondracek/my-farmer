@@ -159,7 +159,7 @@ private fun ModeRow(
         horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.extraSmall),
     ) {
         InputChip(
-            label = { Text("Day to day") },
+            label = { Text(stringResource(R.string.day_to_day)) },
             selected = mode == OpeningHoursMode.DAY_TO_DAY,
             onClick = { onModeChange(OpeningHoursMode.DAY_TO_DAY) },
             leadingIcon = {
@@ -170,7 +170,7 @@ private fun ModeRow(
             }
         )
         InputChip(
-            label = { Text("Message") },
+            label = { Text(stringResource(R.string.message)) },
             selected = mode == OpeningHoursMode.MESSAGE,
             onClick = { onModeChange(OpeningHoursMode.MESSAGE) },
             leadingIcon = {
@@ -202,7 +202,9 @@ private fun DayToDayOpeningHoursInput(
                     newMap[day] = it
                     onDayInputChange(newMap)
                 },
-                label = { Text("Write message for ${getDayOfWeekString(day)} here") },
+                label = {
+                    Text(stringResource(R.string.write_message_for_x_here, getDayOfWeekString(day)))
+                },
             )
         }
     }
@@ -218,9 +220,10 @@ private fun MessageOpeningHoursInput(
         modifier = modifier.fillMaxWidth(),
         value = messageInput,
         onValueChange = onMessageInputChange,
-        label = { Text("Enter opening hours message") },
+        label = { Text(stringResource(R.string.enter_opening_hours_message)) },
         singleLine = false,
         maxLines = 5,
+        supportingText = { Text(stringResource(R.string.opening_hours_message_example)) }
     )
 }
 

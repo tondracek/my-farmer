@@ -13,7 +13,7 @@
     <string name="categories">Kategorie</string>
     <string name="description">Popis</string>
     <string name="km">km</string>
-    <string name="product_menu">Menu</string>
+    <string name="product_menu">Menu produktů</string>
     <string name="no_products">Žádné produkty</string>
     <string name="click_here">Klikni zde</string>
     <string name="contact_info">Kontaktní údaje</string>
@@ -64,4 +64,16 @@
     <string name="login_cancelled">Přihlašování přerušeno</string>
     <string name="apply_filters">Použít filtry</string>
     <string name="cancel">Zrušit</string>
+    <string name="product_categories">Kategorie produktů</string>
+    <string name="add_product">Přidat produkt</string>
+    <string name="add_category">Přidat kategorii</string>
+    <string name="no_products_yet">Žádné produkty</string>
+    <string name="shop_photos">Obrázky obchodu</string>
+    <string name="shop_description">Popis obchodu</string>
+    <string name="describe_your_shop">Popište svůj obchod</string>
+    <string name="day_to_day">Otevřeno ve dny</string>
+    <string name="message">Zpráva</string>
+    <string name="write_message_for_x_here">Zde napište zprávu pro %1$s</string>
+    <string name="enter_opening_hours_message">Zde napište zprávu místo otevírací doby</string>
+    <string name="opening_hours_message_example">Například: \"Po domluvě přes SMS\", \"Předem volejte na telefon\"</string>
 </resources>

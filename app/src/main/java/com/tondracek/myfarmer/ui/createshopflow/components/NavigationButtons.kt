@@ -27,7 +27,7 @@ fun NavigationButtons(
 
         Button(
             modifier = Modifier.weight(1f),
-            colors = MyFarmerTheme.buttonColors.success,
+            colors = MyFarmerTheme.buttonColors.primary,
             onClick = onNext
         ) {
             val text = when (submitMode) {
