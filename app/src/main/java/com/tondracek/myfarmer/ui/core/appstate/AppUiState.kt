@@ -1,8 +1,6 @@
 package com.tondracek.myfarmer.ui.core.appstate
 
 import androidx.compose.runtime.compositionLocalOf
-import com.tondracek.myfarmer.ui.core.uievents.UiEvent
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -61,12 +59,4 @@ class AppUiStateScope() {
     var showTopBar: Boolean
         get() = showTopBar
         set(value) = _appUiState.update { it.copy(showTopBar = value) }
-}
-
-suspend fun AppUiController.collectEvents(events: Flow<UiEvent>) {
-    events.collect { event ->
-        when (event) {
-            is UiEvent.ShowError -> this.showError(event.message)
-        }
-    }
 }

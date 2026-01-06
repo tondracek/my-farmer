@@ -54,11 +54,45 @@ class AppNavigator @Inject constructor(
 
         navController.navigate(route)
     }
+}
 
-    inline fun <reified T> setResult(key: String, value: T) {
-        val jsonString = json.encodeToString(value)
-        navController.previousBackStackEntry
-            ?.savedStateHandle
-            ?.set(key, jsonString)
-    }
+val navigationJson = Json {
+    ignoreUnknownKeys = true
+    encodeDefaults = true
+}
+
+inline fun <reified T> NavController.navigateForResult(
+    route: Route,
+    key: String,
+    crossinline onResult: (T) -> Unit
+) {
+    val navController = this
+    navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.remove<String>(key)
+
+    val liveData = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getLiveData<String>(key)
+
+    liveData?.observeForever(object : Observer<String> {
+        override fun onChanged(value: String) {
+            liveData.removeObserver(this)
+            navController.currentBackStackEntry
+                ?.savedStateHandle
+                ?.remove<String>(key)
+
+            val result: T = navigationJson.decodeFromString(value)
+            onResult(result)
+        }
+    })
+
+    navController.navigate(route)
+}
+
+inline fun <reified T> NavController.setResult(key: String, value: T) {
+    val jsonString = navigationJson.encodeToString(value)
+    this.previousBackStackEntry
+        ?.savedStateHandle
+        ?.set(key, jsonString)
 }

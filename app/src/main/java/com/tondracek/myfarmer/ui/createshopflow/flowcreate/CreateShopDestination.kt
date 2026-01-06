@@ -1,21 +1,47 @@
 package com.tondracek.myfarmer.ui.createshopflow.flowcreate
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import com.tondracek.myfarmer.R
+import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategorySerializable
+import com.tondracek.myfarmer.shopcategory.domain.model.toDomain
 import com.tondracek.myfarmer.ui.core.navigation.Route
+import com.tondracek.myfarmer.ui.core.navigation.navigateForResult
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 import com.tondracek.myfarmer.ui.createshopflow.CreateShopFlowMode
 import com.tondracek.myfarmer.ui.createshopflow.CreateShopFlowScreen
+import com.tondracek.myfarmer.ui.createshopflow.components.addcategorydialog.NEW_CATEGORY_DIALOG_VALUE
 
-fun NavGraphBuilder.createShopDestination() = routeDestination<Route.CreateShop>({
+fun NavGraphBuilder.createShopDestination(
+    navController: NavController,
+) = routeDestination<Route.CreateShop>({
     title = stringResource(R.string.create_shop_title)
 }) {
     val viewModel: CreateShopViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.effects.collect { effect ->
+            when (effect) {
+                CreateShopEffect.NavigateBack -> navController.navigateUp()
+                CreateShopEffect.OpenAddCategoryDialog -> {
+                    navController.navigateForResult<ShopCategorySerializable>(
+                        route = Route.AddCategoryDialog,
+                        key = NEW_CATEGORY_DIALOG_VALUE,
+                        onResult = { newCategory ->
+                            val category = newCategory.toDomain()
+                            viewModel.addCategory(category)
+                        }
+                    )
+                }
+            }
+        }
+    }
 
     CreateShopFlowScreen(
         state = state,

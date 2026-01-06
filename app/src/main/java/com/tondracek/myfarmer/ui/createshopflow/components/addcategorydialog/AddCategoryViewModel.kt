@@ -6,19 +6,19 @@ import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.shopcategory.domain.model.toSerializable
 import com.tondracek.myfarmer.shopcategory.domain.usecase.GetCategorySuggestionsUC
 import com.tondracek.myfarmer.shopcategory.domain.usecase.GetMostPopularCategoriesUC
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 const val NEW_CATEGORY_DIALOG_VALUE = "new_category"
@@ -27,11 +27,10 @@ const val NEW_CATEGORY_DIALOG_VALUE = "new_category"
 class AddCategoryViewModel @Inject constructor(
     getMostPopularCategories: GetMostPopularCategoriesUC,
     getCategorySuggestions: GetCategorySuggestionsUC,
-    private val navigator: AppNavigator,
 ) : ViewModel() {
 
     private val mostPopularCategories: Flow<List<CategoryPopularity>> =
-        getMostPopularCategories().map { it.getOrElse(emptyList()) }
+        getMostPopularCategories().getOrElse(emptyList())
 
     private val inputCategoryName: MutableStateFlow<String> =
         MutableStateFlow("")
@@ -70,20 +69,27 @@ class AddCategoryViewModel @Inject constructor(
         )
     )
 
-    fun onCategoryNameChange(newName: String) = inputCategoryName.update {
-        newName
+    fun onCategoryNameChange(newName: String) =
+        inputCategoryName.update { newName }
+
+    fun onColorSelected(newColor: Color) =
+        selectedColor.update { newColor }
+
+    fun onAddCategory(category: ShopCategory) = viewModelScope.launch {
+        _effects.emit(AddCategoryEffect.OnAddCategory(category))
     }
 
-    fun onColorSelected(newColor: Color) = selectedColor.update {
-        newColor
+    fun onDismissRequest() = viewModelScope.launch {
+        _effects.emit(AddCategoryEffect.OnGoBackClicked)
     }
 
-    fun onAddCategory(category: ShopCategory) {
-        navigator.setResult(NEW_CATEGORY_DIALOG_VALUE, category.toSerializable())
-        navigator.navigateBack()
-    }
+    private val _effects = MutableSharedFlow<AddCategoryEffect>(extraBufferCapacity = 1)
+    val effects: SharedFlow<AddCategoryEffect> = _effects
+}
 
-    fun onDismissRequest() {
-        navigator.navigateBack()
-    }
+sealed interface AddCategoryEffect {
+
+    data object OnGoBackClicked : AddCategoryEffect
+
+    data class OnAddCategory(val category: ShopCategory) : AddCategoryEffect
 }

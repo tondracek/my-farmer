@@ -68,12 +68,12 @@ class MainActivity : ComponentActivity() {
                             authScreenDestination()
                             myShopsScreenDestination()
 
-                            createShopDestination()
+                            createShopDestination(navController)
                             updateShopDestination()
 
                             shopBottomSheetDestination()
 
-                            addCategoryDialogDestination()
+                            addCategoryDialogDestination(navController)
                             shopsFilterDialogDestination()
                         }
                     }

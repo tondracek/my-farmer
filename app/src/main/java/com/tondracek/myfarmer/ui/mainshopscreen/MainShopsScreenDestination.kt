@@ -11,7 +11,7 @@ import com.tondracek.myfarmer.ui.core.appstate.AppUiController
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListView
-import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListViewEvent
+import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListViewEffect
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListViewModel
 import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapView
 import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapViewEvent
@@ -24,7 +24,7 @@ fun NavGraphBuilder.mainShopsScreenDestination(
 }) { appUiController ->
     val mainShopsScreenViewModel: MainShopsScreenViewModel = hiltViewModel()
     LaunchedEffect(Unit) {
-        mainShopsScreenViewModel.events.collect { event ->
+        mainShopsScreenViewModel.effects.collect { event ->
             when (event) {
                 is MainShopsScreenEvent.OpenFiltersDialog ->
                     navController.navigate(Route.ShopFilterDialog(event.filtersKey))
@@ -58,15 +58,15 @@ private fun ShopsListViewSection(
     val shopsListViewState by shopsListViewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        shopsListViewModel.events.collect { event ->
+        shopsListViewModel.effects.collect { event ->
             when (event) {
-                ShopsListViewEvent.OnBackClicked ->
+                ShopsListViewEffect.OnBackClicked ->
                     navController.navigateUp()
 
-                is ShopsListViewEvent.OpenShopDetail ->
+                is ShopsListViewEffect.OpenShopDetail ->
                     navController.navigate(Route.ShopDetailRoute(event.shopId.toString()))
 
-                is ShopsListViewEvent.ShowError ->
+                is ShopsListViewEffect.ShowError ->
                     appUiController.showError(event.message)
             }
         }
@@ -88,7 +88,7 @@ private fun ShopsMapViewSection(
     val shopsMapViewState by shopsMapViewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        shopsMapViewModel.events.collect { event ->
+        shopsMapViewModel.effects.collect { event ->
             when (event) {
                 is ShopsMapViewEvent.OpenShopDetail ->
                     navController.navigate(Route.ShopDetailRoute(event.shopId.toString()))

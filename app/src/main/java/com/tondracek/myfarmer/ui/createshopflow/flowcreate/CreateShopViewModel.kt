@@ -9,16 +9,13 @@ import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.usecase.CreateShopUC
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategorySerializable
-import com.tondracek.myfarmer.shopcategory.domain.model.toDomain
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.createshopflow.CreateShopState
-import com.tondracek.myfarmer.ui.createshopflow.components.addcategorydialog.NEW_CATEGORY_DIALOG_VALUE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,7 +25,6 @@ import kotlin.time.Duration.Companion.seconds
 @HiltViewModel
 class CreateShopViewModel @Inject constructor(
     private val createShop: CreateShopUC,
-    private val navigator: AppNavigator,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<CreateShopState>(
@@ -36,6 +32,9 @@ class CreateShopViewModel @Inject constructor(
     )
 
     val state: StateFlow<CreateShopState> = _state
+
+    private val _effects = MutableSharedFlow<CreateShopEffect>(extraBufferCapacity = 1)
+    val effects: SharedFlow<CreateShopEffect> = _effects
 
     fun goToNextStep() = _state.updateCreating { currentStep ->
         currentStep.next()
@@ -45,8 +44,9 @@ class CreateShopViewModel @Inject constructor(
         currentStep.previous()
     }
 
-    fun navigateBack() =
-        navigator.navigateBack()
+    fun navigateBack() = viewModelScope.launch {
+        _effects.emit(CreateShopEffect.NavigateBack)
+    }
 
     fun submitCreating() = viewModelScope.launch {
         val currentState = _state.value
@@ -75,17 +75,14 @@ class CreateShopViewModel @Inject constructor(
         it.copy(description = description)
     }
 
-    fun onOpenAddCategoryDialog() = navigator.navigateForResult<ShopCategorySerializable>(
-        route = Route.AddCategoryDialog,
-        key = NEW_CATEGORY_DIALOG_VALUE,
-        onResult = { newCategory ->
-            val category = newCategory.toDomain()
-            _state.updateShopInput { shopInput ->
-                val newCategories = (shopInput.categories + category).distinctBy(ShopCategory::name)
-                shopInput.copy(categories = newCategories)
-            }
-        }
-    )
+    fun onOpenAddCategoryDialog() = viewModelScope.launch {
+        _effects.emit(CreateShopEffect.OpenAddCategoryDialog)
+    }
+
+    fun addCategory(category: ShopCategory) = _state.updateShopInput { shopInput ->
+        val newCategories = (shopInput.categories + category).distinctBy(ShopCategory::name)
+        shopInput.copy(categories = newCategories)
+    }
 
     fun updateCategories(categories: List<ShopCategory>) = _state.updateShopInput {
         it.copy(categories = categories.distinctBy(ShopCategory::name))
@@ -126,4 +123,11 @@ class CreateShopViewModel @Inject constructor(
             else -> it
         }
     }
+}
+
+sealed interface CreateShopEffect {
+
+    data object NavigateBack : CreateShopEffect
+
+    data object OpenAddCategoryDialog : CreateShopEffect
 }

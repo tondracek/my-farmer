@@ -44,10 +44,10 @@ class ShopsListViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val shopsUiState: Flow<UiState<List<Shop>>> = filters
         .flatMapLatest { getAllShops(filters = it) }
-        .asUiState(emptyList()) { _events.emit(ShopsListViewEvent.ShowError(it.userError)) }
+        .asUiState(emptyList()) { _effects.emit(ShopsListViewEffect.ShowError(it.userError)) }
 
     val averageRatings: Flow<Map<ShopId, Rating>> = getAverageRatingsByShopUC()
-        .getOrElse(emptyMap()) { _events.emit(ShopsListViewEvent.ShowError(it.userError)) }
+        .getOrElse(emptyMap()) { _effects.emit(ShopsListViewEffect.ShowError(it.userError)) }
 
     val state: StateFlow<ShopsListViewState> = combine(
         shopsUiState,
@@ -68,22 +68,22 @@ class ShopsListViewModel @Inject constructor(
         initialValue = ShopsListViewState.Loading
     )
 
-    private val _events = MutableSharedFlow<ShopsListViewEvent>(extraBufferCapacity = 1)
-    val events = _events.asSharedFlow()
+    private val _effects = MutableSharedFlow<ShopsListViewEffect>(extraBufferCapacity = 1)
+    val effects = _effects.asSharedFlow()
 
     fun openShopDetail(shopId: ShopId) = viewModelScope.launch {
-        _events.emit(ShopsListViewEvent.OpenShopDetail(shopId))
+        _effects.emit(ShopsListViewEffect.OpenShopDetail(shopId))
     }
 
     fun onBackClicked() = viewModelScope.launch {
-        _events.emit(ShopsListViewEvent.OnBackClicked)
+        _effects.emit(ShopsListViewEffect.OnBackClicked)
     }
 }
 
-sealed interface ShopsListViewEvent {
-    data class OpenShopDetail(val shopId: ShopId) : ShopsListViewEvent
+sealed interface ShopsListViewEffect {
+    data class OpenShopDetail(val shopId: ShopId) : ShopsListViewEffect
 
-    data object OnBackClicked : ShopsListViewEvent
+    data object OnBackClicked : ShopsListViewEffect
 
-    data class ShowError(val message: String) : ShopsListViewEvent
+    data class ShowError(val message: String) : ShopsListViewEffect
 }

@@ -91,16 +91,16 @@ class ShopsMapViewModel @Inject constructor(
     )
 
     fun onShopSelected(shopId: ShopId) = viewModelScope.launch {
-        _events.emit(ShopsMapViewEvent.OpenShopDetail(shopId))
+        _effects.emit(ShopsMapViewEvent.OpenShopDetail(shopId))
     }
 
-    private val _events = MutableSharedFlow<ShopsMapViewEvent>(extraBufferCapacity = 1)
-    val events: SharedFlow<ShopsMapViewEvent> = _events
+    private val _effects = MutableSharedFlow<ShopsMapViewEvent>(extraBufferCapacity = 1)
+    val effects: SharedFlow<ShopsMapViewEvent> = _effects
 
     private fun <T> Flow<UCResult<T>>.getOrEmitError(defaultValue: T): Flow<T> = map { result ->
         result.getOrElse {
             viewModelScope.launch {
-                _events.emit(ShopsMapViewEvent.ShowError(it.userError))
+                _effects.emit(ShopsMapViewEvent.ShowError(it.userError))
             }
             defaultValue
         }

@@ -12,12 +12,12 @@ import javax.inject.Inject
 @HiltViewModel
 class MainShopsScreenViewModel @Inject constructor() : ViewModel() {
 
-    private val _events = MutableSharedFlow<MainShopsScreenEvent>(extraBufferCapacity = 1)
-    val events: SharedFlow<MainShopsScreenEvent> = _events
+    private val _effects = MutableSharedFlow<MainShopsScreenEvent>(extraBufferCapacity = 1)
+    val effects: SharedFlow<MainShopsScreenEvent> = _effects
 
     fun onOpenFiltersDialog() = viewModelScope.launch {
         val filtersKey = ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN
-        _events.emit(MainShopsScreenEvent.OpenFiltersDialog(filtersKey))
+        _effects.emit(MainShopsScreenEvent.OpenFiltersDialog(filtersKey))
     }
 }
 
