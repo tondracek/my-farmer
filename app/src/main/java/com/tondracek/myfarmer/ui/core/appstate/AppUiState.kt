@@ -46,24 +46,21 @@ data class AppUiState(
     val showTopBar: Boolean = true,
 )
 
-class AppUiStateScope(
-    private val controller: AppUiController
-) {
-    var appUiState: MutableStateFlow<AppUiState> = MutableStateFlow(AppUiState())
+class AppUiStateScope() {
+    private val _appUiState: MutableStateFlow<AppUiState> = MutableStateFlow(AppUiState())
+    val appUiState: StateFlow<AppUiState> = _appUiState
 
     var title: String?
         get() = title
-        set(value) = appUiState.update { it.copy(title = value) }
+        set(value) = _appUiState.update { it.copy(title = value) }
 
     var applyTopBarPadding: Boolean
         get() = applyTopBarPadding
-        set(value) = appUiState.update { it.copy(applyTopBarPadding = value) }
+        set(value) = _appUiState.update { it.copy(applyTopBarPadding = value) }
 
     var showTopBar: Boolean
         get() = showTopBar
-        set(value) = appUiState.update { it.copy(showTopBar = value) }
-
-    fun apply() = controller.apply(appUiState.value)
+        set(value) = _appUiState.update { it.copy(showTopBar = value) }
 }
 
 suspend fun AppUiController.collectEvents(events: Flow<UiEvent>) {

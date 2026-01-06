@@ -1,6 +1,9 @@
 package com.tondracek.myfarmer.ui.core.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.tondracek.myfarmer.ui.core.appstate.AppUiController
@@ -13,9 +16,12 @@ inline fun <reified T : Route> NavGraphBuilder.routeDestination(
 ) = composable<T> {
     val appUiController = LocalAppUiController.current
 
-    val appUiStateScope = AppUiStateScope(appUiController)
-    appUiStateScope.uiConfig()
-    appUiStateScope.apply()
+    val appUiStateScope = AppUiStateScope().apply { uiConfig() }
+    val appUiState by appUiStateScope.appUiState.collectAsState()
+
+    LaunchedEffect(appUiState) {
+        appUiController.apply(appUiState)
+    }
 
     content(appUiController)
 }
