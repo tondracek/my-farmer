@@ -50,7 +50,7 @@
 
 **Class Diagram**:
 
-![Class Diagram](docs/diagram-img/class.svg)
+![Class Diagram](docs/diagram-img/class_diagram.svg)
 
 **Postup vývoje**
 
