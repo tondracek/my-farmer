@@ -76,4 +76,15 @@
     <string name="write_message_for_x_here">Zde napište zprávu pro %1$s</string>
     <string name="enter_opening_hours_message">Zde napište zprávu místo otevírací doby</string>
     <string name="opening_hours_message_example">Například: \"Po domluvě přes SMS\", \"Předem volejte na telefon\"</string>
+    <string name="add">Přidat</string>
+    <string name="name">Název</string>
+    <string name="product_name">Název produktu</string>
+    <string name="price">Cena</string>
+    <string name="is_in_stock">Skladem:</string>
+    <string name="edit_product">Upravit produkt</string>
+    <string name="update">Upravit</string>
+    <string name="create_shop_map_hint_01">Posunujte prsty po mapě a klikněte pro umístění polohy obchodu na zvolené místo.</string>
+    <string name="create_shop_map_hint_02">Použijte dva prsty pro přiblížení a oddálení</string>
+    <string name="update_shop">Upravit obchod</string>
+    <string name="delete_shop">Odstranit obchod</string>
 </resources>

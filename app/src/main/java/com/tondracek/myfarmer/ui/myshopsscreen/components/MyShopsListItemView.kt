@@ -16,9 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.domain.model.ShopId
@@ -81,13 +83,13 @@ fun MyShopsListItemView(
                         onClick = { onUpdateShopClick(shop.id) },
                         colors = MyFarmerTheme.buttonColors.tertiary
                     ) {
-                        Text(text = "Update Shop")
+                        Text(text = stringResource(R.string.update_shop))
                     }
                     Button(
                         onClick = { onDeleteShopClick(shop.id) },
                         colors = MyFarmerTheme.buttonColors.error
                     ) {
-                        Text(text = "Delete Shop")
+                        Text(text = stringResource(R.string.delete_shop))
                     }
                 }
             }

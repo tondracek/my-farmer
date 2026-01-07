@@ -115,13 +115,13 @@ private fun Content(
                 Column {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Drag your finger across the map and click to place the marker on the desired position",
+                        text = stringResource(R.string.create_shop_map_hint_01),
                         style = MyFarmerTheme.typography.textSmall,
                         textAlign = TextAlign.Center,
                     )
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Use two fingers to zoom in or zoom out",
+                        text = stringResource(R.string.create_shop_map_hint_02),
                         style = MyFarmerTheme.typography.textSmall,
                         textAlign = TextAlign.Center,
                     )

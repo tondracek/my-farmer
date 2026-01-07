@@ -44,7 +44,7 @@ fun CategoryNameInput(
             modifier = Modifier.fillMaxWidth(),
             value = state.categoryName,
             onValueChange = { onNameChanged(it) },
-            label = { Text("Name") },
+            label = { Text(stringResource(R.string.name)) },
             singleLine = true,
         )
         Row(

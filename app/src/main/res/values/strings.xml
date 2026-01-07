@@ -75,4 +75,15 @@
     <string name="write_message_for_x_here">Write message for %1$s here</string>
     <string name="enter_opening_hours_message">Enter opening hours message</string>
     <string name="opening_hours_message_example">Example: \"Send a message before visit\", \"Call us before coming\"</string>
+    <string name="add">Add</string>
+    <string name="name">Name</string>
+    <string name="product_name">Product name</string>
+    <string name="price">Price</string>
+    <string name="is_in_stock">Is in stock:</string>
+    <string name="edit_product">Edit product</string>
+    <string name="update">Update</string>
+    <string name="create_shop_map_hint_01">Drag your finger across the map and click to place the marker on the desired position</string>
+    <string name="create_shop_map_hint_02">Use two fingers to zoom in or zoom out</string>
+    <string name="update_shop">Update Shop</string>
+    <string name="delete_shop">Delete Shop</string>
 </resources>
