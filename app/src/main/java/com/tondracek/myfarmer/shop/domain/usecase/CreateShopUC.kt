@@ -34,7 +34,12 @@ class CreateShopUC @Inject constructor(
             shopRepository.update(shopWithPhotos)
         }
 
-    suspend fun Shop.updatePhotos(shopId: ShopId): Shop = this.copy(
+    /**
+     * - Uploads the photos for the shop
+     * - retrieves their newly generated URLs
+     * - updates the shop with the new photo URLs
+     */
+    private suspend fun Shop.updatePhotos(shopId: ShopId): Shop = this.copy(
         images = this.images
             .map { UUID.randomUUID().toString() to it }
             .let {
