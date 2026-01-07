@@ -5,7 +5,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -30,6 +34,8 @@ fun ShopsMapView(
     state: ShopsMapViewState,
     onShopSelected: (ShopId) -> Unit,
 ) {
+    var manuallyZoomed by rememberSaveable { mutableStateOf(false) }
+
     val cameraPositionState = rememberCameraPositionState()
     val scope = rememberCoroutineScope()
 
@@ -41,12 +47,14 @@ fun ShopsMapView(
     }
 
     LaunchedEffect(state.initialCameraBounds) {
+        if (manuallyZoomed) return@LaunchedEffect
         val bounds = state.initialCameraBounds ?: return@LaunchedEffect
         delay(500)
 
         cameraPositionState.animate(
             CameraUpdateFactory.newLatLngBounds(bounds, 300)
         )
+        manuallyZoomed = true
     }
 
     val fineLocationPermission = rememberPermissionState(

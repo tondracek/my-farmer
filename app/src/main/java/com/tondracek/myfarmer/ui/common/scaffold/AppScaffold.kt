@@ -19,18 +19,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tondracek.myfarmer.ui.common.navbar.BottomNavigationBar
-import com.tondracek.myfarmer.ui.common.navbar.NavBarState
 import com.tondracek.myfarmer.ui.common.navbar.NavBarViewModel
 import com.tondracek.myfarmer.ui.core.appstate.AppUiController
 import com.tondracek.myfarmer.ui.core.appstate.LocalAppUiController
 import com.tondracek.myfarmer.ui.core.navigation.NavGraph
-import com.tondracek.myfarmer.ui.core.navigation.Route
-import com.tondracek.myfarmer.ui.core.navigation.getCurrentRoute
 import com.tondracek.myfarmer.ui.core.navigation.isInNavGraph
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.core.uievents.MyFarmerSnackBar
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 
 @Composable
 fun AppScaffold(
@@ -38,10 +33,7 @@ fun AppScaffold(
     content: @Composable BoxScope.() -> Unit,
 ) {
     val navBarViewModel: NavBarViewModel = hiltViewModel()
-    val navBarState by getNavBarState(
-        isLoggedIn = navBarViewModel.isLoggedIn,
-        currentRoute = navController.getCurrentRoute()
-    ).collectAsState(NavBarState())
+    val navBarState by navBarViewModel.state.collectAsState()
 
     val appUiController = remember { AppUiController() }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -63,7 +55,7 @@ fun AppScaffold(
                 if (showBottomBar)
                     BottomNavigationBar(
                         state = navBarState,
-                        onNavigate = { route -> navController.navigate(route) }
+                        navController = navController,
                     )
             },
             snackbarHost = {
@@ -84,18 +76,4 @@ fun AppScaffold(
             }
         }
     }
-}
-
-@Composable
-private fun getNavBarState(
-    isLoggedIn: Flow<Boolean>,
-    currentRoute: Flow<Route?>,
-) = combine(
-    isLoggedIn,
-    currentRoute,
-) { loggedIn, route ->
-    NavBarState(
-        isLoggedIn = loggedIn,
-        currentRoute = route,
-    )
 }

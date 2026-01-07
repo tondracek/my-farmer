@@ -67,6 +67,9 @@ class MainActivity : ComponentActivity() {
 
                                 navigation<NavGraph.MainFlow.Profile>(Route.EditProfileScreenRoute) {
                                     editProfileDestination(navController)
+                                }
+
+                                navigation<NavGraph.MainFlow.Auth>(Route.AuthScreenRoute) {
                                     authScreenDestination(navController)
                                 }
                             }
