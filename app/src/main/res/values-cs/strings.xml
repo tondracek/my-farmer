@@ -87,4 +87,5 @@
     <string name="create_shop_map_hint_02">Použijte dva prsty pro přiblížení a oddálení</string>
     <string name="update_shop">Upravit obchod</string>
     <string name="delete_shop">Odstranit obchod</string>
+    <string name="camera">Fotoaparát</string>
 </resources>

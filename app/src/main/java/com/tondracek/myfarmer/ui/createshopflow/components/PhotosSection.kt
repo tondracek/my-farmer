@@ -65,11 +65,15 @@ private fun AddPhotoButtons(
     modifier: Modifier = Modifier,
     onPhotoAdded: (ImageResource) -> Unit
 ) {
-    Row(modifier = modifier) {
-        PictureFromGalleryIconButton {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        PictureFromGalleryIconButton(useLabel = true) {
             onPhotoAdded(it)
         }
-        PictureFromCameraIconButton {
+        PictureFromCameraIconButton(useLabel = true) {
             onPhotoAdded(it)
         }
     }

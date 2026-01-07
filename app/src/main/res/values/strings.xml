@@ -86,4 +86,5 @@
     <string name="create_shop_map_hint_02">Use two fingers to zoom in or zoom out</string>
     <string name="update_shop">Update Shop</string>
     <string name="delete_shop">Delete Shop</string>
+    <string name="camera">Camera</string>
 </resources>
