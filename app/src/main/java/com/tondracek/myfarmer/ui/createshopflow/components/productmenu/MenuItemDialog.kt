@@ -38,17 +38,19 @@ fun AddMenuItemDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
-                    name,
-                    { name = it },
+                    value = name,
+                    onValueChange = { name = it },
                     label = { Text(stringResource(R.string.product_name)) })
                 OutlinedTextField(
-                    description,
-                    { description = it },
+                    value = description,
+                    onValueChange = { description = it },
                     label = { Text(stringResource(R.string.description)) })
                 OutlinedTextField(
-                    price,
-                    { price = it },
-                    label = { Text(stringResource(R.string.price)) })
+                    value = price,
+                    onValueChange = { price = it },
+                    label = { Text(stringResource(R.string.price)) },
+                    supportingText = { Text(stringResource(R.string.price_label_input_hint)) },
+                )
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically

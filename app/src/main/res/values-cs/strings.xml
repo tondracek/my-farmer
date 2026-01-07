@@ -88,4 +88,5 @@
     <string name="update_shop">Upravit obchod</string>
     <string name="delete_shop">Odstranit obchod</string>
     <string name="camera">Fotoaparát</string>
+    <string name="price_label_input_hint">Libovolný text - např. \"200 kč za kg\", \"5 kč za kus\"</string>
 </resources>
