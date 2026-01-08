@@ -4,8 +4,12 @@ import com.tondracek.myfarmer.core.repository.BaseRepository
 import com.tondracek.myfarmer.core.repository.IdMapper
 import com.tondracek.myfarmer.core.repository.RepositoryCore
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
+import com.tondracek.myfarmer.core.repository.request.filterEq
+import com.tondracek.myfarmer.core.repository.request.repositoryRequest
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.systemuser.domain.model.UserId
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,4 +21,10 @@ class ShopRepository @Inject constructor(
     core = core,
     entityMapper = mapper,
     idMapper = IdMapper.UUIDtoFirestore,
-)
+) {
+    fun getByOwnerId(ownerId: UserId): Flow<List<Shop>> = get(
+        repositoryRequest {
+            addFilter(ShopEntity::ownerId filterEq ownerId.toString())
+        }
+    )
+}

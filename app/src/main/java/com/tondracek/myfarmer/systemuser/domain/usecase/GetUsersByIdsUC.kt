@@ -1,8 +1,5 @@
 package com.tondracek.myfarmer.systemuser.domain.usecase
 
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
-import com.tondracek.myfarmer.core.repository.request.filterIn
-import com.tondracek.myfarmer.core.repository.request.repositoryRequest
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.toUCResult
 import com.tondracek.myfarmer.systemuser.data.UserRepository
@@ -21,9 +18,7 @@ class GetUsersByIdsUC @Inject constructor(
             return flowOf(UCResult.Success(emptyList()))
 
         return repository
-            .get(repositoryRequest {
-                FirestoreEntity::id filterIn ids.map(UUID::toString)
-            })
+            .getByIds(ids)
             .toUCResult()
     }
 }
