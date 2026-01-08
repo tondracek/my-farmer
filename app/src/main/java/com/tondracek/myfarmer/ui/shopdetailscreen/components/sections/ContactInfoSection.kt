@@ -55,7 +55,7 @@ fun ContactInfoSection(
         }
         contactInfo.website?.let { website ->
             OpenLinkItem(
-                title = "Website",
+                title = website,
                 url = website,
             )
         }
