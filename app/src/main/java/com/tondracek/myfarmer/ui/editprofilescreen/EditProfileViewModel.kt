@@ -11,7 +11,6 @@ import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.usecase.UpdateUserUC
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -25,7 +24,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
@@ -91,14 +89,13 @@ class EditProfileViewModel @Inject constructor(
         val updateResult = updateUserUC(updateUser)
 
         when (updateResult) {
-            is UCResult.Success -> run {
-                _state.update { EditProfileScreenState.SavedSuccessfully }
-                delay(3.seconds)
-                loadData()
-            }
+            is UCResult.Success ->
+                _effects.emit(EditProfileScreenEffect.ShowSavedProfileMessage)
 
-            is UCResult.Failure -> _state.update { EditProfileScreenState.Error(result = updateResult) }
+            is UCResult.Failure ->
+                _effects.emit(EditProfileScreenEffect.ShowError(updateResult.userError))
         }
+        loadData()
     }
 
     fun navigateBack() = viewModelScope.launch {
@@ -130,4 +127,8 @@ sealed interface EditProfileScreenEffect {
     data object GoBack : EditProfileScreenEffect
 
     data object OpenAuthScreen : EditProfileScreenEffect
+
+    data object ShowSavedProfileMessage : EditProfileScreenEffect
+
+    data class ShowError(val message: String) : EditProfileScreenEffect
 }

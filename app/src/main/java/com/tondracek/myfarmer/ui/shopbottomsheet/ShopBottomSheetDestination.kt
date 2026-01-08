@@ -14,6 +14,7 @@ import com.stefanoq21.material3.navigation.bottomSheet
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
+import com.tondracek.myfarmer.ui.core.appstate.AppUiController
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.shopdetailscreen.ShopDetailState
 import com.tondracek.myfarmer.ui.shopdetailscreen.components.ShopDetailLayout
@@ -25,6 +26,7 @@ fun SavedStateHandle.getShopBottomSheetShopId(): ShopId =
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.shopBottomSheetDestination(
     navController: NavController,
+    appUiController: AppUiController,
 ) = bottomSheet<Route.ShopBottomSheetRoute> {
     val viewmodel: ShopBottomSheetViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()
@@ -44,7 +46,8 @@ fun NavGraphBuilder.shopBottomSheetDestination(
     Content(
         state = state,
         navigateToReviews = viewmodel::navigateToReviews,
-        onNavigateBack = viewmodel::navigateBack
+        onNavigateBack = viewmodel::navigateBack,
+        showErrorMessage = appUiController::showErrorMessage,
     )
 }
 
@@ -53,11 +56,13 @@ private fun Content(
     state: ShopDetailState,
     navigateToReviews: () -> Unit,
     onNavigateBack: () -> Unit,
+    showErrorMessage: (String) -> Unit,
 ) {
     when (state) {
         is ShopDetailState.Success -> ShopDetailLayout(
             state = state,
-            onReviewsClick = navigateToReviews
+            onReviewsClick = navigateToReviews,
+            showErrorMessage = showErrorMessage,
         )
 
         ShopDetailState.Loading -> LoadingLayout()

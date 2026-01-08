@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.navigation
@@ -14,6 +15,7 @@ import com.stefanoq21.material3.navigation.ModalBottomSheetLayout
 import com.stefanoq21.material3.navigation.rememberBottomSheetNavigator
 import com.tondracek.myfarmer.ui.authscreen.authScreenDestination
 import com.tondracek.myfarmer.ui.common.scaffold.AppScaffold
+import com.tondracek.myfarmer.ui.core.appstate.AppUiController
 import com.tondracek.myfarmer.ui.core.navigation.NavGraph
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -44,9 +46,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyFarmerTheme {
                 val bottomSheetNavigator = rememberBottomSheetNavigator()
-                val navController = rememberNavController(bottomSheetNavigator)
 
-                AppScaffold(navController) {
+                val navController = rememberNavController(bottomSheetNavigator)
+                val appUiController = remember { AppUiController() }
+
+                AppScaffold(navController, appUiController) {
                     ModalBottomSheetLayout(
                         modifier = Modifier.fillMaxSize(),
                         bottomSheetNavigator = bottomSheetNavigator,
@@ -62,7 +66,7 @@ class MainActivity : ComponentActivity() {
 
                                 navigation<NavGraph.MainFlow.Home>(Route.MainShopsRoute) {
                                     mainShopsScreenDestination(navController)
-                                    shopBottomSheetDestination(navController)
+                                    shopBottomSheetDestination(navController, appUiController)
                                 }
 
                                 navigation<NavGraph.MainFlow.Profile>(Route.EditProfileScreenRoute) {

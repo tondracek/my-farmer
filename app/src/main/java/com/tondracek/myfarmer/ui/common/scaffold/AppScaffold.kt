@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -26,21 +27,35 @@ import com.tondracek.myfarmer.ui.core.navigation.NavGraph
 import com.tondracek.myfarmer.ui.core.navigation.isInNavGraph
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.core.uievents.MyFarmerSnackBar
+import com.tondracek.myfarmer.ui.core.uievents.SnackBarType
 
 @Composable
 fun AppScaffold(
     navController: NavController,
+    appUiController: AppUiController,
     content: @Composable BoxScope.() -> Unit,
 ) {
     val navBarViewModel: NavBarViewModel = hiltViewModel()
     val navBarState by navBarViewModel.state.collectAsState()
 
-    val appUiController = remember { AppUiController() }
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        appUiController.errors.collect { errorMessage ->
-            snackbarHostState.showSnackbar(errorMessage)
+        appUiController.errors.collect { message ->
+            snackbarHostState.showSnackbar(
+                message = message,
+                actionLabel = SnackBarType.ERROR,
+                duration = SnackbarDuration.Short,
+            )
+        }
+    }
+    LaunchedEffect(Unit) {
+        appUiController.successMessages.collect { message ->
+            snackbarHostState.showSnackbar(
+                message = message,
+                actionLabel = SnackBarType.SUCCESS,
+                duration = SnackbarDuration.Short,
+            )
         }
     }
 

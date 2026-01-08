@@ -10,11 +10,13 @@ fun ShopDetailScreen(
     state: ShopDetailState,
     navigateToReviews: () -> Unit,
     onNavigateBack: () -> Unit,
+    showErrorMessage: (String) -> Unit,
 ) {
     when (state) {
         is ShopDetailState.Success -> ShopDetailLayout(
             state = state,
             onReviewsClick = navigateToReviews,
+            showErrorMessage = showErrorMessage,
         )
 
         is ShopDetailState.Loading -> LoadingLayout()

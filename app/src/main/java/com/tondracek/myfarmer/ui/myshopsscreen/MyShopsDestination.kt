@@ -32,7 +32,7 @@ fun NavGraphBuilder.myShopsScreenDestination(
                 is MyShopsEffect.OpenUpdateShop ->
                     navController.navigate(Route.UpdateShop(it.shopId.toString()))
 
-                is MyShopsEffect.ShowError -> appUiController.showError(it.message)
+                is MyShopsEffect.ShowError -> appUiController.showErrorMessage(it.message)
             }
         }
     }

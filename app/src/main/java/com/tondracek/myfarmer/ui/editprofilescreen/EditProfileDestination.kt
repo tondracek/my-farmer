@@ -14,15 +14,21 @@ import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 
 fun NavGraphBuilder.editProfileDestination(
     navController: NavController,
-) = routeDestination<Route.EditProfileScreenRoute> {
+) = routeDestination<Route.EditProfileScreenRoute> { appUiController ->
     val viewmodel: EditProfileViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()
 
+    val profileSavedMessage = stringResource(R.string.profile_saved_successfully)
     LaunchedEffect(Unit) {
         viewmodel.effects.collect {
             when (it) {
                 EditProfileScreenEffect.GoBack -> navController.navigateUp()
                 EditProfileScreenEffect.OpenAuthScreen -> navController.navigate(Route.AuthScreenRoute)
+                EditProfileScreenEffect.ShowSavedProfileMessage ->
+                    appUiController.showSuccessMessage(profileSavedMessage)
+
+                is EditProfileScreenEffect.ShowError ->
+                    appUiController.showErrorMessage(it.message)
             }
         }
     }

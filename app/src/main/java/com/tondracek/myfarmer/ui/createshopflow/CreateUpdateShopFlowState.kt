@@ -21,7 +21,7 @@ sealed interface CreateUpdateShopFlowState {
             CreateShopStateCreatingStep.CATEGORIES_MENU -> this.copy(step = CreateShopStateCreatingStep.PHOTOS_DESCRIPTION)
             CreateShopStateCreatingStep.PHOTOS_DESCRIPTION -> this.copy(step = CreateShopStateCreatingStep.OPENING_HOURS)
             CreateShopStateCreatingStep.OPENING_HOURS -> this.copy(step = CreateShopStateCreatingStep.REVIEW_AND_SUBMIT)
-            CreateShopStateCreatingStep.REVIEW_AND_SUBMIT -> Finished
+            CreateShopStateCreatingStep.REVIEW_AND_SUBMIT -> this
         }
 
         fun previous(): Creating = when (this.step) {
@@ -37,8 +37,6 @@ sealed interface CreateUpdateShopFlowState {
                 Creating(shopInput = shopInput, step = CreateShopStateCreatingStep.NAME_LOCATION)
         }
     }
-
-    data object Finished : CreateUpdateShopFlowState
 
     data object Loading : CreateUpdateShopFlowState
 

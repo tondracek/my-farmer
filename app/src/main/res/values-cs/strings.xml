@@ -37,7 +37,7 @@
     <string name="shop_reviews">Recenze obchodu</string>
     <string name="shop_created_successfully">Obchod úspěšně vytvořen!</string>
     <string name="shop_updated_successfully">Obchod úspěšně aktualizován!</string>
-    <string name="updating_profile_please_wait">Úpravování profilu, prosím čekejte!</string>
+    <string name="updating_profile_please_wait">Upravování profilu, prosím čekejte!</string>
     <string name="profile_saved_successfully">Profil úspěšně uložen!</string>
     <string name="you_are_logged_in_as">Jste přihlášeni jako %1$s</string>
     <string name="logout">Odhlásit</string>

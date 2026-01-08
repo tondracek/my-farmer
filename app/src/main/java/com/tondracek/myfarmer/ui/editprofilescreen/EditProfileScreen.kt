@@ -12,12 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -59,7 +56,6 @@ fun EditProfileScreen(
         )
 
         EditProfileScreenState.UpdatingProfile -> UpdatingProfileLayout()
-        EditProfileScreenState.SavedSuccessfully -> SavedSuccessfullyLayout()
         EditProfileScreenState.Loading -> LoadingLayout()
         is EditProfileScreenState.Error -> ErrorLayout(
             failure = state.result,
@@ -74,22 +70,6 @@ private fun UpdatingProfileLayout(modifier: Modifier = Modifier) {
         CircularProgressIndicator(modifier = Modifier.size(48.dp))
         Text(
             text = stringResource(R.string.updating_profile_please_wait),
-            style = MyFarmerTheme.typography.textLarge,
-        )
-    }
-}
-
-@Composable
-private fun SavedSuccessfullyLayout(modifier: Modifier = Modifier) {
-    CardMessageLayout(modifier = modifier) {
-        Icon(
-            modifier = Modifier.size(48.dp),
-            imageVector = Icons.Default.CheckCircle,
-            contentDescription = "Success icon",
-            tint = MyFarmerTheme.colors.success,
-        )
-        Text(
-            text = stringResource(R.string.profile_saved_successfully),
             style = MyFarmerTheme.typography.textLarge,
         )
     }
@@ -200,22 +180,6 @@ private fun EditProfileUpdatingScreenPreview() {
     MyFarmerPreview {
         EditProfileScreen(
             state = EditProfileScreenState.UpdatingProfile,
-            onNameChange = {},
-            onProfilePictureChange = {},
-            onContactInfoChange = {},
-            onLogout = {},
-            onSaveClick = {},
-            onNavigateBack = {},
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun EditProfileSavedScreenPreview() {
-    MyFarmerPreview {
-        EditProfileScreen(
-            state = EditProfileScreenState.SavedSuccessfully,
             onNameChange = {},
             onProfilePictureChange = {},
             onContactInfoChange = {},

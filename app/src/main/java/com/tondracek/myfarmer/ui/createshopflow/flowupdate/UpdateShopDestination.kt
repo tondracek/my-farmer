@@ -17,9 +17,8 @@ import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.navigateForResult
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
-import com.tondracek.myfarmer.ui.createshopflow.CreateShopFlowMode
-import com.tondracek.myfarmer.ui.createshopflow.CreateShopFlowScreen
 import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowEffect
+import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowScreen
 import com.tondracek.myfarmer.ui.createshopflow.NEW_CATEGORY_DIALOG_VALUE
 import java.util.UUID
 
@@ -29,9 +28,12 @@ fun SavedStateHandle.getUpdateShopScreenShopId(): ShopId =
 
 fun NavGraphBuilder.updateShopDestination(
     navController: NavController,
-) = routeDestination<Route.UpdateShop> {
+) = routeDestination<Route.UpdateShop> { appUiController ->
     val viewModel: UpdateShopViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
+
+    val shopSuccessfullyCreatedMessage = stringResource(R.string.shop_created_successfully)
+    val shopSuccessfullyUpdatedMessage = stringResource(R.string.shop_updated_successfully)
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -47,6 +49,15 @@ fun NavGraphBuilder.updateShopDestination(
                         }
                     )
                 }
+
+                is CreateUpdateShopFlowEffect.ShowError ->
+                    appUiController.showErrorMessage(effect.message)
+
+                CreateUpdateShopFlowEffect.ShowShopCreatedSuccessfully ->
+                    appUiController.showSuccessMessage(shopSuccessfullyCreatedMessage)
+
+                CreateUpdateShopFlowEffect.ShowShopUpdatedSuccessfully ->
+                    appUiController.showSuccessMessage(shopSuccessfullyUpdatedMessage)
             }
         }
     }
@@ -54,9 +65,8 @@ fun NavGraphBuilder.updateShopDestination(
     ScreenScaffold(
         title = stringResource(R.string.update_shop_title)
     ) {
-        CreateShopFlowScreen(
+        CreateUpdateShopFlowScreen(
             state = state,
-            createShopFlowMode = CreateShopFlowMode.UPDATE,
             onNextStep = viewModel::goToNextStep,
             onPreviousStep = viewModel::goToPreviousStep,
             onUpdateName = viewModel::updateName,

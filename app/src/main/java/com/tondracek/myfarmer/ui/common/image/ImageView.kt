@@ -29,7 +29,9 @@ fun ImageView(
     }
 
     AsyncImage(
-        modifier = modifier.clickable { openImageDialog = true },
+        modifier = modifier.clickable(enabled = imageResource != ImageResource.EMPTY) {
+            openImageDialog = true
+        },
         model = model,
         contentDescription = null,
         placeholder = painterResource(R.drawable.ic_launcher_foreground),

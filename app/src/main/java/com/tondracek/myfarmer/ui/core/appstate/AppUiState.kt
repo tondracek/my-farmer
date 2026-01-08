@@ -13,7 +13,10 @@ class AppUiController {
     private val _errors = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val errors = _errors.asSharedFlow()
 
-    fun showError(message: String) {
-        _errors.tryEmit(message)
-    }
+    fun showErrorMessage(message: String) = _errors.tryEmit(message)
+
+    private val _successMessages = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val successMessages = _successMessages.asSharedFlow()
+
+    fun showSuccessMessage(message: String) = _successMessages.tryEmit(message)
 }

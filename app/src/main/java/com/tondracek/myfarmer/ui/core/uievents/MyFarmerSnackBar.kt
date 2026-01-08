@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -18,13 +19,26 @@ import androidx.compose.ui.text.style.TextAlign
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.toCardColors
 
+object SnackBarType {
+    const val ERROR = "ERROR"
+    const val SUCCESS = "SUCCESS"
+}
+
 @Composable
 fun MyFarmerSnackBar(
     snackbarData: SnackbarData
 ) {
+    val type = snackbarData.visuals.actionLabel
+
+    val cardColors = when (type) {
+        SnackBarType.ERROR -> MyFarmerTheme.colors.errorContainer.toCardColors()
+        SnackBarType.SUCCESS -> MyFarmerTheme.colors.successContainer.toCardColors()
+        else -> MyFarmerTheme.colors.surfaceVariant.toCardColors()
+    }
+
     Card(
         shape = CircleShape,
-        colors = MyFarmerTheme.colors.errorContainer.toCardColors(),
+        colors = cardColors,
     ) {
         Row(
             modifier = Modifier
@@ -32,17 +46,10 @@ fun MyFarmerSnackBar(
                 .padding(MyFarmerTheme.paddings.small),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                modifier = Modifier
-                    .background(
-                        MyFarmerTheme.colors.error,
-                        shape = CircleShape
-                    )
-                    .padding(MyFarmerTheme.paddings.extraSmall),
-                imageVector = Icons.Default.Close,
-                contentDescription = null,
-                tint = MyFarmerTheme.colors.onError,
-            )
+            when (type) {
+                SnackBarType.ERROR -> ErrorIcon()
+                SnackBarType.SUCCESS -> SuccessIcon()
+            }
 
             Text(
                 modifier = Modifier.weight(1f),
@@ -52,4 +59,34 @@ fun MyFarmerSnackBar(
             )
         }
     }
+}
+
+@Composable
+private fun ErrorIcon() {
+    Icon(
+        modifier = Modifier
+            .background(
+                MyFarmerTheme.colors.error,
+                shape = CircleShape
+            )
+            .padding(MyFarmerTheme.paddings.extraSmall),
+        imageVector = Icons.Default.Close,
+        contentDescription = null,
+        tint = MyFarmerTheme.colors.onError,
+    )
+}
+
+@Composable
+private fun SuccessIcon() {
+    Icon(
+        modifier = Modifier
+            .background(
+                MyFarmerTheme.colors.success,
+                shape = CircleShape
+            )
+            .padding(MyFarmerTheme.paddings.extraSmall),
+        imageVector = Icons.Default.Check,
+        contentDescription = null,
+        tint = MyFarmerTheme.colors.onSuccess,
+    )
 }

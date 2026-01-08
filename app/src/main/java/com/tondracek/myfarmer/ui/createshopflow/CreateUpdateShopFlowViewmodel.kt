@@ -26,7 +26,7 @@ open class CreateUpdateShopFlowViewmodel() : ViewModel() {
 
     val state: StateFlow<CreateUpdateShopFlowState> = mutableState
 
-    private val _effects = MutableSharedFlow<CreateUpdateShopFlowEffect>(extraBufferCapacity = 1)
+    protected val _effects = MutableSharedFlow<CreateUpdateShopFlowEffect>(extraBufferCapacity = 1)
     val effects: SharedFlow<CreateUpdateShopFlowEffect> = _effects
 
     fun goToNextStep() = mutableState.updateCreating { currentStep ->
@@ -105,4 +105,10 @@ sealed interface CreateUpdateShopFlowEffect {
     data object NavigateBack : CreateUpdateShopFlowEffect
 
     data object OpenAddCategoryDialog : CreateUpdateShopFlowEffect
+
+    data object ShowShopCreatedSuccessfully : CreateUpdateShopFlowEffect
+
+    data object ShowShopUpdatedSuccessfully : CreateUpdateShopFlowEffect
+
+    data class ShowError(val message: String) : CreateUpdateShopFlowEffect
 }

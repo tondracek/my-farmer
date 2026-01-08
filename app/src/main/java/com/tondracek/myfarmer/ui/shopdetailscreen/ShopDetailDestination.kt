@@ -19,7 +19,7 @@ fun SavedStateHandle.getShopDetailScreenShopId(): ShopId =
 
 fun NavGraphBuilder.shopDetailScreenDestination(
     navController: NavController,
-) = routeDestination<Route.ShopDetailRoute> {
+) = routeDestination<Route.ShopDetailRoute> { appUiController ->
     val viewmodel: ShopDetailViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()
 
@@ -40,6 +40,7 @@ fun NavGraphBuilder.shopDetailScreenDestination(
             state = state,
             navigateToReviews = viewmodel::navigateToReviews,
             onNavigateBack = viewmodel::navigateBack,
+            showErrorMessage = appUiController::showErrorMessage,
         )
     }
 }

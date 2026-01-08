@@ -57,6 +57,7 @@ fun ShopDetailLayout(
     modifier: Modifier = Modifier,
     state: ShopDetailState.Success,
     onReviewsClick: () -> Unit,
+    showErrorMessage: (String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -82,7 +83,10 @@ fun ShopDetailLayout(
             menu = state.menu
         )
 
-        ContactInfoSection(contactInfo = state.owner.contactInfo)
+        ContactInfoSection(
+            contactInfo = state.owner.contactInfo,
+            showErrorMessage = showErrorMessage,
+        )
 
         OpeningHoursSection(
             modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.small),
@@ -242,7 +246,8 @@ private fun ShopDetailLayoutPrev() {
     MyFarmerPreview {
         ShopDetailLayout(
             state = state,
-            onReviewsClick = {}
+            onReviewsClick = {},
+            showErrorMessage = {},
         )
     }
 }
@@ -264,7 +269,8 @@ private fun ShopDetailLayoutPrev0() {
     MyFarmerPreview {
         ShopDetailLayout(
             state = state,
-            onReviewsClick = {}
+            onReviewsClick = {},
+            showErrorMessage = {},
         )
     }
 }

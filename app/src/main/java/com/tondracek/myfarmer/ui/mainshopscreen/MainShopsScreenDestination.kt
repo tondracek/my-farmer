@@ -65,7 +65,7 @@ private fun ShopsListViewSection(
                     navController.navigate(Route.ShopDetailRoute(event.shopId.toString()))
 
                 is ShopsListViewEffect.ShowError ->
-                    appUiController.showError(event.message)
+                    appUiController.showErrorMessage(event.message)
             }
         }
     }
@@ -92,7 +92,7 @@ private fun ShopsMapViewSection(
                     navController.navigate(Route.ShopBottomSheetRoute(event.shopId.toString()))
 
                 is ShopsMapViewEvent.ShowError ->
-                    appUiController.showError(event.message)
+                    appUiController.showErrorMessage(event.message)
             }
         }
     }

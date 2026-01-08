@@ -1,14 +1,11 @@
 package com.tondracek.myfarmer.ui.createshopflow
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
-import com.tondracek.myfarmer.ui.common.layout.CardSuccessMessageLayout
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.createshopflow.steps.CreatingShopCategoriesMenuStep
@@ -17,12 +14,9 @@ import com.tondracek.myfarmer.ui.createshopflow.steps.CreatingShopOpeningHoursSt
 import com.tondracek.myfarmer.ui.createshopflow.steps.CreatingShopPhotosDescriptionStep
 import com.tondracek.myfarmer.ui.createshopflow.steps.CreatingShopReviewAndSubmitStep
 
-enum class CreateShopFlowMode { CREATE, UPDATE }
-
 @Composable
-fun CreateShopFlowScreen(
+fun CreateUpdateShopFlowScreen(
     state: CreateUpdateShopFlowState,
-    createShopFlowMode: CreateShopFlowMode,
     onNextStep: () -> Unit,
     onPreviousStep: () -> Unit,
     onUpdateName: (String) -> Unit,
@@ -80,13 +74,6 @@ fun CreateShopFlowScreen(
         is CreateUpdateShopFlowState.Error -> ErrorLayout(
             failure = state.failure,
             onNavigateBack = onNavigateBack
-        )
-
-        CreateUpdateShopFlowState.Finished -> CardSuccessMessageLayout(
-            title = when (createShopFlowMode) {
-                CreateShopFlowMode.CREATE -> stringResource(R.string.shop_created_successfully)
-                CreateShopFlowMode.UPDATE -> stringResource(R.string.shop_updated_successfully)
-            }
         )
 
         CreateUpdateShopFlowState.Loading -> LoadingLayout()

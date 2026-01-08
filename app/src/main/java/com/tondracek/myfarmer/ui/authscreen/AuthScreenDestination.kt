@@ -19,7 +19,7 @@ fun NavGraphBuilder.authScreenDestination(
                     navController.navigate(Route.EditProfileScreenRoute)
 
                 is AuthScreenEffect.ShowError ->
-                    appUiController.showError(effect.message)
+                    appUiController.showErrorMessage(effect.message)
             }
         }
     }

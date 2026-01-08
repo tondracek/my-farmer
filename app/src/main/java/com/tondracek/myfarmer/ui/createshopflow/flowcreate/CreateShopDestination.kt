@@ -14,20 +14,22 @@ import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.navigateForResult
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
-import com.tondracek.myfarmer.ui.createshopflow.CreateShopFlowMode
-import com.tondracek.myfarmer.ui.createshopflow.CreateShopFlowScreen
 import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowEffect
+import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowScreen
 import com.tondracek.myfarmer.ui.createshopflow.NEW_CATEGORY_DIALOG_VALUE
 
 fun NavGraphBuilder.createShopDestination(
     navController: NavController,
-) = routeDestination<Route.CreateShop> {
+) = routeDestination<Route.CreateShop> { appUiController ->
     val viewModel: CreateShopViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 
+    val shopSuccessfullyCreatedMessage = stringResource(R.string.shop_created_successfully)
+    val shopSuccessfullyUpdatedMessage = stringResource(R.string.shop_updated_successfully)
+
     LaunchedEffect(Unit) {
-        viewModel.effects.collect { effect ->
-            when (effect) {
+        viewModel.effects.collect {
+            when (it) {
                 CreateUpdateShopFlowEffect.NavigateBack -> navController.navigateUp()
                 CreateUpdateShopFlowEffect.OpenAddCategoryDialog -> {
                     navController.navigateForResult<ShopCategorySerializable>(
@@ -39,6 +41,15 @@ fun NavGraphBuilder.createShopDestination(
                         }
                     )
                 }
+
+                is CreateUpdateShopFlowEffect.ShowError ->
+                    appUiController.showErrorMessage(it.message)
+
+                CreateUpdateShopFlowEffect.ShowShopCreatedSuccessfully ->
+                    appUiController.showSuccessMessage(shopSuccessfullyCreatedMessage)
+
+                CreateUpdateShopFlowEffect.ShowShopUpdatedSuccessfully ->
+                    appUiController.showSuccessMessage(shopSuccessfullyUpdatedMessage)
             }
         }
     }
@@ -47,9 +58,8 @@ fun NavGraphBuilder.createShopDestination(
     ScreenScaffold(
         title = stringResource(R.string.create_shop_title)
     ) {
-        CreateShopFlowScreen(
+        CreateUpdateShopFlowScreen(
             state = state,
-            createShopFlowMode = CreateShopFlowMode.CREATE,
             onNextStep = viewModel::goToNextStep,
             onPreviousStep = viewModel::goToPreviousStep,
             onUpdateName = viewModel::updateName,
