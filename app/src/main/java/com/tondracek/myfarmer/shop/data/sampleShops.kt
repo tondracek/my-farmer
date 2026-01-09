@@ -9,6 +9,7 @@ import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.shop.domain.model.Shop
+import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
@@ -21,7 +22,7 @@ import java.time.DayOfWeek
 import java.util.UUID
 
 val shop0 = Shop(
-    id = UUID.fromString("ded3f207-09d3-47e7-94d0-1f48cb10ef12"),
+    id = ShopId.fromString("ded3f207-09d3-47e7-94d0-1f48cb10ef12"),
     name = "Domácí včelařství v Jundrově",
     description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
     ownerId = user0.id,
@@ -140,7 +141,7 @@ val shop0reviews = listOf(
 )
 
 val shop1 = Shop(
-    id = UUID.fromString("295d5f90-b45a-4df4-8785-fd2b6db4160e"),
+    id = ShopId.fromString("295d5f90-b45a-4df4-8785-fd2b6db4160e"),
     name = "FI MUNI",
     images = listOf(
         ImageResource("https://picsum.photos/400/300"),
@@ -181,7 +182,7 @@ val shop1 = Shop(
 val shop1reviews = emptyList<Review>()
 
 val shop2 = Shop(
-    id = UUID.fromString("88a35777-c323-416f-8de5-265392eb1227"),
+    id = ShopId.fromString("88a35777-c323-416f-8de5-265392eb1227"),
     name = "Obchod s vejci",
     images = listOf(
         ImageResource("https://picsum.photos/400/300"),
@@ -235,7 +236,7 @@ val shop2reviews = listOf(
 )
 
 val shop3 = Shop(
-    id = UUID.fromString("7892234a-f7dd-40dc-a528-7eec23e90589"),
+    id = ShopId.fromString("7892234a-f7dd-40dc-a528-7eec23e90589"),
     name = "Obchod s masem a mnohem více, především s extra dlouhým názvem, který jen tak nekončí, takže se musíme připravit na to, že se nám to nevejde do komponent a může nadělat paseku, když si na to nedáme pozor",
     images = listOf(
     ),

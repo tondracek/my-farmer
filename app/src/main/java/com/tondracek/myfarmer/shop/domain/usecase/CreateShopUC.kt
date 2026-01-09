@@ -26,7 +26,7 @@ class CreateShopUC @Inject constructor(
             val user = getLoggedInUser().first().getOrReturn { return it }
 
             val shop: Shop = input
-                .toShop(shopId = UUID.randomUUID(), ownerId = user.id)
+                .toShop(shopId = ShopId.newId(), ownerId = user.id)
                 .getOrReturn { return it }
             shopRepository.create(shop)
 

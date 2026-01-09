@@ -6,6 +6,7 @@ import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollectionName
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.Review
+import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.serialization.Serializable
 import java.util.UUID
@@ -27,7 +28,7 @@ class ReviewMapper @Inject constructor() : EntityMapper<Review, ReviewEntity> {
 
     override fun toModel(entity: ReviewEntity): Review = Review(
         id = UUID.fromString(entity.id),
-        shopId = UUID.fromString(entity.shopId),
+        shopId = ShopId.fromString(entity.shopId),
         userId = UserId.fromString(entity.userId),
         rating = Rating(entity.rating),
         comment = entity.comment,

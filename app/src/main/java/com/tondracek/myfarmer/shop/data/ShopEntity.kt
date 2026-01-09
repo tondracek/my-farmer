@@ -12,6 +12,7 @@ import com.tondracek.myfarmer.productmenu.data.ProductMenuEntity
 import com.tondracek.myfarmer.productmenu.data.toEntity
 import com.tondracek.myfarmer.productmenu.data.toModel
 import com.tondracek.myfarmer.shop.domain.model.Shop
+import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shopcategory.data.ShopCategoryEntity
 import com.tondracek.myfarmer.shopcategory.data.toEntity
 import com.tondracek.myfarmer.shopcategory.data.toModel
@@ -20,7 +21,6 @@ import com.tondracek.myfarmer.shoplocation.data.toEntity
 import com.tondracek.myfarmer.shoplocation.data.toModel
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.serialization.Serializable
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -54,7 +54,7 @@ class ShopMapper @Inject constructor() : EntityMapper<Shop, ShopEntity> {
     )
 
     override fun toModel(entity: ShopEntity) = Shop(
-        id = UUID.fromString(entity.id),
+        id = ShopId.fromString(entity.id),
         name = entity.name,
         description = entity.description,
         ownerId = UserId.fromString(entity.ownerId),

@@ -20,7 +20,10 @@ class ShopRepository @Inject constructor(
 ) : BaseRepository<Shop, ShopId, ShopEntity, FirestoreEntityId>(
     core = core,
     entityMapper = mapper,
-    idMapper = IdMapper.UUIDtoFirestore,
+    idMapper = object : IdMapper<ShopId, FirestoreEntityId> {
+        override fun toEntityId(modelId: ShopId): FirestoreEntityId = modelId.toString()
+        override fun toModelId(entityId: FirestoreEntityId): ShopId = ShopId.fromString(entityId)
+    },
 ) {
     fun getByOwnerId(ownerId: UserId): Flow<List<Shop>> = get(
         repositoryRequest {

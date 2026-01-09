@@ -10,6 +10,7 @@ import com.tondracek.myfarmer.review.domain.model.ReviewInput
 import com.tondracek.myfarmer.review.domain.usecase.CreateShopReviewUC
 import com.tondracek.myfarmer.review.domain.usecase.GetShopReviewsWithAuthorsUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
+import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.GetShopByIdUC
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.ui.common.review.toUiState
@@ -21,7 +22,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,7 +32,7 @@ class ShopReviewsViewModel @Inject constructor(
     private val createShopReview: CreateShopReviewUC,
 ) : ViewModel() {
 
-    val shopId: UUID = savedStateHandle.getReviewsScreenShopId()
+    val shopId: ShopId = savedStateHandle.getReviewsScreenShopId()
 
     val shop: Flow<UCResult<Shop>> = getShopById(shopId)
     val reviewsWithAuthors: Flow<UCResult<List<Pair<Review, SystemUser>>>> =

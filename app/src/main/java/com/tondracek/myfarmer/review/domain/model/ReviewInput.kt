@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.review.domain.model
 
+import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import java.util.UUID
 
@@ -9,7 +10,7 @@ data class ReviewInput(
 )
 
 fun ReviewInput.toReview(
-    shopId: UUID,
+    shopId: ShopId,
     userId: UserId,
 ): Review = Review(
     id = UUID.randomUUID(),
