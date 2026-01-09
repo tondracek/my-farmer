@@ -1,0 +1,33 @@
+name: Generate UML Diagrams
+
+on:
+  push:
+    paths:
+      - 'docs/diagram/**/*.puml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Render all .puml files under docs/diagram (recursive)
+        run: |
+          mkdir -p docs/diagram-img
+          docker run --rm \
+            -v ${{ github.workspace }}/docs/diagram:/in \
+            -v ${{ github.workspace }}/docs/diagram-img:/out \
+            plantuml/plantuml:1.2024.4 \
+            -failfast -nbthread auto -tsvg /in -o /out
+
+      - name: Commit and push rendered diagrams
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🖼️ Auto-update UML diagrams"
+          file_pattern: docs/diagram-img/*.svg

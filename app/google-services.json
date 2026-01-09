@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "248652196071",
+    "project_id": "my-farmer-b5751",
+    "storage_bucket": "my-farmer-b5751.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:248652196071:android:b9b5ef3941bc5892e21a42",
+        "android_client_info": {
+          "package_name": "com.tondracek.myfarmer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "248652196071-0p6di3e1ibgj7tf89odda4as4a36f9kg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tondracek.myfarmer",
+            "certificate_hash": "b389885f5fabbf10f6b2cde8e2a322d35910c28d"
+          }
+        },
+        {
+          "client_id": "248652196071-b1ujid57attf3tvhhmh36jplkjo5dmo3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tondracek.myfarmer",
+            "certificate_hash": "3c627cc1030ab32e5d894e0c203429b813ed97db"
+          }
+        },
+        {
+          "client_id": "248652196071-sp2ed61vl3f09arji1hlr4ee4pja1oid.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tondracek.myfarmer",
+            "certificate_hash": "1358b4f1cd903c493d506f5513f6a2c590ea5a5b"
+          }
+        },
+        {
+          "client_id": "248652196071-a5qg23m3stldk4innhvllcd6h2ikpfo9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtZKhfg7BuoE5aUvBQulpmlfPj6qNs88A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "248652196071-a5qg23m3stldk4innhvllcd6h2ikpfo9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
