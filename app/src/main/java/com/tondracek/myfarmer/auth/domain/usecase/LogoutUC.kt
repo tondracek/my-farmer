@@ -1,11 +1,10 @@
 package com.tondracek.myfarmer.auth.domain.usecase
 
-import com.google.firebase.auth.FirebaseAuth
+import com.tondracek.myfarmer.auth.domain.repository.AuthRepository
 import javax.inject.Inject
 
 class LogoutUC @Inject constructor(
-    private val auth: FirebaseAuth,
+    private val authRepository: AuthRepository,
 ) {
-    operator fun invoke() = auth.signOut()
-
+    operator fun invoke() = authRepository.signOut()
 }

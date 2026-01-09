@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.systemuser.data
 
+import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.data.ContactInfoEntity
 import com.tondracek.myfarmer.contactinfo.data.toEntity
@@ -29,7 +30,7 @@ class UserEntityMapper @Inject constructor() : EntityMapper<SystemUser, UserEnti
     override fun toEntity(model: SystemUser) =
         UserEntity(
             id = model.id.toString(),
-            firebaseId = model.firebaseId,
+            firebaseId = model.authId.value,
             name = model.name,
             profilePicture = model.profilePicture.uri,
             contactInfo = model.contactInfo.toEntity()
@@ -37,7 +38,7 @@ class UserEntityMapper @Inject constructor() : EntityMapper<SystemUser, UserEnti
 
     override fun toModel(entity: UserEntity) = SystemUser(
         id = UUID.fromString(entity.id),
-        firebaseId = entity.firebaseId,
+        authId = AuthId(entity.firebaseId),
         name = entity.name,
         profilePicture = ImageResource(entity.profilePicture),
         contactInfo = entity.contactInfo.toModel()

@@ -2,8 +2,6 @@ package com.tondracek.myfarmer.systemuser.data
 
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import com.tondracek.myfarmer.common.image.model.ImageResource
-import com.tondracek.myfarmer.contactinfo.data.toModel
 import com.tondracek.myfarmer.core.firestore.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.firestore.helpers.firestoreGetById
 import com.tondracek.myfarmer.core.firestore.helpers.firestoreGetByIds
@@ -28,22 +26,16 @@ class FirestoreUserReadAdapter @Inject constructor(
     override fun invoke(id: UserId): Flow<SystemUser?> {
         val entityId = id.toFirestoreId()
         return firestoreGetById(collection, entityId, UserEntity::class)
-            .map { it?.toDomain() }
+            .map { it?.toModel() }
     }
 
     override fun invoke(ids: List<UserId>): Flow<List<SystemUser>> {
         val entityIds = ids.map { it.toFirestoreId() }
         return firestoreGetByIds(collection, entityIds, UserEntity::class)
-            .map { entities -> entities.map { it.toDomain() } }
+            .map { entities -> entities.map { it.toModel() } }
     }
 }
 
 fun UUID.toFirestoreId(): FirestoreEntityId = this.toString()
 
-private fun UserEntity.toDomain() = SystemUser(
-    id = UUID.fromString(id),
-    firebaseId = firebaseId,
-    name = name,
-    profilePicture = ImageResource(profilePicture),
-    contactInfo = contactInfo.toModel()
-)
+private fun UserEntity.toModel() = UserEntityMapper().toModel(this)

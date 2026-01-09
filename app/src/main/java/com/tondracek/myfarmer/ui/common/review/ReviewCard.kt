@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.review.domain.model.Rating
@@ -87,7 +88,7 @@ private fun ReviewCardPreview1() {
                 author = SystemUser(
                     id = UUID.randomUUID(),
                     name = "John Doe super super super super super super super super super super super long name",
-                    firebaseId = "",
+                    authId = AuthId(""),
                     profilePicture = ImageResource.EMPTY,
                     contactInfo = ContactInfo.EMPTY
                 ),

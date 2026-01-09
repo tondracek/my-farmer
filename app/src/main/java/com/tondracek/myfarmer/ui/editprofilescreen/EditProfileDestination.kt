@@ -43,7 +43,6 @@ fun NavGraphBuilder.editProfileDestination(
             onContactInfoChange = viewmodel::onContactInfoChange,
             onLogout = viewmodel::onLogout,
             onSaveClick = viewmodel::onSaveProfile,
-            onNavigateBack = viewmodel::navigateBack,
         )
     }
 }

@@ -36,7 +36,6 @@ class DeleteShopUCTest {
     @Before
     fun setup() {
         uc = DeleteShopUC(
-            userRepository = userRepository,
             shopRepository = shopRepository,
             photoStorage = FakePhotoStorage()
         )

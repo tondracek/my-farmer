@@ -1,15 +1,13 @@
 package com.tondracek.myfarmer.ui.editprofilescreen
 
+import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
-import java.util.UUID
+import com.tondracek.myfarmer.systemuser.domain.model.UserId
 
 sealed interface EditProfileScreenState {
     data class Success(
-        val id: UUID,
-        val firebaseId: String,
         val name: String,
         val profilePicture: ImageResource,
         val contactInfo: ContactInfo,
@@ -19,23 +17,29 @@ sealed interface EditProfileScreenState {
 
     data object Loading : EditProfileScreenState
 
-    data class Error(val result: UCResult.Failure) : EditProfileScreenState
+    companion object {
+        val Empty = Success(
+            name = "",
+            profilePicture = ImageResource.EMPTY,
+            contactInfo = ContactInfo.EMPTY,
+        )
+    }
 }
 
 fun SystemUser.toUiState(): EditProfileScreenState.Success =
     EditProfileScreenState.Success(
-        id = this.id,
-        firebaseId = this.firebaseId,
         name = this.name,
         profilePicture = this.profilePicture,
         contactInfo = this.contactInfo,
     )
 
-fun EditProfileScreenState.Success.toSystemUser() =
-    SystemUser(
-        id = id,
-        firebaseId = firebaseId,
-        name = this.name,
-        profilePicture = this.profilePicture,
-        contactInfo = this.contactInfo,
-    )
+fun EditProfileScreenState.Success.toSystemUser(
+    id: UserId,
+    authId: AuthId,
+) = SystemUser(
+    id = id,
+    authId = authId,
+    name = this.name,
+    profilePicture = this.profilePicture,
+    contactInfo = this.contactInfo,
+)
