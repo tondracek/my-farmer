@@ -1,6 +1,7 @@
 package com.tondracek.myfarmer.shop.data
 
 import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollectionName
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
@@ -23,7 +24,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Serializable
-@FirestoreCollectionName("shop")
+@FirestoreCollectionName(FirestoreCollectionNames.SHOP)
 data class ShopEntity(
     override var id: String = "",
     var name: String? = null,

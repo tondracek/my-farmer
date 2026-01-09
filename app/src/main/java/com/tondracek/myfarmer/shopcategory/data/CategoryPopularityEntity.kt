@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.shopcategory.data
 
+import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollectionName
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
@@ -7,7 +8,7 @@ import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@FirestoreCollectionName("category_popularity")
+@FirestoreCollectionName(FirestoreCollectionNames.CATEGORY_POPULARITY)
 data class CategoryPopularityEntity(
     override var id: String = "",
     var count: Int = 0
