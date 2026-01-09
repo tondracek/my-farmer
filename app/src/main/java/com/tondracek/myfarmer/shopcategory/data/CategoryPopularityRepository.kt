@@ -7,7 +7,6 @@ import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.core.repository.request.DescendingSort
 import com.tondracek.myfarmer.core.repository.request.repositoryRequest
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
-import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularityId
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,7 +14,7 @@ import javax.inject.Singleton
 class CategoryPopularityRepository @Inject constructor(
     core: RepositoryCore<CategoryPopularityEntity, FirestoreEntityId>,
     mapper: CategoryPopularityMapper,
-) : BaseRepository<CategoryPopularity, CategoryPopularityId, CategoryPopularityEntity, FirestoreEntityId>(
+) : BaseRepository<CategoryPopularity, String, CategoryPopularityEntity, FirestoreEntityId>(
     core = core,
     entityMapper = mapper,
     idMapper = IdMapper.StringToString,
