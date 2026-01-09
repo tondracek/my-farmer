@@ -8,8 +8,8 @@ import com.tondracek.myfarmer.common.usecase.result.UpdateFailedUCResult
 import com.tondracek.myfarmer.core.usecaseresult.ForbiddenUCResult
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.getOrReturn
-import com.tondracek.myfarmer.systemuser.data.UserRepository
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.systemuser.domain.repository.UserRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 

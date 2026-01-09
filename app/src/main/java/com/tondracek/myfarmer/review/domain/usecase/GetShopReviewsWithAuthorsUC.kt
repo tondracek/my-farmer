@@ -6,8 +6,8 @@ import com.tondracek.myfarmer.review.data.ReviewRepository
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.usecase.result.UCFailureLoadingReviews
 import com.tondracek.myfarmer.shop.domain.model.ShopId
-import com.tondracek.myfarmer.systemuser.data.UserRepository
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.systemuser.domain.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
