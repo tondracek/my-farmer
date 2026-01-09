@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
+import kotlin.reflect.KClass
 
 class FirestoreRepositoryCore<Entity : FirestoreEntity>(
     val entityClass: Class<Entity>,
@@ -84,7 +85,20 @@ class FirestoreRepositoryCore<Entity : FirestoreEntity>(
     }
 }
 
-private fun <Entity : FirestoreEntity> DocumentSnapshot.toObjectWithId(entityClass: Class<Entity>): Entity? {
+fun <Entity : FirestoreEntity> DocumentSnapshot.toObjectWithId(entityClass: Class<Entity>): Entity? {
     return this.toObject(entityClass)
         ?.also { it.id = this.id }
 }
+
+fun <Entity : FirestoreEntity> DocumentSnapshot.toObjectWithId(entityClass: KClass<Entity>): Entity? {
+    return this.toObject(entityClass.java)
+        ?.also { it.id = this.id }
+}
+
+fun <Entity : FirestoreEntity> Flow<DocumentSnapshot>.mapToEntity(entityClass: KClass<Entity>): Flow<Entity?> =
+    this.map { it.toObjectWithId(entityClass) }
+
+fun <Entity : FirestoreEntity> Flow<List<DocumentSnapshot>>.mapToEntities(entityClass: KClass<Entity>): Flow<List<Entity>> =
+    this.map { list ->
+        list.mapNotNull { it.toObjectWithId(entityClass) }
+    }

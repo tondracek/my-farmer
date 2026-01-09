@@ -166,7 +166,7 @@ private fun shortenWebLink(link: String): String {
         .removePrefix("www.")
         .split("/")
         .firstOrNull()
-        ?.let { "$it..." }
+        ?.let { "$it/..." }
         ?: link
 }
 

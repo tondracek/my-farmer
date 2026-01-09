@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.review.data
 
-import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
+import com.tondracek.myfarmer.core.firestore.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollectionName
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
