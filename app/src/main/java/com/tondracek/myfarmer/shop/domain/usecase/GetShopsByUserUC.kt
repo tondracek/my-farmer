@@ -1,11 +1,8 @@
 package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
-import com.tondracek.myfarmer.core.repository.request.filterEq
-import com.tondracek.myfarmer.core.repository.request.repositoryRequest
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.toUCResult
-import com.tondracek.myfarmer.shop.data.ShopEntity
 import com.tondracek.myfarmer.shop.data.ShopRepository
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
@@ -25,9 +22,7 @@ class GetShopsByUserUC @Inject constructor(
         getLoggedInUserUC().flatMapLatest { user: UCResult<SystemUser> ->
             val userId: UserId = user.getOrThrow().id
 
-            val request = repositoryRequest {
-                addFilter(ShopEntity::ownerId filterEq userId.toString())
-            }
-            shopRepository.get(request)
+
+            shopRepository.getByOwnerId(ownerId = userId)
         }.toUCResult(userError = "Failed to load user's shops.")
 }

@@ -18,27 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.image.model.ImageResource
-import com.tondracek.myfarmer.review.domain.model.Rating
-import com.tondracek.myfarmer.shop.data.sampleReviewsUI
-import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
 import com.tondracek.myfarmer.ui.common.image.ImageView
-import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
-import com.tondracek.myfarmer.ui.core.preview.PreviewDark
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.createshopflow.components.NavigationButtons
-import com.tondracek.myfarmer.ui.shopdetailscreen.components.ShopDetailLayout
 import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.MenuSection
 import com.tondracek.myfarmer.ui.shopdetailscreen.components.sections.OpeningHoursSection
-import com.tondracek.myfarmer.ui.shopdetailscreen.toShopDetailState
 
 
 @Composable
@@ -164,48 +155,5 @@ private fun Description(modifier: Modifier = Modifier, description: String?) {
             fontSize = 16.sp,
         )
         Text(text = description)
-    }
-}
-
-@Preview
-@Composable
-private fun ShopDetailLayoutPrev() {
-    val shop = shop0
-
-    val owner = sampleUsers.find { it.id == shop.ownerId }!!
-    val reviews = sampleReviewsUI.take(3)
-    val state = shop.toShopDetailState(
-        owner = owner,
-        reviewsPreview = reviews,
-        averageRating = Rating(3)
-    )
-
-    MyFarmerPreview {
-        ShopDetailLayout(
-            state = state,
-            onReviewsClick = {}
-        )
-    }
-}
-
-
-@PreviewDark
-@Composable
-private fun ShopDetailLayoutPrev0() {
-    val shop = shop0
-
-    val owner = sampleUsers.find { it.id == shop.ownerId }!!
-    val reviews = sampleReviewsUI.take(3)
-    val state = shop.toShopDetailState(
-        owner = owner,
-        reviewsPreview = reviews,
-        averageRating = Rating(3)
-    )
-
-    MyFarmerPreview {
-        ShopDetailLayout(
-            state = state,
-            onReviewsClick = {}
-        )
     }
 }

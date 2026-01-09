@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.review.data
 
+import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollectionName
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
@@ -10,7 +11,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@FirestoreCollectionName("review")
+@FirestoreCollectionName(FirestoreCollectionNames.REVIEW)
 @Serializable
 data class ReviewEntity(
     override var id: String = "",

@@ -34,7 +34,7 @@ abstract class BaseRepository<Model, ModelId, Entity : RepositoryEntity<EntityId
             }
     }
 
-    override fun get(request: RepositoryRequest): Flow<List<Model>> = core.get(request)
+    protected fun get(request: RepositoryRequest): Flow<List<Model>> = core.get(request)
         .map { entities -> entities.map(entityMapper::toModel) }
 
     override fun getAll(): Flow<List<Model>> = core.getAll().map { entities ->

@@ -10,10 +10,8 @@ import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.usecase.UpdateUserUC
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import com.tondracek.myfarmer.ui.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,19 +24,17 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     getLoggedInUserUC: GetLoggedInUserUC,
     private val updateUserUC: UpdateUserUC,
     private val logout: LogoutUC,
-    private val appNavigator: AppNavigator,
 ) : ViewModel() {
 
     val loggedInUserUC: SharedFlow<UCResult<SystemUser>> = getLoggedInUserUC()
         .onEach { result ->
-            if (result is UCResult.Failure) appNavigator.navigate(Route.AuthScreenRoute)
+            if (result is UCResult.Failure) _effects.emit(EditProfileScreenEffect.OpenAuthScreen)
         }
         .shareIn(
             scope = viewModelScope,
@@ -56,13 +52,16 @@ class EditProfileViewModel @Inject constructor(
         when (loggedUserResult) {
             is UCResult.Success -> state
             is UCResult.Failure -> EditProfileScreenState.Error(result = loggedUserResult)
-                .also { appNavigator.navigate(Route.AuthScreenRoute) }
+                .also { _effects.emit(EditProfileScreenEffect.OpenAuthScreen) }
         }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = EditProfileScreenState.Loading
     )
+
+    private val _effects = MutableSharedFlow<EditProfileScreenEffect>(extraBufferCapacity = 1)
+    val effects: SharedFlow<EditProfileScreenEffect> = _effects
 
     init {
         viewModelScope.launch { loadData() }
@@ -90,17 +89,18 @@ class EditProfileViewModel @Inject constructor(
         val updateResult = updateUserUC(updateUser)
 
         when (updateResult) {
-            is UCResult.Success -> run {
-                _state.update { EditProfileScreenState.SavedSuccessfully }
-                delay(3.seconds)
-                loadData()
-            }
+            is UCResult.Success ->
+                _effects.emit(EditProfileScreenEffect.ShowSavedProfileMessage)
 
-            is UCResult.Failure -> _state.update { EditProfileScreenState.Error(result = updateResult) }
+            is UCResult.Failure ->
+                _effects.emit(EditProfileScreenEffect.ShowError(updateResult.userError))
         }
+        loadData()
     }
 
-    fun navigateBack() = appNavigator.navigateBack()
+    fun navigateBack() = viewModelScope.launch {
+        _effects.emit(EditProfileScreenEffect.GoBack)
+    }
 
     /* PRIVATE HELPERS */
 
@@ -121,4 +121,14 @@ class EditProfileViewModel @Inject constructor(
                 .getOrElse { EditProfileScreenState.Error(result = it) }
         }
     }
+}
+
+sealed interface EditProfileScreenEffect {
+    data object GoBack : EditProfileScreenEffect
+
+    data object OpenAuthScreen : EditProfileScreenEffect
+
+    data object ShowSavedProfileMessage : EditProfileScreenEffect
+
+    data class ShowError(val message: String) : EditProfileScreenEffect
 }

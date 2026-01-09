@@ -117,6 +117,16 @@ inline fun <T> UCResult<T>.getOrElse(defaultValue: (Failure) -> T): T = when (th
     is Failure -> defaultValue(this)
 }
 
+fun <T> Flow<UCResult<T>>.getOrElse(
+    defaultValue: T,
+    onError: suspend (Failure) -> Unit = {}
+): Flow<T> = this.map { result ->
+    result.getOrElse {
+        onError(it)
+        defaultValue
+    }
+}
+
 fun <T, R> Flow<UCResult<T>>.mapSuccessFlow(transform: suspend (T) -> R): Flow<UCResult<R>> =
     this.map { result ->
         when (result) {

@@ -3,6 +3,7 @@ package com.tondracek.myfarmer.auth.domain.usecase
 import com.tondracek.myfarmer.auth.data.FirebaseAuthRepository
 import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.usecaseresult.toUCResult
 import com.tondracek.myfarmer.systemuser.data.UserRepository
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -10,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -30,20 +30,20 @@ class GetLoggedInUserUC @Inject constructor(
             when (firebaseId == null) {
                 true -> flowOf(NotLoggedInUCResult())
                 false -> getOrCreateSystemUser(firebaseId)
-                    .map { UCResult.Success(it) }
             }
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun getOrCreateSystemUser(firebaseId: String): Flow<SystemUser> =
+    private fun getOrCreateSystemUser(firebaseId: String): Flow<UCResult<SystemUser>> =
         userRepository.getUserByFirebaseId(firebaseId).flatMapLatest { user ->
             when (user == null) {
                 true -> SystemUser.createEmpty(firebaseId)
                     .let { userRepository.create(it) }
                     .let { userRepository.getById(it) }
                     .filterNotNull()
+                    .toUCResult("Could not create new SystemUser for logged-in Firebase user $firebaseId")
 
-                false -> flowOf(user)
+                false -> flowOf(user).toUCResult()
             }
         }
 }

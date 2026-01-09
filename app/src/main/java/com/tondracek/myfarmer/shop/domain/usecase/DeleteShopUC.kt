@@ -21,7 +21,6 @@ class DeleteShopUC @Inject constructor(
     ) {
         val shop = shopRepository.getById(shopId).first()
             ?: return ShopNotFoundUCResult(shopId)
-
         val currentUser = userRepository.getLoggedInUser().first()
             ?: return NotLoggedInUCResult()
 
@@ -29,7 +28,7 @@ class DeleteShopUC @Inject constructor(
             return NotShopOwnerUCResult(currentUser.id, shopId)
 
         val photosToDelete = shop.images
-        shopRepository.delete(shopId)
         photoStorage.deletePhotos(photosToDelete)
+        shopRepository.delete(shopId)
     }
 }

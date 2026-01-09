@@ -1,25 +1,30 @@
 package com.tondracek.myfarmer.ui.authscreen
 
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import com.tondracek.myfarmer.ui.core.navigation.Route
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthScreenViewModel @Inject constructor(
-    private val appNavigator: AppNavigator,
-) : ViewModel() {
+class AuthScreenViewModel @Inject constructor() : ViewModel() {
 
-    fun navigateToProfileScreen() =
-        appNavigator.navigate(Route.EditProfileScreenRoute)
+    private val _effects = MutableSharedFlow<AuthScreenEffect>(extraBufferCapacity = 1)
+    val effects: SharedFlow<AuthScreenEffect> = _effects.asSharedFlow()
 
-    fun showError(context: Context, message: String) =
-        Toast.makeText(
-            context,
-            message,
-            Toast.LENGTH_LONG
-        ).show()
+    fun navigateToProfileScreen() = viewModelScope.launch {
+        _effects.emit(AuthScreenEffect.NavigateToProfileScreen)
+    }
+
+    fun showError(message: String) = viewModelScope.launch {
+        _effects.emit(AuthScreenEffect.ShowError(message))
+    }
+}
+
+sealed interface AuthScreenEffect {
+    object NavigateToProfileScreen : AuthScreenEffect
+    data class ShowError(val message: String) : AuthScreenEffect
 }

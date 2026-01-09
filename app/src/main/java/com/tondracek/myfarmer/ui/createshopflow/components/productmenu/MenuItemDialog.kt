@@ -14,9 +14,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
+import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 
 @Composable
 fun AddMenuItemDialog(
@@ -30,20 +34,28 @@ fun AddMenuItemDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add product") },
+        title = { Text(stringResource(R.string.add_product)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedTextField(name, { name = it }, label = { Text("Product name") })
                 OutlinedTextField(
-                    description,
-                    { description = it },
-                    label = { Text("Description") })
-                OutlinedTextField(price, { price = it }, label = { Text("Price") })
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text(stringResource(R.string.product_name)) })
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    label = { Text(stringResource(R.string.description)) })
+                OutlinedTextField(
+                    value = price,
+                    onValueChange = { price = it },
+                    label = { Text(stringResource(R.string.price)) },
+                    supportingText = { Text(stringResource(R.string.price_label_input_hint)) },
+                )
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Is in stock:")
+                    Text(stringResource(R.string.is_in_stock))
                     Switch(checked = inStock, onCheckedChange = { inStock = it })
                 }
             }
@@ -58,10 +70,10 @@ fun AddMenuItemDialog(
                         inStock = inStock,
                     )
                 )
-            }) { Text("Add") }
+            }) { Text(stringResource(R.string.add)) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         }
     )
 }
@@ -79,20 +91,26 @@ fun EditMenuItemDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Edit product") },
+        title = { Text(stringResource(R.string.edit_product)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedTextField(name, { name = it }, label = { Text("Product name") })
+                OutlinedTextField(
+                    name,
+                    { name = it },
+                    label = { Text(stringResource(R.string.product_name)) })
                 OutlinedTextField(
                     description,
                     { description = it },
-                    label = { Text("Description") })
-                OutlinedTextField(price, { price = it }, label = { Text("Price") })
+                    label = { Text(stringResource(R.string.description)) })
+                OutlinedTextField(
+                    price,
+                    { price = it },
+                    label = { Text(stringResource(R.string.price)) })
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Is in stock:")
+                    Text(stringResource(R.string.is_in_stock))
                     Switch(checked = inStock, onCheckedChange = { inStock = it })
                 }
             }
@@ -107,10 +125,21 @@ fun EditMenuItemDialog(
                         inStock = inStock,
                     )
                 )
-            }) { Text("Update") }
+            }) { Text(stringResource(R.string.update)) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         }
     )
+}
+
+@Preview
+@Composable
+private fun AddMenuItemDialogPreview() {
+    MyFarmerPreview {
+        AddMenuItemDialog(
+            onAdd = {},
+            onDismiss = {}
+        )
+    }
 }

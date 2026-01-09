@@ -25,6 +25,8 @@ val farmerLightColors: MyFarmerColors = MyFarmerColors(
 
     success = Color(0xFF4CAF50),
     onSuccess = Color(0xFFFFFFFF),
+    successContainer = Color(0xFFCCEACE),
+    onSuccessContainer = Color(0xFF152A12),
 
     error = Color(0xFFBA1A1A),
     onError = Color(0xFFFFFFFF),
@@ -80,6 +82,8 @@ val farmerDarkColors: MyFarmerColors = MyFarmerColors(
 
     success = Color(0xFF81C784),
     onSuccess = Color(0xFF152A12),
+    successContainer = Color(0xFF2A4D2C),
+    onSuccessContainer = Color(0xFFCCEACE),
 
     error = Color(0xFF93000A),
     onError = Color(0xFFFFDAD6),
@@ -149,6 +153,8 @@ data class MyFarmerColors(
 
     val success: Color,
     val onSuccess: Color,
+    val successContainer: Color,
+    val onSuccessContainer: Color,
 
     val error: Color,
     val onError: Color,

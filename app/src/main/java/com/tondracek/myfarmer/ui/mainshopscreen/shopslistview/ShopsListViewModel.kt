@@ -2,8 +2,7 @@ package com.tondracek.myfarmer.ui.mainshopscreen.shopslistview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.core.usecaseresult.combineUCResults
+import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.location.usecase.MeasureDistanceFromMeUC
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.usecase.GetAverageRatingsByShopUC
@@ -13,17 +12,22 @@ import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
 import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
 import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import com.tondracek.myfarmer.ui.core.navigation.Route
+import com.tondracek.myfarmer.ui.core.uiState.UiState
+import com.tondracek.myfarmer.ui.core.uiState.asUiState
+import com.tondracek.myfarmer.ui.core.uiState.getOrReturn
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.ShopListViewItem
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.toListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,23 +36,25 @@ class ShopsListViewModel @Inject constructor(
     measureDistanceFromMe: MeasureDistanceFromMeUC,
     getAllShops: GetAllShopsUC,
     getShopFilters: GetShopFiltersUC,
-    private val navigator: AppNavigator,
 ) : ViewModel() {
 
     private val filters: StateFlow<ShopFilters> =
         getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val shops: Flow<UCResult<List<Shop>>> = filters
+    private val shopsUiState: Flow<UiState<List<Shop>>> = filters
         .flatMapLatest { getAllShops(filters = it) }
+        .asUiState(emptyList()) { _effects.emit(ShopsListViewEffect.ShowError(it.userError)) }
 
-    private val averageRatings: Flow<UCResult<Map<ShopId, Rating>>> = getAverageRatingsByShopUC()
+    val averageRatings: Flow<Map<ShopId, Rating>> = getAverageRatingsByShopUC()
+        .getOrElse(emptyMap()) { _effects.emit(ShopsListViewEffect.ShowError(it.userError)) }
 
-    val state: StateFlow<ShopsListViewState> = combineUCResults(
-        shops,
+    val state: StateFlow<ShopsListViewState> = combine(
+        shopsUiState,
         averageRatings,
-        { ShopsListViewState.Error(it) }
-    ) { shops, ratings ->
+    ) { shopsUiState, ratings ->
+        val shops = shopsUiState.getOrReturn { return@combine ShopsListViewState.Loading }
+
         val shopListItems = shops.map {
             val distance = measureDistanceFromMe(it.location)
             val rating = ratings[it.id] ?: Rating.ZERO
@@ -62,8 +68,22 @@ class ShopsListViewModel @Inject constructor(
         initialValue = ShopsListViewState.Loading
     )
 
-    fun navigateToShopDetail(shopId: ShopId) =
-        navigator.navigate(Route.ShopDetailRoute(shopId.toString()))
+    private val _effects = MutableSharedFlow<ShopsListViewEffect>(extraBufferCapacity = 1)
+    val effects: SharedFlow<ShopsListViewEffect> = _effects
 
-    fun navigateBack() = navigator.navigateBack()
+    fun openShopDetail(shopId: ShopId) = viewModelScope.launch {
+        _effects.emit(ShopsListViewEffect.OpenShopDetail(shopId))
+    }
+
+    fun onBackClicked() = viewModelScope.launch {
+        _effects.emit(ShopsListViewEffect.OnBackClicked)
+    }
+}
+
+sealed interface ShopsListViewEffect {
+    data class OpenShopDetail(val shopId: ShopId) : ShopsListViewEffect
+
+    data object OnBackClicked : ShopsListViewEffect
+
+    data class ShowError(val message: String) : ShopsListViewEffect
 }

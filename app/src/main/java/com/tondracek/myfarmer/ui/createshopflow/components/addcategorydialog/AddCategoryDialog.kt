@@ -24,11 +24,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.ui.common.category.CategoryNameInput
@@ -64,6 +66,7 @@ fun AddCategoryDialog(
     )
 
     AlertDialog(
+        containerColor = MyFarmerTheme.colors.surface,
         onDismissRequest = onDismiss,
         title = {
             Card(
@@ -75,7 +78,7 @@ fun AddCategoryDialog(
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "Add category",
+                    text = stringResource(R.string.add_category),
                     textAlign = TextAlign.Center
                 )
             }
@@ -106,10 +109,10 @@ fun AddCategoryDialog(
                         )
                     )
                 }
-            ) { Text("Add") }
+            ) { Text(stringResource(R.string.add)) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         }
     )
 }

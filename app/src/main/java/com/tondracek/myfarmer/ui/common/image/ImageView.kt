@@ -2,7 +2,6 @@ package com.tondracek.myfarmer.ui.common.image
 
 import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -30,7 +29,9 @@ fun ImageView(
     }
 
     AsyncImage(
-        modifier = modifier.clickable { openImageDialog = true },
+        modifier = modifier.clickable(enabled = imageResource != ImageResource.EMPTY) {
+            openImageDialog = true
+        },
         model = model,
         contentDescription = null,
         placeholder = painterResource(R.drawable.ic_launcher_foreground),

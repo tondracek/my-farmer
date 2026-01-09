@@ -15,47 +15,20 @@ import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.usecase.GetUsersByIdsUC
 import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
-import com.tondracek.myfarmer.ui.core.navigation.AppNavigator
-import com.tondracek.myfarmer.ui.core.navigation.Route
-import com.tondracek.myfarmer.ui.core.uievents.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-abstract class BaseViewModel : ViewModel() {
-
-    private val _events = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
-    val events = _events.asSharedFlow()
-
-    private suspend fun emitError(failure: UCResult.Failure) {
-        _events.emit(UiEvent.ShowError(failure.userError))
-    }
-
-    protected suspend fun <T> UCResult<T>.getOrEmitError(defaultValue: T): T =
-        this.getOrElse {
-            emitError(it)
-            defaultValue
-        }
-
-    protected fun <T> Flow<UCResult<T>>.getOrEmitError(defaultValue: T): Flow<T> =
-        this.map { result ->
-            result.getOrElse {
-                _events.tryEmit(UiEvent.ShowError(it.userError))
-                defaultValue
-            }
-        }
-}
-
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -65,8 +38,7 @@ class ShopsMapViewModel @Inject constructor(
     getShopFilters: GetShopFiltersUC,
     getUsersByIds: GetUsersByIdsUC,
     private val getInitialCameraBounds: GetMapViewInitialCameraBoundsUC,
-    private val navigator: AppNavigator,
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val filters: StateFlow<ShopFilters> =
         getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
@@ -118,7 +90,26 @@ class ShopsMapViewModel @Inject constructor(
         initialValue = ShopsMapViewState()
     )
 
-    fun onShopSelected(shopId: ShopId) {
-        navigator.navigate(Route.ShopBottomSheetRoute(shopId.toString()))
+    fun onShopSelected(shopId: ShopId) = viewModelScope.launch {
+        _effects.emit(ShopsMapViewEvent.OpenShopDetail(shopId))
     }
+
+    private val _effects = MutableSharedFlow<ShopsMapViewEvent>(extraBufferCapacity = 1)
+    val effects: SharedFlow<ShopsMapViewEvent> = _effects
+
+    private fun <T> Flow<UCResult<T>>.getOrEmitError(defaultValue: T): Flow<T> = map { result ->
+        result.getOrElse {
+            viewModelScope.launch {
+                _effects.emit(ShopsMapViewEvent.ShowError(it.userError))
+            }
+            defaultValue
+        }
+    }
+}
+
+sealed interface ShopsMapViewEvent {
+
+    data class OpenShopDetail(val shopId: ShopId) : ShopsMapViewEvent
+
+    data class ShowError(val message: String) : ShopsMapViewEvent
 }

@@ -37,7 +37,7 @@
     <string name="shop_reviews">Recenze obchodu</string>
     <string name="shop_created_successfully">Obchod úspěšně vytvořen!</string>
     <string name="shop_updated_successfully">Obchod úspěšně aktualizován!</string>
-    <string name="updating_profile_please_wait">Úpravování profilu, prosím čekejte!</string>
+    <string name="updating_profile_please_wait">Upravování profilu, prosím čekejte!</string>
     <string name="profile_saved_successfully">Profil úspěšně uložen!</string>
     <string name="you_are_logged_in_as">Jste přihlášeni jako %1$s</string>
     <string name="logout">Odhlásit</string>
@@ -76,4 +76,18 @@
     <string name="write_message_for_x_here">Zde napište zprávu pro %1$s</string>
     <string name="enter_opening_hours_message">Zde napište zprávu místo otevírací doby</string>
     <string name="opening_hours_message_example">Například: \"Po domluvě přes SMS\", \"Předem volejte na telefon\"</string>
+    <string name="add">Přidat</string>
+    <string name="name">Název</string>
+    <string name="product_name">Název produktu</string>
+    <string name="price">Cena</string>
+    <string name="is_in_stock">Skladem:</string>
+    <string name="edit_product">Upravit produkt</string>
+    <string name="update">Upravit</string>
+    <string name="create_shop_map_hint_01">Posunujte prsty po mapě a klikněte pro umístění polohy obchodu na zvolené místo.</string>
+    <string name="create_shop_map_hint_02">Použijte dva prsty pro přiblížení a oddálení</string>
+    <string name="update_shop">Upravit obchod</string>
+    <string name="delete_shop">Odstranit obchod</string>
+    <string name="camera">Fotoaparát</string>
+    <string name="price_label_input_hint">Libovolný text - např. \"200 kč za kg\", \"5 kč za kus\"</string>
+    <string name="could_not_open_the_link">Nebylo možné otevřít odkaz: %1$s</string>
 </resources>
