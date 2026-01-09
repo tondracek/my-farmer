@@ -22,7 +22,10 @@ class UserRepository @Inject constructor(
 ) : BaseRepository<SystemUser, UserId, UserEntity, String>(
     core = core,
     entityMapper = mapper,
-    idMapper = IdMapper.UUIDtoFirestore,
+    idMapper = object : IdMapper<UserId, String> {
+        override fun toEntityId(modelId: UserId): String = modelId.toString()
+        override fun toModelId(entityId: String): UserId = UserId.fromString(entityId)
+    }
 ) {
 
     fun getUserByAuthId(authId: AuthId): Flow<SystemUser?> =

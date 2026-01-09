@@ -10,8 +10,8 @@ import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollectionName
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.serialization.Serializable
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,7 +37,7 @@ class UserEntityMapper @Inject constructor() : EntityMapper<SystemUser, UserEnti
         )
 
     override fun toModel(entity: UserEntity) = SystemUser(
-        id = UUID.fromString(entity.id),
+        id = UserId.fromString(entity.id),
         authId = AuthId(entity.firebaseId),
         name = entity.name,
         profilePicture = ImageResource(entity.profilePicture),

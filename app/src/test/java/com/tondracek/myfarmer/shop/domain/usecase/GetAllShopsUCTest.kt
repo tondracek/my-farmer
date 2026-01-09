@@ -46,7 +46,7 @@ class GetAllShopsUCTest {
     @Test
     fun `returns empty list when repository emits empty list`() = runTest {
         // Arrange
-        whenever(shopRepository.get(any())).thenReturn(flowOf(emptyList()))
+        whenever(shopRepository.getAll()).thenReturn(flowOf(emptyList()))
         whenever(applyFiltersUC(any(), any())).thenReturn(emptyList())
 
         // Act
@@ -62,7 +62,7 @@ class GetAllShopsUCTest {
         val shops = listOf(shop0, shop1)
         val filtered = listOf(shop1)
 
-        whenever(shopRepository.get(any()))
+        whenever(shopRepository.getAll())
             .thenReturn(flowOf(shops))
 
         whenever(applyFiltersUC(shops, ShopFilters.None))
@@ -77,7 +77,7 @@ class GetAllShopsUCTest {
     @Test
     fun `returns success with filtered shops`() = runTest {
         val shops = listOf(shop0)
-        whenever(shopRepository.get(any())).thenReturn(flowOf(shops))
+        whenever(shopRepository.getAll()).thenReturn(flowOf(shops))
         whenever(applyFiltersUC(shops, ShopFilters.None)).thenReturn(shops)
 
         val result = uc().first()
@@ -91,7 +91,7 @@ class GetAllShopsUCTest {
     fun `flows react to repository emissions`() = runTest {
         val flow = MutableStateFlow(listOf(shop0))
 
-        whenever(shopRepository.get(any())).thenReturn(flow)
+        whenever(shopRepository.getAll()).thenReturn(flow)
         whenever(applyFiltersUC.invoke(any(), any()))
             .thenAnswer { invocation -> invocation.getArgument(0) }
 

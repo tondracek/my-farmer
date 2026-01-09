@@ -21,11 +21,11 @@ import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.sampleReviews
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import com.tondracek.myfarmer.ui.common.rating.RatingStars
 import com.tondracek.myfarmer.ui.common.user.UserPreviewCard
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
-import java.util.UUID
 
 @Composable
 fun ReviewCard(
@@ -86,7 +86,7 @@ private fun ReviewCardPreview1() {
         ReviewCard(
             review = ReviewUiState(
                 author = SystemUser(
-                    id = UUID.randomUUID(),
+                    id = UserId.newId(),
                     name = "John Doe super super super super super super super super super super super long name",
                     authId = AuthId(""),
                     profilePicture = ImageResource.EMPTY,

@@ -18,6 +18,7 @@ import com.tondracek.myfarmer.shopcategory.data.toModel
 import com.tondracek.myfarmer.shoplocation.data.ShopLocationEntity
 import com.tondracek.myfarmer.shoplocation.data.toEntity
 import com.tondracek.myfarmer.shoplocation.data.toModel
+import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.serialization.Serializable
 import java.util.UUID
 import javax.inject.Inject
@@ -56,7 +57,7 @@ class ShopMapper @Inject constructor() : EntityMapper<Shop, ShopEntity> {
         id = UUID.fromString(entity.id),
         name = entity.name,
         description = entity.description,
-        ownerId = UUID.fromString(entity.ownerId),
+        ownerId = UserId.fromString(entity.ownerId),
         categories = entity.categories.map { it.toModel() },
         images = entity.images.map { ImageResource(it) },
         menu = entity.menu.toModel(),

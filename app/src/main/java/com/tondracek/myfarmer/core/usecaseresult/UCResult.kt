@@ -58,11 +58,6 @@ sealed interface UCResult<out T> {
         is Failure -> onFailure(this)
     }
 
-    fun getOrThrow() = when (this) {
-        is Success -> data
-        is Failure -> throw Throwable(systemError)
-    }
-
     companion object {
         fun <T> of(data: T): UCResult<T> = Success(data)
 

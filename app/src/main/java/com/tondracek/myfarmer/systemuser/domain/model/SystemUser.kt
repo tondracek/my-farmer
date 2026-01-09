@@ -3,9 +3,7 @@ package com.tondracek.myfarmer.systemuser.domain.model
 import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
-import java.util.UUID
 
-typealias UserId = UUID
 
 data class SystemUser(
     val id: UserId,
@@ -16,7 +14,7 @@ data class SystemUser(
 ) {
     companion object {
         fun createEmpty(authId: AuthId) = SystemUser(
-            id = UUID.randomUUID(),
+            id = UserId.newId(),
             authId = authId,
             name = "",
             profilePicture = ImageResource.EMPTY,

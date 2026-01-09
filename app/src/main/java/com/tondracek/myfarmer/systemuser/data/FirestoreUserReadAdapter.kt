@@ -12,7 +12,6 @@ import com.tondracek.myfarmer.systemuser.domain.port.GetUserByIdPort
 import com.tondracek.myfarmer.systemuser.domain.port.GetUsersByIdsPort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,6 +35,6 @@ class FirestoreUserReadAdapter @Inject constructor(
     }
 }
 
-fun UUID.toFirestoreId(): FirestoreEntityId = this.toString()
+fun UserId.toFirestoreId(): FirestoreEntityId = this.toString()
 
 private fun UserEntity.toModel() = UserEntityMapper().toModel(this)

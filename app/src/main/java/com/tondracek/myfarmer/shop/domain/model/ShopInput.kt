@@ -7,7 +7,7 @@ import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shop.domain.result.MissingShopInputDataUCResult
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
-import java.util.UUID
+import com.tondracek.myfarmer.systemuser.domain.model.UserId
 
 data class ShopInput(
     val name: String = "",
@@ -21,7 +21,7 @@ data class ShopInput(
 
 fun ShopInput.toShop(
     shopId: ShopId,
-    ownerId: UUID,
+    ownerId: UserId,
 ): UCResult<Shop> {
     if (this.location == null)
         return MissingShopInputDataUCResult

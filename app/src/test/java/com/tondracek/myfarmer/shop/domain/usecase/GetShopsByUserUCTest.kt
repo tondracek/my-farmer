@@ -62,7 +62,7 @@ class GetShopsByUserUCTest {
         whenever(getLoggedInUserUC())
             .thenReturn(flowOf(UCResult.Success(sampleUser)))
 
-        whenever(shopRepository.get(any()))
+        whenever(shopRepository.getByOwnerId(any()))
             .thenReturn(flowOf(listOf(shop0, shop1)))
 
         val result = uc().first()
@@ -76,7 +76,7 @@ class GetShopsByUserUCTest {
         whenever(getLoggedInUserUC())
             .thenReturn(flowOf(UCResult.Success(sampleUser)))
 
-        whenever(shopRepository.get(any()))
+        whenever(shopRepository.getByOwnerId(any()))
             .thenReturn(flowOf(emptyList()))
 
         val result = uc().first()
@@ -91,7 +91,7 @@ class GetShopsByUserUCTest {
         val shopFlow = MutableStateFlow(listOf(shop0))
 
         whenever(getLoggedInUserUC()).thenReturn(userFlow)
-        whenever(shopRepository.get(any())).thenReturn(shopFlow)
+        whenever(shopRepository.getByOwnerId(any())).thenReturn(shopFlow)
 
         val emissions = mutableListOf<UCResult<List<Shop>>>()
 
@@ -115,7 +115,7 @@ class GetShopsByUserUCTest {
         whenever(getLoggedInUserUC())
             .thenReturn(flowOf(UCResult.Success(sampleUser)))
 
-        whenever(shopRepository.get(any()))
+        whenever(shopRepository.getByOwnerId(any()))
             .thenReturn(flow { throw RuntimeException("DB crashed") })
 
         val result = uc().first()
