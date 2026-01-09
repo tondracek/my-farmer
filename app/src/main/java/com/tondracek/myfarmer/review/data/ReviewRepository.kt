@@ -20,7 +20,10 @@ class ReviewRepository @Inject constructor(
 ) : BaseRepository<Review, ReviewId, ReviewEntity, FirestoreEntityId>(
     core = core,
     entityMapper = mapper,
-    idMapper = IdMapper.UUIDtoFirestore,
+    idMapper = object : IdMapper<ReviewId, FirestoreEntityId> {
+        override fun toEntityId(modelId: ReviewId) = modelId.toString()
+        override fun toModelId(entityId: FirestoreEntityId) = ReviewId.fromString(entityId)
+    }
 ) {
 
     fun getReviewsPreview(shopId: ShopId): Flow<List<Review>> = repositoryRequest {
