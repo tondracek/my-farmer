@@ -124,12 +124,12 @@ private fun LinkButton(
     showErrorMessage: (String) -> Unit,
     icon: ImageVector,
 ) {
+    val errorMessage = stringResource(R.string.could_not_open_the_link, uri)
+
     Button(
         colors = buttonColors,
         onClick = {
-            uriHandler.safelyOpenUrl(uri) {
-                showErrorMessage("Could not open the link: $uri")
-            }
+            uriHandler.safelyOpenUrl(uri) { showErrorMessage(errorMessage) }
         }
     ) {
         Row(
