@@ -40,28 +40,30 @@ data class ShopEntity(
 
 @Singleton
 class ShopMapper @Inject constructor() : EntityMapper<Shop, ShopEntity> {
-
-    override fun toEntity(model: Shop) = ShopEntity(
-        id = model.id.toString(),
-        name = model.name,
-        description = model.description,
-        ownerId = model.ownerId.toString(),
-        categories = model.categories.map { it.toEntity() },
-        images = model.images.map { it.uri },
-        menu = model.menu.toEntity(),
-        location = model.location.toEntity(),
-        openingHours = model.openingHours.toEntity(),
-    )
-
-    override fun toModel(entity: ShopEntity) = Shop(
-        id = ShopId.fromString(entity.id),
-        name = entity.name,
-        description = entity.description,
-        ownerId = UserId.fromString(entity.ownerId),
-        categories = entity.categories.map { it.toModel() },
-        images = entity.images.map { ImageResource(it) },
-        menu = entity.menu.toModel(),
-        location = entity.location.toModel(),
-        openingHours = entity.openingHours.toModel(),
-    )
+    override fun toEntity(model: Shop) = model.toEntity()
+    override fun toModel(entity: ShopEntity) = entity.toModel()
 }
+
+fun Shop.toEntity() = ShopEntity(
+    id = id.toString(),
+    name = name,
+    description = description,
+    ownerId = ownerId.toString(),
+    categories = categories.map { it.toEntity() },
+    images = images.map { it.uri },
+    menu = menu.toEntity(),
+    location = location.toEntity(),
+    openingHours = openingHours.toEntity(),
+)
+
+fun ShopEntity.toModel() = Shop(
+    id = ShopId.fromString(id),
+    name = name,
+    description = description,
+    ownerId = UserId.fromString(ownerId),
+    categories = categories.map { it.toModel() },
+    images = images.map { ImageResource(it) },
+    menu = menu.toModel(),
+    location = location.toModel(),
+    openingHours = openingHours.toModel(),
+)
