@@ -2,7 +2,6 @@ package com.tondracek.myfarmer.ui.createshopflow.steps
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.location.Location
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,8 +35,8 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.tondracek.myfarmer.R
+import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
-import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.createshopflow.components.NavigationButtons
 import kotlinx.coroutines.launch
@@ -46,7 +45,7 @@ import kotlinx.coroutines.launch
 fun CreatingShopNameLocationStep(
     shopInput: ShopInput,
     onUpdateName: (String) -> Unit,
-    onUpdateLocation: (ShopLocation) -> Unit,
+    onUpdateLocation: (Location) -> Unit,
     onNextStep: () -> Unit,
     onPreviousStep: () -> Unit,
 ) {
@@ -71,7 +70,7 @@ private fun Content(
     modifier: Modifier = Modifier,
     shopInput: ShopInput,
     onUpdateName: (String) -> Unit,
-    onUpdateLocation: (ShopLocation) -> Unit,
+    onUpdateLocation: (Location) -> Unit,
 ) {
     Column(
         modifier = modifier.padding(horizontal = MyFarmerTheme.paddings.medium),
@@ -136,8 +135,8 @@ private fun Content(
 @Composable
 fun PickLocationMap(
     modifier: Modifier = Modifier,
-    location: ShopLocation?,
-    onLocationSelected: (ShopLocation) -> Unit
+    location: Location?,
+    onLocationSelected: (Location) -> Unit
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -164,12 +163,12 @@ fun PickLocationMap(
         when {
             !isPermissionGranted -> {}
             location != null -> zoomToLocation(location.toLatLng())
-            else -> locationClient.lastLocation.addOnSuccessListener { newLocation: Location? ->
+            else -> locationClient.lastLocation.addOnSuccessListener { newLocation: android.location.Location? ->
                 if (newLocation == null) return@addOnSuccessListener
 
                 val latLng = LatLng(newLocation.latitude, newLocation.longitude)
                 zoomToLocation(latLng)
-                onLocationSelected(ShopLocation(latLng))
+                onLocationSelected(Location(latLng))
             }
         }
     }
@@ -187,7 +186,7 @@ fun PickLocationMap(
             ),
             onMapClick = { latLng ->
                 zoomToLocation(latLng)
-                onLocationSelected(ShopLocation(latLng))
+                onLocationSelected(Location(latLng))
             }
         ) {
             if (location != null)

@@ -2,6 +2,7 @@ package com.tondracek.myfarmer.shop.data
 
 import androidx.compose.ui.graphics.Color
 import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
@@ -12,7 +13,6 @@ import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.systemuser.data.user0
 import com.tondracek.myfarmer.systemuser.data.user1
@@ -43,7 +43,7 @@ val shop0 = Shop(
         ImageResource("https://picsum.photos/200/403"),
         ImageResource("https://picsum.photos/600/103"),
     ),
-    location = ShopLocation(49.209166, 16.556608),
+    location = Location(49.209166, 16.556608),
     categories = listOf(
         ShopCategory(name = "Med", color = Color(0xFFFFC107)),
         ShopCategory(name = "Včelařství", color = Color(0xFFFF9800)),
@@ -158,7 +158,7 @@ val shop1 = Shop(
         ImageResource("https://picsum.photos/600/103"),
     ),
     description = "Na FI je všechno",
-    location = ShopLocation(49.209806, 16.598833),
+    location = Location(49.209806, 16.598833),
     categories = listOf(
         ShopCategory(name = "Zelenina", color = Color(0xFF067C06)),
         ShopCategory(name = "Ovoce", color = Color(0xFFE4560B)),
@@ -190,7 +190,7 @@ val shop2 = Shop(
         ImageResource("https://picsum.photos/600/100"),
     ),
     description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
-    location = ShopLocation(49.205778, 16.593361),
+    location = Location(49.205778, 16.593361),
     categories = listOf(
         ShopCategory(name = "Vejce", color = Color(0xFFBE9329)),
     ),
@@ -241,7 +241,7 @@ val shop3 = Shop(
     images = listOf(
     ),
     description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
-    location = ShopLocation(49.205778, 16.59),
+    location = Location(49.205778, 16.59),
     categories = listOf(
         ShopCategory(name = "Maso", color = Color(0xFF642000)),
     ),

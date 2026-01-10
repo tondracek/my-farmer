@@ -3,7 +3,10 @@ package com.tondracek.myfarmer.ui.mainshopscreen.shopslistview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.core.usecaseresult.getOrElse
-import com.tondracek.myfarmer.location.usecase.MeasureDistanceFromMeUC
+import com.tondracek.myfarmer.location.model.Distance
+import com.tondracek.myfarmer.location.model.Location
+import com.tondracek.myfarmer.location.usecase.measureMapDistance
+import com.tondracek.myfarmer.map.GetUserLocationUC
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.usecase.GetAverageRatingsByShopUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
@@ -22,6 +25,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -31,37 +35,52 @@ import javax.inject.Inject
 @HiltViewModel
 class ShopsListViewModel @Inject constructor(
     getAverageRatingsByShopUC: GetAverageRatingsByShopUC,
-    measureDistanceFromMe: MeasureDistanceFromMeUC,
+    getUserLocation: GetUserLocationUC,
     getAllShops: GetAllShopsUC,
     getShopFilters: GetShopFiltersUC,
 ) : ViewModel() {
 
-    private val _filters: StateFlow<ShopFilters> =
+    private val filters: StateFlow<ShopFilters> =
         getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
 
-    val averageRatings: Flow<Map<ShopId, Rating>> = getAverageRatingsByShopUC()
-        .getOrElse(emptyMap()) {
+    private val userLocation: Flow<Location?> = getUserLocation()
+        .getOrElse(null) { _effects.emit(ShopsListViewEffect.ShowError(it.userError)) }
+        .distinctUntilChanged()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val shops: Flow<List<Shop>> = filters
+        .flatMapLatest { filters -> getAllShops(filters = filters) }
+        .getOrElse(emptyList()) {
             _effects.emit(ShopsListViewEffect.ShowError(it.userError))
         }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val _shops: Flow<List<Shop>> = _filters.flatMapLatest { filters ->
-        getAllShops(filters = filters)
-            .getOrElse(emptyList()) {
-                _effects.emit(ShopsListViewEffect.ShowError(it.userError))
-            }
+    private val _distanceToShops: Flow<Map<ShopId, Distance?>> = combine(
+        shops,
+        userLocation
+    ) { shops, userLocation ->
+        shops.associate { shop ->
+            val distance = measureMapDistance(shop.location, userLocation)
+            shop.id to distance
+        }
+    }.distinctUntilChanged()
+
+    private val averageRatings: Flow<Map<ShopId, Rating>> = getAverageRatingsByShopUC()
+        .getOrElse(emptyMap()) { _effects.emit(ShopsListViewEffect.ShowError(it.userError)) }
+        .distinctUntilChanged()
+
+    private val shopsUiData: Flow<List<ShopListViewItem>> = combine(
+        shops,
+        _distanceToShops,
+        averageRatings
+    ) { shops, distances, ratings ->
+        shops.map { shop ->
+            val distance = distances[shop.id]
+            val rating = ratings[shop.id] ?: Rating.ZERO
+            shop.toListItem(distance, rating)
+        }.sortedBy(ShopListViewItem::distance)
     }
 
-    private val _shopsUiData: Flow<List<ShopListViewItem>> =
-        combine(_shops, averageRatings) { shops, ratings ->
-            shops.map { shop ->
-                val distance = measureDistanceFromMe(shop.location)
-                val rating = ratings[shop.id] ?: Rating.ZERO
-                shop.toListItem(distance, rating)
-            }.sortedBy(ShopListViewItem::distance)
-        }
-
-    val state: StateFlow<ShopsListViewState> = _shopsUiData.map {
+    val state: StateFlow<ShopsListViewState> = shopsUiData.map {
         ShopsListViewState.Success(shops = it)
     }.stateIn(
         scope = viewModelScope,

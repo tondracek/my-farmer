@@ -4,11 +4,11 @@ package com.tondracek.myfarmer.ui.createshopflow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -71,7 +71,7 @@ open class CreateUpdateShopFlowViewmodel() : ViewModel() {
         it.copy(menu = menu)
     }
 
-    fun updateLocation(location: ShopLocation) = mutableState.updateShopInput {
+    fun updateLocation(location: Location) = mutableState.updateShopInput {
         it.copy(location = location)
     }
 

@@ -5,6 +5,9 @@ import com.tondracek.myfarmer.core.firestore.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.repository.EntityMapper
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollectionName
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
+import com.tondracek.myfarmer.location.data.LocationEntity
+import com.tondracek.myfarmer.location.data.toEntity
+import com.tondracek.myfarmer.location.data.toModel
 import com.tondracek.myfarmer.openinghours.data.OpeningHoursEntity
 import com.tondracek.myfarmer.openinghours.data.toEntity
 import com.tondracek.myfarmer.openinghours.data.toModel
@@ -16,9 +19,6 @@ import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shopcategory.data.ShopCategoryEntity
 import com.tondracek.myfarmer.shopcategory.data.toEntity
 import com.tondracek.myfarmer.shopcategory.data.toModel
-import com.tondracek.myfarmer.shoplocation.data.ShopLocationEntity
-import com.tondracek.myfarmer.shoplocation.data.toEntity
-import com.tondracek.myfarmer.shoplocation.data.toModel
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
@@ -34,7 +34,7 @@ data class ShopEntity(
     var categories: List<ShopCategoryEntity> = emptyList(),
     var images: List<String?> = emptyList(),
     var menu: ProductMenuEntity = ProductMenuEntity(),
-    var location: ShopLocationEntity = ShopLocationEntity(),
+    var location: LocationEntity = LocationEntity(),
     var openingHours: OpeningHoursEntity = OpeningHoursEntity(),
 ) : FirestoreEntity
 

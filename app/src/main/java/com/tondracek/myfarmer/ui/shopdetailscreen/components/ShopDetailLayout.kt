@@ -32,11 +32,11 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.sampleReviewsUI
 import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
 import com.tondracek.myfarmer.ui.common.image.ImageView
@@ -140,7 +140,7 @@ private fun Header(
 @Composable
 private fun NavigateButton(
     modifier: Modifier = Modifier,
-    location: ShopLocation
+    location: Location
 ) {
     val context = LocalContext.current
 

@@ -57,7 +57,8 @@ class ShopsMapViewModel @Inject constructor(
         .distinctUntilChanged()
 
     private val _closestShops: Flow<List<Shop>> = _shops
-        .map { getClosestShops(it, count = 5) }
+        .map { getClosestShops(it, count = 3) }
+        .distinctUntilChanged()
 
     private val _initialCameraBounds: Flow<LatLngBounds?> = _closestShops
         .map { shops ->

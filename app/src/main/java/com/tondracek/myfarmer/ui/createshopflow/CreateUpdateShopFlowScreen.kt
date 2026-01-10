@@ -2,10 +2,10 @@ package com.tondracek.myfarmer.ui.createshopflow
 
 import androidx.compose.runtime.Composable
 import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.createshopflow.steps.CreatingShopCategoriesMenuStep
@@ -24,7 +24,7 @@ fun CreateUpdateShopFlowScreen(
     onOpenAddCategoryDialog: () -> Unit,
     onUpdateCategories: (List<ShopCategory>) -> Unit,
     onUpdateImages: (List<ImageResource>) -> Unit,
-    onUpdateLocation: (ShopLocation) -> Unit,
+    onUpdateLocation: (Location) -> Unit,
     onUpdateOpeningHours: (OpeningHours) -> Unit,
     onUpdateMenu: (ProductMenu) -> Unit,
     onSubmitCreating: () -> Unit,

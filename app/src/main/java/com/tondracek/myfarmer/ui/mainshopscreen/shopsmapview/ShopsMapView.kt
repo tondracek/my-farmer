@@ -20,8 +20,8 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.shop.domain.model.ShopId
-import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.ui.common.map.marker.ShopIconMarker
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import kotlinx.coroutines.delay
@@ -39,7 +39,7 @@ fun ShopsMapView(
     val cameraPositionState = rememberCameraPositionState()
     val scope = rememberCoroutineScope()
 
-    fun zoomToShop(location: ShopLocation, zoom: Float = 15f) = scope.launch {
+    fun zoomToShop(location: Location, zoom: Float = 15f) = scope.launch {
         val currentZoom = cameraPositionState.position.zoom
         if (currentZoom < zoom) cameraPositionState.animate(
             CameraUpdateFactory.newLatLngZoom(location.toLatLng(), zoom)

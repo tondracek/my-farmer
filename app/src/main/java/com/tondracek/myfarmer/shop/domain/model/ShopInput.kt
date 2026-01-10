@@ -2,11 +2,11 @@ package com.tondracek.myfarmer.shop.domain.model
 
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
+import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shop.domain.result.MissingShopInputDataUCResult
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 
 data class ShopInput(
@@ -15,7 +15,7 @@ data class ShopInput(
     val categories: List<ShopCategory> = emptyList(),
     val images: List<ImageResource> = emptyList(),
     val menu: ProductMenu = ProductMenu.Empty,
-    val location: ShopLocation? = null,
+    val location: Location? = null,
     val openingHours: OpeningHours = OpeningHours.Empty,
 )
 
