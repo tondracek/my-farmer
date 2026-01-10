@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
 
 private const val FIRESTORE_WHERE_IN_LIMIT = 10
 
-fun <Entity : FirestoreEntity, V> firestoreGetWhereIn(
+fun <Entity : FirestoreEntity, V> firestoreGetByFieldValues(
     collection: CollectionReference,
     entityClass: KClass<Entity>,
     field: FieldPath,

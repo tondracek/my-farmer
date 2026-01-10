@@ -1,8 +1,8 @@
 package com.tondracek.myfarmer.review.domain.usecase
 
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.review.data.ReviewRepository
 import com.tondracek.myfarmer.review.domain.model.Review
+import com.tondracek.myfarmer.review.domain.repository.ReviewRepository
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

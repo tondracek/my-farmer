@@ -2,13 +2,14 @@ package com.tondracek.myfarmer.systemuser.data
 
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.firestore.helpers.FirestoreCrudHelper
+import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetByField
 import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetByIds
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetWhereEqualTo
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import com.tondracek.myfarmer.systemuser.domain.repository.UserRepository
@@ -51,10 +52,10 @@ class FirestoreUserRepository @Inject constructor() : UserRepository {
 
 
     override fun getUserByAuthId(authId: AuthId): Flow<SystemUser?> =
-        firestoreGetWhereEqualTo(
+        firestoreGetByField(
             collection = collection,
             entityClass = UserEntity::class,
-            property = UserEntity::firebaseId,
+            field = FieldPath.of(UserEntity::firebaseId.name),
             value = authId.value,
         )
             .map { it.firstOrNull() }

@@ -2,8 +2,8 @@ package com.tondracek.myfarmer.review.domain.usecase
 
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.toUCResult
-import com.tondracek.myfarmer.review.data.ReviewRepository
 import com.tondracek.myfarmer.review.domain.model.Review
+import com.tondracek.myfarmer.review.domain.repository.ReviewRepository
 import com.tondracek.myfarmer.review.domain.usecase.result.UCFailureLoadingReviews
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
@@ -21,7 +21,7 @@ class GetShopReviewsWithAuthorsUC @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(shopId: ShopId): Flow<UCResult<List<Pair<Review, SystemUser>>>> {
-        val reviews: Flow<List<Review>> = reviewRepository.getReviews(shopId)
+        val reviews: Flow<List<Review>> = reviewRepository.getShopReviews(shopId)
         val authors: Flow<List<SystemUser>> = reviews.flatMapLatest { reviewList ->
             val authorIds = reviewList.map { it.userId }.distinct()
             userRepository.getByIds(authorIds)

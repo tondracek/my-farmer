@@ -12,7 +12,7 @@ fun <T : FirestoreEntity> firestoreGetByIds(
     ids: List<FirestoreEntityId>,
     entityClass: KClass<T>
 ): Flow<List<T>> =
-    firestoreGetWhereIn(
+    firestoreGetByFieldValues(
         collection = collection,
         entityClass = entityClass,
         field = FieldPath.of(FirestoreEntity::id.name),
