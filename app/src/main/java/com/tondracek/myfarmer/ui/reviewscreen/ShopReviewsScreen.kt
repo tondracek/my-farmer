@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.LoadState
 import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.review.domain.model.ReviewInput
 import com.tondracek.myfarmer.shop.data.sampleReviewsUI
@@ -29,6 +28,7 @@ import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.common.paging.FullScreenLoading
 import com.tondracek.myfarmer.ui.common.paging.LoadingMoreItem
 import com.tondracek.myfarmer.ui.common.paging.RetryItem
+import com.tondracek.myfarmer.ui.common.paging.collectAsLazyPagingItemsAndSnackbarErrors
 import com.tondracek.myfarmer.ui.common.review.ReviewCard
 import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
@@ -91,7 +91,7 @@ private fun Content(
 
 @Composable
 private fun ReviewsList(state: ShopReviewsScreenState.Success) {
-    val pagingItems = state.reviews.collectAsLazyPagingItems()
+    val pagingItems = state.reviews.collectAsLazyPagingItemsAndSnackbarErrors()
 
     LazyColumn(
         modifier = Modifier

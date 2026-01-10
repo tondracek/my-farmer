@@ -3,22 +3,20 @@ package com.tondracek.myfarmer.ui.reviewscreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.review.domain.model.Review
+import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.review.domain.model.ReviewInput
-import com.tondracek.myfarmer.review.domain.paging.ShopReviewsPagingSource
 import com.tondracek.myfarmer.review.domain.usecase.CreateShopReviewUC
 import com.tondracek.myfarmer.review.domain.usecase.GetShopReviewsWithAuthorsUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.GetShopByIdUC
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.ui.common.paging.getUCResultPageDataFlow
 import com.tondracek.myfarmer.ui.common.review.ReviewUiState
 import com.tondracek.myfarmer.ui.common.review.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,25 +41,14 @@ class ShopReviewsViewModel @Inject constructor(
 
     val shop: Flow<UCResult<Shop>> = getShopById(shopId)
 
-    private val _reviewsWithAuthors: Flow<PagingData<Pair<Review, SystemUser>>> = Pager(
-        config = PagingConfig(
-            pageSize = 20,
-            enablePlaceholders = false
-        ),
-        pagingSourceFactory = {
-            ShopReviewsPagingSource(
-                getData = { limit, after ->
-                    getShopReviewsWithAuthorsUC.paged(
-                        shopId = shopId,
-                        limit = limit,
-                        after = after,
-                    ).getOrElse(emptyList()) {
-                        _effects.emit(ShopReviewsEffect.ShowError(it.userError))
-                    }
-                }
+    private val _reviewsWithAuthors: Flow<PagingData<Pair<Review, SystemUser>>> =
+        getUCResultPageDataFlow<ReviewId, Pair<Review, SystemUser>>({ (review, _) -> review.id }) { limit, after ->
+            getShopReviewsWithAuthorsUC.paged(
+                shopId = shopId,
+                limit = limit,
+                after = after,
             )
-        }
-    ).flow.cachedIn(viewModelScope)
+        }.cachedIn(viewModelScope)
 
     private val _reviewsUiState: Flow<PagingData<ReviewUiState>> =
         _reviewsWithAuthors.map { pagingData ->

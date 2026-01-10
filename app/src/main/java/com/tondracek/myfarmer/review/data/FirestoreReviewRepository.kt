@@ -6,7 +6,7 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.snapshots
 import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.firestore.helpers.FirestoreCrudHelper
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetPaginatedByField
+import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetPaginatedFilteredByField
 import com.tondracek.myfarmer.core.firestore.helpers.mapToEntities
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.review.domain.model.Review
@@ -41,7 +41,7 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
         limit: Int?,
         after: ReviewId?
     ): Flow<List<Review>> =
-        firestoreGetPaginatedByField(
+        firestoreGetPaginatedFilteredByField(
             collection = collection,
             entityClass = ReviewEntity::class,
             field = FieldPath.of(ReviewEntity::shopId.name),

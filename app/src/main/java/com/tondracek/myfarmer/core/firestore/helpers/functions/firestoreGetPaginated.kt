@@ -22,7 +22,7 @@ fun <Entity : FirestoreEntity> firestoreGetPaginated(
     .snapshots()
     .mapToEntities(entityClass)
 
-fun <Entity : FirestoreEntity, V> firestoreGetPaginatedByField(
+fun <Entity : FirestoreEntity, V> firestoreGetPaginatedFilteredByField(
     collection: CollectionReference,
     entityClass: KClass<Entity>,
     field: FieldPath,

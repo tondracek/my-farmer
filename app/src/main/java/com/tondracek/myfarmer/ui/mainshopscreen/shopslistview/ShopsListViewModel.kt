@@ -2,8 +2,6 @@ package com.tondracek.myfarmer.ui.mainshopscreen.shopslistview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
@@ -13,10 +11,10 @@ import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.usecase.GetAverageRatingsByShopUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
-import com.tondracek.myfarmer.shop.domain.paging.ShopsPagingSource
 import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
 import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
+import com.tondracek.myfarmer.ui.common.paging.getUCResultPageDataFlow
 import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.ShopListViewItem
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.toListItem
@@ -42,43 +40,23 @@ class ShopsListViewModel @Inject constructor(
     getShopFilters: GetShopFiltersUC,
 ) : ViewModel() {
 
-    private val filters: StateFlow<ShopFilters> =
+    private val _filters: StateFlow<ShopFilters> =
         getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
 
-    val averageRatings: Flow<Map<ShopId, Rating>> =
-        getAverageRatingsByShopUC()
-            .getOrElse(emptyMap()) {
-                _effects.emit(ShopsListViewEffect.ShowError(it.userError))
-            }
+    val averageRatings: Flow<Map<ShopId, Rating>> = getAverageRatingsByShopUC()
+        .getOrElse(emptyMap()) {
+            _effects.emit(ShopsListViewEffect.ShowError(it.userError))
+        }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val _shopsPagingData: Flow<PagingData<Shop>> =
-        filters.flatMapLatest { filtersValue ->
-            Pager(
-                config = PagingConfig(
-                    pageSize = 20,
-                    enablePlaceholders = false
-                ),
-                pagingSourceFactory = {
-                    ShopsPagingSource(
-                        getData = { limit, after ->
-                            getAllShops.paged(
-                                limit = limit,
-                                after = after,
-                                filters = filtersValue
-                            ).getOrElse(emptyList()) {
-                                _effects.emit(
-                                    ShopsListViewEffect.ShowError(it.userError)
-                                )
-                            }
-                        }
-                    )
-                }
-            ).flow
-        }.cachedIn(viewModelScope)
+    private val _shops: Flow<PagingData<Shop>> = _filters.flatMapLatest { filters ->
+        getUCResultPageDataFlow<ShopId, Shop>({ it.id }) { limit, after ->
+            getAllShops.paged(filters = filters, limit = limit, after = after)
+        }
+    }.cachedIn(viewModelScope)
 
-    private val _shopsUiPagingData: Flow<PagingData<ShopListViewItem>> =
-        combine(_shopsPagingData, averageRatings) { pagingData, ratings ->
+    private val _shopsUiData: Flow<PagingData<ShopListViewItem>> =
+        combine(_shops, averageRatings) { pagingData, ratings ->
             pagingData.map { shop ->
                 val distance = measureDistanceFromMe(shop.location)
                 val rating = ratings[shop.id] ?: Rating.ZERO
@@ -87,7 +65,7 @@ class ShopsListViewModel @Inject constructor(
         }
 
     val state: StateFlow<ShopsListViewState> = flowOf(
-        ShopsListViewState.Success(shops = _shopsUiPagingData)
+        ShopsListViewState.Success(shops = _shopsUiData)
     ).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),

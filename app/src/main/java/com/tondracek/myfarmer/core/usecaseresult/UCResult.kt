@@ -92,6 +92,8 @@ private fun Failure.logFailure() {
     )
 }
 
+fun Failure.toException(): Exception = Exception(userError, Exception(systemError))
+
 /**
  * - For `UseCaseResult.Success` returns the `data` value
  * - For `UseCaseResult.Failure` applies the `block` function that can return some value
@@ -111,7 +113,6 @@ inline fun <T> UCResult<T>.getOrElse(defaultValue: (Failure) -> T): T = when (th
     is Success -> data
     is Failure -> defaultValue(this)
 }
-
 
 suspend fun <T> UCResult<T>.getOrElse(
     defaultValue: T,

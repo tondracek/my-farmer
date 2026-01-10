@@ -8,16 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.LoadState
 import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.tondracek.myfarmer.location.model.km
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.ShopId
-import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.common.paging.FullScreenLoading
 import com.tondracek.myfarmer.ui.common.paging.LoadingMoreItem
 import com.tondracek.myfarmer.ui.common.paging.RetryItem
+import com.tondracek.myfarmer.ui.common.paging.collectAsLazyPagingItemsAndSnackbarErrors
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -40,10 +39,6 @@ fun ShopsListView(
         )
 
         ShopsListViewState.Loading -> LoadingLayout()
-        is ShopsListViewState.Error -> ErrorLayout(
-            failure = state.error,
-            onNavigateBack = onNavigateBack
-        )
     }
 }
 
@@ -54,7 +49,7 @@ private fun SuccessLayout(
     onNavigateToShopDetail: (ShopId) -> Unit
 ) {
     val lazyListState = rememberLazyListState()
-    val pagingItems = state.shops.collectAsLazyPagingItems()
+    val pagingItems = state.shops.collectAsLazyPagingItemsAndSnackbarErrors()
 
     LazyColumn(
         modifier = modifier,

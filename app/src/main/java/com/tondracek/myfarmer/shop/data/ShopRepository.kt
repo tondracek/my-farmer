@@ -36,6 +36,8 @@ class ShopRepository @Inject constructor(
         }
     )
 
+    // TODO: Remake to simple architecture without CORE
+
     private val firestore = Firebase.firestore
     private val collection = firestore.collection(FirestoreCollectionNames.SHOP)
 
