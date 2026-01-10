@@ -3,23 +3,30 @@ package com.tondracek.myfarmer.ui.reviewscreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.core.usecaseresult.combineUCResults
+import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewInput
+import com.tondracek.myfarmer.review.domain.paging.ShopReviewsPagingSource
 import com.tondracek.myfarmer.review.domain.usecase.CreateShopReviewUC
 import com.tondracek.myfarmer.review.domain.usecase.GetShopReviewsWithAuthorsUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.GetShopByIdUC
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.ui.common.review.ReviewUiState
 import com.tondracek.myfarmer.ui.common.review.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,30 +35,58 @@ import javax.inject.Inject
 class ShopReviewsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getShopById: GetShopByIdUC,
-    getShopReviewsWithAuthorsUC: GetShopReviewsWithAuthorsUC,
+    private val getShopReviewsWithAuthorsUC: GetShopReviewsWithAuthorsUC,
     private val createShopReview: CreateShopReviewUC,
 ) : ViewModel() {
 
     val shopId: ShopId = savedStateHandle.getReviewsScreenShopId()
 
     val shop: Flow<UCResult<Shop>> = getShopById(shopId)
-    val reviewsWithAuthors: Flow<UCResult<List<Pair<Review, SystemUser>>>> =
-        getShopReviewsWithAuthorsUC(shopId)
 
-    val state: StateFlow<ShopReviewsScreenState> = combineUCResults(
-        reviewsWithAuthors,
-        shop,
-        { ShopReviewsScreenState.Error(it) }
-    ) { reviews, shop ->
-        ShopReviewsScreenState.Success(
-            shopName = shop.name,
-            reviews = reviews.map { (review, author) -> review.toUiState(author) }
+    private val _reviewsWithAuthors: Flow<PagingData<Pair<Review, SystemUser>>> = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = {
+            ShopReviewsPagingSource(
+                getData = { limit, after ->
+                    getShopReviewsWithAuthorsUC.paged(
+                        shopId = shopId,
+                        limit = limit,
+                        after = after,
+                    ).getOrElse(emptyList()) {
+                        _effects.emit(ShopReviewsEffect.ShowError(it.userError))
+                    }
+                }
+            )
+        }
+    ).flow.cachedIn(viewModelScope)
+
+    private val _reviewsUiState: Flow<PagingData<ReviewUiState>> =
+        _reviewsWithAuthors.map { pagingData ->
+            pagingData.map { (review, author) -> review.toUiState(author) }
+        }
+
+    val state: StateFlow<ShopReviewsScreenState> = shop
+        .map {
+            it.fold(
+                onSuccess = { shop ->
+                    ShopReviewsScreenState.Success(
+                        shopName = shop.name,
+                        reviews = _reviewsUiState,
+                    )
+                },
+                onFailure = { failure ->
+                    ShopReviewsScreenState.Error(failure)
+                }
+            )
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5_000),
+            initialValue = ShopReviewsScreenState.Loading
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = ShopReviewsScreenState.Loading
-    )
 
     private val _effects = MutableSharedFlow<ShopReviewsEffect>(extraBufferCapacity = 1)
     val effects: SharedFlow<ShopReviewsEffect> = _effects
@@ -70,4 +105,6 @@ class ShopReviewsViewModel @Inject constructor(
 
 sealed interface ShopReviewsEffect {
     object NavigateBack : ShopReviewsEffect
+
+    data class ShowError(val message: String) : ShopReviewsEffect
 }

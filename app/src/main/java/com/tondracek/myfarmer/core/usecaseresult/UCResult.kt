@@ -112,6 +112,15 @@ inline fun <T> UCResult<T>.getOrElse(defaultValue: (Failure) -> T): T = when (th
     is Failure -> defaultValue(this)
 }
 
+
+suspend fun <T> UCResult<T>.getOrElse(
+    defaultValue: T,
+    onError: suspend (Failure) -> Unit = {},
+): T = this.getOrElse {
+    onError(it)
+    defaultValue
+}
+
 fun <T> Flow<UCResult<T>>.getOrElse(
     defaultValue: T,
     onError: suspend (Failure) -> Unit = {}

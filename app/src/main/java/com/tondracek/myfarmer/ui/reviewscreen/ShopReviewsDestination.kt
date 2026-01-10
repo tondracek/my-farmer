@@ -18,7 +18,7 @@ fun SavedStateHandle.getReviewsScreenShopId(): ShopId =
 
 fun NavGraphBuilder.shopReviewsScreenDestination(
     navController: NavController,
-) = routeDestination<Route.ShopReviews> {
+) = routeDestination<Route.ShopReviews> { appUiController ->
     val viewmodel: ShopReviewsViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()
 
@@ -26,6 +26,7 @@ fun NavGraphBuilder.shopReviewsScreenDestination(
         viewmodel.effects.collect { event ->
             when (event) {
                 is ShopReviewsEffect.NavigateBack -> navController.navigateUp()
+                is ShopReviewsEffect.ShowError -> appUiController.showErrorMessage(event.message)
             }
         }
     }

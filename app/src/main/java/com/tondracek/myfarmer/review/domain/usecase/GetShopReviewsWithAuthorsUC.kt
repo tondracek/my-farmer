@@ -3,6 +3,7 @@ package com.tondracek.myfarmer.review.domain.usecase
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.toUCResult
 import com.tondracek.myfarmer.review.domain.model.Review
+import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.review.domain.repository.ReviewRepository
 import com.tondracek.myfarmer.review.domain.usecase.result.UCFailureLoadingReviews
 import com.tondracek.myfarmer.shop.domain.model.ShopId
@@ -11,6 +12,7 @@ import com.tondracek.myfarmer.systemuser.domain.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
@@ -34,5 +36,31 @@ class GetShopReviewsWithAuthorsUC @Inject constructor(
                 author?.let { review to author }
             }
         }.toUCResult(UCFailureLoadingReviews())
+    }
+
+    suspend fun paged(
+        shopId: ShopId,
+        limit: Int,
+        after: ReviewId?,
+    ): UCResult<List<Pair<Review, SystemUser>>> = UCResult.of {
+
+        val reviews = reviewRepository
+            .getShopReviews(
+                shopId = shopId,
+                limit = limit,
+                after = after
+            )
+            .first()
+
+        if (reviews.isEmpty()) return@of emptyList()
+
+        val authors = userRepository
+            .getByIds(reviews.map { it.userId }.distinct())
+            .first()
+            .associateBy { it.id }
+
+        return@of reviews.mapNotNull { review ->
+            authors[review.userId]?.let { review to it }
+        }
     }
 }

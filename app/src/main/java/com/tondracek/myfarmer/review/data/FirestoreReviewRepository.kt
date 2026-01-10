@@ -2,11 +2,11 @@ package com.tondracek.myfarmer.review.data
 
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.snapshots
 import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.firestore.helpers.FirestoreCrudHelper
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetByField
 import com.tondracek.myfarmer.core.firestore.helpers.mapToEntities
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.review.domain.model.Review
@@ -37,13 +37,23 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
 
     override fun getShopReviews(
         shopId: ShopId,
+        limit: Int?,
+        after: ReviewId?
     ): Flow<List<Review>> =
-        firestoreGetByField(
-            collection = collection,
-            entityClass = ReviewEntity::class,
-            field = FieldPath.of(ReviewEntity::shopId.name),
-            value = shopId.toString(),
-        ).mapToModelList()
+        collection
+            .whereEqualTo(ReviewEntity::shopId.name, shopId.toString())
+            .orderBy(FieldPath.documentId())
+            .startAfterNullable(after)
+            .limitNullable(limit)
+            .snapshots()
+            .mapToEntities(ReviewEntity::class)
+            .mapToModelList()
+
+    private fun Query.startAfterNullable(lastReviewId: ReviewId?): Query =
+        lastReviewId?.let { id -> this.startAfter(id.toString()) } ?: this
+
+    private fun Query.limitNullable(limit: Int?): Query =
+        limit?.let { this.limit(it.toLong()) } ?: this
 
 
     override suspend fun create(item: Review): ReviewId =

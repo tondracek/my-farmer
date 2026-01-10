@@ -18,6 +18,7 @@ import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.review.domain.model.Rating
+import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.shop.data.sampleReviews
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
@@ -85,6 +86,7 @@ private fun ReviewCardPreview1() {
     MyFarmerPreview {
         ReviewCard(
             review = ReviewUiState(
+                id = ReviewId.newId(),
                 author = SystemUser(
                     id = UserId.newId(),
                     name = "John Doe super super super super super super super super super super super long name",
