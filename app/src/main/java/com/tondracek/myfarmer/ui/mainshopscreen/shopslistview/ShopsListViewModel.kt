@@ -2,9 +2,6 @@ package com.tondracek.myfarmer.ui.mainshopscreen.shopslistview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
 import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.location.usecase.MeasureDistanceFromMeUC
 import com.tondracek.myfarmer.review.domain.model.Rating
@@ -14,7 +11,6 @@ import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
 import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
-import com.tondracek.myfarmer.ui.common.paging.getUCResultPageDataFlow
 import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.ShopListViewItem
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.toListItem
@@ -27,7 +23,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -49,24 +45,25 @@ class ShopsListViewModel @Inject constructor(
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val _shops: Flow<PagingData<Shop>> = _filters.flatMapLatest { filters ->
-        getUCResultPageDataFlow<ShopId, Shop>({ it.id }) { limit, after ->
-            getAllShops.paged(filters = filters, limit = limit, after = after)
-        }
-    }.cachedIn(viewModelScope)
+    private val _shops: Flow<List<Shop>> = _filters.flatMapLatest { filters ->
+        getAllShops(filters = filters)
+            .getOrElse(emptyList()) {
+                _effects.emit(ShopsListViewEffect.ShowError(it.userError))
+            }
+    }
 
-    private val _shopsUiData: Flow<PagingData<ShopListViewItem>> =
-        combine(_shops, averageRatings) { pagingData, ratings ->
-            pagingData.map { shop ->
+    private val _shopsUiData: Flow<List<ShopListViewItem>> =
+        combine(_shops, averageRatings) { shops, ratings ->
+            shops.map { shop ->
                 val distance = measureDistanceFromMe(shop.location)
                 val rating = ratings[shop.id] ?: Rating.ZERO
                 shop.toListItem(distance, rating)
-            }
+            }.sortedBy(ShopListViewItem::distance)
         }
 
-    val state: StateFlow<ShopsListViewState> = flowOf(
-        ShopsListViewState.Success(shops = _shopsUiData)
-    ).stateIn(
+    val state: StateFlow<ShopsListViewState> = _shopsUiData.map {
+        ShopsListViewState.Success(shops = it)
+    }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = ShopsListViewState.Loading

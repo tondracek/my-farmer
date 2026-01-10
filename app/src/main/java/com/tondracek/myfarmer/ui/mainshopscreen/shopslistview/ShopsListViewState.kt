@@ -8,6 +8,6 @@ sealed class ShopsListViewState {
     data object Loading : ShopsListViewState()
 
     data class Success(
-        val shops: Flow<PagingData<ShopListViewItem>>
+        val shops: List<ShopListViewItem>
     ) : ShopsListViewState()
 }

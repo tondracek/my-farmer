@@ -18,17 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.review.domain.model.ReviewInput
 import com.tondracek.myfarmer.shop.data.sampleReviewsUI
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
-import com.tondracek.myfarmer.ui.common.paging.FullScreenLoading
-import com.tondracek.myfarmer.ui.common.paging.LoadingMoreItem
-import com.tondracek.myfarmer.ui.common.paging.RetryItem
 import com.tondracek.myfarmer.ui.common.paging.collectAsLazyPagingItemsAndSnackbarErrors
+import com.tondracek.myfarmer.ui.common.paging.paginatedItems
 import com.tondracek.myfarmer.ui.common.review.ReviewCard
 import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
@@ -101,30 +98,14 @@ private fun ReviewsList(state: ShopReviewsScreenState.Success) {
         contentPadding = PaddingValues(bottom = MyFarmerTheme.paddings.xxL),
         verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
     ) {
-        items(
-            count = pagingItems.itemCount,
-            key = { index -> pagingItems[index]?.id?.value ?: index }
-        ) { index ->
-            pagingItems[index]?.let { review ->
-                ReviewCard(
-                    review = review,
-                    colors = MyFarmerTheme.cardColors.secondary,
-                )
-            }
-        }
-
-        when {
-            pagingItems.loadState.append is LoadState.Loading -> {
-                item { LoadingMoreItem() }
-            }
-
-            pagingItems.loadState.refresh is LoadState.Loading -> {
-                item { FullScreenLoading() }
-            }
-
-            pagingItems.loadState.append is LoadState.Error -> {
-                item { RetryItem { pagingItems.retry() } }
-            }
+        paginatedItems(
+            pagingItems = pagingItems,
+            getKey = { index -> pagingItems[index]?.id?.value ?: index }
+        ) {
+            ReviewCard(
+                review = it,
+                colors = MyFarmerTheme.cardColors.secondary,
+            )
         }
     }
 }

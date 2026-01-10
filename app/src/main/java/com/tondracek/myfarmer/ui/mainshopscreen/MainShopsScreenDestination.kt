@@ -72,8 +72,7 @@ private fun ShopsListViewSection(
 
     ShopsListView(
         state = shopsListViewState,
-        onNavigateToShopDetail = shopsListViewModel::openShopDetail,
-        onNavigateBack = shopsListViewModel::onBackClicked
+        onNavigateToShopDetail = shopsListViewModel::openShopDetail
     )
 }
 
