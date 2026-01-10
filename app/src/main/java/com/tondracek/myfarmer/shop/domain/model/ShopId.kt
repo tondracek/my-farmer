@@ -3,7 +3,7 @@ package com.tondracek.myfarmer.shop.domain.model
 import java.util.UUID
 
 @JvmInline
-value class ShopId(val value: UUID) {
+value class ShopId private constructor(val value: UUID) {
 
     override fun toString() = value.toString()
 

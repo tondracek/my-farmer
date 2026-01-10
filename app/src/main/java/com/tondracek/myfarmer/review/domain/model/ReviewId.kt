@@ -3,7 +3,7 @@ package com.tondracek.myfarmer.review.domain.model
 import java.util.UUID
 
 @JvmInline
-value class ReviewId(val value: UUID) {
+value class ReviewId private constructor(val value: UUID) {
     override fun toString() = value.toString()
 
     companion object {

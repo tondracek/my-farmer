@@ -6,9 +6,9 @@ import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
 import com.tondracek.myfarmer.common.image.data.FakePhotoStorage
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.shop.data.ShopRepository
 import com.tondracek.myfarmer.shop.data.getFakeShopRepository
 import com.tondracek.myfarmer.shop.data.shop0
+import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import com.tondracek.myfarmer.shop.domain.result.NotShopOwnerUCResult
 import com.tondracek.myfarmer.shop.domain.result.ShopNotFoundUCResult
 import com.tondracek.myfarmer.systemuser.data.sampleUsers

@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ReviewRepository : Repository<Review, ReviewId> {
 
-    fun getReviewsPreview(shopId: ShopId): Flow<List<Review>>
-
     fun getShopReviews(
         shopId: ShopId,
         limit: Int? = null,

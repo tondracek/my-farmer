@@ -10,6 +10,7 @@ import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.firestore.helpers.FirestoreCrudHelper
 import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetByField
 import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetByIds
+import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import com.tondracek.myfarmer.systemuser.domain.repository.UserRepository
@@ -35,10 +36,10 @@ class FirestoreUserRepository @Inject constructor() : UserRepository {
         helper.update(item.toEntity())
 
     override suspend fun delete(id: UserId) =
-        helper.delete(id.toString())
+        helper.delete(id.toFirestoreId())
 
     override fun getById(id: UserId): Flow<SystemUser?> =
-        helper.getById(id.toString()).mapToModel()
+        helper.getById(id.toFirestoreId()).mapToModel()
 
     override fun getAll(): Flow<List<SystemUser>> =
         helper.getAll().mapToModelList()
@@ -46,7 +47,7 @@ class FirestoreUserRepository @Inject constructor() : UserRepository {
     override fun getByIds(userIds: List<UserId>): Flow<List<SystemUser>> =
         firestoreGetByIds(
             collection = collection,
-            ids = userIds.map { it.toString() },
+            ids = userIds.map { it.toFirestoreId() },
             entityClass = UserEntity::class,
         ).mapToModelList()
 
@@ -70,4 +71,5 @@ private fun Flow<List<UserEntity>>.mapToModelList(): Flow<List<SystemUser>> =
         userEntities.map { userEntity -> userEntity.toModel() }
     }
 
-private fun String.toUserId() = UserId.fromString(this)
+fun FirestoreEntityId.toUserId() = UserId.fromString(this)
+fun UserId.toFirestoreId() = this.value.toString()

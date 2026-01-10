@@ -3,11 +3,9 @@ package com.tondracek.myfarmer.review.data
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.snapshots
 import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.firestore.helpers.FirestoreCrudHelper
 import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetPaginatedFilteredByField
-import com.tondracek.myfarmer.core.firestore.helpers.mapToEntities
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewId
@@ -27,14 +25,6 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
         collection = collection,
         entityClass = ReviewEntity::class,
     )
-
-    override fun getReviewsPreview(shopId: ShopId): Flow<List<Review>> =
-        collection
-            .whereEqualTo(ReviewEntity::shopId.name, shopId.toFirestoreId())
-            .limit(3)
-            .snapshots()
-            .mapToEntities(ReviewEntity::class)
-            .mapToModelList()
 
     override fun getShopReviews(
         shopId: ShopId,

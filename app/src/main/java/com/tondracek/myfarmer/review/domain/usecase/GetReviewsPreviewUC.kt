@@ -13,7 +13,7 @@ class GetReviewsPreviewUC @Inject constructor(
 ) {
 
     operator fun invoke(shopId: ShopId): Flow<UCResult<List<Review>>> =
-        repository.getReviewsPreview(shopId)
+        repository.getShopReviews(shopId, limit = 3)
             .map { UCResult.Success(it) }
 
 }

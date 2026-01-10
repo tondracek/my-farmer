@@ -6,11 +6,11 @@ import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.common.image.data.FakePhotoStorage
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.shop.data.ShopRepository
 import com.tondracek.myfarmer.shop.data.getFakeShopRepository
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShopInput
+import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first

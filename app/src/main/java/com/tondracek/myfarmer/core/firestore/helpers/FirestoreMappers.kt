@@ -19,3 +19,17 @@ fun <Entity : FirestoreEntity> Flow<QuerySnapshot>.mapToEntities(entityClass: KC
     this.map {
         it.documents.mapNotNull { doc -> doc.toObjectWithId(entityClass) }
     }
+
+fun <Entity : FirestoreEntity, Model> Flow<DocumentSnapshot>.mapToDomain(
+    entityClass: KClass<Entity>,
+    toDomain: (Entity) -> Model,
+): Flow<Model?> =
+    this.mapToEntity(entityClass)
+        .map { entity -> entity?.let { toDomain(it) } }
+
+fun <Entity : FirestoreEntity, Model> Flow<QuerySnapshot>.mapToDomains(
+    entityClass: KClass<Entity>,
+    toDomain: (Entity) -> Model,
+): Flow<List<Model>> =
+    this.mapToEntities(entityClass)
+        .map { entities -> entities.map { entity -> toDomain(entity) } }

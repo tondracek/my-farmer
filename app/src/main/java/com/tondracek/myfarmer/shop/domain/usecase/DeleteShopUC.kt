@@ -4,8 +4,8 @@ import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.common.image.data.PhotoStorage
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.getOrReturn
-import com.tondracek.myfarmer.shop.data.ShopRepository
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import com.tondracek.myfarmer.shop.domain.result.NotShopOwnerUCResult
 import com.tondracek.myfarmer.shop.domain.result.ShopNotFoundUCResult
 import kotlinx.coroutines.flow.first

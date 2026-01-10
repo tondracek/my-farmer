@@ -54,7 +54,8 @@ class ApplyFiltersUCTest {
             id = UUID.randomUUID(),
             name = null,
             description = null,
-            ownerId = UUID.randomUUID(),
+            ownerId =
+                UUID.randomUUID(),
             categories = categories.map { ShopCategory(it, Color.White) },
             images = emptyList(),
             menu = ProductMenu(emptyList()),
