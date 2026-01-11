@@ -100,7 +100,7 @@ private fun ReviewsList(state: ShopReviewsScreenState.Success) {
     ) {
         paginatedItems(
             pagingItems = pagingItems,
-            getKey = { index -> pagingItems[index]?.id?.value ?: index }
+            getKey = { it.id.value }
         ) {
             ReviewCard(
                 review = it,

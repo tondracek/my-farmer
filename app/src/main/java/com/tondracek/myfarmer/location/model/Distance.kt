@@ -14,6 +14,10 @@ data class Distance(
     val unit: DistanceUnit = DistanceUnit.KM,
 ) : Comparable<Distance> {
 
+    fun toMeters(): Double = when (unit) {
+        DistanceUnit.KM -> value.toDouble() * 1000.0
+    }
+
     @Composable
     fun toStringTranslated(): String {
         val locale = Locale.current.platformLocale

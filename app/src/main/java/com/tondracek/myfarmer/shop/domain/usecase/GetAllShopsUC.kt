@@ -9,7 +9,6 @@ import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
 import com.tondracek.myfarmer.shopfilters.domain.usecase.ApplyFiltersUC
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
@@ -25,16 +24,20 @@ class GetAllShopsUC @Inject constructor(
         shopRepository.getAll()
             .flatMapLatest { applyFiltersUC(shops = it, filters = filters) }
             .toUCResult(userError = "Failed to load shops.")
+}
 
-    suspend fun paged(
-        filters: ShopFilters = ShopFilters.None,
-        limit: Int,
-        after: ShopId?
-    ): UCResult<List<Shop>> = UCResult.of {
-        val shops = shopRepository
-            .getAll(limit = limit, after = after)
-            .first()
+class GetAllShopsPaginatedUC @Inject constructor(
+    private val shopRepository: ShopRepository,
+) {
 
-        applyFiltersUC(shops = shops, filters = filters).first()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    suspend operator fun invoke(
+        limit: Int? = null,
+        after: ShopId? = null,
+    ): UCResult<List<Shop>> = UCResult.of("Failed to load shops.") {
+        shopRepository.getAllPaginated(
+            limit = limit,
+            after = after,
+        )
     }
 }

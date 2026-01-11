@@ -19,22 +19,21 @@ class LocationProvider @Inject constructor(
         LocationServices.getFusedLocationProviderClient(context)
     }
 
-    suspend fun getCurrentLocation(): Location? =
-        try {
-            val token = CancellationTokenSource()
+    suspend fun getCurrentLocation(): Location? = try {
+        val token = CancellationTokenSource()
 
-            val location: android.location.Location = client.getCurrentLocation(
-                Priority.PRIORITY_HIGH_ACCURACY,
-                token.token
-            ).await()
+        val location: android.location.Location = client.getCurrentLocation(
+            Priority.PRIORITY_HIGH_ACCURACY,
+            token.token
+        ).await()
 
-            Location(
-                latitude = location.latitude,
-                longitude = location.longitude
-            )
-        } catch (e: SecurityException) {
-            null
-        } catch (e: Exception) {
-            null
-        }
+        Location(
+            latitude = location.latitude,
+            longitude = location.longitude
+        )
+    } catch (e: SecurityException) {
+        null
+    } catch (e: Exception) {
+        null
+    }
 }

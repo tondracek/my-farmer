@@ -1,7 +1,6 @@
 package com.tondracek.myfarmer.map
 
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.core.usecaseresult.toUCResult
 import com.tondracek.myfarmer.location.LocationProvider
 import com.tondracek.myfarmer.location.model.Location
 import kotlinx.coroutines.currentCoroutineContext
@@ -21,12 +20,14 @@ class GetUserLocationUC @Inject constructor(
 
     operator fun invoke(): Flow<UCResult<Location>> = flow {
         while (currentCoroutineContext().isActive) {
-            locationProvider.getCurrentLocation()
-                ?.let { emit(it) }
+            val location = locationProvider.getCurrentLocation()
+
+            when (location) {
+                null -> emit(UCResult.Failure("Failed to get user location."))
+                else -> emit(UCResult.Success(location))
+            }
+
             delay(INTERVAL)
         }
-    }
-        .toUCResult("Couldn't get user's location")
-        .distinctUntilChanged()
-
+    }.distinctUntilChanged()
 }

@@ -12,6 +12,7 @@ import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
 import com.tondracek.myfarmer.shopfilters.domain.model.apply
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class ApplyFiltersUC @Inject constructor(
@@ -32,6 +33,25 @@ class ApplyFiltersUC @Inject constructor(
         }
 
         filters.apply(
+            shops = shops,
+            distanceProvider = { shop -> distances[shop.id] },
+            ratingProvider = { shop -> ratings[shop.id] ?: Rating.ZERO }
+        )
+    }
+
+    suspend fun sync(
+        shops: List<Shop>,
+        filters: ShopFilters,
+    ): List<Shop> {
+        val userLocation = getUserLocationUC().getOrElse(null).first()
+        val ratings = getAverageRatingsByShopUC().getOrElse(emptyMap()).first()
+
+        val distances: Map<ShopId, Distance?> = shops.associate {
+            val distance = measureMapDistance(userLocation, it.location)
+            it.id to distance
+        }
+
+        return filters.apply(
             shops = shops,
             distanceProvider = { shop -> distances[shop.id] },
             ratingProvider = { shop -> ratings[shop.id] ?: Rating.ZERO }

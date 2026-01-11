@@ -1,7 +1,9 @@
 package com.tondracek.myfarmer.shop.data
 
+import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.shop.domain.repository.DistancePagingCursor
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
@@ -32,10 +34,12 @@ class FakeShopRepository : ShopRepository {
     override fun getAll(): Flow<List<Shop>> =
         combine(items.values) { it.toList() }
 
-    override fun getAll(
+    override suspend fun getAllPaginated(
         limit: Int?,
         after: ShopId?
-    ): Flow<List<Shop>> = combine(items.values) { values ->
+    ): List<Shop> {
+        val values = items.values.map { it.value }
+
         val sortedItems = values.toList()
             .sortedBy { it.id.toString() }
 
@@ -47,12 +51,20 @@ class FakeShopRepository : ShopRepository {
             sortedItems.drop(startIndex).take(it)
         } ?: sortedItems.drop(startIndex)
 
-        limitedItems
+        return limitedItems
     }
 
     override fun getByOwnerId(ownerId: UserId): Flow<List<Shop>> = combine(
         items.values
     ) { values ->
         values.toList().filter { it.ownerId == ownerId }
+    }
+
+    override suspend fun getPagedByDistance(
+        center: Location,
+        pageSize: Int,
+        cursor: DistancePagingCursor?
+    ): Pair<List<Shop>, DistancePagingCursor?> {
+        TODO("Not yet implemented")
     }
 }

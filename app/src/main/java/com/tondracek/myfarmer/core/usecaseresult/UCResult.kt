@@ -42,7 +42,7 @@ sealed interface UCResult<out T> {
         }
     }
 
-    fun <R> mapSuccess(transform: (T) -> R): UCResult<R> = when (this) {
+    suspend fun <R> mapSuccess(transform: suspend (T) -> R): UCResult<R> = when (this) {
         is Success -> Success(transform(data))
         is Failure -> this
     }

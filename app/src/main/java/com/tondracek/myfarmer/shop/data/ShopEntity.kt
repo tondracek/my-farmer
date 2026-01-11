@@ -38,12 +38,6 @@ data class ShopEntity(
     var openingHours: OpeningHoursEntity = OpeningHoursEntity(),
 ) : FirestoreEntity
 
-@Singleton
-class ShopMapper @Inject constructor() : EntityMapper<Shop, ShopEntity> {
-    override fun toEntity(model: Shop) = model.toEntity()
-    override fun toModel(entity: ShopEntity) = entity.toModel()
-}
-
 fun Shop.toEntity() = ShopEntity(
     id = id.toString(),
     name = name,

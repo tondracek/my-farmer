@@ -7,12 +7,12 @@ import androidx.paging.compose.LazyPagingItems
 
 fun <T : Any> LazyListScope.paginatedItems(
     pagingItems: LazyPagingItems<T>,
-    getKey: (index: Int) -> Any,
+    getKey: (index: T) -> Any,
     content: @Composable (item: T) -> Unit,
 ) {
     items(
         count = pagingItems.itemCount,
-        key = getKey,
+        key = { index -> pagingItems[index]?.let { getKey(it).toString() } ?: index }
     ) { index ->
         pagingItems[index]?.let { item ->
             content(item)

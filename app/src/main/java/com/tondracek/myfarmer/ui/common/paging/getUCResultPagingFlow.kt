@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import kotlinx.coroutines.flow.Flow
 
-fun <Id : Any, Model : Any> getUCResultPageDataFlow(
+fun <Id : Any, Model : Any> getUCResultPageFlow(
     getDataKey: suspend (data: Model) -> Id,
     pageSize: Int = 20,
     enablePlaceholders: Boolean = false,

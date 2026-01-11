@@ -7,14 +7,17 @@ import kotlinx.serialization.Serializable
 data class LocationEntity(
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
+    var geohash: String = "",
 )
 
 fun LocationEntity.toModel() = Location(
     latitude = latitude,
     longitude = longitude,
+    geohash = geohash,
 )
 
 fun Location.toEntity() = LocationEntity(
     latitude = latitude,
     longitude = longitude,
+    geohash = geohash ?: GeoHashUtils.encode(latitude, longitude),
 )

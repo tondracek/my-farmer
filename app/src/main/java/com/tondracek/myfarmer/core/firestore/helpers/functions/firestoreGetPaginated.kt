@@ -4,23 +4,27 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.snapshots
+import com.tondracek.myfarmer.core.firestore.helpers.getEntity
 import com.tondracek.myfarmer.core.firestore.helpers.mapToEntities
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
 import kotlinx.coroutines.flow.Flow
+import timber.log.Timber
 import kotlin.reflect.KClass
 
-fun <Entity : FirestoreEntity> firestoreGetPaginated(
+suspend fun <Entity : FirestoreEntity> firestoreGetPaginatedById(
     collection: CollectionReference,
     entityClass: KClass<Entity>,
     limit: Int?,
     after: FirestoreEntityId?,
-): Flow<List<Entity>> = collection
+): List<Entity> = collection
     .orderBy(FieldPath.documentId())
     .startAfterNullable(after)
     .limitNullable(limit)
-    .snapshots()
-    .mapToEntities(entityClass)
+    .getEntity(entityClass)
+    .also {
+        Timber.d("Fetched ${it.size} entities from ${collection.path} paginated by ID. Limit=$limit, After=$after")
+    }
 
 fun <Entity : FirestoreEntity, V> firestoreGetPaginatedFilteredByField(
     collection: CollectionReference,
@@ -34,7 +38,7 @@ fun <Entity : FirestoreEntity, V> firestoreGetPaginatedFilteredByField(
     .orderBy(FieldPath.documentId())
     .startAfterNullable(after)
     .limitNullable(limit)
-    .snapshots()
+    .snapshots() // TODO: getEntity instead of flow
     .mapToEntities(entityClass)
 
 

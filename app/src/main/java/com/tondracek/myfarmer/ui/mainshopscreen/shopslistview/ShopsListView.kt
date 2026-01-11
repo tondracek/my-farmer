@@ -3,20 +3,24 @@ package com.tondracek.myfarmer.ui.mainshopscreen.shopslistview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.tondracek.myfarmer.location.model.km
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
+import com.tondracek.myfarmer.ui.common.paging.paginatedItems
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.ShopListItemCard
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.toListItem
+import kotlinx.coroutines.flow.flowOf
+import java.util.UUID
 
 @Composable
 fun ShopsListView(
@@ -52,7 +56,10 @@ private fun SuccessLayout(
         ),
         verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.medium)
     ) {
-        items(state.shops) {
+        paginatedItems(
+            pagingItems = state.shops,
+            getKey = { UUID.randomUUID().toString() }
+        ) {
             ShopListItemCard(
                 modifier = Modifier,
                 shop = it,
@@ -73,9 +80,11 @@ private fun ShopsListViewPreview() {
             )
         }
 
+        val lazyShops = flowOf(PagingData.from(shops)).collectAsLazyPagingItems()
+
         ShopsListView(
             modifier = Modifier,
-            state = ShopsListViewState.Success(shops = shops),
+            state = ShopsListViewState.Success(shops = lazyShops),
             onNavigateToShopDetail = {},
         )
     }
