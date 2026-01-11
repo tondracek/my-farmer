@@ -6,6 +6,7 @@ import com.google.firebase.firestore.firestore
 import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.firestore.helpers.FirestoreCrudHelper
 import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetPaginatedFilteredByField
+import com.tondracek.myfarmer.core.firestore.helpers.getEntitiesFlow
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewId
@@ -29,17 +30,26 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
     override fun getShopReviews(
         shopId: ShopId,
         limit: Int?,
-        after: ReviewId?
-    ): Flow<List<Review>> =
-        firestoreGetPaginatedFilteredByField(
-            collection = collection,
-            entityClass = ReviewEntity::class,
-            field = FieldPath.of(ReviewEntity::shopId.name),
-            value = shopId.toFirestoreId(),
-            limit = limit,
-            after = after.toFirestoreId(),
-        ).mapToModelList()
+    ): Flow<List<Review>> = collection
+        .whereEqualTo(FieldPath.of(ReviewEntity::shopId.name), shopId.toFirestoreId())
+        .let { query ->
+            limit?.let { query.limit(it.toLong()) } ?: query
+        }
+        .getEntitiesFlow(ReviewEntity::class)
+        .mapToModelList()
 
+    override suspend fun getShopReviewsPaged(
+        shopId: ShopId,
+        limit: Int,
+        after: ReviewId?
+    ): List<Review> = firestoreGetPaginatedFilteredByField(
+        collection = collection,
+        entityClass = ReviewEntity::class,
+        field = FieldPath.of(ReviewEntity::shopId.name),
+        value = shopId.toFirestoreId(),
+        limit = limit,
+        after = after.toFirestoreId(),
+    ).map { it.toModel() }
 
     override suspend fun create(item: Review): ReviewId =
         helper.create(item.toEntity()).toReviewId()

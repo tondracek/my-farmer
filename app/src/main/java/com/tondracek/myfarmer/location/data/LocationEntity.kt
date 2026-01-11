@@ -13,11 +13,10 @@ data class LocationEntity(
 fun LocationEntity.toModel() = Location(
     latitude = latitude,
     longitude = longitude,
-    geohash = geohash,
 )
 
 fun Location.toEntity() = LocationEntity(
     latitude = latitude,
     longitude = longitude,
-    geohash = geohash ?: GeoHashUtils.encode(latitude, longitude),
+    geohash = GeoHashUtils.encode(latitude, longitude),
 )

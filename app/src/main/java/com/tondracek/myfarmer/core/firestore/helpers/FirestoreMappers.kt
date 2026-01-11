@@ -3,6 +3,7 @@ package com.tondracek.myfarmer.core.firestore.helpers
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.snapshots
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -20,10 +21,19 @@ fun <Entity : FirestoreEntity> QuerySnapshot.toObjectsWithId(entityClass: KClass
     }
 }
 
-suspend fun <Entity : FirestoreEntity> Query.getEntity(
+suspend fun <Entity : FirestoreEntity> Query.getEntities(
     entityClass: KClass<Entity>,
 ) =
     this.get().await().toObjectsWithId(entityClass)
+
+
+fun <Entity : FirestoreEntity> Query.getEntitiesFlow(
+    entityClass: KClass<Entity>,
+) =
+    this.snapshots().map { querySnapshot ->
+        querySnapshot.toObjectsWithId(entityClass)
+    }
+
 
 fun <Entity : FirestoreEntity> Flow<DocumentSnapshot>.mapToEntity(entityClass: KClass<Entity>): Flow<Entity?> =
     this.map { it.toObjectWithId(entityClass) }

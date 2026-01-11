@@ -33,12 +33,28 @@ class FakeReviewRepository : ReviewRepository {
 
     override fun getShopReviews(
         shopId: ShopId,
-        limit: Int?,
+        limit: Int?
+    ): Flow<List<Review>> {
+        return combine(
+            items.values
+        ) { values ->
+            val filteredItems = values.toList()
+                .filter { it.shopId == shopId }
+                .sortedBy { it.id.toString() }
+
+            limit?.let {
+                filteredItems.take(it)
+            } ?: filteredItems
+        }
+    }
+
+    override suspend fun getShopReviewsPaged(
+        shopId: ShopId,
+        limit: Int,
         after: ReviewId?
-    ): Flow<List<Review>> = combine(
-        items.values
-    ) { values ->
-        val sortedItems = values.toList()
+    ): List<Review> {
+        val sortedItems = items.values
+            .map { it.value }
             .filter { it.shopId == shopId }
             .sortedBy { it.id.toString() }
 
@@ -46,10 +62,6 @@ class FakeReviewRepository : ReviewRepository {
             sortedItems.indexOfFirst { it.id == id } + 1
         } ?: 0
 
-        val limitedItems = limit?.let {
-            sortedItems.drop(startIndex).take(it)
-        } ?: sortedItems.drop(startIndex)
-
-        limitedItems
+        return sortedItems.drop(startIndex).take(limit)
     }
 }

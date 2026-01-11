@@ -11,6 +11,12 @@ interface ReviewRepository : Repository<Review, ReviewId> {
     fun getShopReviews(
         shopId: ShopId,
         limit: Int? = null,
-        after: ReviewId? = null
     ): Flow<List<Review>>
+
+    suspend fun getShopReviewsPaged(
+        shopId: ShopId,
+        limit: Int,
+        after: ReviewId?
+    ): List<Review>
+
 }

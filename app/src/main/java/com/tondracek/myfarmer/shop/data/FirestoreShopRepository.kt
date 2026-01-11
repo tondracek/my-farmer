@@ -8,8 +8,8 @@ import com.tondracek.myfarmer.core.firestore.helpers.FirestoreCrudHelper
 import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetByField
 import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetPaginatedById
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
-import com.tondracek.myfarmer.location.data.DistanceRings
 import com.tondracek.myfarmer.location.data.GeoHashUtils
+import com.tondracek.myfarmer.location.model.DistanceRing
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.location.usecase.measureMapDistance
 import com.tondracek.myfarmer.shop.data.firestore.firestoreGetByGeohashPaged
@@ -21,7 +21,6 @@ import com.tondracek.myfarmer.systemuser.data.toFirestoreId
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,19 +54,21 @@ class FirestoreShopRepository @Inject constructor(
     override suspend fun getPagedByDistance(
         center: Location,
         pageSize: Int,
-        cursor: DistancePagingCursor?
+        cursor: DistancePagingCursor?,
+        rings: List<DistanceRing>
     ): Pair<List<Shop>, DistancePagingCursor?> {
         val ringIndex = cursor?.ringIndex ?: 0
         val afterGeohash = cursor?.afterGeohash
 
-        val ring = DistanceRings.rings[ringIndex]
-        val results = mutableListOf<ShopEntity>()
+        val ring = rings.getOrNull(ringIndex)
+        if (ring == null) return (emptyList<Shop>() to null) // No more rings available
 
         val ranges = GeoHashUtils.ranges(
             center = center,
-            radiusMeters = ring.maxRadiusMeters,
+            ring = ring
         )
 
+        val results = mutableListOf<ShopEntity>()
         for (range in ranges) {
             val query = firestoreGetByGeohashPaged(
                 collection = collection,
@@ -82,7 +83,6 @@ class FirestoreShopRepository @Inject constructor(
         }
 
         val page = results.take(pageSize)
-            .map { it.toModel() }
 
         val nextCursor = when {
             results.size > pageSize -> // More data available in the current ring
@@ -92,12 +92,9 @@ class FirestoreShopRepository @Inject constructor(
                 DistancePagingCursor(ringIndex + 1, afterGeohash)
         }
 
-        return (page to nextCursor).also { (list, cursor) ->
-            println("XXX Paged shops by distance: returned ${page.size} items, nextCursor=$cursor. (center=$center, pageSize=$pageSize, ringIndex=$ringIndex, afterGeohash=$afterGeohash)")
-            list.forEach {
-                println("  XXX  Shop: name=${it.name}, distance=${measureMapDistance(center, it.location)}")
-            }
-        }
+        val domainPage = page.map { it.toModel() }
+            .sortedBy { measureMapDistance(it.location, center) }
+        return domainPage to nextCursor
     }
 
     override suspend fun create(item: Shop): ShopId =

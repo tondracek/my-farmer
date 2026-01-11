@@ -8,10 +8,10 @@ import kotlin.math.roundToInt
 fun measureMapDistance(pointA: Location?, pointB: Location?): Distance? {
     if (pointA == null || pointB == null) return null
 
-    return measureMapDistanceInternal(pointA, pointB)
+    return measureMapDistanceNotNull(pointA, pointB)
 }
 
-private fun measureMapDistanceInternal(pointA: Location, pointB: Location): Distance {
+fun measureMapDistanceNotNull(pointA: Location, pointB: Location): Distance {
     val myLocation = android.location.Location("myLocation").apply {
         latitude = pointA.latitude
         longitude = pointA.longitude

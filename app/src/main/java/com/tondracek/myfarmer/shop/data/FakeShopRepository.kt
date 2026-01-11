@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.shop.data
 
+import com.tondracek.myfarmer.location.model.DistanceRing
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
@@ -63,7 +64,8 @@ class FakeShopRepository : ShopRepository {
     override suspend fun getPagedByDistance(
         center: Location,
         pageSize: Int,
-        cursor: DistancePagingCursor?
+        cursor: DistancePagingCursor?,
+        rings: List<DistanceRing>
     ): Pair<List<Shop>, DistancePagingCursor?> {
         TODO("Not yet implemented")
     }

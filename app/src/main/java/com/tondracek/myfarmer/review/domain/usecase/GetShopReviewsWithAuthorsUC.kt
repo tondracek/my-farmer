@@ -44,13 +44,11 @@ class GetShopReviewsWithAuthorsUC @Inject constructor(
         after: ReviewId?,
     ): UCResult<List<Pair<Review, SystemUser>>> = UCResult.of {
 
-        val reviews = reviewRepository
-            .getShopReviews(
-                shopId = shopId,
-                limit = limit,
-                after = after
-            )
-            .first()
+        val reviews = reviewRepository.getShopReviewsPaged(
+            shopId = shopId,
+            limit = limit,
+            after = after
+        )
 
         if (reviews.isEmpty()) return@of emptyList()
 

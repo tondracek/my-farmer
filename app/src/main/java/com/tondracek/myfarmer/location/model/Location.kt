@@ -11,7 +11,6 @@ import com.google.android.gms.maps.model.LatLng
 data class Location(
     val latitude: Double,
     val longitude: Double,
-    val geohash: String? = null
 ) {
     constructor(latLng: LatLng) : this(
         latitude = latLng.latitude,

@@ -7,12 +7,15 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import androidx.paging.cachedIn
 import androidx.paging.map
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.getOrElse
 import com.tondracek.myfarmer.core.usecaseresult.toException
 import com.tondracek.myfarmer.location.model.Location
+import com.tondracek.myfarmer.location.model.meters
 import com.tondracek.myfarmer.location.usecase.measureMapDistance
+import com.tondracek.myfarmer.location.usecase.measureMapDistanceNotNull
 import com.tondracek.myfarmer.map.GetUserLocationUC
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.usecase.GetAverageRatingsByShopUC
@@ -30,7 +33,6 @@ import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.ShopLis
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.toListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -38,9 +40,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ShopsListViewModel @Inject constructor(
@@ -60,43 +62,54 @@ class ShopsListViewModel @Inject constructor(
         .getOrElse(null) { _effects.emit(ShopsListViewEffect.ShowError(it.userError)) }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val shops: Flow<PagingData<Shop>> = userLocation.flatMapLatest { location ->
-        when (location) {
-            null -> getUCResultPageFlow(
-                getDataKey = { shop: Shop -> shop.id },
-                pageSize = 3,
-                getData = { limit, after ->
-                    getAllShopsPaginated(
-                        limit = limit,
-                        after = after
-                    ).mapSuccess {
-                        applyFiltersUC.sync(
-                            shops = it,
-                            filters = filters.value
-                        )
-                    }
-                }
-            )
+    private val shops: Flow<PagingData<Shop>> = userLocation
+        .scan<Location?, Location?>(null) { lastAccepted, current ->
+            if (lastAccepted == null) return@scan current
+            if (current == null) return@scan lastAccepted
 
-            else -> getShopsByDistancePageFlow(
-                getShops = { center, pageSize, cursor ->
-                    getShopsByDistancePaged(
-                        center = center,
-                        pageSize = pageSize,
-                        cursor = cursor
-                    ).mapSuccess { (shops, nextCursor) ->
-                        val filteredShops = applyFiltersUC.sync(
-                            shops = shops,
-                            filters = filters.value
-                        )
-                        filteredShops to nextCursor
-                    }
-                },
-                center = location,
-                pageSize = 3,
-            )
+            val d = measureMapDistanceNotNull(lastAccepted, current)
+
+            if (d > 50.meters) current else lastAccepted
         }
-    }
+        .distinctUntilChanged()
+        .combine(filters) { location, filters -> location to filters }
+        .flatMapLatest { (location, filters) ->
+            when (location) {
+                null -> getUCResultPageFlow(
+                    getDataKey = { shop: Shop -> shop.id },
+                    pageSize = 20,
+                    getData = { limit, after ->
+                        getAllShopsPaginated(
+                            limit = limit,
+                            after = after
+                        ).mapSuccess {
+                            applyFiltersUC.sync(
+                                shops = it,
+                                filters = filters,
+                            )
+                        }
+                    }
+                )
+
+                else -> getShopsByDistancePageFlow(
+                    getShops = { center, pageSize, cursor ->
+                        getShopsByDistancePaged(
+                            center = center,
+                            pageSize = pageSize,
+                            cursor = cursor
+                        ).mapSuccess { (shops, nextCursor) ->
+                            val filteredShops = applyFiltersUC.sync(
+                                shops = shops,
+                                filters = filters,
+                            )
+                            filteredShops to nextCursor
+                        }
+                    },
+                    center = location,
+                    pageSize = 20,
+                )
+            }
+        }.cachedIn(viewModelScope)
 
     private val averageRatings: Flow<Map<ShopId, Rating>> = getAverageRatingsByShopUC()
         .getOrElse(emptyMap()) { _effects.emit(ShopsListViewEffect.ShowError(it.userError)) }
@@ -176,9 +189,7 @@ class ShopsByDistancePagingSource(
                 )
             }
 
-            is UCResult.Failure -> {
-                LoadResult.Error(result.toException())
-            }
+            is UCResult.Failure -> LoadResult.Error(result.toException())
         }
     }
 

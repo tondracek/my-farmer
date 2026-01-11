@@ -16,6 +16,7 @@ data class Distance(
 
     fun toMeters(): Double = when (unit) {
         DistanceUnit.KM -> value.toDouble() * 1000.0
+        DistanceUnit.M -> value.toDouble()
     }
 
     @Composable
@@ -35,18 +36,21 @@ data class Distance(
     }
 
     override fun compareTo(other: Distance): Int =
-        this.value.toDouble().compareTo(other.value.toDouble())
+        this.toMeters().compareTo(other.toMeters())
 }
 
 val Number.km get() = Distance(this)
+val Number.meters get() = Distance(this, DistanceUnit.M)
 
 
 enum class DistanceUnit() {
-    KM()
+    KM(),
+    M(),
     ;
 
     @Composable
     fun toStringTranslated(): String = when (this) {
         KM -> stringResource(R.string.km)
+        M -> "m"
     }
 }
