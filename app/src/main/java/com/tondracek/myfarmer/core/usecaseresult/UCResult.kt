@@ -24,6 +24,22 @@ sealed interface UCResult<out T> {
         init {
             logFailure()
         }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Failure) return false
+
+            if (userError != other.userError) return false
+            if (systemError != other.systemError) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = userError.hashCode()
+            result = 31 * result + (systemError?.hashCode() ?: 0)
+            return result
+        }
     }
 
     fun <R> mapSuccess(transform: (T) -> R): UCResult<R> = when (this) {
