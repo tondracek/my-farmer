@@ -9,7 +9,7 @@ import com.tondracek.myfarmer.systemuser.domain.model.UserId
 
 data class Shop(
     val id: ShopId,
-    val name: String?,
+    val name: String,
     val description: String?,
     val ownerId: UserId,
     val categories: List<ShopCategory>,

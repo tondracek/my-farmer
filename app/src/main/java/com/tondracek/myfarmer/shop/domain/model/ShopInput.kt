@@ -41,7 +41,7 @@ fun ShopInput.toShop(
 
 fun Shop.toShopInput(): ShopInput =
     ShopInput(
-        name = this.name ?: "",
+        name = this.name,
         description = this.description ?: "",
         categories = this.categories,
         images = this.images,

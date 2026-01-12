@@ -22,7 +22,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ShopEntity(
     override var id: String = "",
-    var name: String? = null,
+    var name: String = "",
     var description: String? = null,
     var ownerId: String = "",
     var categories: List<ShopCategoryEntity> = emptyList(),

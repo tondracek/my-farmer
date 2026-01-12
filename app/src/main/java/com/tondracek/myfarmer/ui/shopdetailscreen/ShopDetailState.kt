@@ -16,7 +16,7 @@ sealed interface ShopDetailState {
 
     data class Success(
         val id: ShopId,
-        val name: String?,
+        val name: String,
         val description: String?,
         val owner: SystemUser,
         val categories: List<ShopCategory>,

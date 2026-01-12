@@ -112,15 +112,14 @@ private fun Header(
             location = state.location
         )
         Column(Modifier.align(Alignment.Center)) {
-            if (!state.name.isNullOrBlank())
-                Text(
-                    modifier = Modifier
-                        .padding(vertical = MyFarmerTheme.paddings.large)
-                        .fillMaxWidth(),
-                    text = state.name,
-                    style = MyFarmerTheme.typography.titleMedium,
-                    textAlign = TextAlign.Center
-                )
+            Text(
+                modifier = Modifier
+                    .padding(vertical = MyFarmerTheme.paddings.large)
+                    .fillMaxWidth(),
+                text = state.name,
+                style = MyFarmerTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
+            )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
