@@ -3,11 +3,11 @@ package com.tondracek.myfarmer.review.data
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.firestore
-import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
-import com.tondracek.myfarmer.core.firestore.helpers.FirestoreCrudHelper
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetPaginatedFilteredByField
-import com.tondracek.myfarmer.core.firestore.helpers.getEntitiesFlow
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
+import com.tondracek.myfarmer.core.data.firestore.FirestoreCollectionNames
+import com.tondracek.myfarmer.core.data.firestore.helpers.FirestoreCrudHelper
+import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetPaginatedFilteredByField
+import com.tondracek.myfarmer.core.data.firestore.helpers.getEntitiesFlow
+import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.review.domain.repository.ReviewRepository

@@ -3,11 +3,11 @@ package com.tondracek.myfarmer.shop.data
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.firestore
-import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
-import com.tondracek.myfarmer.core.firestore.helpers.FirestoreCrudHelper
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetByField
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetPaginatedById
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
+import com.tondracek.myfarmer.core.data.firestore.FirestoreCollectionNames
+import com.tondracek.myfarmer.core.data.firestore.helpers.FirestoreCrudHelper
+import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetByField
+import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetPaginatedById
+import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.location.data.GeoHashUtils
 import com.tondracek.myfarmer.location.model.DistanceRing
 import com.tondracek.myfarmer.location.model.Location

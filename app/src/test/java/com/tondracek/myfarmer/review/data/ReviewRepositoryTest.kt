@@ -1,6 +1,5 @@
 package com.tondracek.myfarmer.review.data
 
-import com.tondracek.myfarmer.core.repository.fake.FakeRepositoryCore
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.repository.ReviewRepository
@@ -16,10 +15,7 @@ class ReviewRepositoryTest {
     val shopId: UUID = UUID.randomUUID()
     val userId: UUID = UUID.randomUUID()
 
-    val reviewRepository: ReviewRepository = ReviewRepository(
-        core = FakeRepositoryCore(),
-        mapper = ReviewMapper()
-    )
+    val reviewRepository: ReviewRepository = ReviewRepository
 
     private suspend fun insert(review: Review) {
         reviewRepository.create(review)

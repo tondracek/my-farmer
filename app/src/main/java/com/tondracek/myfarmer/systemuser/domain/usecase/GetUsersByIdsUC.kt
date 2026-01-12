@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.systemuser.domain.usecase
 
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.core.usecaseresult.toUCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import com.tondracek.myfarmer.systemuser.domain.repository.UserRepository

@@ -6,11 +6,11 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.tondracek.myfarmer.auth.domain.model.AuthId
-import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
-import com.tondracek.myfarmer.core.firestore.helpers.FirestoreCrudHelper
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetByField
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetByIds
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
+import com.tondracek.myfarmer.core.data.firestore.FirestoreCollectionNames
+import com.tondracek.myfarmer.core.data.firestore.helpers.FirestoreCrudHelper
+import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetByField
+import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetByIds
+import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import com.tondracek.myfarmer.systemuser.domain.repository.UserRepository

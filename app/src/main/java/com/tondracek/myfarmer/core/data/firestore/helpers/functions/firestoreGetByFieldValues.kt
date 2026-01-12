@@ -1,10 +1,10 @@
-package com.tondracek.myfarmer.core.firestore.helpers.functions
+package com.tondracek.myfarmer.core.data.firestore.helpers.functions
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.snapshots
-import com.tondracek.myfarmer.core.firestore.helpers.mapToEntities
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
+import com.tondracek.myfarmer.core.data.firestore.helpers.mapToEntities
+import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf

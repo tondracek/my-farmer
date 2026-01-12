@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.shop.domain.usecase
 
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.location.model.DistanceRings
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.shop.domain.model.Shop

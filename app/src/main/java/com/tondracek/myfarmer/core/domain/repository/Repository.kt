@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.core.repository
+package com.tondracek.myfarmer.core.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 

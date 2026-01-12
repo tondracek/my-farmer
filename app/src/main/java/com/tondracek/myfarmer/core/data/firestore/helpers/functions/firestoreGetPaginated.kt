@@ -1,11 +1,11 @@
-package com.tondracek.myfarmer.core.firestore.helpers.functions
+package com.tondracek.myfarmer.core.data.firestore.helpers.functions
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.Query
-import com.tondracek.myfarmer.core.firestore.helpers.getEntities
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
+import com.tondracek.myfarmer.core.data.firestore.helpers.getEntities
+import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntity
+import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntityId
 import timber.log.Timber
 import kotlin.reflect.KClass
 

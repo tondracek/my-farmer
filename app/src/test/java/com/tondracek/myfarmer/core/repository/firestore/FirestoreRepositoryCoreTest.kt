@@ -7,12 +7,12 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.check
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.tondracek.myfarmer.core.repository.firestore.firestoreclient.FirestoreClient
-import com.tondracek.myfarmer.core.repository.firestore.firestoreclient.FirestoreCollection
-import com.tondracek.myfarmer.core.repository.firestore.firestoreclient.FirestoreDocumentRef
-import com.tondracek.myfarmer.core.repository.firestore.firestoreclient.FirestoreQuery
-import com.tondracek.myfarmer.core.repository.request.filterEq
-import com.tondracek.myfarmer.core.repository.request.repositoryRequest
+import com.tondracek.myfarmer.core.domain.repository.firestore.firestoreclient.FirestoreClient
+import com.tondracek.myfarmer.core.domain.repository.firestore.firestoreclient.FirestoreCollection
+import com.tondracek.myfarmer.core.domain.repository.firestore.firestoreclient.FirestoreDocumentRef
+import com.tondracek.myfarmer.core.domain.repository.firestore.firestoreclient.FirestoreQuery
+import com.tondracek.myfarmer.core.domain.repository.request.filterEq
+import com.tondracek.myfarmer.core.domain.repository.request.repositoryRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -202,7 +202,6 @@ class FirestoreRepositoryCoreTest {
 
     /* TEST DATA CLASSES */
 
-    @FirestoreCollectionName("test")
     data class TestEntity(
         override var id: String = "",
         var value: String = ""

@@ -1,10 +1,10 @@
 package com.tondracek.myfarmer.core.repository.fake
 
 import com.google.common.truth.Truth.assertThat
-import com.tondracek.myfarmer.core.repository.RepositoryEntity
-import com.tondracek.myfarmer.core.repository.request.ascending
-import com.tondracek.myfarmer.core.repository.request.filterEq
-import com.tondracek.myfarmer.core.repository.request.repositoryRequest
+import com.tondracek.myfarmer.core.domain.repository.RepositoryEntity
+import com.tondracek.myfarmer.core.domain.repository.request.ascending
+import com.tondracek.myfarmer.core.domain.repository.request.filterEq
+import com.tondracek.myfarmer.core.domain.repository.request.repositoryRequest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Test

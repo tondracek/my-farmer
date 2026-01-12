@@ -1,13 +1,13 @@
-package com.tondracek.myfarmer.core.firestore.helpers
+package com.tondracek.myfarmer.core.data.firestore.helpers
 
 import com.google.firebase.firestore.CollectionReference
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreCreate
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreDeleteById
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetAll
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreGetById
-import com.tondracek.myfarmer.core.firestore.helpers.functions.firestoreUpdate
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntityId
+import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreCreate
+import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreDeleteById
+import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetAll
+import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetById
+import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreUpdate
+import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntity
+import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntityId
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 

@@ -1,10 +1,7 @@
 package com.tondracek.myfarmer.shop.data
 
 import com.tondracek.myfarmer.common.image.model.ImageResource
-import com.tondracek.myfarmer.core.firestore.FirestoreCollectionNames
-import com.tondracek.myfarmer.core.repository.EntityMapper
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollectionName
-import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
+import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntity
 import com.tondracek.myfarmer.location.data.LocationEntity
 import com.tondracek.myfarmer.location.data.toEntity
 import com.tondracek.myfarmer.location.data.toModel
@@ -21,11 +18,8 @@ import com.tondracek.myfarmer.shopcategory.data.toEntity
 import com.tondracek.myfarmer.shopcategory.data.toModel
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.serialization.Serializable
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Serializable
-@FirestoreCollectionName(FirestoreCollectionNames.SHOP)
 data class ShopEntity(
     override var id: String = "",
     var name: String? = null,

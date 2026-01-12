@@ -3,7 +3,7 @@ package com.tondracek.myfarmer.ui.common.paging
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import kotlinx.coroutines.flow.Flow
 
 fun <Id : Any, Model : Any> getUCResultPageFlow(

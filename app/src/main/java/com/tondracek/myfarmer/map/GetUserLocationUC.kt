@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.map
 
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.location.LocationProvider
 import com.tondracek.myfarmer.location.model.Location
 import kotlinx.coroutines.currentCoroutineContext

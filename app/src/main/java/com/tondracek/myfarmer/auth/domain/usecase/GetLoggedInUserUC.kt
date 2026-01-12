@@ -3,8 +3,8 @@ package com.tondracek.myfarmer.auth.domain.usecase
 import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.auth.domain.repository.AuthRepository
 import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.core.usecaseresult.toUCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi

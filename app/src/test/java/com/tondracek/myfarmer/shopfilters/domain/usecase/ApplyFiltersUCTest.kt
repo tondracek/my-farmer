@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.location.model.Distance
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.location.usecase.MeasureDistanceFromMeUC

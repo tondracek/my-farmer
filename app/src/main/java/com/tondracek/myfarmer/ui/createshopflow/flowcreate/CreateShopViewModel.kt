@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.ui.createshopflow.flowcreate
 
 import androidx.lifecycle.viewModelScope
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.shop.domain.usecase.CreateShopUC
 import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowEffect
 import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowState

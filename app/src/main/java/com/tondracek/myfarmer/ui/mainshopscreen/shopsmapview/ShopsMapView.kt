@@ -58,6 +58,7 @@ import com.tondracek.myfarmer.ui.common.map.marker.ShopMarkerIconLoader
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.math.max
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -275,7 +276,7 @@ private fun zoomToShop(
     mapboxMap.easeTo(
         CameraOptions.Builder()
             .center(geometry)
-            .zoom(15.5)
+            .zoom(max(15.5, mapboxMap.cameraState.zoom)) // good “nearby shops” zoom
             .build(),
         MapAnimationOptions.mapAnimationOptions { duration(500) }
     )

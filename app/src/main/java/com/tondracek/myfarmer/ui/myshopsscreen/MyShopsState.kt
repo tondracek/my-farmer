@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.ui.myshopsscreen
 
 import com.tondracek.myfarmer.common.image.model.ImageResource
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId

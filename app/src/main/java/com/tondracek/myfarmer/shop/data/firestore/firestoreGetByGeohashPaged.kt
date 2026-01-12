@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.shop.data.firestore
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
-import com.tondracek.myfarmer.core.firestore.helpers.toObjectsWithId
+import com.tondracek.myfarmer.core.data.firestore.helpers.toObjectsWithId
 import com.tondracek.myfarmer.location.data.GeoHashRange
 import com.tondracek.myfarmer.shop.data.ShopEntity
 import kotlinx.coroutines.tasks.await

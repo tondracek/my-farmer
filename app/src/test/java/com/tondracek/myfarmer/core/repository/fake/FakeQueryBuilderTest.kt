@@ -1,17 +1,17 @@
 package com.tondracek.myfarmer.core.repository.fake
 
-import com.tondracek.myfarmer.core.repository.fake.FakeQueryBuilder.applyFilters
-import com.tondracek.myfarmer.core.repository.fake.FakeQueryBuilder.applyLimit
-import com.tondracek.myfarmer.core.repository.fake.FakeQueryBuilder.applyOffset
-import com.tondracek.myfarmer.core.repository.fake.FakeQueryBuilder.applySorts
-import com.tondracek.myfarmer.core.repository.request.ascending
-import com.tondracek.myfarmer.core.repository.request.descending
-import com.tondracek.myfarmer.core.repository.request.filterEq
-import com.tondracek.myfarmer.core.repository.request.filterGt
-import com.tondracek.myfarmer.core.repository.request.filterGte
-import com.tondracek.myfarmer.core.repository.request.filterIn
-import com.tondracek.myfarmer.core.repository.request.filterLt
-import com.tondracek.myfarmer.core.repository.request.filterLte
+import com.tondracek.myfarmer.core.domain.repository.fake.FakeQueryBuilder.applyFilters
+import com.tondracek.myfarmer.core.domain.repository.fake.FakeQueryBuilder.applyLimit
+import com.tondracek.myfarmer.core.domain.repository.fake.FakeQueryBuilder.applyOffset
+import com.tondracek.myfarmer.core.domain.repository.fake.FakeQueryBuilder.applySorts
+import com.tondracek.myfarmer.core.domain.repository.request.ascending
+import com.tondracek.myfarmer.core.domain.repository.request.descending
+import com.tondracek.myfarmer.core.domain.repository.request.filterEq
+import com.tondracek.myfarmer.core.domain.repository.request.filterGt
+import com.tondracek.myfarmer.core.domain.repository.request.filterGte
+import com.tondracek.myfarmer.core.domain.repository.request.filterIn
+import com.tondracek.myfarmer.core.domain.repository.request.filterLt
+import com.tondracek.myfarmer.core.domain.repository.request.filterLte
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

@@ -2,8 +2,8 @@ package com.tondracek.myfarmer.ui.common.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.core.usecaseresult.toException
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.toException
 
 class UCResultPagingSource<Id : Any, Data : Any>(
     private val getDataKey: suspend (data: Data) -> Id,

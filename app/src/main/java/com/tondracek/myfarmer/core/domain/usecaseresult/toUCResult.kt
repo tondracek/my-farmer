@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.core.usecaseresult
+package com.tondracek.myfarmer.core.domain.usecaseresult
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

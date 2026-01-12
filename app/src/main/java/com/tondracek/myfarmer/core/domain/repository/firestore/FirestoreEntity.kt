@@ -1,6 +1,6 @@
-package com.tondracek.myfarmer.core.repository.firestore
+package com.tondracek.myfarmer.core.domain.repository.firestore
 
-import com.tondracek.myfarmer.core.repository.RepositoryEntity
+import com.tondracek.myfarmer.core.domain.repository.RepositoryEntity
 
 typealias FirestoreEntityId = String
 

@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.review.domain.usecase.result
 
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 
 class UCFailureLoadingReviews(throwable: Throwable) : UCResult.Failure(
     userError = "Couldn't load reviews",

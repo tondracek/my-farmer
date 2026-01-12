@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.review.domain.usecase
 
-import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.core.usecaseresult.toUCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.averageRating
 import com.tondracek.myfarmer.review.domain.repository.ReviewRepository

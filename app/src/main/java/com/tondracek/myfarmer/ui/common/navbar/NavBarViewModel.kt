@@ -3,7 +3,7 @@ package com.tondracek.myfarmer.ui.common.navbar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.auth.domain.usecase.IsLoggedInUC
-import com.tondracek.myfarmer.core.usecaseresult.getOrElse
+import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
