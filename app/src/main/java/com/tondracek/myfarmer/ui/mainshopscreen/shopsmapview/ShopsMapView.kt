@@ -155,6 +155,7 @@ private fun MapboxShopMap(
                 pulsingEnabled = false
                 locationPuck = LocationPuck2D(
                     bearingImage = ImageHolder.from(R.drawable.outline_my_location_24),
+                    shadowImage = ImageHolder.from(R.drawable.mapbox_user_puck_shadow),
                 )
             }
 
@@ -163,16 +164,7 @@ private fun MapboxShopMap(
                     handleShopClick(map, point, onShopSelected)
                     true
                 }
-            }
-
-            map.subscribeStyleLoaded {
-                val style = map.style ?: return@subscribeStyleLoaded
-
-                if (!style.styleSourceExists(SHOP_SOURCE_ID)) {
-                    addShopLayers(style, state.shops)
-                } else {
-                    updateShopSource(style, state.shops)
-                }
+                addShopLayers(style, state.shops)
             }
         }
     )

@@ -24,19 +24,19 @@ const val PROP_ID = "id"
 const val PROP_ICON = "icon"
 const val PROP_POINT_COUNT = "point_count"
 
-val clusterLayer = circleLayer(CLUSTER_LAYER_ID, SHOP_SOURCE_ID) {
+fun createClusterLayer() = circleLayer(CLUSTER_LAYER_ID, SHOP_SOURCE_ID) {
     filter(Expression.has(PROP_POINT_COUNT))
     circleRadius(18.0)
     circleColor(Color(76, 175, 80).toArgb())
 }
 
-val countLayer = symbolLayer(CLUSTER_COUNT_LAYER_ID, SHOP_SOURCE_ID) {
+fun createCountLayer() = symbolLayer(CLUSTER_COUNT_LAYER_ID, SHOP_SOURCE_ID) {
     filter(Expression.has(PROP_POINT_COUNT))
     textField(Expression.get(PROP_POINT_COUNT))
     textSize(12.0)
 }
 
-val shopLayer = symbolLayer(SHOP_LAYER_ID, SHOP_SOURCE_ID) {
+fun createShopLayer() = symbolLayer(SHOP_LAYER_ID, SHOP_SOURCE_ID) {
     filter(Expression.not(Expression.has(PROP_POINT_COUNT)))
     iconImage(Expression.get(PROP_ICON))
     iconAllowOverlap(true)
@@ -57,7 +57,7 @@ fun addShopLayers(
 
     style.addSource(source)
 
-    style.addLayer(clusterLayer)
-    style.addLayer(countLayer)
-    style.addLayer(shopLayer)
+    style.addLayer(createClusterLayer())
+    style.addLayer(createCountLayer())
+    style.addLayer(createShopLayer())
 }
