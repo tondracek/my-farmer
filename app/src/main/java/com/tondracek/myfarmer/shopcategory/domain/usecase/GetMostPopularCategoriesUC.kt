@@ -2,8 +2,8 @@ package com.tondracek.myfarmer.shopcategory.domain.usecase
 
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.toUCResult
-import com.tondracek.myfarmer.shopcategory.data.CategoryPopularityRepository
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
+import com.tondracek.myfarmer.shopcategory.domain.repository.CategoryPopularityRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

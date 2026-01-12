@@ -6,10 +6,10 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
-import com.tondracek.myfarmer.shop.data.ShopRepository
 import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.data.shop1
 import com.tondracek.myfarmer.shop.domain.model.Shop
+import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import com.tondracek.myfarmer.systemuser.data.user0
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,7 +62,7 @@ class GetShopsByUserUCTest {
         whenever(getLoggedInUserUC())
             .thenReturn(flowOf(UCResult.Success(sampleUser)))
 
-        whenever(shopRepository.get(any()))
+        whenever(shopRepository.getByOwnerId(any()))
             .thenReturn(flowOf(listOf(shop0, shop1)))
 
         val result = uc().first()
@@ -76,7 +76,7 @@ class GetShopsByUserUCTest {
         whenever(getLoggedInUserUC())
             .thenReturn(flowOf(UCResult.Success(sampleUser)))
 
-        whenever(shopRepository.get(any()))
+        whenever(shopRepository.getByOwnerId(any()))
             .thenReturn(flowOf(emptyList()))
 
         val result = uc().first()
@@ -91,7 +91,7 @@ class GetShopsByUserUCTest {
         val shopFlow = MutableStateFlow(listOf(shop0))
 
         whenever(getLoggedInUserUC()).thenReturn(userFlow)
-        whenever(shopRepository.get(any())).thenReturn(shopFlow)
+        whenever(shopRepository.getByOwnerId(any())).thenReturn(shopFlow)
 
         val emissions = mutableListOf<UCResult<List<Shop>>>()
 
@@ -115,7 +115,7 @@ class GetShopsByUserUCTest {
         whenever(getLoggedInUserUC())
             .thenReturn(flowOf(UCResult.Success(sampleUser)))
 
-        whenever(shopRepository.get(any()))
+        whenever(shopRepository.getByOwnerId(any()))
             .thenReturn(flow { throw RuntimeException("DB crashed") })
 
         val result = uc().first()

@@ -7,14 +7,16 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import com.tondracek.myfarmer.ui.common.paging.collectAsLazyPagingItemsAndSnackbarErrors
 import com.tondracek.myfarmer.ui.core.appstate.AppUiController
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListView
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListViewEffect
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListViewModel
+import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListViewState
 import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapView
-import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapViewEvent
+import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapViewEffect
 import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapViewModel
 
 fun NavGraphBuilder.mainShopsScreenDestination(
@@ -53,7 +55,7 @@ private fun ShopsListViewSection(
     appUiController: AppUiController,
 ) {
     val shopsListViewModel: ShopsListViewModel = hiltViewModel()
-    val shopsListViewState by shopsListViewModel.state.collectAsState()
+    val shopsPaged = shopsListViewModel.shopsUiData.collectAsLazyPagingItemsAndSnackbarErrors()
 
     LaunchedEffect(Unit) {
         shopsListViewModel.effects.collect { event ->
@@ -71,9 +73,8 @@ private fun ShopsListViewSection(
     }
 
     ShopsListView(
-        state = shopsListViewState,
-        onNavigateToShopDetail = shopsListViewModel::openShopDetail,
-        onNavigateBack = shopsListViewModel::onBackClicked
+        state = ShopsListViewState.Success(shopsPaged),
+        onNavigateToShopDetail = shopsListViewModel::openShopDetail
     )
 }
 
@@ -88,10 +89,10 @@ private fun ShopsMapViewSection(
     LaunchedEffect(Unit) {
         shopsMapViewModel.effects.collect { event ->
             when (event) {
-                is ShopsMapViewEvent.OpenShopDetail ->
+                is ShopsMapViewEffect.OpenShopDetail ->
                     navController.navigate(Route.ShopBottomSheetRoute(event.shopId.toString()))
 
-                is ShopsMapViewEvent.ShowError ->
+                is ShopsMapViewEffect.ShowError ->
                     appUiController.showErrorMessage(event.message)
             }
         }

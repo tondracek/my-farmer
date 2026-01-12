@@ -89,4 +89,5 @@
     <string name="camera">Camera</string>
     <string name="price_label_input_hint">Any text - e.g., \"10 eur per kg\", \"5 eur per piece\"</string>
     <string name="could_not_open_the_link">Could not open the link: %1$s</string>
+    <string name="retry">Retry</string>
 </resources>

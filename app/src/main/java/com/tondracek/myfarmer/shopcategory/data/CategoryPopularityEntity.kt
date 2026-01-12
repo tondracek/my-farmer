@@ -1,12 +1,9 @@
 package com.tondracek.myfarmer.shopcategory.data
 
-import com.tondracek.myfarmer.core.data.FirestoreCollectionNames
-import com.tondracek.myfarmer.core.repository.EntityMapper
+import com.tondracek.myfarmer.core.firestore.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreCollectionName
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @FirestoreCollectionName(FirestoreCollectionNames.CATEGORY_POPULARITY)
 data class CategoryPopularityEntity(
@@ -14,17 +11,12 @@ data class CategoryPopularityEntity(
     var count: Int = 0
 ) : FirestoreEntity
 
-@Singleton
-class CategoryPopularityMapper @Inject constructor() :
-    EntityMapper<CategoryPopularity, CategoryPopularityEntity> {
+fun CategoryPopularity.toEntity() = CategoryPopularityEntity(
+    id = name,
+    count = count
+)
 
-    override fun toEntity(model: CategoryPopularity) = CategoryPopularityEntity(
-        id = model.name,
-        count = model.count
-    )
-
-    override fun toModel(entity: CategoryPopularityEntity) = CategoryPopularity(
-        name = entity.id,
-        count = entity.count
-    )
-}
+fun CategoryPopularityEntity.toModel() = CategoryPopularity(
+    name = id,
+    count = count
+)

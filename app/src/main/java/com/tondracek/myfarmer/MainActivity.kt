@@ -67,6 +67,7 @@ class MainActivity : ComponentActivity() {
                                 navigation<NavGraph.MainFlow.Home>(Route.MainShopsRoute) {
                                     mainShopsScreenDestination(navController)
                                     shopBottomSheetDestination(navController, appUiController)
+                                    shopsFilterDialogDestination(navController)
                                 }
 
                                 navigation<NavGraph.MainFlow.Profile>(Route.EditProfileScreenRoute) {
@@ -85,7 +86,6 @@ class MainActivity : ComponentActivity() {
                             updateShopDestination(navController)
 
                             addCategoryDialogDestination(navController)
-                            shopsFilterDialogDestination(navController)
                         }
                     }
                 }

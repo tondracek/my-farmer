@@ -18,10 +18,9 @@ import com.tondracek.myfarmer.ui.core.appstate.AppUiController
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.shopdetailscreen.ShopDetailState
 import com.tondracek.myfarmer.ui.shopdetailscreen.components.ShopDetailLayout
-import java.util.UUID
 
 fun SavedStateHandle.getShopBottomSheetShopId(): ShopId =
-    UUID.fromString(toRoute<Route.ShopBottomSheetRoute>().shopId)
+    ShopId.fromString(toRoute<Route.ShopBottomSheetRoute>().shopId)
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.shopBottomSheetDestination(

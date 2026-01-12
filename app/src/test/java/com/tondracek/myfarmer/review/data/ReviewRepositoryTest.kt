@@ -3,6 +3,7 @@ package com.tondracek.myfarmer.review.data
 import com.tondracek.myfarmer.core.repository.fake.FakeRepositoryCore
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.Review
+import com.tondracek.myfarmer.review.domain.repository.ReviewRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -22,27 +23,6 @@ class ReviewRepositoryTest {
 
     private suspend fun insert(review: Review) {
         reviewRepository.create(review)
-    }
-
-    @Test
-    fun `getReviewsPreview returns limited number of reviews`() = runTest {
-        repeat(20) {
-            insert(
-                Review(
-                    id = UUID.randomUUID(),
-                    userId = userId,
-                    shopId = shopId,
-                    rating = Rating(5),
-                    comment = "Review $it",
-                )
-            )
-        }
-
-        val previews = reviewRepository
-            .getReviewsPreview(shopId)
-            .first()
-
-        assertTrue(previews.size <= 10)
     }
 
     @Test

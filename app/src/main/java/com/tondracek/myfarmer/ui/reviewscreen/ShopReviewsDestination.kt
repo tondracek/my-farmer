@@ -8,17 +8,17 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
+import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
-import java.util.UUID
 
-fun SavedStateHandle.getReviewsScreenShopId(): UUID =
+fun SavedStateHandle.getReviewsScreenShopId(): ShopId =
     this.toRoute<Route.ShopReviews>()
-        .let { UUID.fromString(it.shopId) }
+        .let { ShopId.fromString(it.shopId) }
 
 fun NavGraphBuilder.shopReviewsScreenDestination(
     navController: NavController,
-) = routeDestination<Route.ShopReviews> {
+) = routeDestination<Route.ShopReviews> { appUiController ->
     val viewmodel: ShopReviewsViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()
 
@@ -26,6 +26,7 @@ fun NavGraphBuilder.shopReviewsScreenDestination(
         viewmodel.effects.collect { event ->
             when (event) {
                 is ShopReviewsEffect.NavigateBack -> navController.navigateUp()
+                is ShopReviewsEffect.ShowError -> appUiController.showErrorMessage(event.message)
             }
         }
     }

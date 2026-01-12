@@ -28,7 +28,6 @@ import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.systemuser.data.user0
 import com.tondracek.myfarmer.ui.common.layout.CardMessageLayout
-import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -43,7 +42,6 @@ fun EditProfileScreen(
     onContactInfoChange: (ContactInfo) -> Unit,
     onLogout: () -> Unit,
     onSaveClick: () -> Unit,
-    onNavigateBack: () -> Unit,
 ) {
     when (state) {
         is EditProfileScreenState.Success -> SuccessScreen(
@@ -57,10 +55,6 @@ fun EditProfileScreen(
 
         EditProfileScreenState.UpdatingProfile -> UpdatingProfileLayout()
         EditProfileScreenState.Loading -> LoadingLayout()
-        is EditProfileScreenState.Error -> ErrorLayout(
-            failure = state.result,
-            onNavigateBack = onNavigateBack,
-        )
     }
 }
 
@@ -169,7 +163,6 @@ private fun EditProfileScreenPreview() {
             onContactInfoChange = {},
             onLogout = {},
             onSaveClick = {},
-            onNavigateBack = {},
         )
     }
 }
@@ -185,7 +178,6 @@ private fun EditProfileUpdatingScreenPreview() {
             onContactInfoChange = {},
             onLogout = {},
             onSaveClick = {},
-            onNavigateBack = {},
         )
     }
 }

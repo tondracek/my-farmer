@@ -11,8 +11,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.scale
 import androidx.core.graphics.withClip
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.farmerDarkColors
@@ -20,7 +18,7 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.farmerDarkC
 suspend fun getCustomMarkerIcon(
     imageResource: ImageResource,
     context: Context,
-): BitmapDescriptor {
+): Bitmap {
     val imageUrl = imageResource.getImageUrl()
     val drawable: Drawable =
         fetchCustomMarkerImage(context, imageUrl, R.drawable.baseline_store_48)
@@ -59,7 +57,7 @@ suspend fun getCustomMarkerIcon(
         canvas.drawBitmap(scaledBitmap, 0f, 0f, Paint().apply { isAntiAlias = true })
     }
 
-    return BitmapDescriptorFactory.fromBitmap(output)
+    return output
 }
 
 private fun Drawable.toBitmapSafely(): Bitmap {

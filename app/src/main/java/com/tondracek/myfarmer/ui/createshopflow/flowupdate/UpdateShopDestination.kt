@@ -20,11 +20,10 @@ import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowEffect
 import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowScreen
 import com.tondracek.myfarmer.ui.createshopflow.NEW_CATEGORY_DIALOG_VALUE
-import java.util.UUID
 
 fun SavedStateHandle.getUpdateShopScreenShopId(): ShopId =
     toRoute<Route.UpdateShop>().shopId
-        .let { UUID.fromString(it) }
+        .let { ShopId.fromString(it) }
 
 fun NavGraphBuilder.updateShopDestination(
     navController: NavController,

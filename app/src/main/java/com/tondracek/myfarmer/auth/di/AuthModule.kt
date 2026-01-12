@@ -1,8 +1,9 @@
 package com.tondracek.myfarmer.auth.di
 
-import com.google.firebase.auth.FirebaseAuth
+import com.tondracek.myfarmer.auth.data.FirebaseAuthRepository
+import com.tondracek.myfarmer.auth.domain.repository.AuthRepository
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -10,11 +11,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AuthModule {
+interface AuthModule {
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideFirebaseAuth(): FirebaseAuth {
-        return FirebaseAuth.getInstance()
-    }
+    fun provideAuthRepository(
+        firebaseAuthRepository: FirebaseAuthRepository
+    ): AuthRepository
 }

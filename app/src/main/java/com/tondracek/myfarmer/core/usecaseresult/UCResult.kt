@@ -24,9 +24,25 @@ sealed interface UCResult<out T> {
         init {
             logFailure()
         }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Failure) return false
+
+            if (userError != other.userError) return false
+            if (systemError != other.systemError) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = userError.hashCode()
+            result = 31 * result + (systemError?.hashCode() ?: 0)
+            return result
+        }
     }
 
-    fun <R> mapSuccess(transform: (T) -> R): UCResult<R> = when (this) {
+    suspend fun <R> mapSuccess(transform: suspend (T) -> R): UCResult<R> = when (this) {
         is Success -> Success(transform(data))
         is Failure -> this
     }
@@ -56,11 +72,6 @@ sealed interface UCResult<out T> {
     fun <R> fold(onSuccess: (T) -> R, onFailure: (Failure) -> R) = when (this) {
         is Success -> onSuccess(data)
         is Failure -> onFailure(this)
-    }
-
-    fun getOrThrow() = when (this) {
-        is Success -> data
-        is Failure -> throw Throwable(systemError)
     }
 
     companion object {
@@ -97,6 +108,8 @@ private fun Failure.logFailure() {
     )
 }
 
+fun Failure.toException(): Exception = Exception(userError, Exception(systemError))
+
 /**
  * - For `UseCaseResult.Success` returns the `data` value
  * - For `UseCaseResult.Failure` applies the `block` function that can return some value
@@ -115,6 +128,14 @@ fun <T> UCResult<T>.getOrElse(defaultValue: T): T = when (this) {
 inline fun <T> UCResult<T>.getOrElse(defaultValue: (Failure) -> T): T = when (this) {
     is Success -> data
     is Failure -> defaultValue(this)
+}
+
+suspend fun <T> UCResult<T>.getOrElse(
+    defaultValue: T,
+    onError: suspend (Failure) -> Unit = {},
+): T = this.getOrElse {
+    onError(it)
+    defaultValue
 }
 
 fun <T> Flow<UCResult<T>>.getOrElse(

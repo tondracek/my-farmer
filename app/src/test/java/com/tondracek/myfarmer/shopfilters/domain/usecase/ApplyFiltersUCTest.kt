@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.location.model.Distance
+import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.location.usecase.MeasureDistanceFromMeUC
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
@@ -14,7 +15,6 @@ import com.tondracek.myfarmer.review.domain.usecase.GetAverageRatingsByShopUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
-import com.tondracek.myfarmer.shoplocation.domain.model.ShopLocation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -44,17 +44,18 @@ class ApplyFiltersUCTest {
     fun setup() {
         uc = ApplyFiltersUC(measureDistanceFromMeUC, getAverageRatingsByShopUC)
 
-        shopA = fakeShop(categories = listOf("Fruit"), location = ShopLocation(0.0, 0.0))
-        shopB = fakeShop(categories = listOf("Eggs"), location = ShopLocation(1.0, 1.0))
-        shopC = fakeShop(categories = listOf("Fruit"), location = ShopLocation(2.0, 2.0))
+        shopA = fakeShop(categories = listOf("Fruit"), location = Location(0.0, 0.0))
+        shopB = fakeShop(categories = listOf("Eggs"), location = Location(1.0, 1.0))
+        shopC = fakeShop(categories = listOf("Fruit"), location = Location(2.0, 2.0))
     }
 
-    private fun fakeShop(categories: List<String>, location: ShopLocation): Shop =
+    private fun fakeShop(categories: List<String>, location: Location): Shop =
         Shop(
             id = UUID.randomUUID(),
             name = null,
             description = null,
-            ownerId = UUID.randomUUID(),
+            ownerId =
+                UUID.randomUUID(),
             categories = categories.map { ShopCategory(it, Color.White) },
             images = emptyList(),
             menu = ProductMenu(emptyList()),

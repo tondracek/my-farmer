@@ -14,17 +14,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.review.domain.model.Rating
+import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.shop.data.sampleReviews
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import com.tondracek.myfarmer.ui.common.rating.RatingStars
 import com.tondracek.myfarmer.ui.common.user.UserPreviewCard
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
-import java.util.UUID
 
 @Composable
 fun ReviewCard(
@@ -84,10 +86,11 @@ private fun ReviewCardPreview1() {
     MyFarmerPreview {
         ReviewCard(
             review = ReviewUiState(
+                id = ReviewId.newId(),
                 author = SystemUser(
-                    id = UUID.randomUUID(),
+                    id = UserId.newId(),
                     name = "John Doe super super super super super super super super super super super long name",
-                    firebaseId = "",
+                    authId = AuthId(""),
                     profilePicture = ImageResource.EMPTY,
                     contactInfo = ContactInfo.EMPTY
                 ),

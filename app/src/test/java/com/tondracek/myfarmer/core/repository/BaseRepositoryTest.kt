@@ -3,7 +3,6 @@ package com.tondracek.myfarmer.core.repository
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.core.repository.firestore.FirestoreEntity
-import com.tondracek.myfarmer.core.repository.request.RepositoryRequest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -80,20 +79,6 @@ class BaseRepositoryTest {
 
         assertThat(result).isEqualTo(model)
         verify(core).getById(entityId)
-    }
-
-    @Test
-    fun `get delegates to core`() = runTest {
-        val request = RepositoryRequest()
-        val model = TestModel(value = "abc")
-
-        val value = flowOf(listOf(mapper.toEntity(model)))
-        whenever(core.get(request)).thenReturn(value)
-
-        val result: List<TestModel> = repo.get(request).first()
-
-        assertThat(result).isEqualTo(listOf(model))
-        verify(core).get(request)
     }
 
     @Test

@@ -100,7 +100,6 @@ dependencies {
     implementation(libs.androidx.compose.pager)
     implementation(libs.androidx.material.icons.extended)
 
-    implementation(libs.maps.compose)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.accompanist.permissions)
@@ -115,4 +114,13 @@ dependencies {
     implementation(libs.firebase.analytics)
 
     implementation(libs.jakewharton.timber)
+
+    implementation(libs.androidx.paging.common)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+
+    implementation(libs.geofire.android.common)
+
+    implementation(libs.maps.compose)
+    implementation(libs.mapbox.android.ndk27)
 }

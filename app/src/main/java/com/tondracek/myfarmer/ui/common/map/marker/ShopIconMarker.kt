@@ -23,7 +23,7 @@ fun ShopIconMarker(
     val icon: BitmapDescriptor by produceState(
         initialValue = BitmapDescriptorFactory.defaultMarker(),
         key1 = shop.icon.uri
-    ) { value = ShopMarkerIconLoader.get(shop.icon, context) }
+    ) { value = BitmapDescriptorFactory.fromBitmap(ShopMarkerIconLoader.get(shop.icon, context)) }
 
     val state = rememberUpdatedMarkerState(position = shop.location.toLatLng())
 

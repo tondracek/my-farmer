@@ -75,11 +75,6 @@ class UCResultTest {
     }
 
     @Test
-    fun `getOrThrow on Success returns data`() {
-        assertThat(UCResult.Success("A").getOrThrow()).isEqualTo("A")
-    }
-
-    @Test
     fun `fold on Success invokes onSuccess`() {
         val result = UCResult.Success(5).fold(
             onSuccess = { it * 2 },
@@ -119,11 +114,6 @@ class UCResultTest {
     @Test
     fun `getOrNull on Failure returns null`() {
         assertNull(UCResult.Failure("X").getOrNull())
-    }
-
-    @Test(expected = Throwable::class)
-    fun `getOrThrow on Failure throws`() {
-        UCResult.Failure("X", "Failure").getOrThrow()
     }
 
     @Test

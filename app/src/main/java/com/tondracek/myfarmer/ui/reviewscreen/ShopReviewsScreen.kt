@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -19,16 +18,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.paging.PagingData
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.review.domain.model.ReviewInput
 import com.tondracek.myfarmer.shop.data.sampleReviewsUI
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
+import com.tondracek.myfarmer.ui.common.paging.collectAsLazyPagingItemsAndSnackbarErrors
+import com.tondracek.myfarmer.ui.common.paging.paginatedItems
 import com.tondracek.myfarmer.ui.common.review.ReviewCard
 import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.reviewscreen.components.CreateShopReviewBottomSheet
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun ShopReviewsScreen(
@@ -62,21 +65,7 @@ private fun Content(
         title = state.shopName ?: stringResource(R.string.app_name)
     ) {
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = MyFarmerTheme.paddings.medium),
-            state = rememberLazyListState(),
-            contentPadding = PaddingValues(bottom = MyFarmerTheme.paddings.xxL),
-            verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
-        ) {
-            items(state.reviews) { review ->
-                ReviewCard(
-                    review = review,
-                    colors = MyFarmerTheme.cardColors.secondary,
-                )
-            }
-        }
+        ReviewsList(state)
 
         Button(
             modifier = Modifier
@@ -97,6 +86,30 @@ private fun Content(
     }
 }
 
+@Composable
+private fun ReviewsList(state: ShopReviewsScreenState.Success) {
+    val pagingItems = state.reviews.collectAsLazyPagingItemsAndSnackbarErrors()
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = MyFarmerTheme.paddings.medium),
+        state = rememberLazyListState(),
+        contentPadding = PaddingValues(bottom = MyFarmerTheme.paddings.xxL),
+        verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
+    ) {
+        paginatedItems(
+            pagingItems = pagingItems,
+            getKey = { it.id.value }
+        ) {
+            ReviewCard(
+                review = it,
+                colors = MyFarmerTheme.cardColors.secondary,
+            )
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun ShopReviewsScreenPreview() {
@@ -104,7 +117,7 @@ private fun ShopReviewsScreenPreview() {
         ShopReviewsScreen(
             state = ShopReviewsScreenState.Success(
                 shopName = "Sample Shop long long long long long long long long long long long long name",
-                reviews = sampleReviewsUI
+                reviews = flowOf(PagingData.from(sampleReviewsUI))
             ),
             onSubmitReview = {},
             onBackClick = {}
@@ -119,7 +132,7 @@ private fun ShopReviewsScreenPreviewSingleReview() {
         ShopReviewsScreen(
             state = ShopReviewsScreenState.Success(
                 shopName = "Sample Shop",
-                reviews = listOf(sampleReviewsUI.first())
+                reviews = flowOf(PagingData.from(listOf(sampleReviewsUI.first())))
             ),
             onSubmitReview = {},
             onBackClick = {}
@@ -134,7 +147,7 @@ private fun ShopReviewsScreenPreviewNoReview() {
         ShopReviewsScreen(
             state = ShopReviewsScreenState.Success(
                 shopName = "Sample Shop",
-                reviews = emptyList()
+                reviews = flowOf(PagingData.from(emptyList()))
             ),
             onSubmitReview = {},
             onBackClick = {}

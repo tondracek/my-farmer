@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.auth.domain.usecase.LogoutUC
+import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
@@ -16,9 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -32,39 +31,44 @@ class EditProfileViewModel @Inject constructor(
     private val logout: LogoutUC,
 ) : ViewModel() {
 
-    val loggedInUserUC: SharedFlow<UCResult<SystemUser>> = getLoggedInUserUC()
-        .onEach { result ->
-            if (result is UCResult.Failure) _effects.emit(EditProfileScreenEffect.OpenAuthScreen)
-        }
+    private val loggedInUserFlow: SharedFlow<UCResult<SystemUser>> = getLoggedInUserUC()
         .shareIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             replay = 1
         )
 
+    private val loggedInUser: StateFlow<SystemUser?> = loggedInUserFlow
+        .getOrElse(defaultValue = null) {
+            viewModelScope.launch {
+                emitError(it)
+                _effects.emit(EditProfileScreenEffect.OpenAuthScreen)
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = null
+        )
+
     private val _state: MutableStateFlow<EditProfileScreenState> =
         MutableStateFlow(EditProfileScreenState.Loading)
 
-    val state: StateFlow<EditProfileScreenState> = combine(
-        _state,
-        loggedInUserUC,
-    ) { state, loggedUserResult ->
-        when (loggedUserResult) {
-            is UCResult.Success -> state
-            is UCResult.Failure -> EditProfileScreenState.Error(result = loggedUserResult)
-                .also { _effects.emit(EditProfileScreenEffect.OpenAuthScreen) }
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = EditProfileScreenState.Loading
-    )
+    val state: StateFlow<EditProfileScreenState> = _state
 
     private val _effects = MutableSharedFlow<EditProfileScreenEffect>(extraBufferCapacity = 1)
     val effects: SharedFlow<EditProfileScreenEffect> = _effects
 
+    private suspend fun emitError(message: String) =
+        _effects.emit(EditProfileScreenEffect.ShowError(message))
+
+    private suspend fun emitError(result: UCResult.Failure) =
+        emitError(result.userError)
+
     init {
-        viewModelScope.launch { loadData() }
+        viewModelScope.launch {
+            loadUserData()
+        }
     }
 
     fun onNameChange(newName: String) = updateState {
@@ -83,23 +87,23 @@ class EditProfileViewModel @Inject constructor(
 
     fun onSaveProfile() = viewModelScope.launch {
         val currentState = _state.value as? EditProfileScreenState.Success ?: return@launch
-        val updateUser = currentState.toSystemUser()
+        val loggedUser = loggedInUser.value ?: return@launch emitError(NotLoggedInUCResult())
 
         _state.update { EditProfileScreenState.UpdatingProfile }
-        val updateResult = updateUserUC(updateUser)
 
-        when (updateResult) {
-            is UCResult.Success ->
+        val updateUser = currentState.toSystemUser(id = loggedUser.id, authId = loggedUser.authId)
+
+        when (val updateResult = updateUserUC(updateUser)) {
+            is UCResult.Success -> {
                 _effects.emit(EditProfileScreenEffect.ShowSavedProfileMessage)
+                loadUserData()
+            }
 
-            is UCResult.Failure ->
-                _effects.emit(EditProfileScreenEffect.ShowError(updateResult.userError))
+            is UCResult.Failure -> {
+                emitError(updateResult.userError)
+                _state.update { currentState }
+            }
         }
-        loadData()
-    }
-
-    fun navigateBack() = viewModelScope.launch {
-        _effects.emit(EditProfileScreenEffect.GoBack)
     }
 
     /* PRIVATE HELPERS */
@@ -112,13 +116,9 @@ class EditProfileViewModel @Inject constructor(
             }
         }
 
-    private suspend fun loadData() {
-        val loggedUser = loggedInUserUC.first()
-
-        _state.update { prevState: EditProfileScreenState ->
-            loggedUser
-                .mapSuccess { it.toUiState() }
-                .getOrElse { EditProfileScreenState.Error(result = it) }
+    private suspend fun loadUserData() = loggedInUserFlow.first().getOrNull().let { user ->
+        _state.update {
+            user?.toUiState() ?: EditProfileScreenState.Empty
         }
     }
 }
