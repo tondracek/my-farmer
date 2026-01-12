@@ -16,7 +16,7 @@ import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListViewEffec
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListViewModel
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.ShopsListViewState
 import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapView
-import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapViewEvent
+import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapViewEffect
 import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapViewModel
 
 fun NavGraphBuilder.mainShopsScreenDestination(
@@ -89,10 +89,10 @@ private fun ShopsMapViewSection(
     LaunchedEffect(Unit) {
         shopsMapViewModel.effects.collect { event ->
             when (event) {
-                is ShopsMapViewEvent.OpenShopDetail ->
+                is ShopsMapViewEffect.OpenShopDetail ->
                     navController.navigate(Route.ShopBottomSheetRoute(event.shopId.toString()))
 
-                is ShopsMapViewEvent.ShowError ->
+                is ShopsMapViewEffect.ShowError ->
                     appUiController.showErrorMessage(event.message)
             }
         }

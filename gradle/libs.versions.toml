@@ -1,6 +1,7 @@
 [versions]
 accompanistPermissions = "0.37.3"
 agp = "8.13.2"
+mapbox = "11.17.1"
 coilCompose = "3.3.0"
 firebaseBom = "34.7.0"
 firebaseUiAuth = "9.1.1"
@@ -45,6 +46,7 @@ pagingCommon = "3.3.6"
 
 [libraries]
 # Firebase – versions managed by BOM
+mapbox-android-ndk27 = { module = "com.mapbox.maps:android-ndk27", version.ref = "mapbox" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-storage = { module = "com.google.firebase:firebase-storage" }

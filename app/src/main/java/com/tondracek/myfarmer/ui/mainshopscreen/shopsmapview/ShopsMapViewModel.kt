@@ -5,12 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLngBounds
 import com.tondracek.myfarmer.core.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.usecaseresult.getOrElse
+import com.tondracek.myfarmer.location.model.Location
+import com.tondracek.myfarmer.location.model.meters
+import com.tondracek.myfarmer.location.usecase.measureMapDistanceNotNull
 import com.tondracek.myfarmer.map.GetMapViewInitialCameraBoundsUC
+import com.tondracek.myfarmer.map.GetUserLocationUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
-import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsUC
+import com.tondracek.myfarmer.shop.domain.repository.DistancePagingCursor
+import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsPaginatedUC
 import com.tondracek.myfarmer.shop.domain.usecase.GetClosestShopsUC
+import com.tondracek.myfarmer.shop.domain.usecase.GetShopsByDistancePagedUC
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
+import com.tondracek.myfarmer.shopfilters.domain.usecase.ApplyFiltersUC
 import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.usecase.GetUsersByIdsUC
@@ -22,10 +29,12 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,7 +42,10 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ShopsMapViewModel @Inject constructor(
-    getAllShops: GetAllShopsUC,
+    getShopsByDistancePaged: GetShopsByDistancePagedUC,
+    getAllShopsPaginated: GetAllShopsPaginatedUC,
+    applyFilters: ApplyFiltersUC,
+    getUserLocation: GetUserLocationUC,
     getClosestShops: GetClosestShopsUC,
     getShopFilters: GetShopFiltersUC,
     getUsersByIds: GetUsersByIdsUC,
@@ -43,10 +55,61 @@ class ShopsMapViewModel @Inject constructor(
     private val filters: StateFlow<ShopFilters> =
         getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
 
-    private val _shops: Flow<Collection<Shop>> = filters
-        .flatMapLatest { getAllShops(filters = it) }
-        .getOrEmitError(emptyList())
+    private val userLocation: Flow<Location?> = getUserLocation()
         .distinctUntilChanged()
+        .getOrElse(null) { _effects.emit(ShopsMapViewEffect.ShowError(it.userError)) }
+
+    private val _shops: Flow<Collection<Shop>> = userLocation
+        .scan<Location?, Location?>(null) { lastAccepted, current ->
+            if (lastAccepted == null) return@scan current
+            if (current == null) return@scan lastAccepted
+
+            val d = measureMapDistanceNotNull(lastAccepted, current)
+
+            if (d > 50.meters) current else lastAccepted
+        }
+        .distinctUntilChanged()
+        .combine(filters) { location, filters -> location to filters }
+        .flatMapLatest { (location, filters) ->
+            when {
+                location != null -> channelFlow {
+                    val shops = mutableSetOf<Shop>()
+                    var cursor: DistancePagingCursor? = null
+
+                    do {
+                        getShopsByDistancePaged(
+                            center = location,
+                            pageSize = 20,
+                            cursor = cursor,
+                        ).withSuccess { (list, nextCursor) ->
+                            val filtered = applyFilters.sync(shops = list, filters = filters)
+                            shops.addAll(filtered)
+
+                            send(shops.toList())
+                            cursor = nextCursor
+                        }
+                    } while (cursor != null)
+                }
+
+                else -> channelFlow {
+                    val shops = mutableSetOf<Shop>()
+                    var cursor: ShopId? = null
+
+                    do {
+                        getAllShopsPaginated(
+                            limit = 20,
+                            after = cursor
+                        ).withSuccess {
+                            val filtered = applyFilters.sync(shops = it, filters = filters)
+                            shops.addAll(filtered)
+
+                            send(shops.toList())
+                            cursor = it.lastOrNull()?.id
+                        }
+                    } while (cursor != null)
+                }
+            }
+        }
 
     private val _shopOwners: Flow<List<SystemUser>> = _shops
         .flatMapLatest {
@@ -92,25 +155,25 @@ class ShopsMapViewModel @Inject constructor(
     )
 
     fun onShopSelected(shopId: ShopId) = viewModelScope.launch {
-        _effects.emit(ShopsMapViewEvent.OpenShopDetail(shopId))
+        _effects.emit(ShopsMapViewEffect.OpenShopDetail(shopId))
     }
 
-    private val _effects = MutableSharedFlow<ShopsMapViewEvent>(extraBufferCapacity = 1)
-    val effects: SharedFlow<ShopsMapViewEvent> = _effects
+    private val _effects = MutableSharedFlow<ShopsMapViewEffect>(extraBufferCapacity = 1)
+    val effects: SharedFlow<ShopsMapViewEffect> = _effects
 
     private fun <T> Flow<UCResult<T>>.getOrEmitError(defaultValue: T): Flow<T> = map { result ->
         result.getOrElse {
             viewModelScope.launch {
-                _effects.emit(ShopsMapViewEvent.ShowError(it.userError))
+                _effects.emit(ShopsMapViewEffect.ShowError(it.userError))
             }
             defaultValue
         }
     }
 }
 
-sealed interface ShopsMapViewEvent {
+sealed interface ShopsMapViewEffect {
 
-    data class OpenShopDetail(val shopId: ShopId) : ShopsMapViewEvent
+    data class OpenShopDetail(val shopId: ShopId) : ShopsMapViewEffect
 
-    data class ShowError(val message: String) : ShopsMapViewEvent
+    data class ShowError(val message: String) : ShopsMapViewEffect
 }
