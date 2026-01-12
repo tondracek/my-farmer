@@ -1,6 +1,5 @@
 package com.tondracek.myfarmer.ui.editprofilescreen
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.auth.domain.usecase.LogoutUC
@@ -11,8 +10,8 @@ import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.usecase.UpdateUserUC
+import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,7 +28,7 @@ class EditProfileViewModel @Inject constructor(
     getLoggedInUserUC: GetLoggedInUserUC,
     private val updateUserUC: UpdateUserUC,
     private val logout: LogoutUC,
-) : ViewModel() {
+) : BaseViewModel<EditProfileScreenEffect>() {
 
     private val loggedInUserFlow: SharedFlow<UCResult<SystemUser>> = getLoggedInUserUC()
         .shareIn(
@@ -42,7 +41,7 @@ class EditProfileViewModel @Inject constructor(
         .getOrElse(defaultValue = null) {
             viewModelScope.launch {
                 emitError(it)
-                _effects.emit(EditProfileScreenEffect.OpenAuthScreen)
+                emitEffect(EditProfileScreenEffect.GoToLogin)
             }
         }
         .stateIn(
@@ -56,11 +55,8 @@ class EditProfileViewModel @Inject constructor(
 
     val state: StateFlow<EditProfileScreenState> = _state
 
-    private val _effects = MutableSharedFlow<EditProfileScreenEffect>(extraBufferCapacity = 1)
-    val effects: SharedFlow<EditProfileScreenEffect> = _effects
-
     private suspend fun emitError(message: String) =
-        _effects.emit(EditProfileScreenEffect.ShowError(message))
+        emitEffect(EditProfileScreenEffect.ShowError(message))
 
     private suspend fun emitError(result: UCResult.Failure) =
         emitError(result.userError)
@@ -83,7 +79,10 @@ class EditProfileViewModel @Inject constructor(
         it.copy(contactInfo = newContactInfo)
     }
 
-    fun onLogout() = logout()
+    fun onLogout() = viewModelScope.launch {
+        emitEffect(EditProfileScreenEffect.GoToLogin)
+        logout()
+    }
 
     fun onSaveProfile() = viewModelScope.launch {
         val currentState = _state.value as? EditProfileScreenState.Success ?: return@launch
@@ -95,7 +94,7 @@ class EditProfileViewModel @Inject constructor(
 
         when (val updateResult = updateUserUC(updateUser)) {
             is UCResult.Success -> {
-                _effects.emit(EditProfileScreenEffect.ShowSavedProfileMessage)
+                emitEffect(EditProfileScreenEffect.ShowSavedProfileMessage)
                 loadUserData()
             }
 
@@ -126,7 +125,7 @@ class EditProfileViewModel @Inject constructor(
 sealed interface EditProfileScreenEffect {
     data object GoBack : EditProfileScreenEffect
 
-    data object OpenAuthScreen : EditProfileScreenEffect
+    data object GoToLogin : EditProfileScreenEffect
 
     data object ShowSavedProfileMessage : EditProfileScreenEffect
 

@@ -7,7 +7,7 @@ import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopMapItem
 
 fun ImageResource.toStyleIconId(): String =
-    "shop-icon-${this.hashCode()}"
+    "shop-icon-${this.uri}"
 
 fun shopsToFeatureCollection(shops: Collection<ShopMapItem>): FeatureCollection {
     return FeatureCollection.fromFeatures(

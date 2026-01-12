@@ -57,7 +57,6 @@ class ShopsMapViewModel @Inject constructor(
 
     private val userLocation: Flow<Location?> = getUserLocation()
         .distinctUntilChanged()
-        .getOrElse(null) { _effects.emit(ShopsMapViewEffect.ShowError(it.userError)) }
 
     private val _shops: Flow<Collection<Shop>> = userLocation
         .scan<Location?, Location?>(null) { lastAccepted, current ->
@@ -88,6 +87,7 @@ class ShopsMapViewModel @Inject constructor(
                             send(shops.toList())
                             cursor = nextCursor
                         }
+                        // TODO: shops are loading repeatedly
                     } while (cursor != null)
                 }
 

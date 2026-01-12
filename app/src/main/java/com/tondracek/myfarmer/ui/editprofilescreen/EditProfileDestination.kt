@@ -8,6 +8,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import com.tondracek.myfarmer.R
+import com.tondracek.myfarmer.ui.auth.loginscreen.LoginRoute
 import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
@@ -23,7 +24,8 @@ fun NavGraphBuilder.editProfileDestination(
         viewmodel.effects.collect {
             when (it) {
                 EditProfileScreenEffect.GoBack -> navController.navigateUp()
-                EditProfileScreenEffect.OpenAuthScreen -> navController.navigate(Route.AuthScreenRoute)
+                EditProfileScreenEffect.GoToLogin -> navController.navigate(LoginRoute)
+
                 EditProfileScreenEffect.ShowSavedProfileMessage ->
                     appUiController.showSuccessMessage(profileSavedMessage)
 

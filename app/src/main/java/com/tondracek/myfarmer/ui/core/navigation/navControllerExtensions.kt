@@ -7,22 +7,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.toRoute
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 
 val navigationJson = Json {
     ignoreUnknownKeys = true
     encodeDefaults = true
 }
-
-fun NavController.getCurrentRoute(): Flow<Route?> = this
-    .currentBackStackEntryFlow
-    .map {
-        Route.getRouteClass(it)
-            ?.let { routeClass -> it.toRoute(routeClass) }
-    }
 
 @Composable
 fun NavController.isInNavGraph(navGraph: NavGraph): Boolean {

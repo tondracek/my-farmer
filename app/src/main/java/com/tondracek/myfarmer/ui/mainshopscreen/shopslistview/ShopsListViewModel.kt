@@ -59,7 +59,6 @@ class ShopsListViewModel @Inject constructor(
 
     private val userLocation: Flow<Location?> = getUserLocation()
         .distinctUntilChanged()
-        .getOrElse(null) { _effects.emit(ShopsListViewEffect.ShowError(it.userError)) }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val shops: Flow<PagingData<Shop>> = userLocation
@@ -134,9 +133,6 @@ class ShopsListViewModel @Inject constructor(
         _effects.emit(ShopsListViewEffect.OpenShopDetail(shopId))
     }
 
-    fun onBackClicked() = viewModelScope.launch {
-        _effects.emit(ShopsListViewEffect.OnBackClicked)
-    }
 }
 
 sealed interface ShopsListViewEffect {

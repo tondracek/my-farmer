@@ -24,7 +24,7 @@ class ApplyFiltersUC @Inject constructor(
         shops: List<Shop>,
         filters: ShopFilters,
     ): Flow<List<Shop>> = combine(
-        getUserLocationUC().getOrElse(null),
+        getUserLocationUC(),
         getAverageRatingsByShopUC().getOrElse(emptyMap()),
     ) { userLocation, ratings ->
         val distances: Map<ShopId, Distance?> = shops.associate {
@@ -43,7 +43,7 @@ class ApplyFiltersUC @Inject constructor(
         shops: List<Shop>,
         filters: ShopFilters,
     ): List<Shop> {
-        val userLocation = getUserLocationUC().getOrElse(null).first()
+        val userLocation = getUserLocationUC().first()
         val ratings = getAverageRatingsByShopUC().getOrElse(emptyMap()).first()
 
         val distances: Map<ShopId, Distance?> = shops.associate {

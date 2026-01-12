@@ -1,6 +1,7 @@
 package com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview
 
 import android.Manifest
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,6 +20,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -168,6 +170,15 @@ private fun MapboxShopMap(
             }
         }
     )
+
+    val context = LocalContext.current
+    LaunchedEffect(state.shops) {
+        Toast.makeText(
+            context,
+            "${state.shops.size} shops loaded",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
 
     LaunchedEffect(state.shops) {
         val mapboxMapView = mapboxMapView ?: return@LaunchedEffect

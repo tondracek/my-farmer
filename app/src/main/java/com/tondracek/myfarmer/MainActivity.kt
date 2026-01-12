@@ -13,7 +13,9 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.stefanoq21.material3.navigation.ModalBottomSheetLayout
 import com.stefanoq21.material3.navigation.rememberBottomSheetNavigator
-import com.tondracek.myfarmer.ui.authscreen.authScreenDestination
+import com.tondracek.myfarmer.ui.auth.loginscreen.loginDestination
+import com.tondracek.myfarmer.ui.auth.registrationscreen.RegistrationRoute
+import com.tondracek.myfarmer.ui.auth.registrationscreen.registrationDestination
 import com.tondracek.myfarmer.ui.common.scaffold.AppScaffold
 import com.tondracek.myfarmer.ui.core.appstate.AppUiController
 import com.tondracek.myfarmer.ui.core.navigation.NavGraph
@@ -74,8 +76,9 @@ class MainActivity : ComponentActivity() {
                                     editProfileDestination(navController)
                                 }
 
-                                navigation<NavGraph.MainFlow.Auth>(Route.AuthScreenRoute) {
-                                    authScreenDestination(navController)
+                                navigation<NavGraph.MainFlow.Auth>(RegistrationRoute) {
+                                    registrationDestination(navController, appUiController)
+                                    loginDestination(navController, appUiController)
                                 }
                             }
 

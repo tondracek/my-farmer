@@ -51,6 +51,9 @@ val myFarmerButtonColors
         }
     )
 
+@Composable
+fun Color.toButtonColors(): ButtonColors = MyFarmerTheme.buttonColors.custom(this)
+
 data class MyFarmerIconButtonColors(
     val base: IconButtonColors,
     val primary: IconButtonColors,

@@ -90,4 +90,15 @@
     <string name="price_label_input_hint">Any text - e.g., \"10 eur per kg\", \"5 eur per piece\"</string>
     <string name="could_not_open_the_link">Could not open the link: %1$s</string>
     <string name="retry">Retry</string>
+    <string name="email">Email</string>
+    <string name="register">Register</string>
+    <string name="registered_successfully_please_complete_your_profile">Registered successfully. Please complete your profile.</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="user_registration">User Registration</string>
+    <string name="user_login">User Login</string>
+    <string name="don_t_have_an_account_register_by_clicking_here">Don\'t have an account? Register by clicking here.</string>
+    <string name="already_have_an_account_login_by_clicking_here">Already have an account? Login by clicking here</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="login_successful">Login successful</string>
 </resources>
