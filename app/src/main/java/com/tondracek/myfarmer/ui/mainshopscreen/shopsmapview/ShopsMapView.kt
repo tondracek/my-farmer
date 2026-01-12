@@ -47,6 +47,8 @@ import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.map.mapbox.CLUSTER_LAYER_ID
 import com.tondracek.myfarmer.ui.common.map.mapbox.MapboxMapView
+import com.tondracek.myfarmer.ui.common.map.mapbox.PROP_ID
+import com.tondracek.myfarmer.ui.common.map.mapbox.PROP_POINT_COUNT
 import com.tondracek.myfarmer.ui.common.map.mapbox.SHOP_LAYER_ID
 import com.tondracek.myfarmer.ui.common.map.mapbox.SHOP_SOURCE_ID
 import com.tondracek.myfarmer.ui.common.map.mapbox.addShopLayers
@@ -230,10 +232,10 @@ private fun handleShopClick(
 
             when {
                 // CLUSTER CLICK
-                feature.hasProperty("point_count") -> zoomIntoCluster(mapboxMap, feature)
+                feature.hasProperty(PROP_POINT_COUNT) -> zoomIntoCluster(mapboxMap, feature)
 
                 // SHOP CLICK
-                else -> feature.getStringProperty("id")
+                else -> feature.getStringProperty(PROP_ID)
                     ?.let(ShopId::fromString)
                     ?.let(onShopSelected)
                     ?.also {

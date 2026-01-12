@@ -20,8 +20,8 @@ fun shopsToFeatureCollection(shops: Collection<ShopMapItem>): FeatureCollection 
                     shop.location.latitude
                 )
             ).apply {
-                addStringProperty("id", shop.id.toString())
-                addStringProperty("icon", iconId)
+                addStringProperty(PROP_ID, shop.id.toString())
+                addStringProperty(PROP_ICON, iconId)
             }
         }
     )

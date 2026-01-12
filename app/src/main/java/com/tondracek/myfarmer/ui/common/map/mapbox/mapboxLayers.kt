@@ -19,21 +19,26 @@ const val SHOP_LAYER_ID = "shop-points"
 const val CLUSTER_LAYER_ID = "clusters"
 const val CLUSTER_COUNT_LAYER_ID = "cluster-count"
 
+
+const val PROP_ID = "id"
+const val PROP_ICON = "icon"
+const val PROP_POINT_COUNT = "point_count"
+
 val clusterLayer = circleLayer(CLUSTER_LAYER_ID, SHOP_SOURCE_ID) {
-    filter(Expression.has("point_count"))
+    filter(Expression.has(PROP_POINT_COUNT))
     circleRadius(18.0)
     circleColor(Color(76, 175, 80).toArgb())
 }
 
 val countLayer = symbolLayer(CLUSTER_COUNT_LAYER_ID, SHOP_SOURCE_ID) {
-    filter(Expression.has("point_count"))
-    textField(Expression.get("point_count"))
+    filter(Expression.has(PROP_POINT_COUNT))
+    textField(Expression.get(PROP_POINT_COUNT))
     textSize(12.0)
 }
 
 val shopLayer = symbolLayer(SHOP_LAYER_ID, SHOP_SOURCE_ID) {
-    filter(Expression.not(Expression.has("point_count")))
-    iconImage(Expression.get("icon"))
+    filter(Expression.not(Expression.has(PROP_POINT_COUNT)))
+    iconImage(Expression.get(PROP_ICON))
     iconAllowOverlap(true)
     iconIgnorePlacement(true)
     iconAnchor(IconAnchor.BOTTOM)
