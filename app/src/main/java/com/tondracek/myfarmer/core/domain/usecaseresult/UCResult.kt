@@ -49,6 +49,7 @@ sealed interface UCResult<out T> {
     companion object {
 
         /**
+         * TODO: remove and use try-catch
          * Executes the given [block] and wraps its result into [UCResult].
          *
          * The [errorMappings] are evaluated ⚠️**in order**⚠️; the first matching exception
@@ -137,6 +138,9 @@ fun <T> Flow<UCResult<T>>.withFailure(
 
 inline fun <T, R> Flow<UCResult<T>>.mapFlow(crossinline transform: (T) -> R): Flow<UCResult<R>> =
     this.map { result -> result.mapSuccess(transform) }
+
+inline fun <T, R> Flow<UCResult<T>>.mapFlowUC(crossinline transform: (T) -> UCResult<R>): Flow<UCResult<R>> =
+    this.map { result -> result.mapFlatten(transform) }
 
 @OptIn(ExperimentalCoroutinesApi::class)
 fun <T, R> Flow<UCResult<T>>.flatMap(transform: suspend (T) -> Flow<UCResult<R>>): Flow<UCResult<R>> =

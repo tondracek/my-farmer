@@ -137,4 +137,8 @@
     <string name="password_must_contain_at_least_one_uppercase_letter">Password must contain at least one uppercase letter.</string>
     <string name="password_must_contain_at_least_one_lowercase_letter">Password must contain at least one lowercase letter.</string>
     <string name="passwords_do_not_match">Passwords do not match.</string>
+    <string name="you_have_already_submitted_a_review_for_this_shop">You have already submitted a review for this shop.</string>
+    <string name="you_are_not_the_author_of_this_review">You are not the author of this review.</string>
+    <string name="write_a_review">Write a review</string>
+    <string name="delete">Delete</string>
 </resources>

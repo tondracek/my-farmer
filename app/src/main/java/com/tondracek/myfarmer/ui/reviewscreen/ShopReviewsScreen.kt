@@ -1,10 +1,13 @@
 package com.tondracek.myfarmer.ui.reviewscreen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
@@ -23,6 +26,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.review.domain.model.ReviewInput
 import com.tondracek.myfarmer.shop.data.sampleReviewsUI
+import com.tondracek.myfarmer.ui.common.divider.CustomHorizontalDivider
 import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.common.paging.paginatedItems
@@ -67,15 +71,16 @@ private fun Content(
 
         ReviewsList(state)
 
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MyFarmerTheme.paddings.bottomButtons)
-                .align(Alignment.BottomCenter),
-            onClick = { showNewReviewBottomSheet = true }
-        ) {
-            Text("Write a review")
-        }
+        if (state.myReview == null)
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MyFarmerTheme.paddings.bottomButtons)
+                    .align(Alignment.BottomCenter),
+                onClick = { showNewReviewBottomSheet = true }
+            ) {
+                Text(stringResource(R.string.write_a_review))
+            }
     }
 
     if (showNewReviewBottomSheet) {
@@ -98,6 +103,20 @@ private fun ReviewsList(state: ShopReviewsScreenState.Success) {
         contentPadding = PaddingValues(bottom = MyFarmerTheme.paddings.xxL),
         verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
     ) {
+        item {
+            if (state.myReview != null)
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("My Review")
+                    ReviewCard(
+                        review = state.myReview,
+                        colors = MyFarmerTheme.cardColors.primary,
+                    )
+                    Spacer(Modifier.size(MyFarmerTheme.paddings.medium))
+                    CustomHorizontalDivider()
+                    Text("Other Reviews")
+                }
+        }
+
         paginatedItems(
             pagingItems = pagingItems,
             getKey = { it.id.value }
@@ -117,6 +136,7 @@ private fun ShopReviewsScreenPreview() {
         ShopReviewsScreen(
             state = ShopReviewsScreenState.Success(
                 shopName = "Sample Shop long long long long long long long long long long long long name",
+                myReview = sampleReviewsUI.first(),
                 reviews = flowOf(PagingData.from(sampleReviewsUI))
             ),
             onSubmitReview = {},
@@ -132,6 +152,7 @@ private fun ShopReviewsScreenPreviewSingleReview() {
         ShopReviewsScreen(
             state = ShopReviewsScreenState.Success(
                 shopName = "Sample Shop",
+                myReview = null,
                 reviews = flowOf(PagingData.from(listOf(sampleReviewsUI.first())))
             ),
             onSubmitReview = {},
@@ -147,6 +168,7 @@ private fun ShopReviewsScreenPreviewNoReview() {
         ShopReviewsScreen(
             state = ShopReviewsScreenState.Success(
                 shopName = "Sample Shop",
+                myReview = null,
                 reviews = flowOf(PagingData.from(emptyList()))
             ),
             onSubmitReview = {},

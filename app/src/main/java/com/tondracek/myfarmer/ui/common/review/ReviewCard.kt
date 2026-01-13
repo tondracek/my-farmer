@@ -23,6 +23,7 @@ import com.tondracek.myfarmer.shop.data.sampleReviews
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
+import com.tondracek.myfarmer.ui.common.button.DeleteButton
 import com.tondracek.myfarmer.ui.common.rating.RatingStars
 import com.tondracek.myfarmer.ui.common.user.UserPreviewCard
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
@@ -33,6 +34,7 @@ fun ReviewCard(
     modifier: Modifier = Modifier,
     review: ReviewUiState,
     colors: CardColors = MyFarmerTheme.cardColors.primary,
+    onDeleteClick: (() -> Unit)? = null,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -63,6 +65,14 @@ fun ReviewCard(
                     text = review.comment,
                     style = MyFarmerTheme.typography.textMedium
                 )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                if (onDeleteClick != null)
+                    DeleteButton(onClick = onDeleteClick)
+            }
         }
     }
 }
@@ -96,7 +106,8 @@ private fun ReviewCardPreview1() {
                 ),
                 rating = Rating(4),
                 comment = "Great service and friendly staff! Super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super long comment."
-            )
+            ),
+            onDeleteClick = {},
         )
     }
 }

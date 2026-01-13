@@ -44,6 +44,8 @@ fun DomainError.toUserFriendlyMessage(context: Context) = when (this) {
     is ReviewError.UpdateFailed -> context.getString(R.string.failed_to_update_review)
     is ReviewError.DeletionFailed -> context.getString(R.string.failed_to_delete_review)
     is ReviewError.FetchingFailed -> context.getString(R.string.failed_to_fetch_reviews)
+    ReviewError.AlreadyExists -> context.getString(R.string.you_have_already_submitted_a_review_for_this_shop)
+    ReviewError.NotAuthor -> context.getString(R.string.you_are_not_the_author_of_this_review)
     is ReviewError.NotFound -> context.getString(R.string.review_not_found)
     is ReviewError.Unknown -> context.getString(R.string.an_unknown_review_error_occurred)
 

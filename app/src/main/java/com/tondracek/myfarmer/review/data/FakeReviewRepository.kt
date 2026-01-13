@@ -2,10 +2,12 @@ package com.tondracek.myfarmer.review.data
 
 import com.tondracek.myfarmer.core.domain.domainerror.ReviewError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultNonNull
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.review.domain.repository.ReviewRepository
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -73,4 +75,12 @@ class FakeReviewRepository : ReviewRepository {
 
         return UCResult.Success(pagedItems)
     }
+
+    override fun getUserReviewOnShop(
+        shopId: ShopId,
+        userId: UserId
+    ): Flow<UCResult<Review>> = combine(items.values) { values ->
+        values.firstOrNull { it.shopId == shopId && it.userId == userId }
+    }.toUCResultNonNull(ReviewError.NotFound, ReviewError.FetchingFailed)
+
 }

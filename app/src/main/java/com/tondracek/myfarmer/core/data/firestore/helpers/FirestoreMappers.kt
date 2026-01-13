@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.core.data.firestore.helpers
 
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
@@ -9,6 +10,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import kotlin.reflect.KClass
+
+
+fun <E> Query.applyIfNotNull(value: E?, block: Query.(E) -> Query): Query =
+    value?.let { block(it) } ?: this
 
 fun <Entity : FirestoreEntity> DocumentSnapshot.toObjectWithId(entityClass: KClass<Entity>): Entity? {
     return this.toObject(entityClass.java)
@@ -20,6 +25,10 @@ fun <Entity : FirestoreEntity> QuerySnapshot.toObjectsWithId(entityClass: KClass
         doc.toObjectWithId(entityClass)
     }
 }
+
+suspend fun <Entity : FirestoreEntity> DocumentReference.getEntity(
+    entityClass: KClass<Entity>,
+) = this.get().await().toObjectWithId(entityClass)
 
 suspend fun <Entity : FirestoreEntity> Query.getEntities(
     entityClass: KClass<Entity>,

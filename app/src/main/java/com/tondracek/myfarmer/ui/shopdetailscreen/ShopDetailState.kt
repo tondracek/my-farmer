@@ -1,7 +1,6 @@
 package com.tondracek.myfarmer.ui.shopdetailscreen
 
 import com.tondracek.myfarmer.common.image.model.ImageResource
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
@@ -27,8 +26,6 @@ sealed interface ShopDetailState {
         val reviewsPreview: List<ReviewUiState>,
         val averageRating: Rating,
     ) : ShopDetailState
-
-    data class Error(val result: UCResult.Failure) : ShopDetailState
 
     data object Loading : ShopDetailState
 }

@@ -1,12 +1,13 @@
 package com.tondracek.myfarmer.review.data
 
 import com.google.firebase.Firebase
-import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.snapshots
 import com.tondracek.myfarmer.core.data.firestore.FirestoreCollectionNames
-import com.tondracek.myfarmer.core.data.firestore.helpers.FirestoreCrudHelper
-import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetPaginatedFilteredByField
+import com.tondracek.myfarmer.core.data.firestore.helpers.applyIfNotNull
+import com.tondracek.myfarmer.core.data.firestore.helpers.getEntities
 import com.tondracek.myfarmer.core.data.firestore.helpers.getEntitiesFlow
+import com.tondracek.myfarmer.core.data.firestore.helpers.mapToDomain
 import com.tondracek.myfarmer.core.domain.domainerror.ReviewError
 import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
@@ -17,28 +18,39 @@ import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.review.domain.repository.ReviewRepository
 import com.tondracek.myfarmer.shop.data.toFirestoreId
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.systemuser.data.toFirestoreId
+import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+
+private class ReviewAlreadyExistsException : Exception()
+
+private class ReviewNotFoundException : Exception()
 
 class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
 
     private val firestore = Firebase.firestore
-    private val collection = firestore.collection(FirestoreCollectionNames.REVIEW)
 
-    private val helper = FirestoreCrudHelper(
-        collection = collection,
-        entityClass = ReviewEntity::class,
-    )
+    private fun reviewsCollection(shopId: ShopId) =
+        firestore
+            .collection(FirestoreCollectionNames.SHOP)
+            .document(shopId.toFirestoreId())
+            .collection("reviews")
+
+    private fun reviewsCollection(shopId: ShopId, userId: UserId) =
+        reviewsCollection(shopId)
+            .document(userId.toFirestoreId())
+
+    private fun allReviewsCollection() =
+        firestore.collectionGroup("reviews")
 
     override fun getShopReviews(
         shopId: ShopId,
         limit: Int?,
-    ): Flow<UCResult<List<Review>>> = collection
-        .whereEqualTo(FieldPath.of(ReviewEntity::shopId.name), shopId.toFirestoreId())
-        .let { query ->
-            limit?.let { query.limit(it.toLong()) } ?: query
-        }
+    ): Flow<UCResult<List<Review>>> = reviewsCollection(shopId)
+        .applyIfNotNull(limit) { this.limit(it.toLong()) }
         .getEntitiesFlow(ReviewEntity::class)
         .mapToModelList()
         .toUCResult(ReviewError.FetchingFailed)
@@ -47,46 +59,79 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
         shopId: ShopId,
         limit: Int,
         after: ReviewId?
-    ): UCResult<List<Review>> =
-        UCResult.of(ReviewError.FetchingFailed) {
-            firestoreGetPaginatedFilteredByField(
-                collection = collection,
-                entityClass = ReviewEntity::class,
-                field = FieldPath.of(ReviewEntity::shopId.name),
-                value = shopId.toFirestoreId(),
-                limit = limit,
-                after = after.toFirestoreId(),
-            ).map { it.toModel() }
-        }
+    ): UCResult<List<Review>> = UCResult.of(ReviewError.FetchingFailed) {
+        reviewsCollection(shopId)
+            .applyIfNotNull(after) { id -> this.startAfter(id.toFirestoreId()) }
+            .limit(limit.toLong())
+            .getEntities(ReviewEntity::class)
+            .map { it.toModel() }
+    }
 
-    override suspend fun create(item: Review): UCResult<ReviewId> =
-        UCResult.of(ReviewError.CreationFailed) {
-            helper.create(item.toEntity()).toReviewId()
-        }
+    override fun getUserReviewOnShop(
+        shopId: ShopId,
+        userId: UserId
+    ): Flow<UCResult<Review>> =
+        reviewsCollection(shopId, userId)
+            .snapshots()
+            .mapToDomain(ReviewEntity::class) { it.toModel() }
+            .toUCResultNonNull(ReviewError.NotFound, ReviewError.FetchingFailed)
+
+    override suspend fun create(item: Review): UCResult<ReviewId> = try {
+        firestore.runTransaction { tx ->
+            val docRef = reviewsCollection(item.shopId, item.userId)
+
+            if (tx.get(docRef).exists())
+                throw ReviewAlreadyExistsException()
+
+            tx.set(docRef, item.toEntity())
+        }.await()
+
+        UCResult.Success(item.id)
+    } catch (e: ReviewAlreadyExistsException) {
+        UCResult.Failure(ReviewError.AlreadyExists, e)
+    } catch (e: Exception) {
+        UCResult.Failure(ReviewError.CreationFailed, e)
+    }
 
     override suspend fun update(item: Review): UCResult<Unit> =
         UCResult.of(ReviewError.UpdateFailed) {
-            helper.update(item.toEntity())
+            reviewsCollection(item.shopId, item.userId)
+                .set(item.toEntity())
+                .await()
         }
 
     override suspend fun delete(id: ReviewId): UCResult<Unit> =
         UCResult.of(ReviewError.DeletionFailed) {
-            helper.delete(id.toFirestoreId())
+            val entity = allReviewsCollection()
+                .whereEqualTo(ReviewEntity::id.name, id.toFirestoreId())
+                .getEntities(ReviewEntity::class)
+                .firstOrNull()
+                ?: return UCResult.Failure(ReviewError.NotFound)
+
+
+            reviewsCollection(
+                ShopId.fromString(entity.shopId),
+                UserId.fromString(entity.userId)
+            )
+                .delete()
+                .await()
         }
 
     override fun getById(id: ReviewId): Flow<UCResult<Review>> =
-        helper.getById(id.toFirestoreId())
-            .mapToModel()
+        allReviewsCollection()
+            .whereEqualTo(ReviewEntity::id.name, id.toFirestoreId())
+            .getEntitiesFlow(ReviewEntity::class)
+            .mapToModelList()
+            .map { it.firstOrNull() }
             .toUCResultNonNull(ReviewError.NotFound, ReviewError.FetchingFailed)
 
+
     override fun getAll(): Flow<UCResult<List<Review>>> =
-        helper.getAll()
+        allReviewsCollection()
+            .getEntitiesFlow(ReviewEntity::class)
             .mapToModelList()
             .toUCResult(ReviewError.FetchingFailed)
 }
-
-private fun Flow<ReviewEntity?>.mapToModel(): Flow<Review?> =
-    this.map { reviewEntity -> reviewEntity?.toModel() }
 
 private fun Flow<List<ReviewEntity>>.mapToModelList(): Flow<List<Review>> =
     this.map { userEntities ->

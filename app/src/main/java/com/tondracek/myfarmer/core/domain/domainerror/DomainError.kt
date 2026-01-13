@@ -53,6 +53,8 @@ sealed interface ReviewError : DomainError {
 
     data object FetchingFailed : ReviewError
     data object NotFound : ReviewError
+    data object AlreadyExists : ReviewError
+    data object NotAuthor : ReviewError
 
     data object Unknown : ReviewError
 }
