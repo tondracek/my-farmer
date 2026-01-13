@@ -21,26 +21,30 @@ class CreateShopUC @Inject constructor(
     private val photoStorage: PhotoStorage,
 ) {
 
-    suspend operator fun invoke(input: ShopInput): UCResult<Unit> =
-        UCResult.of("An Error occurred while creating the shop.") {
-            val user = getLoggedInUser().first().getOrReturn { return it }
+    suspend operator fun invoke(input: ShopInput): UCResult<Unit> {
+        val user = getLoggedInUser().first()
+            .getOrReturn { return it }
 
-            val shop: Shop = input
-                .toShop(shopId = ShopId.newId(), ownerId = user.id)
-                .getOrReturn { return it }
-            shopRepository.create(shop)
+        val shop: Shop = input
+            .toShop(shopId = ShopId.newId(), ownerId = user.id)
+            .getOrReturn { return it }
 
-            val shopWithPhotos = shop.updatePhotos(shop.id)
-            shopRepository.update(shopWithPhotos)
-        }
+        shopRepository.create(shop)
+            .getOrReturn { return it }
+
+        val shopWithPhotos = shop.updatePhotos(shop.id)
+            .getOrReturn { return it }
+
+        return shopRepository.update(shopWithPhotos)
+    }
 
     /**
      * - Uploads the photos for the shop
      * - retrieves their newly generated URLs
      * - updates the shop with the new photo URLs
      */
-    private suspend fun Shop.updatePhotos(shopId: ShopId): Shop = this.copy(
-        images = this.images
+    private suspend fun Shop.updatePhotos(shopId: ShopId): UCResult<Shop> {
+        val newImages = this.images
             .map { UUID.randomUUID().toString() to it }
             .let {
                 photoStorage.uploadPhotos(
@@ -49,5 +53,9 @@ class CreateShopUC @Inject constructor(
                     quality = Quality.FULL_HD,
                 )
             }
-    )
+            .getOrReturn { return it }
+
+        return this.copy(images = newImages)
+            .let { UCResult.Success(it) }
+    }
 }

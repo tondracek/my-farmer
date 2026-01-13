@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.core.domain.repository
 
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -16,13 +17,13 @@ import kotlinx.coroutines.flow.Flow
  */
 interface Repository<Model, ModelId> {
 
-    suspend fun create(item: Model): ModelId
+    suspend fun create(item: Model): UCResult<ModelId>
 
-    suspend fun update(item: Model)
+    suspend fun update(item: Model): UCResult<Unit>
 
-    suspend fun delete(id: ModelId)
+    suspend fun delete(id: ModelId): UCResult<Unit>
 
-    fun getById(id: ModelId): Flow<Model?>
+    fun getById(id: ModelId): Flow<UCResult<Model>>
 
-    fun getAll(): Flow<List<Model>>
+    fun getAll(): Flow<UCResult<List<Model>>>
 }

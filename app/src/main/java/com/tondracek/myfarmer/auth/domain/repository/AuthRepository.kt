@@ -1,17 +1,28 @@
 package com.tondracek.myfarmer.auth.domain.repository
 
 import com.tondracek.myfarmer.auth.domain.model.AuthId
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
-    suspend fun loginUser(email: String, password: String)
-    suspend fun loginWithGoogle(idToken: String)
+    suspend fun loginUser(
+        email: String,
+        password: String
+    ): UCResult<Unit>
 
-    suspend fun registerUser(email: String, password: String)
+    suspend fun loginWithGoogle(
+        idToken: String
+    ): UCResult<Unit>
 
-    fun signOut()
+    suspend fun registerUser(
+        email: String,
+        password: String
+    ): UCResult<Unit>
 
-    fun getCurrentUserAuthId(): Flow<AuthId?>
-    fun isLoggedIn(): Flow<Boolean>
+    fun signOut(): UCResult<Unit>
+
+    fun getCurrentUserAuthId(): Flow<UCResult<AuthId?>>
+
+    fun isLoggedIn(): Flow<UCResult<Boolean>>
 }

@@ -2,15 +2,13 @@ package com.tondracek.myfarmer.auth.domain.usecase
 
 import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.auth.domain.repository.AuthRepository
-import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
+import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.flatMap
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.repository.UserRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
@@ -22,29 +20,25 @@ import javax.inject.Inject
 class GetLoggedInUserUC @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
-) : () -> Flow<UCResult<SystemUser>> {
+) {
 
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override operator fun invoke(): Flow<UCResult<SystemUser>> =
-        authRepository.getCurrentUserAuthId().flatMapLatest { firebaseId ->
+    operator fun invoke(): Flow<UCResult<SystemUser>> =
+        authRepository.getCurrentUserAuthId().flatMap { firebaseId ->
             when (firebaseId == null) {
-                true -> flowOf(NotLoggedInUCResult())
+                true -> flowOf(UCResult.Failure(AuthError.NotLoggedIn))
                 false -> getOrCreateSystemUser(firebaseId)
             }
         }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun getOrCreateSystemUser(authId: AuthId): Flow<UCResult<SystemUser>> =
-        userRepository.getUserByAuthId(authId).flatMapLatest { user ->
+        userRepository.getUserByAuthId(authId).flatMap { user ->
             when (user == null) {
                 true -> SystemUser.createEmpty(authId)
                     .let { userRepository.create(it) }
-                    .let { userRepository.getById(it) }
-                    .filterNotNull()
-                    .toUCResult("Could not create a new SystemUser.")
+                    .flatMap { userRepository.getById(it) }
+                    .filter { it is UCResult.Success }
 
-                false -> flowOf(user).toUCResult()
+                false -> flowOf(UCResult.Success(user))
             }
         }
 }

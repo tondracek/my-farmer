@@ -1,7 +1,10 @@
 package com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview
 
 import android.Manifest
-import android.widget.Toast
+import android.content.Context
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,9 +23,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -57,15 +64,28 @@ import com.tondracek.myfarmer.ui.common.map.mapbox.addShopLayers
 import com.tondracek.myfarmer.ui.common.map.mapbox.shopsToFeatureCollection
 import com.tondracek.myfarmer.ui.common.map.mapbox.toStyleIconId
 import com.tondracek.myfarmer.ui.common.map.marker.ShopMarkerIconLoader
+import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.math.max
+import kotlin.reflect.KClass
+
+@Composable
+fun <R : Route> rememberIsLeaving(
+    navController: NavHostController,
+    currentRoute: KClass<R>,
+): Boolean {
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    return backStackEntry?.destination?.hasRoute(currentRoute) == false
+}
+
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ShopsMapView(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     state: ShopsMapViewState,
     onShopSelected: (ShopId) -> Unit,
 ) {
@@ -83,16 +103,19 @@ fun ShopsMapView(
     var mapboxMap by remember { mutableStateOf<MapboxMap?>(null) }
 
     Box(modifier = modifier) {
-        MapboxShopMap(
-            state = state,
-            onShopSelected = onShopSelected,
-            mapboxMapView = mapboxMapView,
-            mapboxMap = mapboxMap,
-            mapViewReadyCallback = { mapView, map ->
-                mapboxMapView = mapView
-                mapboxMap = map
-            }
-        )
+        FadingOverlay(navController) {
+            MapboxShopMap(
+                state = state,
+                onShopSelected = onShopSelected,
+                mapboxMapView = mapboxMapView,
+                mapboxMap = mapboxMap,
+                mapViewReadyCallback = { mapView, map ->
+                    mapboxMapView = mapView
+                    mapboxMap = map
+                }
+            )
+        }
+
         Surface(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -134,6 +157,34 @@ fun ShopsMapView(
 }
 
 @Composable
+fun FadingOverlay(
+    navController: NavHostController,
+    content: @Composable () -> Unit
+) {
+    val isLeaving = rememberIsLeaving(
+        navController,
+        Route.MainShopsRoute::class,
+    )
+
+    val alpha by animateFloatAsState(
+        targetValue = if (isLeaving) 0f else 1f,
+        animationSpec = tween(
+            durationMillis = 300,
+            easing = FastOutLinearInEasing
+        ),
+        label = "fadeOut"
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .graphicsLayer { this.alpha = alpha }
+    ) {
+        content()
+    }
+}
+
+@Composable
 private fun MapboxShopMap(
     modifier: Modifier = Modifier,
     state: ShopsMapViewState,
@@ -171,38 +222,37 @@ private fun MapboxShopMap(
         }
     )
 
-    val context = LocalContext.current
-    LaunchedEffect(state.shops) {
-        Toast.makeText(
-            context,
-            "${state.shops.size} shops loaded",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-
-    LaunchedEffect(state.shops) {
+    LaunchedEffect(mapboxMapView, state.shops) {
         val mapboxMapView = mapboxMapView ?: return@LaunchedEffect
 
         mapboxMap?.getStyle { style ->
             val context = mapboxMapView.context
 
             coroutineScope.launch {
-                state.shops
-                    .map { it.icon }
-                    .distinct()
-                    .forEach { icon ->
-                        val imageId = icon.toStyleIconId()
-
-                        if (!style.hasStyleImage(imageId)) {
-                            val bitmap = ShopMarkerIconLoader.get(icon, context)
-                            style.addImage(imageId, bitmap)
-                        }
-                    }
+                loadShopImages(context, style, state.shops)
 
                 updateShopSource(style, state.shops)
             }
         }
     }
+}
+
+private suspend fun loadShopImages(
+    context: Context,
+    style: Style,
+    shops: Collection<ShopMapItem>
+) {
+    shops
+        .map { it.icon }
+        .distinct()
+        .forEach { icon ->
+            val imageId = icon.toStyleIconId()
+
+            if (!style.hasStyleImage(imageId)) {
+                val bitmap = ShopMarkerIconLoader.get(icon, context)
+                style.addImage(imageId, bitmap)
+            }
+        }
 }
 
 fun updateShopSource(
@@ -334,6 +384,7 @@ private fun ShopsMapViewPreview() {
     MyFarmerTheme {
         ShopsMapView(
             state = ShopsMapViewState(),
+            navController = NavHostController(LocalContext.current),
             onShopSelected = {},
             modifier = Modifier.fillMaxSize(),
         )

@@ -50,7 +50,7 @@ fun NavGraphBuilder.loginDestination(
                 navController.navigate(Route.EditProfileScreenRoute)
 
             is LoginEffect.ShowError ->
-                appUiController.showErrorMessage(effect.message)
+                appUiController.showError(effect.error)
 
             LoginEffect.ShowLoginSuccessfully ->
                 appUiController.showSuccessMessage(loginSuccessfullyMessage)

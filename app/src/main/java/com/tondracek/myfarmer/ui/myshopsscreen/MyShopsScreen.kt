@@ -16,11 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.ShopId
-import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -34,7 +32,6 @@ fun MyShopsScreen(
     onUpdateShopClick: (shopId: ShopId) -> Unit,
     onDeleteShopClick: (shopId: ShopId) -> Unit,
     onCreateShopClick: () -> Unit,
-    onNavigateBack: () -> Unit,
 ) {
     when (state) {
         is MyShopsState.Success -> SuccessScreen(
@@ -47,10 +44,6 @@ fun MyShopsScreen(
         )
 
         is MyShopsState.Loading -> LoadingLayout(modifier = modifier)
-        is MyShopsState.Error -> ErrorLayout(
-            failure = state.failure,
-            onNavigateBack = onNavigateBack
-        )
     }
 }
 
@@ -107,7 +100,6 @@ private fun MyShopsScreenSuccessPreview() {
             onUpdateShopClick = {},
             onDeleteShopClick = {},
             onCreateShopClick = {},
-            onNavigateBack = {},
         )
     }
 }
@@ -122,22 +114,6 @@ private fun MyShopsScreenLoadingPreview() {
             onUpdateShopClick = {},
             onDeleteShopClick = {},
             onCreateShopClick = {},
-            onNavigateBack = {},
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun MyShopsScreenErrorPreview() {
-    MyFarmerPreview {
-        MyShopsScreen(
-            state = MyShopsState.Error(NotLoggedInUCResult()),
-            onShopClick = {},
-            onUpdateShopClick = {},
-            onDeleteShopClick = {},
-            onCreateShopClick = {},
-            onNavigateBack = {},
         )
     }
 }

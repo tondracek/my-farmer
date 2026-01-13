@@ -1,6 +1,7 @@
 package com.tondracek.myfarmer.ui.auth.registrationscreen.components
 
 import android.util.Patterns
+import com.tondracek.myfarmer.core.domain.domainerror.ValidationError
 
 
 data class RegistrationInput(
@@ -18,9 +19,9 @@ data class RegistrationInput(
 }
 
 data class RegistrationValidation(
-    val emailError: String? = null,
-    val passwordError: String? = null,
-    val confirmPasswordError: String? = null,
+    val emailError: ValidationError? = null,
+    val passwordError: ValidationError? = null,
+    val confirmPasswordError: ValidationError? = null,
 ) {
 
     fun isValid() = this == Valid
@@ -44,25 +45,25 @@ fun validateInput(registrationInput: RegistrationInput): RegistrationValidation 
 }
 
 
-private fun validateEmail(email: String): String? =
+private fun validateEmail(email: String): ValidationError? =
     when (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
         true -> null
-        false -> "Invalid email address."
+        false -> ValidationError.InvalidEmailFormat
     }
 
-private fun validatePassword(password: String): String? {
+private fun validatePassword(password: String): ValidationError? {
     // Minimum length check
-    if (password.length < 6) return "Password must be at least 6 characters long."
+    if (password.length < 6) return ValidationError.PasswordMustBeAtLeast6Chars
     // Uppercase letter check
-    if (!password.any { it.isUpperCase() }) return "Password must contain at least one uppercase letter."
+    if (!password.any { it.isUpperCase() }) return ValidationError.PasswordMustContainUppercaseLetter
     // Lowercase letter check
-    if (!password.any { it.isLowerCase() }) return "Password must contain at least one lowercase letter."
+    if (!password.any { it.isLowerCase() }) return ValidationError.PasswordMustContainLowercaseLetter
 
     return null
 }
 
-private fun validateConfirmPassword(password: String, confirmPassword: String): String? =
+private fun validateConfirmPassword(password: String, confirmPassword: String): ValidationError? =
     when (password == confirmPassword) {
         true -> null
-        false -> "Passwords do not match."
+        false -> ValidationError.PasswordsDoNotMatch
     }

@@ -48,7 +48,7 @@ class UpdateShopViewModel @Inject constructor(
         val result = updateShop(shopId = shopId, input = shopInput)
         when (result) {
             is UCResult.Success -> _effects.emit(CreateUpdateShopFlowEffect.ShowShopUpdatedSuccessfully)
-            is UCResult.Failure -> _effects.emit(CreateUpdateShopFlowEffect.ShowError(message = result.userError))
+            is UCResult.Failure -> _effects.emit(CreateUpdateShopFlowEffect.ShowError(result.error))
         }
         navigateBack()
     }

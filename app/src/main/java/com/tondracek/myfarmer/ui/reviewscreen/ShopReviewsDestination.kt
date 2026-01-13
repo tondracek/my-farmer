@@ -26,7 +26,7 @@ fun NavGraphBuilder.shopReviewsScreenDestination(
         viewmodel.effects.collect { event ->
             when (event) {
                 is ShopReviewsEffect.NavigateBack -> navController.navigateUp()
-                is ShopReviewsEffect.ShowError -> appUiController.showErrorMessage(event.message)
+                is ShopReviewsEffect.ShowError -> appUiController.showError(event.error)
             }
         }
     }

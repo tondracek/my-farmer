@@ -3,6 +3,7 @@ package com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLngBounds
+import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
 import com.tondracek.myfarmer.location.model.Location
@@ -87,7 +88,6 @@ class ShopsMapViewModel @Inject constructor(
                             send(shops.toList())
                             cursor = nextCursor
                         }
-                        // TODO: shops are loading repeatedly
                     } while (cursor != null)
                 }
 
@@ -162,12 +162,9 @@ class ShopsMapViewModel @Inject constructor(
     val effects: SharedFlow<ShopsMapViewEffect> = _effects
 
     private fun <T> Flow<UCResult<T>>.getOrEmitError(defaultValue: T): Flow<T> = map { result ->
-        result.getOrElse {
-            viewModelScope.launch {
-                _effects.emit(ShopsMapViewEffect.ShowError(it.userError))
-            }
-            defaultValue
-        }
+        result
+            .withFailure { _effects.emit(ShopsMapViewEffect.ShowError(it.error)) }
+            .getOrElse(defaultValue)
     }
 }
 
@@ -175,5 +172,5 @@ sealed interface ShopsMapViewEffect {
 
     data class OpenShopDetail(val shopId: ShopId) : ShopsMapViewEffect
 
-    data class ShowError(val message: String) : ShopsMapViewEffect
+    data class ShowError(val error: DomainError) : ShopsMapViewEffect
 }

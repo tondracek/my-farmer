@@ -53,7 +53,7 @@ fun NavGraphBuilder.registrationDestination(
                 navController.navigate(Route.EditProfileScreenRoute)
 
             is RegistrationEffect.ShowError ->
-                appUiController.showErrorMessage(effect.message)
+                appUiController.showError(effect.error)
 
             RegistrationEffect.ShowRegisteredSuccessfully -> {
                 appUiController.showSuccessMessage(registeredSuccessfullyMessage)

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewId
@@ -23,6 +24,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -42,7 +44,10 @@ class ShopReviewsViewModel @Inject constructor(
     val shop: Flow<UCResult<Shop>> = getShopById(shopId)
 
     private val _reviewsWithAuthors: Flow<PagingData<Pair<Review, SystemUser>>> =
-        getUCResultPageFlow<ReviewId, Pair<Review, SystemUser>>({ (review, _) -> review.id }) { limit, after ->
+        getUCResultPageFlow<ReviewId, Pair<Review, SystemUser>>(
+            getDataKey = { (review, _) -> review.id },
+            showError = { _effects.emit(ShopReviewsEffect.ShowError(it)) },
+        ) { limit, after ->
             getShopReviewsWithAuthorsUC.paged(
                 shopId = shopId,
                 limit = limit,
@@ -71,7 +76,7 @@ class ShopReviewsViewModel @Inject constructor(
         }
         .stateIn(
             scope = viewModelScope,
-            started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5_000),
+            started = SharingStarted.WhileSubscribed(5_000),
             initialValue = ShopReviewsScreenState.Loading
         )
 
@@ -93,5 +98,5 @@ class ShopReviewsViewModel @Inject constructor(
 sealed interface ShopReviewsEffect {
     object NavigateBack : ShopReviewsEffect
 
-    data class ShowError(val message: String) : ShopReviewsEffect
+    data class ShowError(val error: DomainError) : ShopReviewsEffect
 }

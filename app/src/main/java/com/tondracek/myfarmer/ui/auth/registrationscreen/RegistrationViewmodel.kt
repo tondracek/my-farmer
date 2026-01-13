@@ -3,6 +3,7 @@ package com.tondracek.myfarmer.ui.auth.registrationscreen
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.auth.domain.usecase.LoginWithGoogleUC
 import com.tondracek.myfarmer.auth.domain.usecase.RegisterUserUC
+import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.ui.auth.registrationscreen.components.RegistrationInput
 import com.tondracek.myfarmer.ui.auth.registrationscreen.components.RegistrationValidation
@@ -65,7 +66,7 @@ class RegistrationViewmodel @Inject constructor(
                 emitEffect(RegistrationEffect.GoToProfileScreen)
             }
 
-            is UCResult.Failure -> emitEffect(RegistrationEffect.ShowError(result.userError))
+            is UCResult.Failure -> emitEffect(RegistrationEffect.ShowError(result.error))
         }
     }
 
@@ -77,7 +78,7 @@ class RegistrationViewmodel @Inject constructor(
                 emitEffect(RegistrationEffect.GoToProfileScreen)
             }
 
-            is UCResult.Failure -> emitEffect(RegistrationEffect.ShowError(result.userError))
+            is UCResult.Failure -> emitEffect(RegistrationEffect.ShowError(result.error))
         }
     }
 
@@ -152,7 +153,7 @@ sealed interface RegistrationEffect {
     data object LaunchGoogleSignIn : RegistrationEffect
 
 
-    data class ShowError(val message: String) : RegistrationEffect
+    data class ShowError(val error: DomainError) : RegistrationEffect
     data object ShowRegisteredSuccessfully : RegistrationEffect
     data object ShowLoggedInSuccessfully : RegistrationEffect
 }

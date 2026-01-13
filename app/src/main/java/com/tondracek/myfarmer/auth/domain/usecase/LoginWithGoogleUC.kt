@@ -11,7 +11,5 @@ class LoginWithGoogleUC @Inject constructor(
     suspend operator fun invoke(
         idToken: String,
     ): UCResult<Unit> =
-        UCResult.of("Failed to sign in with Google.") {
-            authRepository.loginWithGoogle(idToken)
-        }
+        authRepository.loginWithGoogle(idToken)
 }

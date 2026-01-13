@@ -1,6 +1,7 @@
 package com.tondracek.myfarmer.ui.auth.loginscreen.components
 
 import android.util.Patterns
+import com.tondracek.myfarmer.core.domain.domainerror.ValidationError
 
 data class LoginInput(
     val email: String,
@@ -15,8 +16,8 @@ data class LoginInput(
 }
 
 data class LoginValidation(
-    val emailError: String? = null,
-    val passwordError: String? = null,
+    val emailError: ValidationError? = null,
+    val passwordError: ValidationError? = null,
 ) {
 
     companion object {
@@ -28,7 +29,7 @@ data class LoginValidation(
 
 fun validateInput(loginInput: LoginInput): LoginValidation {
     val emailResult = validateEmail(loginInput.email)
-    val passwordResult = validatePassword(loginInput.password)
+    val passwordResult = null
 
     return LoginValidation(
         emailError = emailResult,
@@ -37,19 +38,8 @@ fun validateInput(loginInput: LoginInput): LoginValidation {
 }
 
 
-private fun validateEmail(email: String): String? =
+private fun validateEmail(email: String): ValidationError? =
     when (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
         true -> null
-        false -> "Invalid email address."
+        false -> ValidationError.InvalidEmailFormat
     }
-
-private fun validatePassword(password: String): String? {
-    // Minimum length check
-    if (password.length < 6) return "Password must be at least 6 characters long."
-    // Uppercase letter check
-    if (!password.any { it.isUpperCase() }) return "Password must contain at least one uppercase letter."
-    // Lowercase letter check
-    if (!password.any { it.isLowerCase() }) return "Password must contain at least one lowercase letter."
-
-    return null
-}

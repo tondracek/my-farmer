@@ -10,6 +10,9 @@ import androidx.core.net.toUri
 import androidx.exifinterface.media.ExifInterface
 import com.google.firebase.storage.FirebaseStorage
 import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.core.domain.domainerror.PhotoError
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultList
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -29,10 +32,12 @@ class PhotoStorageImpl @Inject constructor(
         name: String,
         folder: PhotoStorageFolder,
         quality: Quality,
-    ): ImageResource {
-        val localUri = imageResource.uri ?: return ImageResource.EMPTY
+    ): UCResult<ImageResource> = UCResult.of(PhotoError.UploadFailed) {
+        val localUri = imageResource.uri
+            ?: return UCResult.Success(ImageResource.EMPTY)
 
-        val bitmap = loadBitmapFromUri(localUri.toUri()) ?: return ImageResource.EMPTY
+        val bitmap = loadBitmapFromUri(localUri.toUri())
+            ?: return UCResult.Failure(PhotoError.UploadFailed)
         val resizedBitmap = resizeBitmapForQuality(bitmap, quality)
         val bytes = compressBitmap(resizedBitmap)
 
@@ -45,14 +50,14 @@ class PhotoStorageImpl @Inject constructor(
         ref.putBytes(bytes).await()
 
         Timber.d("Photo uploaded to $storagePath")
-        return ImageResource(ref.path)
+        ImageResource(ref.path)
     }
 
     override suspend fun uploadPhotos(
         imageResources: Collection<Pair<String, ImageResource>>,
         folder: PhotoStorageFolder,
         quality: Quality,
-    ): List<ImageResource> = coroutineScope {
+    ): UCResult<List<ImageResource>> = coroutineScope {
         imageResources.map {
             async {
                 uploadPhoto(
@@ -62,12 +67,15 @@ class PhotoStorageImpl @Inject constructor(
                     quality = quality
                 )
             }
-        }.awaitAll()
+        }.awaitAll().toUCResultList()
     }
 
-    override suspend fun deletePhoto(imageResource: ImageResource) {
+    override suspend fun deletePhoto(imageResource: ImageResource): UCResult<Unit> = UCResult.of(
+        PhotoError.DeletionFailed
+    ) {
         if (!imageResource.isFirebaseStoragePath())
-            return Timber.d("ImageResource $imageResource is not a Firebase Storage path, skipping deletion.")
+            return UCResult.Success(Unit)
+                .also { Timber.d("ImageResource $imageResource is not a Firebase Storage path, skipping deletion.") }
 
         imageResource.uri
             ?.runCatching {
@@ -79,16 +87,20 @@ class PhotoStorageImpl @Inject constructor(
             }
             ?.onFailure {
                 Timber.e(it, "Failed to delete photo at ${imageResource.uri}")
+                throw it
             } ?: Timber.e("Photo path is null for imageResource: $imageResource")
     }
 
-    override suspend fun deletePhotos(imageResources: Collection<ImageResource>) {
-        coroutineScope {
-            imageResources.map { imageResource ->
-                async { deletePhoto(imageResource) }
-            }.awaitAll()
+    override suspend fun deletePhotos(imageResources: Collection<ImageResource>): UCResult<Unit> =
+        UCResult.of(
+            PhotoError.DeletionFailed
+        ) {
+            coroutineScope {
+                imageResources.map { imageResource ->
+                    async { deletePhoto(imageResource) }
+                }.awaitAll()
+            }
         }
-    }
 
     /* HELPERS */
 

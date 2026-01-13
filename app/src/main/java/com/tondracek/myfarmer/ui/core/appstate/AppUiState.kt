@@ -1,6 +1,7 @@
 package com.tondracek.myfarmer.ui.core.appstate
 
 import androidx.compose.runtime.compositionLocalOf
+import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
@@ -10,10 +11,15 @@ val LocalAppUiController = compositionLocalOf<AppUiController> {
 
 class AppUiController {
 
-    private val _errors = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    private val _errors = MutableSharedFlow<DomainError>(extraBufferCapacity = 1)
     val errors = _errors.asSharedFlow()
 
-    fun showErrorMessage(message: String) = _errors.tryEmit(message)
+    fun showError(error: DomainError) = _errors.tryEmit(error)
+
+    private val _errorMessages = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val errorMessages = _errorMessages.asSharedFlow()
+
+    fun showErrorMessage(message: String) = _errorMessages.tryEmit(message)
 
     private val _successMessages = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val successMessages = _successMessages.asSharedFlow()

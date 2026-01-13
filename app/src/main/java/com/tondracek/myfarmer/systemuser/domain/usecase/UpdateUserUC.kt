@@ -4,10 +4,11 @@ import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.common.image.data.PhotoStorage
 import com.tondracek.myfarmer.common.image.data.PhotoStorageFolder
 import com.tondracek.myfarmer.common.image.data.Quality
-import com.tondracek.myfarmer.common.usecase.result.UpdateFailedUCResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.ForbiddenUCResult
+import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
+import com.tondracek.myfarmer.core.domain.usecaseresult.mapFlatten
+import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.repository.UserRepository
 import kotlinx.coroutines.flow.first
@@ -19,29 +20,31 @@ class UpdateUserUC @Inject constructor(
     private val getLoggedInUser: GetLoggedInUserUC,
 ) {
 
-    suspend operator fun invoke(userToUpdate: SystemUser): UCResult<Unit> =
-        UCResult.of(UpdateFailedUCResult()) {
-            val currentUser = getLoggedInUser().first().getOrReturn { return it }
-            if (currentUser.id != userToUpdate.id) return ForbiddenUCResult
+    suspend operator fun invoke(userToUpdate: SystemUser): UCResult<Unit> {
+        val currentUser = getLoggedInUser().first()
+            .getOrReturn { return it }
+        if (currentUser.id != userToUpdate.id)
+            return UCResult.Failure(AuthError.Forbidden)
 
-            val original = repository.getById(userToUpdate.id).first()
-                ?: return UserNotFoundResult(userToUpdate.id)
-            val updateItem = userToUpdate.loadNewPhoto(original = original)
+        val original = repository.getById(userToUpdate.id).first()
+            .getOrReturn { return it }
 
-            repository.update(updateItem)
-        }
+        return userToUpdate.loadNewPhoto(original = original)
+            .mapFlatten { repository.update(it) }
+    }
 
-    private suspend fun SystemUser.loadNewPhoto(original: SystemUser): SystemUser =
+    private suspend fun SystemUser.loadNewPhoto(original: SystemUser): UCResult<SystemUser> =
         when (original.profilePicture == this.profilePicture) {
-            true -> this
-            false -> {
+            true -> UCResult.Success(this)
+            false ->
                 photoStorage.deletePhoto(original.profilePicture)
-                photoStorage.uploadPhoto(
-                    imageResource = this.profilePicture,
-                    name = this.id.toString(),
-                    folder = PhotoStorageFolder.ProfilePictures,
-                    quality = Quality.HD
-                ).let { this.copy(profilePicture = it) }
-            }
+                    .mapFlatten {
+                        photoStorage.uploadPhoto(
+                            imageResource = this.profilePicture,
+                            name = this.id.toString(),
+                            folder = PhotoStorageFolder.ProfilePictures,
+                            quality = Quality.HD
+                        ).mapSuccess { this.copy(profilePicture = it) }
+                    }
         }
 }

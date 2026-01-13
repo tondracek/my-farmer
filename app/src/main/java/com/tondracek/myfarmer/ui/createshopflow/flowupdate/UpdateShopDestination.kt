@@ -50,7 +50,7 @@ fun NavGraphBuilder.updateShopDestination(
                 }
 
                 is CreateUpdateShopFlowEffect.ShowError ->
-                    appUiController.showErrorMessage(effect.message)
+                    appUiController.showError(effect.error)
 
                 CreateUpdateShopFlowEffect.ShowShopCreatedSuccessfully ->
                     appUiController.showSuccessMessage(shopSuccessfullyCreatedMessage)

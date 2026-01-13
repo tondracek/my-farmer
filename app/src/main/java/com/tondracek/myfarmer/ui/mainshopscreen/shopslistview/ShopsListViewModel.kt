@@ -9,9 +9,11 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
-import com.tondracek.myfarmer.core.domain.usecaseresult.toException
+import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
+import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.location.model.meters
 import com.tondracek.myfarmer.location.usecase.measureMapDistance
@@ -77,41 +79,42 @@ class ShopsListViewModel @Inject constructor(
                 null -> getUCResultPageFlow(
                     getDataKey = { shop: Shop -> shop.id },
                     pageSize = 20,
-                    getData = { limit, after ->
-                        getAllShopsPaginated(
-                            limit = limit,
-                            after = after
-                        ).mapSuccess {
-                            applyFiltersUC.sync(
-                                shops = it,
-                                filters = filters,
-                            )
-                        }
+                    showError = { _effects.emit(ShopsListViewEffect.ShowError(it)) }
+                ) { limit, after ->
+                    getAllShopsPaginated(
+                        limit = limit,
+                        after = after
+                    ).mapSuccess {
+                        applyFiltersUC.sync(
+                            shops = it,
+                            filters = filters,
+                        )
                     }
-                )
+                }
 
                 else -> getShopsByDistancePageFlow(
-                    getShops = { center, pageSize, cursor ->
-                        getShopsByDistancePaged(
-                            center = center,
-                            pageSize = pageSize,
-                            cursor = cursor
-                        ).mapSuccess { (shops, nextCursor) ->
-                            val filteredShops = applyFiltersUC.sync(
-                                shops = shops,
-                                filters = filters,
-                            )
-                            filteredShops to nextCursor
-                        }
-                    },
                     center = location,
                     pageSize = 20,
-                )
+                    showError = { _effects.emit(ShopsListViewEffect.ShowError(it)) },
+                ) { center, pageSize, cursor ->
+                    getShopsByDistancePaged(
+                        center = center,
+                        pageSize = pageSize,
+                        cursor = cursor
+                    ).mapSuccess { (shops, nextCursor) ->
+                        val filteredShops = applyFiltersUC.sync(
+                            shops = shops,
+                            filters = filters,
+                        )
+                        filteredShops to nextCursor
+                    }
+                }
             }
         }.cachedIn(viewModelScope)
 
     private val averageRatings: Flow<Map<ShopId, Rating>> = getAverageRatingsByShopUC()
-        .getOrElse(emptyMap()) { _effects.emit(ShopsListViewEffect.ShowError(it.userError)) }
+        .withFailure { _effects.emit(ShopsListViewEffect.ShowError(it.error)) }
+        .getOrElse(emptyMap())
         .distinctUntilChanged()
 
     val shopsUiData: Flow<PagingData<ShopListViewItem>> = combine(
@@ -140,13 +143,14 @@ sealed interface ShopsListViewEffect {
 
     data object OnBackClicked : ShopsListViewEffect
 
-    data class ShowError(val message: String) : ShopsListViewEffect
+    data class ShowError(val error: DomainError) : ShopsListViewEffect
 }
 
 fun getShopsByDistancePageFlow(
-    getShops: suspend (center: Location, pageSize: Int, cursor: DistancePagingCursor?) -> UCResult<Pair<List<Shop>, DistancePagingCursor?>>,
     center: Location,
     pageSize: Int,
+    showError: suspend (error: DomainError) -> Unit,
+    getShops: suspend (center: Location, pageSize: Int, cursor: DistancePagingCursor?) -> UCResult<Pair<List<Shop>, DistancePagingCursor?>>,
 ): Flow<PagingData<Shop>> = Pager(
     config = PagingConfig(
         pageSize = pageSize,
@@ -154,18 +158,20 @@ fun getShopsByDistancePageFlow(
     ),
     pagingSourceFactory = {
         ShopsByDistancePagingSource(
-            getShops = getShops,
             center = center,
             pageSize = pageSize,
+            showError = showError,
+            getShops = getShops,
         )
     }
 ).flow
 
 
 class ShopsByDistancePagingSource(
-    private val getShops: suspend (center: Location, pageSize: Int, cursor: DistancePagingCursor?) -> UCResult<Pair<List<Shop>, DistancePagingCursor?>>,
     private val center: Location,
     private val pageSize: Int,
+    private val showError: suspend (error: DomainError) -> Unit,
+    private val getShops: suspend (center: Location, pageSize: Int, cursor: DistancePagingCursor?) -> UCResult<Pair<List<Shop>, DistancePagingCursor?>>,
 ) : PagingSource<DistancePagingCursor, Shop>() {
 
     override suspend fun load(
@@ -185,7 +191,9 @@ class ShopsByDistancePagingSource(
                 )
             }
 
-            is UCResult.Failure -> LoadResult.Error(result.toException())
+            is UCResult.Failure -> result
+                .withFailure { showError(it.error) }
+                .let { LoadResult.Error(result.cause ?: Exception()) }
         }
     }
 

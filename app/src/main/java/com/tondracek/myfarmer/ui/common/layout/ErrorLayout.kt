@@ -8,13 +8,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.core.domain.domainerror.ShopError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.ui.common.button.GoBackButton
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.core.util.toUserFriendlyMessage
 
 @Composable
 fun ErrorLayout(
@@ -22,6 +25,8 @@ fun ErrorLayout(
     failure: UCResult.Failure,
     onNavigateBack: () -> Unit,
 ) {
+    val context = LocalContext.current
+
     CardMessageLayout(
         modifier = modifier,
         cardColors = MyFarmerTheme.cardColors.error
@@ -34,7 +39,7 @@ fun ErrorLayout(
         )
         Text(
             modifier = Modifier.widthIn(max = 270.dp),
-            text = failure.userError,
+            text = failure.error.toUserFriendlyMessage(context),
             textAlign = TextAlign.Center,
         )
         GoBackButton(
@@ -49,10 +54,7 @@ fun ErrorLayout(
 private fun ErrorLayoutPreview() {
     MyFarmerPreview {
         ErrorLayout(
-            failure = UCResult.Failure(
-                userError = "An unexpected error occurred. Please try again later.",
-                systemError = "NullPointerException at line 42",
-            ),
+            failure = UCResult.Failure(ShopError.NotFound),
             onNavigateBack = {}
         )
     }

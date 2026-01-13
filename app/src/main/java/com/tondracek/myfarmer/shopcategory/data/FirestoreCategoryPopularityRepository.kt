@@ -6,6 +6,8 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.snapshots
 import com.tondracek.myfarmer.core.data.firestore.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.data.firestore.helpers.mapToDomains
+import com.tondracek.myfarmer.core.domain.domainerror.CategoryPopularityError
+import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
 import com.tondracek.myfarmer.shopcategory.domain.repository.CategoryPopularityRepository
 import javax.inject.Inject
 
@@ -19,4 +21,5 @@ class FirestoreCategoryPopularityRepository @Inject constructor() : CategoryPopu
         .limit(limit.toLong())
         .snapshots()
         .mapToDomains(CategoryPopularityEntity::class) { it.toModel() }
+        .toUCResult(CategoryPopularityError.FetchingFailed)
 }

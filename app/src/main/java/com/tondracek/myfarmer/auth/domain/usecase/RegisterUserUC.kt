@@ -10,10 +10,9 @@ class RegisterUserUC @Inject constructor(
     suspend operator fun invoke(
         email: String,
         password: String,
-    ): UCResult<Unit> = UCResult.of("Failed to register user.") {
-        authRepository.registerUser(
-            email = email,
-            password = password,
-        )
-    }
+    ): UCResult<Unit> = authRepository.registerUser(
+        email = email,
+        password = password,
+    )
+
 }

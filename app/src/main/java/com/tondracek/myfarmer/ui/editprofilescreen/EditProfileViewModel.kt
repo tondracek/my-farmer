@@ -3,11 +3,13 @@ package com.tondracek.myfarmer.ui.editprofilescreen
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.auth.domain.usecase.LogoutUC
-import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
+import com.tondracek.myfarmer.core.domain.domainerror.AuthError
+import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
+import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
+import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.usecase.UpdateUserUC
 import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
@@ -37,17 +39,12 @@ class EditProfileViewModel @Inject constructor(
             replay = 1
         )
 
-    private val loggedInUser: StateFlow<SystemUser?> = loggedInUserFlow
-        .getOrElse(defaultValue = null) {
-            viewModelScope.launch {
-                emitError(it)
-                emitEffect(EditProfileScreenEffect.GoToLogin)
-            }
-        }
+    private val loggedInUser: StateFlow<UCResult<SystemUser>> = loggedInUserFlow
+        .withFailure { emitEffect(EditProfileScreenEffect.GoToLogin) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-            initialValue = null
+            initialValue = UCResult.Failure(AuthError.NotLoggedIn)
         )
 
     private val _state: MutableStateFlow<EditProfileScreenState> =
@@ -55,11 +52,8 @@ class EditProfileViewModel @Inject constructor(
 
     val state: StateFlow<EditProfileScreenState> = _state
 
-    private suspend fun emitError(message: String) =
-        emitEffect(EditProfileScreenEffect.ShowError(message))
-
     private suspend fun emitError(result: UCResult.Failure) =
-        emitError(result.userError)
+        emitEffect(EditProfileScreenEffect.ShowError(result.error))
 
     init {
         viewModelScope.launch {
@@ -81,12 +75,15 @@ class EditProfileViewModel @Inject constructor(
 
     fun onLogout() = viewModelScope.launch {
         emitEffect(EditProfileScreenEffect.GoToLogin)
-        logout()
+        logout().withFailure { emitError(it) }
     }
 
     fun onSaveProfile() = viewModelScope.launch {
         val currentState = _state.value as? EditProfileScreenState.Success ?: return@launch
-        val loggedUser = loggedInUser.value ?: return@launch emitError(NotLoggedInUCResult())
+        val loggedUser = loggedInUser.value
+            .withFailure { emitError(it) }
+            .withFailure { emitEffect(EditProfileScreenEffect.GoToLogin) }
+            .getOrReturn { return@launch }
 
         _state.update { EditProfileScreenState.UpdatingProfile }
 
@@ -99,7 +96,7 @@ class EditProfileViewModel @Inject constructor(
             }
 
             is UCResult.Failure -> {
-                emitError(updateResult.userError)
+                emitError(updateResult)
                 _state.update { currentState }
             }
         }
@@ -129,5 +126,5 @@ sealed interface EditProfileScreenEffect {
 
     data object ShowSavedProfileMessage : EditProfileScreenEffect
 
-    data class ShowError(val message: String) : EditProfileScreenEffect
+    data class ShowError(val error: DomainError) : EditProfileScreenEffect
 }

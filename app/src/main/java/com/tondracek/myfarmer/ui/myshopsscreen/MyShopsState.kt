@@ -1,7 +1,6 @@
 package com.tondracek.myfarmer.ui.myshopsscreen
 
 import com.tondracek.myfarmer.common.image.model.ImageResource
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
@@ -12,8 +11,6 @@ sealed interface MyShopsState {
     data class Success(val shops: List<MyShopsListItem>) : MyShopsState
 
     data object Loading : MyShopsState
-
-    data class Error(val failure: UCResult.Failure) : MyShopsState
 }
 
 data class MyShopsListItem(

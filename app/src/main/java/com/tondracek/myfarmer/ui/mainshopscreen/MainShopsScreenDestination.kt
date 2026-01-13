@@ -7,7 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import com.tondracek.myfarmer.ui.common.paging.collectAsLazyPagingItemsAndSnackbarErrors
+import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.tondracek.myfarmer.ui.core.appstate.AppUiController
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
@@ -20,7 +21,7 @@ import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapViewEffect
 import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.ShopsMapViewModel
 
 fun NavGraphBuilder.mainShopsScreenDestination(
-    navController: NavController,
+    navController: NavHostController,
 ) = routeDestination<Route.MainShopsRoute> { appUiController ->
     val mainShopsScreenViewModel: MainShopsScreenViewModel = hiltViewModel()
     LaunchedEffect(Unit) {
@@ -55,7 +56,7 @@ private fun ShopsListViewSection(
     appUiController: AppUiController,
 ) {
     val shopsListViewModel: ShopsListViewModel = hiltViewModel()
-    val shopsPaged = shopsListViewModel.shopsUiData.collectAsLazyPagingItemsAndSnackbarErrors()
+    val shopsPaged = shopsListViewModel.shopsUiData.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         shopsListViewModel.effects.collect { event ->
@@ -67,7 +68,7 @@ private fun ShopsListViewSection(
                     navController.navigate(Route.ShopDetailRoute(event.shopId.toString()))
 
                 is ShopsListViewEffect.ShowError ->
-                    appUiController.showErrorMessage(event.message)
+                    appUiController.showError(event.error)
             }
         }
     }
@@ -80,7 +81,7 @@ private fun ShopsListViewSection(
 
 @Composable
 private fun ShopsMapViewSection(
-    navController: NavController,
+    navController: NavHostController,
     appUiController: AppUiController,
 ) {
     val shopsMapViewModel: ShopsMapViewModel = hiltViewModel()
@@ -93,12 +94,13 @@ private fun ShopsMapViewSection(
                     navController.navigate(Route.ShopBottomSheetRoute(event.shopId.toString()))
 
                 is ShopsMapViewEffect.ShowError ->
-                    appUiController.showErrorMessage(event.message)
+                    appUiController.showError(event.error)
             }
         }
     }
 
     ShopsMapView(
+        navController = navController,
         state = shopsMapViewState,
         onShopSelected = shopsMapViewModel::onShopSelected,
     )

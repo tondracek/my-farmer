@@ -1,11 +1,11 @@
 package com.tondracek.myfarmer.shop.domain.model
 
 import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.core.domain.domainerror.InputDataError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
-import com.tondracek.myfarmer.shop.domain.result.MissingShopInputDataUCResult
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 
@@ -24,7 +24,7 @@ fun ShopInput.toShop(
     ownerId: UserId,
 ): UCResult<Shop> {
     if (this.location == null)
-        return MissingShopInputDataUCResult
+        return UCResult.Failure(InputDataError.MissingRequiredData)
 
     return Shop(
         id = shopId,

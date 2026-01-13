@@ -5,7 +5,6 @@ import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.repository.ReviewRepository
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetReviewsPreviewUC @Inject constructor(
@@ -14,6 +13,5 @@ class GetReviewsPreviewUC @Inject constructor(
 
     operator fun invoke(shopId: ShopId): Flow<UCResult<List<Review>>> =
         repository.getShopReviews(shopId, limit = 3)
-            .map { UCResult.Success(it) }
 
 }

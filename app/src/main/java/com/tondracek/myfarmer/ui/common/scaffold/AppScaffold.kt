@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -28,6 +29,7 @@ import com.tondracek.myfarmer.ui.core.navigation.isInNavGraph
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.core.uievents.MyFarmerSnackBar
 import com.tondracek.myfarmer.ui.core.uievents.SnackBarType
+import com.tondracek.myfarmer.ui.core.util.toUserFriendlyMessage
 
 @Composable
 fun AppScaffold(
@@ -35,6 +37,8 @@ fun AppScaffold(
     appUiController: AppUiController,
     content: @Composable BoxScope.() -> Unit,
 ) {
+    val context = LocalContext.current
+
     val navBarViewModel: NavBarViewModel = hiltViewModel()
     val navBarState by navBarViewModel.state.collectAsState()
 
@@ -42,6 +46,15 @@ fun AppScaffold(
 
     LaunchedEffect(Unit) {
         appUiController.errors.collect { message ->
+            snackbarHostState.showSnackbar(
+                message = message.toUserFriendlyMessage(context),
+                actionLabel = SnackBarType.ERROR,
+                duration = SnackbarDuration.Short,
+            )
+        }
+    }
+    LaunchedEffect(Unit) {
+        appUiController.errorMessages.collect { message ->
             snackbarHostState.showSnackbar(
                 message = message,
                 actionLabel = SnackBarType.ERROR,

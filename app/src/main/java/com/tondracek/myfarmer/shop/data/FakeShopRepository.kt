@@ -1,7 +1,12 @@
 package com.tondracek.myfarmer.shop.data
 
+import com.tondracek.myfarmer.core.domain.domainerror.ShopError
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.location.data.GeoHashUtils
 import com.tondracek.myfarmer.location.model.DistanceRing
 import com.tondracek.myfarmer.location.model.Location
+import com.tondracek.myfarmer.location.usecase.measureMapDistance
+import com.tondracek.myfarmer.location.usecase.measureMapDistanceNotNull
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.repository.DistancePagingCursor
@@ -15,58 +20,112 @@ class FakeShopRepository : ShopRepository {
 
     private val items: MutableMap<ShopId, MutableStateFlow<Shop>> = mutableMapOf()
 
-    override suspend fun create(item: Shop): ShopId {
+    override suspend fun create(item: Shop): UCResult<ShopId> {
         items[item.id] = MutableStateFlow(item)
-        return item.id
+        return UCResult.Success(item.id)
     }
 
-    override suspend fun update(item: Shop) {
+    override suspend fun update(item: Shop): UCResult<Unit> {
         items[item.id]?.value = item
+        return UCResult.Success(Unit)
     }
 
-    override suspend fun delete(id: ShopId) {
+    override suspend fun delete(id: ShopId): UCResult<Unit> {
         items.remove(id)
+        return UCResult.Success(Unit)
     }
 
-    override fun getById(id: ShopId): Flow<Shop?> {
-        return items[id] ?: MutableStateFlow(null)
-    }
+    override fun getById(id: ShopId): Flow<UCResult<Shop>> =
+        items[id]
+            ?.value
+            ?.let { MutableStateFlow(UCResult.Success(it)) }
+            ?: MutableStateFlow(UCResult.Failure(ShopError.NotFound))
 
-    override fun getAll(): Flow<List<Shop>> =
-        combine(items.values) { it.toList() }
+    override fun getAll(): Flow<UCResult<List<Shop>>> =
+        combine(items.values) { values ->
+            UCResult.Success(values.toList())
+        }
 
     override suspend fun getAllPaginated(
         limit: Int?,
         after: ShopId?
-    ): List<Shop> {
-        val values = items.values.map { it.value }
-
-        val sortedItems = values.toList()
+    ): UCResult<List<Shop>> {
+        val sortedItems = items.values
+            .map { it.value }
             .sortedBy { it.id.toString() }
 
         val startIndex = after?.let { id ->
             sortedItems.indexOfFirst { it.id == id } + 1
         } ?: 0
 
-        val limitedItems = limit?.let {
-            sortedItems.drop(startIndex).take(it)
-        } ?: sortedItems.drop(startIndex)
+        val paginatedItems = if (limit != null) {
+            sortedItems.drop(startIndex).take(limit)
+        } else {
+            sortedItems.drop(startIndex)
+        }
 
-        return limitedItems
+        return UCResult.Success(paginatedItems)
     }
 
-    override fun getByOwnerId(ownerId: UserId): Flow<List<Shop>> = combine(
+    override fun getByOwnerId(ownerId: UserId): Flow<UCResult<List<Shop>>> = combine(
         items.values
     ) { values ->
-        values.toList().filter { it.ownerId == ownerId }
+        val filteredItems = values.toList()
+            .filter { it.ownerId == ownerId }
+        UCResult.Success(filteredItems)
     }
 
+    /*
+    data class DistancePagingCursor(
+    val ringIndex: Int,
+    val afterGeohash: String?,
+)
+
+     */
     override suspend fun getPagedByDistance(
         center: Location,
         pageSize: Int,
         cursor: DistancePagingCursor?,
         rings: List<DistanceRing>
-    ): Pair<List<Shop>, DistancePagingCursor?> {
-        TODO("Not yet implemented")
+    ): UCResult<Pair<List<Shop>, DistancePagingCursor?>> {
+        val ringIndex = cursor?.ringIndex ?: 0
+        val ring = rings.getOrNull(ringIndex)
+            ?: return UCResult.Success(Pair(emptyList(), null))
+        val startGeohash = cursor?.afterGeohash
+
+        val items = items.values
+            .map { it.value }
+            .filter { shop ->
+                val distance = measureMapDistanceNotNull(center, shop.location)
+                distance.toMeters() >= ring.minRadiusMeters &&
+                        (ring.maxRadiusMeters?.let { distance.toMeters() <= it } ?: true)
+            }
+            .sortedBy { measureMapDistance(center, it.location) }
+            .map { it to GeoHashUtils.encode(it.location.latitude, it.location.longitude) }
+            .dropWhile { (_, geohash) ->
+                startGeohash?.let { geohash <= it } ?: false
+            }
+            .take(pageSize + 1)
+            .map { it.first }
+
+        val page = items.take(pageSize)
+
+        val nextCursor = when {
+            items.size > pageSize -> // More data available in the current ring
+                DistancePagingCursor(
+                    ringIndex = ringIndex,
+                    afterGeohash = GeoHashUtils.encode(
+                        page.last().location.latitude,
+                        page.last().location.longitude
+                    )
+                )
+
+            else -> // Move to the next ring
+                DistancePagingCursor(
+                    ringIndex = ringIndex + 1,
+                    afterGeohash = null
+                )
+        }
+        return UCResult.Success(Pair(page, nextCursor))
     }
 }

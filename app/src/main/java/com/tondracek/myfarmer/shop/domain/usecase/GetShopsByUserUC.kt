@@ -2,8 +2,7 @@ package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.flatMapSuccess
-import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.flatMap
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,8 +16,7 @@ class GetShopsByUserUC @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<UCResult<List<Shop>>> =
-        getLoggedInUserUC().flatMapSuccess {
+        getLoggedInUserUC().flatMap {
             shopRepository.getByOwnerId(ownerId = it.id)
-                .toUCResult(userError = "Failed to load user's shops.")
         }
 }

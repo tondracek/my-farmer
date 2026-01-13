@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.core.domain.usecaseresult
 
+import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult.Failure
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult.Success
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -7,58 +8,29 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.reflect.KClass
 
 sealed interface UCResult<out T> {
 
     data class Success<T>(val data: T) : UCResult<T>
 
-    open class Failure(val userError: String, val systemError: String? = null) : UCResult<Nothing> {
-        constructor(userError: String, throwable: Throwable) : this(
-            userError,
-            throwable.message ?: "Unknown error $throwable"
-        ) {
-            Timber.e(throwable)
-        }
-
-        init {
-            logFailure()
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (other !is Failure) return false
-
-            if (userError != other.userError) return false
-            if (systemError != other.systemError) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = userError.hashCode()
-            result = 31 * result + (systemError?.hashCode() ?: 0)
-            return result
-        }
-    }
-
-    suspend fun <R> mapSuccess(transform: suspend (T) -> R): UCResult<R> = when (this) {
-        is Success -> Success(transform(data))
-        is Failure -> this
-    }
-
-    fun <R> mapSuccessFlat(transform: (T) -> UCResult<R>): UCResult<R> = when (this) {
-        is Success -> transform(data)
-        is Failure -> this
-    }
+    data class Failure(
+        val error: DomainError,
+        val cause: Throwable? = null
+    ) : UCResult<Nothing>
 
     suspend fun withSuccess(block: suspend (T) -> Unit): UCResult<T> = apply {
         if (this is Success) block(this.data)
     }
 
-    suspend fun withFailure(block: suspend (Failure) -> Unit): UCResult<T> = apply {
-        if (this is Failure) block(this)
-    }
+    suspend fun withFailure(block: suspend (Failure) -> Unit): UCResult<T> =
+        when (this) {
+            is Success -> this
+            is Failure -> this.also { block(this) }
+        }
 
     /**
      * - For `UseCaseResult.Success` returns the `data` value
@@ -75,40 +47,68 @@ sealed interface UCResult<out T> {
     }
 
     companion object {
-        fun <T> of(data: T): UCResult<T> = Success(data)
 
+        /**
+         * Executes the given [block] and wraps its result into [UCResult].
+         *
+         * The [errorMappings] are evaluated ⚠️**in order**⚠️; the first matching exception
+         * type (using `is` / `isInstance`) is used. More specific exception types must
+         * therefore come **before** more general ones.
+         *
+         * Coroutine cancellation is respected: [CancellationException] is rethrown
+         * and never wrapped into [UCResult.Failure].
+         *
+         * @param errorMappings ordered pairs of exception types to corresponding domain errors
+         * @param defaultError domain error used when no mapping matches
+         * @param block suspend operation that may throw
+         */
         inline fun <T> of(
-            userError: String = "Unexpected error occurred.",
+            defaultError: DomainError,
+            vararg errorMappings: Pair<KClass<out Throwable>, DomainError>,
             block: () -> T,
-        ): UCResult<T> =
-            runCatching { block() }.fold(
-                onSuccess = { Success(it) },
-                onFailure = { Failure(userError = userError, throwable = it) }
-            )
+        ): UCResult<T> = try {
+            Success(block())
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            val domainError = errorMappings
+                .firstOrNull { (klass, _) -> klass.isInstance(e) }
+                ?.second
+                ?: defaultError
 
-        inline fun <T> of(failure: Failure, block: () -> T): UCResult<T> =
-            runCatching { block() }.fold(
-                onSuccess = { Success(it) },
-                onFailure = { Failure(failure.userError, it) }
-            )
+            Failure(domainError, e)
+        }
     }
 }
 
-private fun Failure.logFailure() {
-    val border = "========================================="
-
-    Timber.e(
-        """
-            $border
-            ❌ FAILURE in ${this.javaClass.simpleName}
-            ❌ USER ERROR: $userError
-            ❌ SYSTEM ERROR: ${systemError ?: "null"}
-            $border
-        """.trimIndent()
-    )
+inline fun <T, R> UCResult<T>.mapSuccess(transform: (T) -> R): UCResult<R> = when (this) {
+    is Success -> Success(transform(data))
+    is Failure -> this
 }
 
-fun Failure.toException(): Exception = Exception(userError, Exception(systemError))
+fun <T> List<UCResult<T>>.toUCResultList(): UCResult<List<T>> {
+    val resultList = mutableListOf<T>()
+    for (result in this) {
+        when (result) {
+            is Success -> resultList.add(result.data)
+            is Failure -> return result
+        }
+    }
+    return Success(resultList)
+}
+
+inline fun <T, R> UCResult<T>.mapFlatten(transform: (T) -> UCResult<R>): UCResult<R> = when (this) {
+    is Success -> transform(data)
+    is Failure -> this
+}
+
+
+fun <T> UCResult<T>.log() = this.also {
+    when (it) {
+        is Success -> Timber.d("UCResult Success: ${it.data}")
+        is Failure -> Timber.e(it.cause, "UCResult Failure: ${it.error}")
+    }
+}
 
 /**
  * - For `UseCaseResult.Success` returns the `data` value
@@ -125,42 +125,30 @@ fun <T> UCResult<T>.getOrElse(defaultValue: T): T = when (this) {
     is Failure -> defaultValue
 }
 
-inline fun <T> UCResult<T>.getOrElse(defaultValue: (Failure) -> T): T = when (this) {
-    is Success -> data
-    is Failure -> defaultValue(this)
+fun <T> Flow<UCResult<T>>.getOrElse(defaultValue: T): Flow<T> = this.map { result ->
+    result.getOrElse(defaultValue)
 }
 
-suspend fun <T> UCResult<T>.getOrElse(
-    defaultValue: T,
-    onError: suspend (Failure) -> Unit = {},
-): T = this.getOrElse {
-    onError(it)
-    defaultValue
+fun <T> Flow<UCResult<T>>.withFailure(
+    onError: suspend (Failure) -> Unit
+): Flow<UCResult<T>> = this.onEach { result ->
+    result.withFailure { onError(it) }
 }
 
-fun <T> Flow<UCResult<T>>.getOrElse(
-    defaultValue: T,
-    onError: suspend (Failure) -> Unit = {}
-): Flow<T> = this.map { result ->
-    result.getOrElse {
-        onError(it)
-        defaultValue
-    }
-}
-
-fun <T, R> Flow<UCResult<T>>.mapSuccessFlow(transform: suspend (T) -> R): Flow<UCResult<R>> =
-    this.map { result ->
-        when (result) {
-            is Success -> UCResult.of { transform(result.data) }
-            is Failure -> result
-        }
-    }
+inline fun <T, R> Flow<UCResult<T>>.mapFlow(crossinline transform: (T) -> R): Flow<UCResult<R>> =
+    this.map { result -> result.mapSuccess(transform) }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-fun <T, R> Flow<UCResult<T>>.flatMapSuccess(transform: (T) -> Flow<UCResult<R>>): Flow<UCResult<R>> =
+fun <T, R> Flow<UCResult<T>>.flatMap(transform: suspend (T) -> Flow<UCResult<R>>): Flow<UCResult<R>> =
     this.flatMapLatest { result ->
         when (result) {
             is Success -> transform(result.data)
             is Failure -> flowOf(result)
         }
+    }
+
+fun <T, R> UCResult<T>.flatMap(transform: (T) -> Flow<UCResult<R>>): Flow<UCResult<R>> =
+    when (this) {
+        is Success -> transform(this.data)
+        is Failure -> flowOf(this)
     }

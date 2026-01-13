@@ -2,12 +2,11 @@ package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.common.image.data.PhotoStorage
+import com.tondracek.myfarmer.core.domain.domainerror.ShopError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
-import com.tondracek.myfarmer.shop.domain.result.NotShopOwnerUCResult
-import com.tondracek.myfarmer.shop.domain.result.ShopNotFoundUCResult
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
@@ -16,16 +15,16 @@ class DeleteShopUC @Inject constructor(
     private val shopRepository: ShopRepository,
     private val photoStorage: PhotoStorage,
 ) {
-    suspend operator fun invoke(shopId: ShopId): UCResult<Unit> = UCResult.of(
-        userError = "An error occurred while deleting shop"
-    ) {
-        val currentUser = getLoggedInUserUC().first().getOrReturn { return it }
-        val shop = shopRepository.getById(shopId).first() ?: return ShopNotFoundUCResult(shopId)
+    suspend operator fun invoke(shopId: ShopId): UCResult<Unit> {
+        val currentUser = getLoggedInUserUC().first()
+            .getOrReturn { return it }
+        val shop = shopRepository.getById(shopId).first()
+            .getOrReturn { return it }
         if (shop.ownerId != currentUser.id)
-            return NotShopOwnerUCResult(currentUser.id, shopId)
+            return UCResult.Failure(ShopError.NotOwner)
 
         val photosToDelete = shop.images
-        photoStorage.deletePhotos(photosToDelete)
-        shopRepository.delete(shopId)
+        photoStorage.deletePhotos(photosToDelete).getOrReturn { return it }
+        return shopRepository.delete(shopId)
     }
 }

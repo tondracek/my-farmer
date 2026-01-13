@@ -17,12 +17,10 @@ class GetShopsByDistancePagedUC @Inject constructor(
         pageSize: Int,
         cursor: DistancePagingCursor?,
     ): UCResult<Pair<List<Shop>, DistancePagingCursor?>> =
-        UCResult.of(userError = "Failed to load shops by distance.") {
-            shopRepository.getPagedByDistance(
-                center = center,
-                pageSize = pageSize,
-                cursor = cursor,
-                rings = DistanceRings.listViewRings
-            )
-        }
+        shopRepository.getPagedByDistance(
+            center = center,
+            pageSize = pageSize,
+            cursor = cursor,
+            rings = DistanceRings.listViewRings
+        )
 }

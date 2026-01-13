@@ -3,6 +3,7 @@ package com.tondracek.myfarmer.ui.auth.loginscreen
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.auth.domain.usecase.LoginUserUC
 import com.tondracek.myfarmer.auth.domain.usecase.LoginWithGoogleUC
+import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.ui.auth.loginscreen.components.LoginInput
 import com.tondracek.myfarmer.ui.auth.loginscreen.components.LoginValidation
@@ -64,7 +65,7 @@ class LoginViewmodel @Inject constructor(
                 emitEffect(LoginEffect.GoToProfileScreen)
             }
 
-            is UCResult.Failure -> emitEffect(LoginEffect.ShowError(result.userError))
+            is UCResult.Failure -> emitEffect(LoginEffect.ShowError(result.error))
         }
     }
 
@@ -76,7 +77,7 @@ class LoginViewmodel @Inject constructor(
                 emitEffect(LoginEffect.GoToProfileScreen)
             }
 
-            is UCResult.Failure -> emitEffect(LoginEffect.ShowError(result.userError))
+            is UCResult.Failure -> emitEffect(LoginEffect.ShowError(result.error))
         }
     }
 
@@ -139,6 +140,6 @@ sealed interface LoginEffect {
 
     data object LaunchGoogleSignIn : LoginEffect
 
-    data class ShowError(val message: String) : LoginEffect
+    data class ShowError(val error: DomainError) : LoginEffect
     data object ShowLoginSuccessfully : LoginEffect
 }

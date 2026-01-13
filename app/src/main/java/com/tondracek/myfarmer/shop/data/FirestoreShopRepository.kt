@@ -7,7 +7,11 @@ import com.tondracek.myfarmer.core.data.firestore.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.data.firestore.helpers.FirestoreCrudHelper
 import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetByField
 import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetPaginatedById
+import com.tondracek.myfarmer.core.domain.domainerror.ShopError
 import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntityId
+import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultNonNull
 import com.tondracek.myfarmer.location.data.GeoHashUtils
 import com.tondracek.myfarmer.location.model.DistanceRing
 import com.tondracek.myfarmer.location.model.Location
@@ -22,9 +26,7 @@ import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class FirestoreShopRepository @Inject constructor(
 ) : ShopRepository {
 
@@ -36,32 +38,36 @@ class FirestoreShopRepository @Inject constructor(
         entityClass = ShopEntity::class,
     )
 
-    override suspend fun getAllPaginated(limit: Int?, after: ShopId?): List<Shop> =
-        firestoreGetPaginatedById(
-            collection = collection,
-            entityClass = ShopEntity::class,
-            limit = limit,
-            after = after?.toString(),
-        ).map { it.toModel() }
+    override suspend fun getAllPaginated(limit: Int?, after: ShopId?): UCResult<List<Shop>> =
+        UCResult.of(ShopError.FetchingFailed) {
+            firestoreGetPaginatedById(
+                collection = collection,
+                entityClass = ShopEntity::class,
+                limit = limit,
+                after = after?.toString(),
+            ).map { it.toModel() }
+        }
 
-    override fun getByOwnerId(ownerId: UserId) = firestoreGetByField(
+    override fun getByOwnerId(ownerId: UserId): Flow<UCResult<List<Shop>>> = firestoreGetByField(
         collection = collection,
         entityClass = ShopEntity::class,
         field = FieldPath.of(ShopEntity::ownerId.name),
         value = ownerId.toFirestoreId(),
     ).mapToModelList()
+        .toUCResult(ShopError.FetchingFailed)
 
     override suspend fun getPagedByDistance(
         center: Location,
         pageSize: Int,
         cursor: DistancePagingCursor?,
         rings: List<DistanceRing>
-    ): Pair<List<Shop>, DistancePagingCursor?> {
+    ): UCResult<Pair<List<Shop>, DistancePagingCursor?>> = UCResult.of(ShopError.FetchingFailed) {
         val ringIndex = cursor?.ringIndex ?: 0
         val afterGeohash = cursor?.afterGeohash
 
         val ring = rings.getOrNull(ringIndex)
-        if (ring == null) return (emptyList<Shop>() to null) // No more rings available
+        if (ring == null)
+            return UCResult.Success(emptyList<Shop>() to null) // No more rings available
 
         val ranges = GeoHashUtils.ranges(
             center = center,
@@ -94,23 +100,30 @@ class FirestoreShopRepository @Inject constructor(
 
         val domainPage = page.map { it.toModel() }
             .sortedBy { measureMapDistance(it.location, center) }
-        return domainPage to nextCursor
+        return UCResult.Success(domainPage to nextCursor)
     }
 
-    override suspend fun create(item: Shop): ShopId =
-        helper.create(item.toEntity()).toShopId()
+    override suspend fun create(item: Shop): UCResult<ShopId> =
+        UCResult.of(ShopError.CreationFailed) {
+            helper.create(item.toEntity()).toShopId()
+        }
 
-    override suspend fun update(item: Shop) =
+    override suspend fun update(item: Shop) = UCResult.of(ShopError.UpdateFailed) {
         helper.update(item.toEntity())
+    }
 
-    override suspend fun delete(id: ShopId) =
+    override suspend fun delete(id: ShopId) = UCResult.of(ShopError.DeletionFailed) {
         helper.delete(id.toFirestoreId())
+    }
 
-    override fun getById(id: ShopId): Flow<Shop?> =
+    override fun getById(id: ShopId): Flow<UCResult<Shop>> =
         helper.getById(id.toFirestoreId()).mapToModel()
+            .toUCResultNonNull(ShopError.NotFound, ShopError.Unknown)
 
-    override fun getAll(): Flow<List<Shop>> =
-        helper.getAll().mapToModelList()
+    override fun getAll(): Flow<UCResult<List<Shop>>> =
+        helper.getAll()
+            .mapToModelList()
+            .toUCResult(ShopError.FetchingFailed)
 
     private fun Flow<ShopEntity?>.mapToModel(): Flow<Shop?> =
         this.map { entity -> entity?.toModel() }

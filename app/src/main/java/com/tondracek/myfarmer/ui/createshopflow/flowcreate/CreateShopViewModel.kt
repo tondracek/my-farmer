@@ -29,7 +29,7 @@ class CreateShopViewModel @Inject constructor(
                 _effects.emit(CreateUpdateShopFlowEffect.ShowShopCreatedSuccessfully)
 
             is UCResult.Failure ->
-                _effects.emit(CreateUpdateShopFlowEffect.ShowError(message = result.userError))
+                _effects.emit(CreateUpdateShopFlowEffect.ShowError(result.error))
         }
         navigateBack()
     }

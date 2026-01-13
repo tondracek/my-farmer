@@ -4,6 +4,7 @@ package com.tondracek.myfarmer.ui.createshopflow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
@@ -110,5 +111,5 @@ sealed interface CreateUpdateShopFlowEffect {
 
     data object ShowShopUpdatedSuccessfully : CreateUpdateShopFlowEffect
 
-    data class ShowError(val message: String) : CreateUpdateShopFlowEffect
+    data class ShowError(val error: DomainError) : CreateUpdateShopFlowEffect
 }

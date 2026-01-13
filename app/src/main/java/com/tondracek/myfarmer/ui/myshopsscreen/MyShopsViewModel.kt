@@ -1,18 +1,18 @@
 package com.tondracek.myfarmer.ui.myshopsscreen
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
+import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.usecase.GetAverageRatingsByShopUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.DeleteShopUC
 import com.tondracek.myfarmer.shop.domain.usecase.GetShopsByUserUC
+import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -25,13 +25,15 @@ class MyShopsViewModel @Inject constructor(
     getShopsByUser: GetShopsByUserUC,
     getAverageRatingsByShopUC: GetAverageRatingsByShopUC,
     private val deleteShopUC: DeleteShopUC,
-) : ViewModel() {
+) : BaseViewModel<MyShopsEffect>() {
 
     private val userShops: Flow<List<Shop>> = getShopsByUser()
-        .getOrElse(emptyList()) { _effects.emit(MyShopsEffect.ShowError(it.userError)) }
+        .withFailure { emitEffect(MyShopsEffect.ShowError(it.error)) }
+        .getOrElse(emptyList())
 
     private val averageRatings: Flow<Map<ShopId, Rating>> = getAverageRatingsByShopUC()
-        .getOrElse(emptyMap()) { _effects.emit(MyShopsEffect.ShowError(it.userError)) }
+        .withFailure { emitEffect(MyShopsEffect.ShowError(it.error)) }
+        .getOrElse(emptyMap())
 
     val state: StateFlow<MyShopsState> = combine(
         userShops,
@@ -53,28 +55,26 @@ class MyShopsViewModel @Inject constructor(
         deleteShopUC(shopId)
     }
 
-    private val _effects = MutableSharedFlow<MyShopsEffect>(extraBufferCapacity = 1)
-    val effects: SharedFlow<MyShopsEffect> = _effects
-
     fun navigateBack() = viewModelScope.launch {
-        _effects.emit(MyShopsEffect.OnGoBack)
+        emitEffect(MyShopsEffect.OnGoBack)
     }
 
     fun navigateToShopDetail(shopId: ShopId) = viewModelScope.launch {
-        _effects.emit(MyShopsEffect.OpenShopDetail(shopId))
+        emitEffect(MyShopsEffect.OpenShopDetail(shopId))
     }
 
     fun navigateToCreateShop() = viewModelScope.launch {
-        _effects.emit(MyShopsEffect.OpenCreateShop)
+        emitEffect(MyShopsEffect.OpenCreateShop)
     }
 
     fun navigateToUpdateShop(shopId: ShopId) = viewModelScope.launch {
-        _effects.emit(MyShopsEffect.OpenUpdateShop(shopId))
+        emitEffect(MyShopsEffect.OpenUpdateShop(shopId))
     }
 }
 
 sealed interface MyShopsEffect {
-    data class ShowError(val message: String) : MyShopsEffect
+
+    data class ShowError(val error: DomainError) : MyShopsEffect
 
     data object OnGoBack : MyShopsEffect
 

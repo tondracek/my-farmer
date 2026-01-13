@@ -30,7 +30,7 @@ fun NavGraphBuilder.editProfileDestination(
                     appUiController.showSuccessMessage(profileSavedMessage)
 
                 is EditProfileScreenEffect.ShowError ->
-                    appUiController.showErrorMessage(it.message)
+                    appUiController.showError(it.error)
             }
         }
     }

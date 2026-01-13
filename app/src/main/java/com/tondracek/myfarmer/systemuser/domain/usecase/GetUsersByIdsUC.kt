@@ -1,7 +1,6 @@
 package com.tondracek.myfarmer.systemuser.domain.usecase
 
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import com.tondracek.myfarmer.systemuser.domain.repository.UserRepository
@@ -17,6 +16,6 @@ class GetUsersByIdsUC @Inject constructor(
         if (ids.isEmpty())
             return flowOf(UCResult.Success(emptyList()))
 
-        return repository.getByIds(ids).toUCResult("Failed loading users' data")
+        return repository.getByIds(ids)
     }
 }
