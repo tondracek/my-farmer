@@ -6,7 +6,6 @@ import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.createshopflow.steps.CreatingShopCategoriesMenuStep
 import com.tondracek.myfarmer.ui.createshopflow.steps.CreatingShopNameLocationStep
@@ -28,7 +27,6 @@ fun CreateUpdateShopFlowScreen(
     onUpdateOpeningHours: (OpeningHours) -> Unit,
     onUpdateMenu: (ProductMenu) -> Unit,
     onSubmitCreating: () -> Unit,
-    onNavigateBack: () -> Unit,
 ) {
     when (state) {
         is CreateUpdateShopFlowState.Creating -> when (state.step) {
@@ -70,11 +68,6 @@ fun CreateUpdateShopFlowScreen(
                 onPreviousStep = onPreviousStep,
             )
         }
-
-        is CreateUpdateShopFlowState.Error -> ErrorLayout(
-            failure = state.failure,
-            onNavigateBack = onNavigateBack
-        )
 
         CreateUpdateShopFlowState.Loading -> LoadingLayout()
     }

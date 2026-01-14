@@ -131,7 +131,6 @@
     <string name="an_unknown_review_error_occurred">An unknown review error occurred.</string>
     <string name="failed_to_fetch_category_popularity">Failed to fetch category popularity.</string>
     <string name="you_do_not_have_permission_to_perform_this_action">You do not have permission to perform this action.</string>
-    <string name="required_data_is_missing">Required data is missing</string>
     <string name="invalid_email_format">Invalid email format.</string>
     <string name="password_must_be_at_least_6_characters_long">Password must be at least 6 characters long.</string>
     <string name="password_must_contain_at_least_one_uppercase_letter">Password must contain at least one uppercase letter.</string>
@@ -144,4 +143,5 @@
     <string name="you_cannot_create_a_review_for_your_own_shop">You cannot create a review for your own shop.</string>
     <string name="my_review">My Review</string>
     <string name="other_reviews">Other Reviews</string>
+    <string name="please_provide_a_location_for_the_shop">Please provide a location for the shop.</string>
 </resources>

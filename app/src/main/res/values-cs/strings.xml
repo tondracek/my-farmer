@@ -132,7 +132,6 @@
     <string name="an_unknown_review_error_occurred">Došlo k neznámé chybě recenze.</string>
     <string name="failed_to_fetch_category_popularity">Nepodařilo se načíst popularitu kategorií.</string>
     <string name="you_do_not_have_permission_to_perform_this_action">Nemáte oprávnění provést tuto akci.</string>
-    <string name="required_data_is_missing">Chybí požadovaná data.</string>
     <string name="invalid_email_format">Neplatný formát e-mailu.</string>
     <string name="password_must_be_at_least_6_characters_long">Heslo musí mít alespoň 6 znaků.</string>
     <string name="password_must_contain_at_least_one_uppercase_letter">Heslo musí obsahovat alespoň jedno velké písmeno.</string>
@@ -145,4 +144,5 @@
     <string name="you_cannot_create_a_review_for_your_own_shop">Nemůžete napsat recenzi na vlastní provozovnu.</string>
     <string name="my_review">Moje recenze</string>
     <string name="other_reviews">Ostatní recenze</string>
+    <string name="please_provide_a_location_for_the_shop">Prosím, zvolte polohu obchodu.</string>
 </resources>

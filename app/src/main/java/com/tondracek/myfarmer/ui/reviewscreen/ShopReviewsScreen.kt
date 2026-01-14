@@ -28,7 +28,6 @@ import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.review.domain.model.ReviewInput
 import com.tondracek.myfarmer.shop.data.sampleReviewsUI
 import com.tondracek.myfarmer.ui.common.divider.CustomHorizontalDivider
-import com.tondracek.myfarmer.ui.common.layout.ErrorLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.common.paging.paginatedItems
 import com.tondracek.myfarmer.ui.common.review.ReviewCard
@@ -53,11 +52,6 @@ fun ShopReviewsScreen(
         )
 
         is ShopReviewsScreenState.Loading -> LoadingLayout()
-
-        is ShopReviewsScreenState.Error -> ErrorLayout(
-            failure = state.failure,
-            onNavigateBack = onBackClick
-        )
     }
 }
 

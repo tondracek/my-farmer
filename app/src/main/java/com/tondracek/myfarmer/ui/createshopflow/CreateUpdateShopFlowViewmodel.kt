@@ -1,7 +1,6 @@
 package com.tondracek.myfarmer.ui.createshopflow
 
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
@@ -10,16 +9,15 @@ import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import kotlinx.coroutines.flow.MutableSharedFlow
+import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 const val NEW_CATEGORY_DIALOG_VALUE = "new_category_dialog_value"
 
-open class CreateUpdateShopFlowViewmodel() : ViewModel() {
+open class CreateUpdateShopFlowViewmodel() : BaseViewModel<CreateUpdateShopFlowEffect>() {
 
     protected val mutableState = MutableStateFlow<CreateUpdateShopFlowState>(
         CreateUpdateShopFlowState.Creating.initial(shopInput = ShopInput())
@@ -27,19 +25,12 @@ open class CreateUpdateShopFlowViewmodel() : ViewModel() {
 
     val state: StateFlow<CreateUpdateShopFlowState> = mutableState
 
-    protected val _effects = MutableSharedFlow<CreateUpdateShopFlowEffect>(extraBufferCapacity = 1)
-    val effects: SharedFlow<CreateUpdateShopFlowEffect> = _effects
-
     fun goToNextStep() = mutableState.updateCreating { currentStep ->
         currentStep.next()
     }
 
     fun goToPreviousStep() = mutableState.updateCreating { currentStep ->
         currentStep.previous()
-    }
-
-    fun navigateBack() = viewModelScope.launch {
-        _effects.emit(CreateUpdateShopFlowEffect.NavigateBack)
     }
 
     /* UPDATE METHODS */
@@ -52,7 +43,7 @@ open class CreateUpdateShopFlowViewmodel() : ViewModel() {
     }
 
     fun onOpenAddCategoryDialog() = viewModelScope.launch {
-        _effects.emit(CreateUpdateShopFlowEffect.OpenAddCategoryDialog)
+        emitEffect(CreateUpdateShopFlowEffect.OpenAddCategoryDialog)
     }
 
     fun addCategory(category: ShopCategory) = mutableState.updateShopInput { shopInput ->

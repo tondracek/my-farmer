@@ -27,9 +27,11 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
@@ -130,6 +132,9 @@ private fun Content(
     }
 }
 
+private val DEFAULT_LAT_LNG = LatLng(49.8175, 15.4730)
+private const val DEFAULT_ZOOM = 6.5f
+
 @OptIn(ExperimentalPermissionsApi::class)
 @SuppressLint("MissingPermission")
 @Composable
@@ -145,8 +150,11 @@ fun PickLocationMap(
         LocationServices.getFusedLocationProviderClient(context)
     }
 
-    val cameraPositionState = rememberCameraPositionState()
-    fun zoomToLocation(latLng: LatLng, zoom: Float = 20f) = coroutineScope.launch {
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(DEFAULT_LAT_LNG, DEFAULT_ZOOM)
+    }
+
+    fun zoomToLocation(latLng: LatLng, zoom: Float = 18f) = coroutineScope.launch {
         val currentZoom = cameraPositionState.position.zoom
         if (currentZoom < zoom)
             cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
@@ -159,7 +167,7 @@ fun PickLocationMap(
         }
     }
     val isPermissionGranted = permission.status.isGranted
-    LaunchedEffect(isPermissionGranted) {
+    LaunchedEffect(isPermissionGranted, location) {
         when {
             !isPermissionGranted -> {}
             location != null -> zoomToLocation(location.toLatLng())
@@ -180,12 +188,12 @@ fun PickLocationMap(
             properties = MapProperties(
                 isMyLocationEnabled = isPermissionGranted,
                 isBuildingEnabled = true,
+                mapType = MapType.SATELLITE,
             ),
             uiSettings = MapUiSettings(
                 rotationGesturesEnabled = false,
             ),
             onMapClick = { latLng ->
-                zoomToLocation(latLng)
                 onLocationSelected(Location(latLng))
             }
         ) {
@@ -198,7 +206,10 @@ fun PickLocationMap(
 @Composable
 fun SimpleMarker(position: LatLng) {
     val state = rememberUpdatedMarkerState(position)
-    Marker(state = state)
+    Marker(
+        state = state,
+        onClick = { true }
+    )
 }
 
 @Composable

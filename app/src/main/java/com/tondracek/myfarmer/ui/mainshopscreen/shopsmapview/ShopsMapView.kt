@@ -184,6 +184,11 @@ fun FadingOverlay(
     }
 }
 
+private val DEFAULT_CAMERA_POSITION = CameraOptions.Builder()
+    .center(Point.fromLngLat(15.4730, 49.8175))
+    .zoom(5.5)
+    .build()
+
 @Composable
 private fun MapboxShopMap(
     modifier: Modifier = Modifier,
@@ -218,6 +223,7 @@ private fun MapboxShopMap(
                     true
                 }
                 addShopLayers(style, state.shops)
+                map.setCamera(DEFAULT_CAMERA_POSITION)
             }
         }
     )

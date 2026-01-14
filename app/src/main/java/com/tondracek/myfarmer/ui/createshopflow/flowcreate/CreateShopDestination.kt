@@ -70,8 +70,7 @@ fun NavGraphBuilder.createShopDestination(
             onUpdateLocation = viewModel::updateLocation,
             onUpdateOpeningHours = viewModel::updateOpeningHours,
             onUpdateMenu = viewModel::updateMenu,
-            onSubmitCreating = viewModel::submitCreating,
-            onNavigateBack = viewModel::navigateBack
+            onSubmitCreating = viewModel::submitCreating
         )
     }
 }

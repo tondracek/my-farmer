@@ -24,7 +24,7 @@ fun ShopInput.toShop(
     ownerId: UserId,
 ): UCResult<Shop> {
     if (this.location == null)
-        return UCResult.Failure(InputDataError.MissingRequiredData)
+        return UCResult.Failure(InputDataError.MissingLocationInput)
 
     return Shop(
         id = shopId,

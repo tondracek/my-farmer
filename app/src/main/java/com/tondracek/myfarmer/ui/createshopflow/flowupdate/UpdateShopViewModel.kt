@@ -27,12 +27,15 @@ class UpdateShopViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            mutableState.update {
-                getShopById(shopId)
-                    .first()
+            mutableState.update { previousState ->
+                getShopById(shopId).first()
+                    .withFailure {
+                        emitEffect(CreateUpdateShopFlowEffect.ShowError(it.error))
+                        emitEffect(CreateUpdateShopFlowEffect.NavigateBack)
+                    }
                     .fold(
                         onSuccess = { CreateUpdateShopFlowState.Creating.initial(it.toShopInput()) },
-                        onFailure = { CreateUpdateShopFlowState.Error(it) }
+                        onFailure = { previousState }
                     )
             }
         }
@@ -43,13 +46,16 @@ class UpdateShopViewModel @Inject constructor(
         if (currentState !is CreateUpdateShopFlowState.Creating) return@launch
 
         val shopInput = currentState.shopInput
-        mutableState.update { CreateUpdateShopFlowState.Loading }
 
+        mutableState.update { CreateUpdateShopFlowState.Loading }
         val result = updateShop(shopId = shopId, input = shopInput)
         when (result) {
-            is UCResult.Success -> _effects.emit(CreateUpdateShopFlowEffect.ShowShopUpdatedSuccessfully)
-            is UCResult.Failure -> _effects.emit(CreateUpdateShopFlowEffect.ShowError(result.error))
+            is UCResult.Success -> {
+                emitEffect(CreateUpdateShopFlowEffect.ShowShopUpdatedSuccessfully)
+                emitEffect(CreateUpdateShopFlowEffect.NavigateBack)
+            }
+
+            is UCResult.Failure -> emitEffect(CreateUpdateShopFlowEffect.ShowError(result.error))
         }
-        navigateBack()
     }
 }

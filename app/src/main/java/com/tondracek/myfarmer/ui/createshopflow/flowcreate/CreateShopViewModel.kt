@@ -21,16 +21,19 @@ class CreateShopViewModel @Inject constructor(
         if (currentState !is CreateUpdateShopFlowState.Creating) return@launch
 
         val shopInput = currentState.shopInput
-        mutableState.update { CreateUpdateShopFlowState.Loading }
 
+        mutableState.update { CreateUpdateShopFlowState.Loading }
         val result = createShop(shopInput)
         when (result) {
-            is UCResult.Success ->
-                _effects.emit(CreateUpdateShopFlowEffect.ShowShopCreatedSuccessfully)
+            is UCResult.Success -> {
+                emitEffect(CreateUpdateShopFlowEffect.ShowShopCreatedSuccessfully)
+                emitEffect(CreateUpdateShopFlowEffect.NavigateBack)
+            }
 
-            is UCResult.Failure ->
-                _effects.emit(CreateUpdateShopFlowEffect.ShowError(result.error))
+            is UCResult.Failure -> {
+                emitEffect(CreateUpdateShopFlowEffect.ShowError(result.error))
+                mutableState.update { currentState }
+            }
         }
-        navigateBack()
     }
 }

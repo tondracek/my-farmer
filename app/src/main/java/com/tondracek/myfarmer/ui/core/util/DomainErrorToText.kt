@@ -53,7 +53,7 @@ fun DomainError.toUserFriendlyMessage(context: Context) = when (this) {
     is CategoryPopularityError.FetchingFailed -> context.getString(R.string.failed_to_fetch_category_popularity)
     is CategoryPopularityError.Unknown -> context.getString(R.string.an_unknown_category_popularity_error_occurred)
 
-    InputDataError.MissingRequiredData -> context.getString(R.string.required_data_is_missing)
+    InputDataError.MissingLocationInput -> context.getString(R.string.please_provide_a_location_for_the_shop)
 
     ValidationError.InvalidEmailFormat -> context.getString(R.string.invalid_email_format)
     ValidationError.PasswordMustBeAtLeast6Chars -> context.getString(R.string.password_must_be_at_least_6_characters_long)

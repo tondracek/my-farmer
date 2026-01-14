@@ -76,8 +76,7 @@ fun NavGraphBuilder.updateShopDestination(
             onUpdateLocation = viewModel::updateLocation,
             onUpdateOpeningHours = viewModel::updateOpeningHours,
             onUpdateMenu = viewModel::updateMenu,
-            onSubmitCreating = viewModel::submitUpdating,
-            onNavigateBack = viewModel::navigateBack
+            onSubmitCreating = viewModel::submitUpdating
         )
     }
 }

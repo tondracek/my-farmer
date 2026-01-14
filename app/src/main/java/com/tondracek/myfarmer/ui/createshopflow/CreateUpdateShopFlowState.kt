@@ -1,6 +1,5 @@
 package com.tondracek.myfarmer.ui.createshopflow
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 
 sealed interface CreateUpdateShopFlowState {
@@ -39,6 +38,4 @@ sealed interface CreateUpdateShopFlowState {
     }
 
     data object Loading : CreateUpdateShopFlowState
-
-    data class Error(val failure: UCResult.Failure) : CreateUpdateShopFlowState
 }

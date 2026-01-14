@@ -66,7 +66,7 @@ sealed interface CategoryPopularityError : DomainError {
 }
 
 sealed interface InputDataError : DomainError {
-    data object MissingRequiredData : InputDataError
+    data object MissingLocationInput : InputDataError
 }
 
 sealed interface ValidationError : DomainError {
