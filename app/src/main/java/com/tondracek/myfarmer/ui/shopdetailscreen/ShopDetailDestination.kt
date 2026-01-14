@@ -11,6 +11,7 @@ import androidx.navigation.toRoute
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.navigation.Route
+import com.tondracek.myfarmer.ui.core.navigation.Route.ShopReviews
 import com.tondracek.myfarmer.ui.core.navigation.routeDestination
 
 fun SavedStateHandle.getShopDetailScreenShopId(): ShopId =
@@ -26,11 +27,11 @@ fun NavGraphBuilder.shopDetailScreenDestination(
     LaunchedEffect(Unit) {
         viewmodel.effects.collect { event ->
             when (event) {
-                ShopDetailEffect.NavigateBack ->
-                    navController.navigateUp()
-
                 is ShopDetailEffect.NavigateToReviews ->
-                    navController.navigate(Route.ShopReviews(shopId = event.shopId.toString()))
+                    navController.navigate(ShopReviews(shopId = event.shopId.toString()))
+
+                is ShopDetailEffect.EmitError ->
+                    appUiController.showError(event.error)
             }
         }
     }
@@ -39,7 +40,6 @@ fun NavGraphBuilder.shopDetailScreenDestination(
         ShopDetailScreen(
             state = state,
             navigateToReviews = viewmodel::navigateToReviews,
-            onNavigateBack = viewmodel::navigateBack,
             showErrorMessage = appUiController::showErrorMessage,
         )
     }

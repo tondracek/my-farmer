@@ -29,7 +29,6 @@ import com.tondracek.myfarmer.ui.mainshopscreen.mainShopsScreenDestination
 import com.tondracek.myfarmer.ui.myshopsscreen.myShopsScreenDestination
 import com.tondracek.myfarmer.ui.reviewscreen.shopReviewsScreenDestination
 import com.tondracek.myfarmer.ui.shopdetailscreen.shopDetailScreenDestination
-import com.tondracek.myfarmer.ui.shopfilterdialog.shopsFilterDialogDestination
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -67,7 +66,6 @@ class MainActivity : ComponentActivity() {
 
                                 navigation<NavGraph.MainFlow.Home>(Route.MainShopsRoute) {
                                     mainShopsScreenDestination(navController)
-                                    shopsFilterDialogDestination(navController)
                                 }
 
                                 navigation<NavGraph.MainFlow.Profile>(Route.EditProfileScreenRoute) {

@@ -34,9 +34,6 @@ interface Route {
     data object EditProfileScreenRoute : Route
 
     @Serializable
-    data class ShopBottomSheetRoute(val shopId: String) : Route
-
-    @Serializable
     data class ShopDetailRoute(val shopId: String) : Route
 
     @Serializable
@@ -50,7 +47,4 @@ interface Route {
 
     @Serializable
     data object AddCategoryDialog : Route
-
-    @Serializable
-    data class ShopFilterDialog(val filterRepositoryKey: String) : Route
 }

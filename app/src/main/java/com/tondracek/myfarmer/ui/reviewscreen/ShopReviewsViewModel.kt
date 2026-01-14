@@ -26,10 +26,12 @@ import com.tondracek.myfarmer.ui.common.review.ReviewUiState
 import com.tondracek.myfarmer.ui.common.review.toUiState
 import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -41,8 +43,8 @@ class ShopReviewsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getShopById: GetShopByIdUC,
     getUserReviewOnShopUC: GetUserReviewOnShopUC,
-    deleteReviewUC: DeleteReviewUC,
     getLoggedInUserUC: GetLoggedInUserUC,
+    private val deleteReviewUC: DeleteReviewUC,
     private val getShopReviewsWithAuthorsUC: GetShopReviewsWithAuthorsUC,
     private val createShopReview: CreateShopReviewUC,
 ) : BaseViewModel<ShopReviewsEffect>() {
@@ -56,25 +58,23 @@ class ShopReviewsViewModel @Inject constructor(
         .map { it.getOrNull() }
 
     private val myReview: Flow<Review?> = currentUser
-        .flatMap {
-            getUserReviewOnShopUC(
-                shopId = shopId,
-                userId = it.id,
-            )
-        }
+        .flatMap { getUserReviewOnShopUC(shopId = shopId, userId = it.id) }
         .map { it.getOrNull() }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val _reviewsWithAuthors: Flow<PagingData<Pair<Review, SystemUser>>> =
-        getUCResultPageFlow<ReviewId, Pair<Review, SystemUser>>(
-            getDataKey = { (review, _) -> review.id },
-            showError = { emitEffect(ShopReviewsEffect.ShowError(it)) },
-        ) { limit, after ->
-            getShopReviewsWithAuthorsUC.paged(
-                shopId = shopId,
-                limit = limit,
-                after = after,
-            )
-        }.cachedIn(viewModelScope)
+        myReview.flatMapLatest {
+            getUCResultPageFlow<ReviewId, Pair<Review, SystemUser>>(
+                getDataKey = { (review, _) -> review.id },
+                showError = { emitEffect(ShopReviewsEffect.ShowError(it)) },
+            ) { limit, after ->
+                getShopReviewsWithAuthorsUC.paged(
+                    shopId = shopId,
+                    limit = limit,
+                    after = after,
+                )
+            }.cachedIn(viewModelScope)
+        }
 
     private val _reviewsUiState: Flow<PagingData<ReviewUiState>> =
         _reviewsWithAuthors.map { pagingData ->
@@ -112,11 +112,16 @@ class ShopReviewsViewModel @Inject constructor(
         createShopReview(
             shopId = shopId,
             reviewInput = reviewInput
-        )
+        ).withFailure { emitEffect(ShopReviewsEffect.ShowError(it.error)) }
     }
 
     fun onNavigateBack() = viewModelScope.launch {
         emitEffect(ShopReviewsEffect.NavigateBack)
+    }
+
+    fun onReviewDeleteClick(reviewId: ReviewId) = viewModelScope.launch {
+        deleteReviewUC(reviewId)
+            .withFailure { emitEffect(ShopReviewsEffect.ShowError(it.error)) }
     }
 }
 

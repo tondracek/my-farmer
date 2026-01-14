@@ -11,6 +11,7 @@ import com.tondracek.myfarmer.core.data.firestore.helpers.mapToDomain
 import com.tondracek.myfarmer.core.domain.domainerror.ReviewError
 import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.log
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultNonNull
 import com.tondracek.myfarmer.review.domain.model.Review
@@ -37,14 +38,14 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
         firestore
             .collection(FirestoreCollectionNames.SHOP)
             .document(shopId.toFirestoreId())
-            .collection("reviews")
+            .collection(FirestoreCollectionNames.REVIEW)
 
     private fun reviewsCollection(shopId: ShopId, userId: UserId) =
         reviewsCollection(shopId)
             .document(userId.toFirestoreId())
 
     private fun allReviewsCollection() =
-        firestore.collectionGroup("reviews")
+        firestore.collectionGroup(FirestoreCollectionNames.REVIEW)
 
     override fun getShopReviews(
         shopId: ShopId,
@@ -61,11 +62,12 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
         after: ReviewId?
     ): UCResult<List<Review>> = UCResult.of(ReviewError.FetchingFailed) {
         reviewsCollection(shopId)
+            .orderBy(ReviewEntity::id.name)
             .applyIfNotNull(after) { id -> this.startAfter(id.toFirestoreId()) }
             .limit(limit.toLong())
             .getEntities(ReviewEntity::class)
             .map { it.toModel() }
-    }
+    }.log()
 
     override fun getUserReviewOnShop(
         shopId: ShopId,
@@ -84,14 +86,14 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
                 throw ReviewAlreadyExistsException()
 
             tx.set(docRef, item.toEntity())
-        }.await()
 
-        UCResult.Success(item.id)
+            UCResult.Success(item.id)
+        }.await()
     } catch (e: ReviewAlreadyExistsException) {
         UCResult.Failure(ReviewError.AlreadyExists, e)
     } catch (e: Exception) {
         UCResult.Failure(ReviewError.CreationFailed, e)
-    }
+    }.log()
 
     override suspend fun update(item: Review): UCResult<Unit> =
         UCResult.of(ReviewError.UpdateFailed) {
@@ -107,7 +109,6 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
                 .getEntities(ReviewEntity::class)
                 .firstOrNull()
                 ?: return UCResult.Failure(ReviewError.NotFound)
-
 
             reviewsCollection(
                 ShopId.fromString(entity.shopId),

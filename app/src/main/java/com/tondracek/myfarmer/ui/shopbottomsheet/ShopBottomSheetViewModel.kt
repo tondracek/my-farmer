@@ -1,6 +1,5 @@
 package com.tondracek.myfarmer.ui.shopbottomsheet
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
@@ -23,19 +22,22 @@ import com.tondracek.myfarmer.ui.shopdetailscreen.toShopDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ShopBottomSheetViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     getShopById: GetShopByIdUC,
     getUserById: GetUserByIdUC,
     getUsersByIds: GetUsersByIdsUC,
@@ -43,20 +45,27 @@ class ShopBottomSheetViewModel @Inject constructor(
     getShopAverageRating: GetShopAverageRatingUC,
 ) : BaseViewModel<ShopBottomSheetEffect>() {
 
-    private val shopId: ShopId = savedStateHandle.getShopBottomSheetShopId()
+    private val _openedShopId = MutableStateFlow<ShopId?>(null)
+    val openedShopId = _openedShopId
 
-    private val shop: Flow<Shop> = getShopById(shopId)
+    fun openShop(id: ShopId?) = _openedShopId.update { id }
+
+    private val shop: Flow<Shop> = _openedShopId
+        .filterNotNull()
+        .flatMapLatest { getShopById(it) }
         .withFailure { emitEffect(ShopBottomSheetEffect.EmitError(it.error)) }
         .mapNotNull { it.getOrNull() }
+        .distinctUntilChanged()
 
     private val owner: Flow<SystemUser> =
         shop.flatMapLatest { getUserById(it.ownerId) }
             .withFailure { emitEffect(ShopBottomSheetEffect.EmitError(it.error)) }
             .mapNotNull { it.getOrNull() }
 
-    private val reviewsPreview: Flow<List<Review>> = getReviewsPreview(shopId)
-        .withFailure { emitEffect(ShopBottomSheetEffect.EmitError(it.error)) }
-        .getOrElse(emptyList())
+    private val reviewsPreview: Flow<List<Review>> =
+        shop.flatMapLatest { getReviewsPreview(it.id) }
+            .withFailure { emitEffect(ShopBottomSheetEffect.EmitError(it.error)) }
+            .getOrElse(emptyList())
 
     private val reviewAuthors: Flow<List<SystemUser>> =
         reviewsPreview.flatMapLatest { reviews ->
@@ -65,9 +74,10 @@ class ShopBottomSheetViewModel @Inject constructor(
         }.withFailure { emitEffect(ShopBottomSheetEffect.EmitError(it.error)) }
             .getOrElse(emptyList())
 
-    private val averageRating: Flow<Rating> = getShopAverageRating(shopId)
-        .withFailure { emitEffect(ShopBottomSheetEffect.EmitError(it.error)) }
-        .mapNotNull { it.getOrNull() }
+    private val averageRating: Flow<Rating> =
+        shop.flatMapLatest { getShopAverageRating(it.id) }
+            .withFailure { emitEffect(ShopBottomSheetEffect.EmitError(it.error)) }
+            .getOrElse(Rating.ZERO)
 
     private val reviewUiStates: Flow<List<ReviewUiState>> = combine(
         reviewsPreview,
@@ -94,6 +104,7 @@ class ShopBottomSheetViewModel @Inject constructor(
     )
 
     fun navigateToReviews() = viewModelScope.launch {
+        val shopId = _openedShopId.value ?: return@launch
         emitEffect(ShopBottomSheetEffect.NavigateToReviews(shopId))
     }
 }

@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.tondracek.myfarmer.R
+import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.review.domain.model.ReviewInput
 import com.tondracek.myfarmer.shop.data.sampleReviewsUI
 import com.tondracek.myfarmer.ui.common.divider.CustomHorizontalDivider
@@ -42,11 +43,13 @@ fun ShopReviewsScreen(
     state: ShopReviewsScreenState,
     onSubmitReview: (reviewInput: ReviewInput) -> Unit,
     onBackClick: () -> Unit,
+    onReviewDeleteClick: (ReviewId) -> Unit,
 ) {
     when (state) {
         is ShopReviewsScreenState.Success -> Content(
             state = state,
-            onSubmitReview = onSubmitReview
+            onSubmitReview = onSubmitReview,
+            onReviewDeleteClick = onReviewDeleteClick,
         )
 
         is ShopReviewsScreenState.Loading -> LoadingLayout()
@@ -62,6 +65,7 @@ fun ShopReviewsScreen(
 private fun Content(
     state: ShopReviewsScreenState.Success,
     onSubmitReview: (reviewInput: ReviewInput) -> Unit,
+    onReviewDeleteClick: (ReviewId) -> Unit,
 ) {
     var showNewReviewBottomSheet by remember { mutableStateOf(false) }
 
@@ -69,7 +73,10 @@ private fun Content(
         title = state.shopName ?: stringResource(R.string.app_name)
     ) {
 
-        ReviewsList(state)
+        ReviewsList(
+            state = state,
+            onReviewDeleteClick = onReviewDeleteClick,
+        )
 
         if (state.myReview == null)
             Button(
@@ -92,7 +99,10 @@ private fun Content(
 }
 
 @Composable
-private fun ReviewsList(state: ShopReviewsScreenState.Success) {
+private fun ReviewsList(
+    state: ShopReviewsScreenState.Success,
+    onReviewDeleteClick: (ReviewId) -> Unit,
+) {
     val pagingItems = state.reviews.collectAsLazyPagingItems()
 
     LazyColumn(
@@ -105,15 +115,20 @@ private fun ReviewsList(state: ShopReviewsScreenState.Success) {
     ) {
         item {
             if (state.myReview != null)
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("My Review")
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
+                ) {
+                    CustomHorizontalDivider()
+                    Text(stringResource(R.string.my_review))
                     ReviewCard(
                         review = state.myReview,
                         colors = MyFarmerTheme.cardColors.primary,
+                        onDeleteClick = { onReviewDeleteClick(state.myReview.id) }
                     )
                     Spacer(Modifier.size(MyFarmerTheme.paddings.medium))
                     CustomHorizontalDivider()
-                    Text("Other Reviews")
+                    Text(stringResource(R.string.other_reviews))
                 }
         }
 
@@ -140,7 +155,8 @@ private fun ShopReviewsScreenPreview() {
                 reviews = flowOf(PagingData.from(sampleReviewsUI))
             ),
             onSubmitReview = {},
-            onBackClick = {}
+            onBackClick = {},
+            onReviewDeleteClick = {},
         )
     }
 }
@@ -156,7 +172,8 @@ private fun ShopReviewsScreenPreviewSingleReview() {
                 reviews = flowOf(PagingData.from(listOf(sampleReviewsUI.first())))
             ),
             onSubmitReview = {},
-            onBackClick = {}
+            onBackClick = {},
+            onReviewDeleteClick = {},
         )
     }
 }
@@ -172,7 +189,8 @@ private fun ShopReviewsScreenPreviewNoReview() {
                 reviews = flowOf(PagingData.from(emptyList()))
             ),
             onSubmitReview = {},
-            onBackClick = {}
+            onBackClick = {},
+            onReviewDeleteClick = {},
         )
     }
 }

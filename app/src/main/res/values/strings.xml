@@ -141,4 +141,7 @@
     <string name="you_are_not_the_author_of_this_review">You are not the author of this review.</string>
     <string name="write_a_review">Write a review</string>
     <string name="delete">Delete</string>
+    <string name="you_cannot_create_a_review_for_your_own_shop">You cannot create a review for your own shop.</string>
+    <string name="my_review">My Review</string>
+    <string name="other_reviews">Other Reviews</string>
 </resources>

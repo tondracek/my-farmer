@@ -138,4 +138,11 @@
     <string name="password_must_contain_at_least_one_uppercase_letter">Heslo musí obsahovat alespoň jedno velké písmeno.</string>
     <string name="password_must_contain_at_least_one_lowercase_letter">Heslo musí obsahovat alespoň jedno malé písmeno.</string>
     <string name="passwords_do_not_match">Hesla se neshodují.</string>
+    <string name="you_have_already_submitted_a_review_for_this_shop">Tuto provozovnu jste již ohodnotil(a).</string>
+    <string name="you_are_not_the_author_of_this_review">Nejste autorem této recenze.</string>
+    <string name="write_a_review">Napsat recenzi</string>
+    <string name="delete">Smazat</string>
+    <string name="you_cannot_create_a_review_for_your_own_shop">Nemůžete napsat recenzi na vlastní provozovnu.</string>
+    <string name="my_review">Moje recenze</string>
+    <string name="other_reviews">Ostatní recenze</string>
 </resources>

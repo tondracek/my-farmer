@@ -12,8 +12,8 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
 fun CustomHorizontalDivider(
-    horizontalPadding: Dp = MyFarmerTheme.paddings.medium,
     verticalPadding: Dp = MyFarmerTheme.paddings.small,
+    horizontalPadding: Dp = MyFarmerTheme.paddings.medium,
     color: Color = LocalContentColor.current
 ) {
     HorizontalDivider(
@@ -21,7 +21,7 @@ fun CustomHorizontalDivider(
             .fillMaxWidth()
             .padding(
                 horizontal = horizontalPadding,
-                vertical = verticalPadding
+                vertical = verticalPadding / 2
             ),
         color = color,
     )

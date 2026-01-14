@@ -1,6 +1,5 @@
 package com.tondracek.myfarmer.ui.shopfilterdialog
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
@@ -12,6 +11,7 @@ import com.tondracek.myfarmer.shopcategory.domain.usecase.GetMostPopularCategori
 import com.tondracek.myfarmer.shopfilters.data.ShopFilterRepositoryFactory
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
 import com.tondracek.myfarmer.ui.common.category.CategoryNameInputState
+import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,14 +29,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShopFilterDialogViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     filterRepositoryFactory: ShopFilterRepositoryFactory,
     getMostPopularCategoriesUC: GetMostPopularCategoriesUC,
     getCategorySuggestionsUC: GetCategorySuggestionsUC,
 ) : ViewModel() {
 
-    val filterRepositoryKey = savedStateHandle.getShopFilterRepositoryKey()
-    val filterRepository = filterRepositoryFactory.createOrGet(filterRepositoryKey)
+    val filterRepository =
+        filterRepositoryFactory.createOrGet(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
+
     private val filters: MutableStateFlow<ShopFilters> = MutableStateFlow(ShopFilters.None)
 
     private val categoryFilterInput: MutableStateFlow<String> = MutableStateFlow("")

@@ -55,6 +55,7 @@ sealed interface ReviewError : DomainError {
     data object NotFound : ReviewError
     data object AlreadyExists : ReviewError
     data object NotAuthor : ReviewError
+    data object CreatingToOwnShopNotAllowed : ReviewError
 
     data object Unknown : ReviewError
 }

@@ -17,7 +17,7 @@ fun <E> Query.applyIfNotNull(value: E?, block: Query.(E) -> Query): Query =
 
 fun <Entity : FirestoreEntity> DocumentSnapshot.toObjectWithId(entityClass: KClass<Entity>): Entity? {
     return this.toObject(entityClass.java)
-        ?.also { it.id = this.id }
+        ?.also { if (it.id.isBlank()) it.id = this.id }
 }
 
 fun <Entity : FirestoreEntity> QuerySnapshot.toObjectsWithId(entityClass: KClass<Entity>): List<Entity> {

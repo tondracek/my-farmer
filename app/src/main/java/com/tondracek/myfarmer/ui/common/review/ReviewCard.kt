@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Text
@@ -59,12 +60,13 @@ fun ReviewCard(
                 RatingStars(rating = review.rating)
             }
 
-            if (!review.comment.isNullOrBlank())
+            if (!review.comment.isNullOrBlank()) SelectionContainer {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = review.comment,
                     style = MyFarmerTheme.typography.textMedium
                 )
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

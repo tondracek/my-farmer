@@ -34,6 +34,7 @@ fun NavGraphBuilder.shopReviewsScreenDestination(
     ShopReviewsScreen(
         state = state,
         onSubmitReview = viewmodel::onSubmitReview,
-        onBackClick = viewmodel::onNavigateBack
+        onBackClick = viewmodel::onNavigateBack,
+        onReviewDeleteClick = viewmodel::onReviewDeleteClick,
     )
 }
