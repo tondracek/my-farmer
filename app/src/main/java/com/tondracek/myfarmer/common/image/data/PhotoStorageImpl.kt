@@ -11,7 +11,7 @@ import androidx.exifinterface.media.ExifInterface
 import com.google.firebase.storage.FirebaseStorage
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.domain.domainerror.PhotoError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultList
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -32,12 +32,12 @@ class PhotoStorageImpl @Inject constructor(
         name: String,
         folder: PhotoStorageFolder,
         quality: Quality,
-    ): UCResult<ImageResource> = UCResult.of(PhotoError.UploadFailed) {
+    ): DomainResult<ImageResource> = DomainResult.of(PhotoError.UploadFailed) {
         val localUri = imageResource.uri
-            ?: return UCResult.Success(ImageResource.EMPTY)
+            ?: return DomainResult.Success(ImageResource.EMPTY)
 
         val bitmap = loadBitmapFromUri(localUri.toUri())
-            ?: return UCResult.Failure(PhotoError.UploadFailed)
+            ?: return DomainResult.Failure(PhotoError.UploadFailed)
         val resizedBitmap = resizeBitmapForQuality(bitmap, quality)
         val bytes = compressBitmap(resizedBitmap)
 
@@ -57,7 +57,7 @@ class PhotoStorageImpl @Inject constructor(
         imageResources: Collection<Pair<String, ImageResource>>,
         folder: PhotoStorageFolder,
         quality: Quality,
-    ): UCResult<List<ImageResource>> = coroutineScope {
+    ): DomainResult<List<ImageResource>> = coroutineScope {
         imageResources.map {
             async {
                 uploadPhoto(
@@ -70,29 +70,30 @@ class PhotoStorageImpl @Inject constructor(
         }.awaitAll().toUCResultList()
     }
 
-    override suspend fun deletePhoto(imageResource: ImageResource): UCResult<Unit> = UCResult.of(
-        PhotoError.DeletionFailed
-    ) {
-        if (!imageResource.isFirebaseStoragePath())
-            return UCResult.Success(Unit)
-                .also { Timber.d("ImageResource $imageResource is not a Firebase Storage path, skipping deletion.") }
+    override suspend fun deletePhoto(imageResource: ImageResource): DomainResult<Unit> =
+        DomainResult.of(
+            PhotoError.DeletionFailed
+        ) {
+            if (!imageResource.isFirebaseStoragePath())
+                return DomainResult.Success(Unit)
+                    .also { Timber.d("ImageResource $imageResource is not a Firebase Storage path, skipping deletion.") }
 
-        imageResource.uri
-            ?.runCatching {
-                Timber.d("Deleting photo at $this")
-                storage.reference.child(imageResource.uri)
-                    .delete()
-                    .await()
-                Timber.d("Photo at $this deleted successfully.")
-            }
-            ?.onFailure {
-                Timber.e(it, "Failed to delete photo at ${imageResource.uri}")
-                throw it
-            } ?: Timber.e("Photo path is null for imageResource: $imageResource")
-    }
+            imageResource.uri
+                ?.runCatching {
+                    Timber.d("Deleting photo at $this")
+                    storage.reference.child(imageResource.uri)
+                        .delete()
+                        .await()
+                    Timber.d("Photo at $this deleted successfully.")
+                }
+                ?.onFailure {
+                    Timber.e(it, "Failed to delete photo at ${imageResource.uri}")
+                    throw it
+                } ?: Timber.e("Photo path is null for imageResource: $imageResource")
+        }
 
-    override suspend fun deletePhotos(imageResources: Collection<ImageResource>): UCResult<Unit> =
-        UCResult.of(
+    override suspend fun deletePhotos(imageResources: Collection<ImageResource>): DomainResult<Unit> =
+        DomainResult.of(
             PhotoError.DeletionFailed
         ) {
             coroutineScope {

@@ -10,7 +10,7 @@ import androidx.paging.PagingState
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
 import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
 import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
@@ -150,7 +150,7 @@ fun getShopsByDistancePageFlow(
     center: Location,
     pageSize: Int,
     showError: suspend (error: DomainError) -> Unit,
-    getShops: suspend (center: Location, pageSize: Int, cursor: DistancePagingCursor?) -> UCResult<Pair<List<Shop>, DistancePagingCursor?>>,
+    getShops: suspend (center: Location, pageSize: Int, cursor: DistancePagingCursor?) -> DomainResult<Pair<List<Shop>, DistancePagingCursor?>>,
 ): Flow<PagingData<Shop>> = Pager(
     config = PagingConfig(
         pageSize = pageSize,
@@ -171,7 +171,7 @@ class ShopsByDistancePagingSource(
     private val center: Location,
     private val pageSize: Int,
     private val showError: suspend (error: DomainError) -> Unit,
-    private val getShops: suspend (center: Location, pageSize: Int, cursor: DistancePagingCursor?) -> UCResult<Pair<List<Shop>, DistancePagingCursor?>>,
+    private val getShops: suspend (center: Location, pageSize: Int, cursor: DistancePagingCursor?) -> DomainResult<Pair<List<Shop>, DistancePagingCursor?>>,
 ) : PagingSource<DistancePagingCursor, Shop>() {
 
     override suspend fun load(
@@ -182,7 +182,7 @@ class ShopsByDistancePagingSource(
         val result = getShops(center, pageSize, cursor)
 
         return when (result) {
-            is UCResult.Success<Pair<List<Shop>, DistancePagingCursor?>> -> {
+            is DomainResult.Success<Pair<List<Shop>, DistancePagingCursor?>> -> {
                 val (shops, nextCursor) = result.data
                 LoadResult.Page(
                     data = shops,
@@ -191,7 +191,7 @@ class ShopsByDistancePagingSource(
                 )
             }
 
-            is UCResult.Failure -> result
+            is DomainResult.Failure -> result
                 .withFailure { showError(it.error) }
                 .let { LoadResult.Error(result.cause ?: Exception()) }
         }

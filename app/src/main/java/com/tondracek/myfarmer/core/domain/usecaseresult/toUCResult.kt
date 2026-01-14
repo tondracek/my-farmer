@@ -15,17 +15,17 @@ import kotlinx.coroutines.flow.map
  */
 fun <T> Flow<T>.toUCResult(
     error: DomainError
-): Flow<UCResult<T>> =
-    this.map { UCResult.Success(it) as UCResult<T> }
-        .catch { e -> emit(UCResult.Failure(error, e)) }
+): Flow<DomainResult<T>> =
+    this.map { DomainResult.Success(it) as DomainResult<T> }
+        .catch { e -> emit(DomainResult.Failure(error, e)) }
 
 fun <T> Flow<T?>.toUCResultNonNull(
     nullError: DomainError,
     defaultError: DomainError
-): Flow<UCResult<T>> =
+): Flow<DomainResult<T>> =
     this.map {
         when (it) {
-            null -> UCResult.Failure(nullError)
-            else -> UCResult.Success(it)
+            null -> DomainResult.Failure(nullError)
+            else -> DomainResult.Success(it)
         }
-    }.catch { e -> emit(UCResult.Failure(defaultError, e)) }
+    }.catch { e -> emit(DomainResult.Failure(defaultError, e)) }

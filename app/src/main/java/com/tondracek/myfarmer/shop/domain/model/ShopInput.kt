@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.shop.domain.model
 
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.domain.domainerror.InputDataError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
@@ -22,9 +22,9 @@ data class ShopInput(
 fun ShopInput.toShop(
     shopId: ShopId,
     ownerId: UserId,
-): UCResult<Shop> {
+): DomainResult<Shop> {
     if (this.location == null)
-        return UCResult.Failure(InputDataError.MissingLocationInput)
+        return DomainResult.Failure(InputDataError.MissingLocationInput)
 
     return Shop(
         id = shopId,
@@ -36,7 +36,7 @@ fun ShopInput.toShop(
         menu = this.menu,
         location = this.location,
         openingHours = this.openingHours,
-    ).let { UCResult.Success(it) }
+    ).let { DomainResult.Success(it) }
 }
 
 fun Shop.toShopInput(): ShopInput =

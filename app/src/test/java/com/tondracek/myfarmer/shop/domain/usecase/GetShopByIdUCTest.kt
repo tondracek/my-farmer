@@ -3,7 +3,7 @@ package com.tondracek.myfarmer.shop.domain.usecase
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.common.usecase.result.NotFoundUCResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
@@ -52,7 +52,7 @@ class GetShopByIdUCTest {
 
         val result = uc(id).first()
 
-        assertThat(result).isInstanceOf(UCResult.Success::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Success::class.java)
         assertThat(result.getOrNull()).isEqualTo(shop)
     }
 
@@ -78,7 +78,7 @@ class GetShopByIdUCTest {
         whenever(repository.getById(id))
             .thenReturn(flow)
 
-        val emissions = mutableListOf<UCResult<Shop>>()
+        val emissions = mutableListOf<DomainResult<Shop>>()
 
         val job = launch {
             uc(id).collect { emissions.add(it) }

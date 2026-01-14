@@ -5,7 +5,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.common.image.data.FakePhotoStorage
 import com.tondracek.myfarmer.common.image.model.ImageResource
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.shop.data.getFakeShopRepository
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
@@ -54,49 +54,49 @@ class UpdateShopUCTest {
 
     @Test
     fun `returns failure when user is not logged in`() = runTest {
-        whenever(getLoggedInUser()).thenReturn(flowOf(UCResult.Failure("Not logged in")))
+        whenever(getLoggedInUser()).thenReturn(flowOf(DomainResult.Failure("Not logged in")))
 
         val result = uc(shop.id, ShopInput())
 
-        assertThat(result).isInstanceOf(UCResult.Failure::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
     }
 
     @Test
     fun `returns failure when shop does not exist`() = runTest {
-        whenever(getLoggedInUser()).thenReturn(flowOf(UCResult.Success(user)))
+        whenever(getLoggedInUser()).thenReturn(flowOf(DomainResult.Success(user)))
 
         val unknownId = UUID.randomUUID()
         val result = uc(unknownId, ShopInput())
 
-        assertThat(result).isInstanceOf(UCResult.Failure::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
     }
 
     @Test
     fun `returns failure when user is not the shop owner`() = runTest {
         val otherUser = sampleUsers.last()
 
-        whenever(getLoggedInUser()).thenReturn(flowOf(UCResult.Success(otherUser)))
+        whenever(getLoggedInUser()).thenReturn(flowOf(DomainResult.Success(otherUser)))
 
         val result = uc(shop.id, ShopInput())
 
-        assertThat(result).isInstanceOf(UCResult.Failure::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
     }
 
     @Test
     fun `returns failure when toShop fails`() = runTest {
-        whenever(getLoggedInUser()).thenReturn(flowOf(UCResult.Success(user)))
+        whenever(getLoggedInUser()).thenReturn(flowOf(DomainResult.Success(user)))
 
         val invalidInput = shop.toShopInput().copy(location = null)
 
         val result = uc(shop.id, invalidInput)
 
-        assertThat(result).isInstanceOf(UCResult.Failure::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `updates shop and uploads only new photos`() = runTest {
-        whenever(getLoggedInUser()).thenReturn(flowOf(UCResult.Success(user)))
+        whenever(getLoggedInUser()).thenReturn(flowOf(DomainResult.Success(user)))
 
         val imgOld1 = ImageResource("old1")
         val imgOld2 = ImageResource("old2")
@@ -113,7 +113,7 @@ class UpdateShopUCTest {
 
         val result = uc(originalShop.id, input)
 
-        assertThat(result).isInstanceOf(UCResult.Success::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Success::class.java)
 
         assertThat(photoStorage.images.containsValue(imgOld2)).isFalse()
 
@@ -126,13 +126,13 @@ class UpdateShopUCTest {
 
     @Test
     fun `successful update returns UCResult_Success`() = runTest {
-        whenever(getLoggedInUser()).thenReturn(flowOf(UCResult.Success(user)))
+        whenever(getLoggedInUser()).thenReturn(flowOf(DomainResult.Success(user)))
 
         val input = shop.toShopInput().copy(name = "Updated Name")
 
         val result = uc(shop.id, input)
 
-        assertThat(result).isInstanceOf(UCResult.Success::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Success::class.java)
 
         val updated = repo.getById(shop.id).first()
         assertThat(updated!!.name).isEqualTo("Updated Name")

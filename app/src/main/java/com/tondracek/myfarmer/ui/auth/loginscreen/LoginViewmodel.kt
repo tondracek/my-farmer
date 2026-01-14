@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.auth.domain.usecase.LoginUserUC
 import com.tondracek.myfarmer.auth.domain.usecase.LoginWithGoogleUC
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.ui.auth.loginscreen.components.LoginInput
 import com.tondracek.myfarmer.ui.auth.loginscreen.components.LoginValidation
 import com.tondracek.myfarmer.ui.auth.loginscreen.components.validateInput
@@ -60,24 +60,24 @@ class LoginViewmodel @Inject constructor(
         _loginInProgress.emit(false)
 
         when (result) {
-            is UCResult.Success -> {
+            is DomainResult.Success -> {
                 emitEffect(LoginEffect.ShowLoginSuccessfully)
                 emitEffect(LoginEffect.GoToProfileScreen)
             }
 
-            is UCResult.Failure -> emitEffect(LoginEffect.ShowError(result.error))
+            is DomainResult.Failure -> emitEffect(LoginEffect.ShowError(result.error))
         }
     }
 
     private suspend fun submitGoogleLogin(token: String) {
         val result = loginWithGoogleUC(token)
         when (result) {
-            is UCResult.Success -> {
+            is DomainResult.Success -> {
                 emitEffect(LoginEffect.ShowLoginSuccessfully)
                 emitEffect(LoginEffect.GoToProfileScreen)
             }
 
-            is UCResult.Failure -> emitEffect(LoginEffect.ShowError(result.error))
+            is DomainResult.Failure -> emitEffect(LoginEffect.ShowError(result.error))
         }
     }
 

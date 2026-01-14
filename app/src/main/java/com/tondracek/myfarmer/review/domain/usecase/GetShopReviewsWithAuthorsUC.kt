@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.review.domain.usecase
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.flatMap
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
 import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
@@ -22,7 +22,7 @@ class GetShopReviewsWithAuthorsUC @Inject constructor(
 ) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(shopId: ShopId): Flow<UCResult<List<Pair<Review, SystemUser>>>> {
+    operator fun invoke(shopId: ShopId): Flow<DomainResult<List<Pair<Review, SystemUser>>>> {
         val reviews = reviewRepository.getShopReviews(shopId)
         val authors = reviews.flatMap { reviewList ->
             val authorIds = reviewList.map { it.userId }.distinct()
@@ -42,7 +42,7 @@ class GetShopReviewsWithAuthorsUC @Inject constructor(
                     val author = authorsById[review.userId]
                     author?.let { review to author }
                 }
-                .let { UCResult.Success(it) }
+                .let { DomainResult.Success(it) }
         }
     }
 
@@ -50,14 +50,14 @@ class GetShopReviewsWithAuthorsUC @Inject constructor(
         shopId: ShopId,
         limit: Int,
         after: ReviewId?,
-    ): UCResult<List<Pair<Review, SystemUser>>> {
+    ): DomainResult<List<Pair<Review, SystemUser>>> {
         val reviews = reviewRepository.getShopReviewsPaged(
             shopId = shopId,
             limit = limit,
             after = after
         ).getOrReturn { return it }
 
-        if (reviews.isEmpty()) return UCResult.Success(emptyList())
+        if (reviews.isEmpty()) return DomainResult.Success(emptyList())
 
         val authorIds = reviews.map { it.userId }.distinct()
         return userRepository

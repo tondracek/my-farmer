@@ -6,7 +6,7 @@ import com.tondracek.myfarmer.common.image.data.PhotoStorageFolder
 import com.tondracek.myfarmer.common.image.data.Quality
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.domain.domainerror.ShopError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
@@ -22,13 +22,13 @@ class UpdateShopUC @Inject constructor(
     private val shopRepository: ShopRepository,
     private val photoStorage: PhotoStorage,
 ) {
-    suspend operator fun invoke(shopId: ShopId, input: ShopInput): UCResult<Unit> {
+    suspend operator fun invoke(shopId: ShopId, input: ShopInput): DomainResult<Unit> {
         val user = getLoggedInUser().first().getOrReturn { return it }
 
         val originalShop = shopRepository.getById(shopId).first().getOrReturn { return it }
 
         if (originalShop.ownerId != user.id)
-            return UCResult.Failure(ShopError.NotOwner)
+            return DomainResult.Failure(ShopError.NotOwner)
 
         val originalImages = originalShop.images
         val updatedShop = input
@@ -40,7 +40,7 @@ class UpdateShopUC @Inject constructor(
         return shopRepository.update(updatedShop)
     }
 
-    private suspend fun Shop.updatePhotos(originalImages: List<ImageResource>): UCResult<Shop> {
+    private suspend fun Shop.updatePhotos(originalImages: List<ImageResource>): DomainResult<Shop> {
         val photosToUpload = images.filter { it !in originalImages }
         val uploadedPhotos = photoStorage.uploadPhotos(
             imageResources = photosToUpload.map { UUID.randomUUID().toString() to it },
@@ -54,6 +54,6 @@ class UpdateShopUC @Inject constructor(
 
         val newImages = photosToKeep + uploadedPhotos
 
-        return UCResult.Success(this.copy(images = newImages))
+        return DomainResult.Success(this.copy(images = newImages))
     }
 }

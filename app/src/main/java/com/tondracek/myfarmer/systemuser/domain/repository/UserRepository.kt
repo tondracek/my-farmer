@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.systemuser.domain.repository
 
 import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.core.domain.repository.Repository
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface UserRepository : Repository<SystemUser, UserId> {
 
-    fun getByIds(userIds: List<UserId>): Flow<UCResult<List<SystemUser>>>
+    fun getByIds(userIds: List<UserId>): Flow<DomainResult<List<SystemUser>>>
 
-    fun getUserByAuthId(authId: AuthId): Flow<UCResult<SystemUser?>>
+    fun getUserByAuthId(authId: AuthId): Flow<DomainResult<SystemUser?>>
 }

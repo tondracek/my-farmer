@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.shop.data
 
 import com.tondracek.myfarmer.core.domain.domainerror.ShopError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.location.data.GeoHashUtils
 import com.tondracek.myfarmer.location.model.DistanceRing
 import com.tondracek.myfarmer.location.model.Location
@@ -20,36 +20,36 @@ class FakeShopRepository : ShopRepository {
 
     private val items: MutableMap<ShopId, MutableStateFlow<Shop>> = mutableMapOf()
 
-    override suspend fun create(item: Shop): UCResult<ShopId> {
+    override suspend fun create(item: Shop): DomainResult<ShopId> {
         items[item.id] = MutableStateFlow(item)
-        return UCResult.Success(item.id)
+        return DomainResult.Success(item.id)
     }
 
-    override suspend fun update(item: Shop): UCResult<Unit> {
+    override suspend fun update(item: Shop): DomainResult<Unit> {
         items[item.id]?.value = item
-        return UCResult.Success(Unit)
+        return DomainResult.Success(Unit)
     }
 
-    override suspend fun delete(id: ShopId): UCResult<Unit> {
+    override suspend fun delete(id: ShopId): DomainResult<Unit> {
         items.remove(id)
-        return UCResult.Success(Unit)
+        return DomainResult.Success(Unit)
     }
 
-    override fun getById(id: ShopId): Flow<UCResult<Shop>> =
+    override fun getById(id: ShopId): Flow<DomainResult<Shop>> =
         items[id]
             ?.value
-            ?.let { MutableStateFlow(UCResult.Success(it)) }
-            ?: MutableStateFlow(UCResult.Failure(ShopError.NotFound))
+            ?.let { MutableStateFlow(DomainResult.Success(it)) }
+            ?: MutableStateFlow(DomainResult.Failure(ShopError.NotFound))
 
-    override fun getAll(): Flow<UCResult<List<Shop>>> =
+    override fun getAll(): Flow<DomainResult<List<Shop>>> =
         combine(items.values) { values ->
-            UCResult.Success(values.toList())
+            DomainResult.Success(values.toList())
         }
 
     override suspend fun getAllPaginated(
         limit: Int?,
         after: ShopId?
-    ): UCResult<List<Shop>> {
+    ): DomainResult<List<Shop>> {
         val sortedItems = items.values
             .map { it.value }
             .sortedBy { it.id.toString() }
@@ -64,15 +64,15 @@ class FakeShopRepository : ShopRepository {
             sortedItems.drop(startIndex)
         }
 
-        return UCResult.Success(paginatedItems)
+        return DomainResult.Success(paginatedItems)
     }
 
-    override fun getByOwnerId(ownerId: UserId): Flow<UCResult<List<Shop>>> = combine(
+    override fun getByOwnerId(ownerId: UserId): Flow<DomainResult<List<Shop>>> = combine(
         items.values
     ) { values ->
         val filteredItems = values.toList()
             .filter { it.ownerId == ownerId }
-        UCResult.Success(filteredItems)
+        DomainResult.Success(filteredItems)
     }
 
     /*
@@ -87,10 +87,10 @@ class FakeShopRepository : ShopRepository {
         pageSize: Int,
         cursor: DistancePagingCursor?,
         rings: List<DistanceRing>
-    ): UCResult<Pair<List<Shop>, DistancePagingCursor?>> {
+    ): DomainResult<Pair<List<Shop>, DistancePagingCursor?>> {
         val ringIndex = cursor?.ringIndex ?: 0
         val ring = rings.getOrNull(ringIndex)
-            ?: return UCResult.Success(Pair(emptyList(), null))
+            ?: return DomainResult.Success(Pair(emptyList(), null))
         val startGeohash = cursor?.afterGeohash
 
         val items = items.values
@@ -126,6 +126,6 @@ class FakeShopRepository : ShopRepository {
                     afterGeohash = null
                 )
         }
-        return UCResult.Success(Pair(page, nextCursor))
+        return DomainResult.Success(Pair(page, nextCursor))
     }
 }

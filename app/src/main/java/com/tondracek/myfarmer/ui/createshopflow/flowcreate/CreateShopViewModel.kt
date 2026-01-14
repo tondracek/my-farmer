@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.ui.createshopflow.flowcreate
 
 import androidx.lifecycle.viewModelScope
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.shop.domain.usecase.CreateShopUC
 import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowEffect
 import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowState
@@ -25,12 +25,12 @@ class CreateShopViewModel @Inject constructor(
         mutableState.update { CreateUpdateShopFlowState.Loading }
         val result = createShop(shopInput)
         when (result) {
-            is UCResult.Success -> {
+            is DomainResult.Success -> {
                 emitEffect(CreateUpdateShopFlowEffect.ShowShopCreatedSuccessfully)
                 emitEffect(CreateUpdateShopFlowEffect.NavigateBack)
             }
 
-            is UCResult.Failure -> {
+            is DomainResult.Failure -> {
                 emitEffect(CreateUpdateShopFlowEffect.ShowError(result.error))
                 mutableState.update { currentState }
             }

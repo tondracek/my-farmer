@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLngBounds
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.location.model.meters
@@ -161,7 +161,7 @@ class ShopsMapViewModel @Inject constructor(
     private val _effects = MutableSharedFlow<ShopsMapViewEffect>(extraBufferCapacity = 1)
     val effects: SharedFlow<ShopsMapViewEffect> = _effects
 
-    private fun <T> Flow<UCResult<T>>.getOrEmitError(defaultValue: T): Flow<T> = map { result ->
+    private fun <T> Flow<DomainResult<T>>.getOrEmitError(defaultValue: T): Flow<T> = map { result ->
         result
             .withFailure { _effects.emit(ShopsMapViewEffect.ShowError(it.error)) }
             .getOrElse(defaultValue)

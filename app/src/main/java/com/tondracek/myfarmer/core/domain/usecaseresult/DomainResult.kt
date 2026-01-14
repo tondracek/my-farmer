@@ -1,8 +1,8 @@
 package com.tondracek.myfarmer.core.domain.usecaseresult
 
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult.Failure
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult.Success
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult.Failure
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult.Success
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -13,20 +13,20 @@ import timber.log.Timber
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.reflect.KClass
 
-sealed interface UCResult<out T> {
+sealed interface DomainResult<out T> {
 
-    data class Success<T>(val data: T) : UCResult<T>
+    data class Success<T>(val data: T) : DomainResult<T>
 
     data class Failure(
         val error: DomainError,
         val cause: Throwable? = null
-    ) : UCResult<Nothing>
+    ) : DomainResult<Nothing>
 
-    suspend fun withSuccess(block: suspend (T) -> Unit): UCResult<T> = apply {
+    suspend fun withSuccess(block: suspend (T) -> Unit): DomainResult<T> = apply {
         if (this is Success) block(this.data)
     }
 
-    suspend fun withFailure(block: suspend (Failure) -> Unit): UCResult<T> =
+    suspend fun withFailure(block: suspend (Failure) -> Unit): DomainResult<T> =
         when (this) {
             is Success -> this
             is Failure -> this.also { block(this) }
@@ -49,15 +49,14 @@ sealed interface UCResult<out T> {
     companion object {
 
         /**
-         * TODO: remove and use try-catch
-         * Executes the given [block] and wraps its result into [UCResult].
+         * Executes the given [block] and wraps its result into [DomainResult].
          *
          * The [errorMappings] are evaluated ⚠️**in order**⚠️; the first matching exception
          * type (using `is` / `isInstance`) is used. More specific exception types must
          * therefore come **before** more general ones.
          *
          * Coroutine cancellation is respected: [CancellationException] is rethrown
-         * and never wrapped into [UCResult.Failure].
+         * and never wrapped into [DomainResult.Failure].
          *
          * @param errorMappings ordered pairs of exception types to corresponding domain errors
          * @param defaultError domain error used when no mapping matches
@@ -67,7 +66,7 @@ sealed interface UCResult<out T> {
             defaultError: DomainError,
             vararg errorMappings: Pair<KClass<out Throwable>, DomainError>,
             block: () -> T,
-        ): UCResult<T> = try {
+        ): DomainResult<T> = try {
             Success(block())
         } catch (e: CancellationException) {
             throw e
@@ -82,12 +81,12 @@ sealed interface UCResult<out T> {
     }
 }
 
-inline fun <T, R> UCResult<T>.mapSuccess(transform: (T) -> R): UCResult<R> = when (this) {
+inline fun <T, R> DomainResult<T>.mapSuccess(transform: (T) -> R): DomainResult<R> = when (this) {
     is Success -> Success(transform(data))
     is Failure -> this
 }
 
-fun <T> List<UCResult<T>>.toUCResultList(): UCResult<List<T>> {
+fun <T> List<DomainResult<T>>.toUCResultList(): DomainResult<List<T>> {
     val resultList = mutableListOf<T>()
     for (result in this) {
         when (result) {
@@ -98,13 +97,14 @@ fun <T> List<UCResult<T>>.toUCResultList(): UCResult<List<T>> {
     return Success(resultList)
 }
 
-inline fun <T, R> UCResult<T>.mapFlatten(transform: (T) -> UCResult<R>): UCResult<R> = when (this) {
-    is Success -> transform(data)
-    is Failure -> this
-}
+inline fun <T, R> DomainResult<T>.mapFlatten(transform: (T) -> DomainResult<R>): DomainResult<R> =
+    when (this) {
+        is Success -> transform(data)
+        is Failure -> this
+    }
 
 
-fun <T> UCResult<T>.log() = this.also {
+fun <T> DomainResult<T>.log() = this.also {
     when (it) {
         is Success -> Timber.d("UCResult Success: ${it.data}")
         is Failure -> Timber.e(it.cause, "UCResult Failure: ${it.error}")
@@ -115,35 +115,35 @@ fun <T> UCResult<T>.log() = this.also {
  * - For `UseCaseResult.Success` returns the `data` value
  * - For `UseCaseResult.Failure` applies the `block` function that can return some value
  */
-inline fun <T> UCResult<T>.getOrReturn(block: (Failure) -> Nothing): T =
+inline fun <T> DomainResult<T>.getOrReturn(block: (Failure) -> Nothing): T =
     when (this) {
         is Success -> data
         is Failure -> block(this)
     }
 
-fun <T> UCResult<T>.getOrElse(defaultValue: T): T = when (this) {
+fun <T> DomainResult<T>.getOrElse(defaultValue: T): T = when (this) {
     is Success -> data
     is Failure -> defaultValue
 }
 
-fun <T> Flow<UCResult<T>>.getOrElse(defaultValue: T): Flow<T> = this.map { result ->
+fun <T> Flow<DomainResult<T>>.getOrElse(defaultValue: T): Flow<T> = this.map { result ->
     result.getOrElse(defaultValue)
 }
 
-fun <T> Flow<UCResult<T>>.withFailure(
+fun <T> Flow<DomainResult<T>>.withFailure(
     onError: suspend (Failure) -> Unit
-): Flow<UCResult<T>> = this.onEach { result ->
+): Flow<DomainResult<T>> = this.onEach { result ->
     result.withFailure { onError(it) }
 }
 
-inline fun <T, R> Flow<UCResult<T>>.mapFlow(crossinline transform: (T) -> R): Flow<UCResult<R>> =
+inline fun <T, R> Flow<DomainResult<T>>.mapFlow(crossinline transform: (T) -> R): Flow<DomainResult<R>> =
     this.map { result -> result.mapSuccess(transform) }
 
-inline fun <T, R> Flow<UCResult<T>>.mapFlowUC(crossinline transform: (T) -> UCResult<R>): Flow<UCResult<R>> =
+inline fun <T, R> Flow<DomainResult<T>>.mapFlowUC(crossinline transform: (T) -> DomainResult<R>): Flow<DomainResult<R>> =
     this.map { result -> result.mapFlatten(transform) }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-fun <T, R> Flow<UCResult<T>>.flatMap(transform: suspend (T) -> Flow<UCResult<R>>): Flow<UCResult<R>> =
+fun <T, R> Flow<DomainResult<T>>.flatMap(transform: suspend (T) -> Flow<DomainResult<R>>): Flow<DomainResult<R>> =
     this.flatMapLatest { result ->
         when (result) {
             is Success -> transform(result.data)
@@ -151,7 +151,7 @@ fun <T, R> Flow<UCResult<T>>.flatMap(transform: suspend (T) -> Flow<UCResult<R>>
         }
     }
 
-fun <T, R> UCResult<T>.flatMap(transform: (T) -> Flow<UCResult<R>>): Flow<UCResult<R>> =
+fun <T, R> DomainResult<T>.flatMap(transform: (T) -> Flow<DomainResult<R>>): Flow<DomainResult<R>> =
     when (this) {
         is Success -> transform(this.data)
         is Failure -> flowOf(this)

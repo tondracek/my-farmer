@@ -7,7 +7,7 @@ import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
 import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
@@ -32,19 +32,19 @@ class EditProfileViewModel @Inject constructor(
     private val logout: LogoutUC,
 ) : BaseViewModel<EditProfileScreenEffect>() {
 
-    private val loggedInUserFlow: SharedFlow<UCResult<SystemUser>> = getLoggedInUserUC()
+    private val loggedInUserFlow: SharedFlow<DomainResult<SystemUser>> = getLoggedInUserUC()
         .shareIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             replay = 1
         )
 
-    private val loggedInUser: StateFlow<UCResult<SystemUser>> = loggedInUserFlow
+    private val loggedInUser: StateFlow<DomainResult<SystemUser>> = loggedInUserFlow
         .withFailure { emitEffect(EditProfileScreenEffect.GoToLogin) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-            initialValue = UCResult.Failure(AuthError.NotLoggedIn)
+            initialValue = DomainResult.Failure(AuthError.NotLoggedIn)
         )
 
     private val _state: MutableStateFlow<EditProfileScreenState> =
@@ -52,7 +52,7 @@ class EditProfileViewModel @Inject constructor(
 
     val state: StateFlow<EditProfileScreenState> = _state
 
-    private suspend fun emitError(result: UCResult.Failure) =
+    private suspend fun emitError(result: DomainResult.Failure) =
         emitEffect(EditProfileScreenEffect.ShowError(result.error))
 
     init {
@@ -90,12 +90,12 @@ class EditProfileViewModel @Inject constructor(
         val updateUser = currentState.toSystemUser(id = loggedUser.id, authId = loggedUser.authId)
 
         when (val updateResult = updateUserUC(updateUser)) {
-            is UCResult.Success -> {
+            is DomainResult.Success -> {
                 emitEffect(EditProfileScreenEffect.ShowSavedProfileMessage)
                 loadUserData()
             }
 
-            is UCResult.Failure -> {
+            is DomainResult.Failure -> {
                 emitError(updateResult)
                 _state.update { currentState }
             }

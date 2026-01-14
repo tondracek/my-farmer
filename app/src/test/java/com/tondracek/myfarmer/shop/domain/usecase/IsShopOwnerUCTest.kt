@@ -3,7 +3,7 @@ package com.tondracek.myfarmer.shop.domain.usecase
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.common.usecase.result.NotFoundUCResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.result.NotShopOwnerUCResult
 import com.tondracek.myfarmer.systemuser.data.sampleUsers
@@ -48,7 +48,7 @@ class IsShopOwnerUCTest {
         val anotherUser = sampleUsers.find { it.id != user.id }!!
 
         whenever(getShopByIdUC(shop.id))
-            .thenReturn(flowOf(UCResult.Success(shop)))
+            .thenReturn(flowOf(DomainResult.Success(shop)))
 
         val result = uc(anotherUser.id, shop.id).first()
 
@@ -61,11 +61,11 @@ class IsShopOwnerUCTest {
     @Test
     fun `returns Success when user is the owner`() = runTest {
         whenever(getShopByIdUC(shop.id)).thenReturn(
-            flowOf(UCResult.Success(shop))
+            flowOf(DomainResult.Success(shop))
         )
 
         val result = uc(user.id, shop.id).first()
 
-        assertThat(result).isInstanceOf(UCResult.Success::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Success::class.java)
     }
 }

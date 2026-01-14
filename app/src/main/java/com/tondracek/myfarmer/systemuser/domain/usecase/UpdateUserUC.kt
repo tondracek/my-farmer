@@ -5,7 +5,7 @@ import com.tondracek.myfarmer.common.image.data.PhotoStorage
 import com.tondracek.myfarmer.common.image.data.PhotoStorageFolder
 import com.tondracek.myfarmer.common.image.data.Quality
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
 import com.tondracek.myfarmer.core.domain.usecaseresult.mapFlatten
 import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
@@ -20,11 +20,11 @@ class UpdateUserUC @Inject constructor(
     private val getLoggedInUser: GetLoggedInUserUC,
 ) {
 
-    suspend operator fun invoke(userToUpdate: SystemUser): UCResult<Unit> {
+    suspend operator fun invoke(userToUpdate: SystemUser): DomainResult<Unit> {
         val currentUser = getLoggedInUser().first()
             .getOrReturn { return it }
         if (currentUser.id != userToUpdate.id)
-            return UCResult.Failure(AuthError.Forbidden)
+            return DomainResult.Failure(AuthError.Forbidden)
 
         val original = repository.getById(userToUpdate.id).first()
             .getOrReturn { return it }
@@ -33,9 +33,9 @@ class UpdateUserUC @Inject constructor(
             .mapFlatten { repository.update(it) }
     }
 
-    private suspend fun SystemUser.loadNewPhoto(original: SystemUser): UCResult<SystemUser> =
+    private suspend fun SystemUser.loadNewPhoto(original: SystemUser): DomainResult<SystemUser> =
         when (original.profilePicture == this.profilePicture) {
-            true -> UCResult.Success(this)
+            true -> DomainResult.Success(this)
             false ->
                 photoStorage.deletePhoto(original.profilePicture)
                     .mapFlatten {

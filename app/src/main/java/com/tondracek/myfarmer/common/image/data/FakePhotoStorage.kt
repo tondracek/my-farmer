@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.common.image.data
 
 import com.tondracek.myfarmer.common.image.model.ImageResource
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultList
 
 class FakePhotoStorage() : PhotoStorage {
@@ -13,18 +13,18 @@ class FakePhotoStorage() : PhotoStorage {
         name: String,
         folder: PhotoStorageFolder,
         quality: Quality,
-    ): UCResult<ImageResource> {
+    ): DomainResult<ImageResource> {
         val path = folder.getPath(name)
 
         images[path] = imageResource
-        return UCResult.Success(imageResource)
+        return DomainResult.Success(imageResource)
     }
 
     override suspend fun uploadPhotos(
         imageResources: Collection<Pair<String, ImageResource>>,
         folder: PhotoStorageFolder,
         quality: Quality,
-    ): UCResult<List<ImageResource>> = imageResources.map { (name, imageResource) ->
+    ): DomainResult<List<ImageResource>> = imageResources.map { (name, imageResource) ->
         uploadPhoto(
             imageResource = imageResource,
             name = name,
@@ -33,15 +33,15 @@ class FakePhotoStorage() : PhotoStorage {
         )
     }.toUCResultList()
 
-    override suspend fun deletePhoto(imageResource: ImageResource): UCResult<Unit> {
+    override suspend fun deletePhoto(imageResource: ImageResource): DomainResult<Unit> {
         val entry = images.entries.find { it.value == imageResource }?.key
 
         if (entry != null) images.remove(entry)
-        return UCResult.Success(Unit)
+        return DomainResult.Success(Unit)
     }
 
-    override suspend fun deletePhotos(imageResources: Collection<ImageResource>): UCResult<Unit> {
+    override suspend fun deletePhotos(imageResources: Collection<ImageResource>): DomainResult<Unit> {
         imageResources.forEach { deletePhoto(it) }
-        return UCResult.Success(Unit)
+        return DomainResult.Success(Unit)
     }
 }

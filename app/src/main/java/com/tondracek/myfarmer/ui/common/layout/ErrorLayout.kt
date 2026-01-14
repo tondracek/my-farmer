@@ -13,7 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.core.domain.domainerror.ShopError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.ui.common.button.GoBackButton
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -22,7 +22,7 @@ import com.tondracek.myfarmer.ui.core.util.toUserFriendlyMessage
 @Composable
 fun ErrorLayout(
     modifier: Modifier = Modifier,
-    failure: UCResult.Failure,
+    failure: DomainResult.Failure,
     onNavigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -54,7 +54,7 @@ fun ErrorLayout(
 private fun ErrorLayoutPreview() {
     MyFarmerPreview {
         ErrorLayout(
-            failure = UCResult.Failure(ShopError.NotFound),
+            failure = DomainResult.Failure(ShopError.NotFound),
             onNavigateBack = {}
         )
     }

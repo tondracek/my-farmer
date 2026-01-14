@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.data.shop1
 import com.tondracek.myfarmer.shop.domain.model.Shop
@@ -53,7 +53,7 @@ class GetAllShopsUCTest {
         val result = uc().first()
 
         // Assert
-        assertThat(result).isInstanceOf(UCResult.Success::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Success::class.java)
         assertThat(result.getOrNull()).isEmpty()
     }
 
@@ -82,7 +82,7 @@ class GetAllShopsUCTest {
 
         val result = uc().first()
 
-        assertThat(result).isInstanceOf(UCResult.Success::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Success::class.java)
         assertThat(result.getOrNull()).containsExactly(shop0)
     }
 
@@ -95,7 +95,7 @@ class GetAllShopsUCTest {
         whenever(applyFiltersUC.invoke(any(), any()))
             .thenAnswer { invocation -> invocation.getArgument(0) }
 
-        val emissions = mutableListOf<UCResult<List<Shop>>>()
+        val emissions = mutableListOf<DomainResult<List<Shop>>>()
 
         val job = launch {
             uc().collect { emissions.add(it) }

@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.ui.createshopflow.flowupdate
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.model.toShopInput
 import com.tondracek.myfarmer.shop.domain.usecase.GetShopByIdUC
@@ -50,12 +50,12 @@ class UpdateShopViewModel @Inject constructor(
         mutableState.update { CreateUpdateShopFlowState.Loading }
         val result = updateShop(shopId = shopId, input = shopInput)
         when (result) {
-            is UCResult.Success -> {
+            is DomainResult.Success -> {
                 emitEffect(CreateUpdateShopFlowEffect.ShowShopUpdatedSuccessfully)
                 emitEffect(CreateUpdateShopFlowEffect.NavigateBack)
             }
 
-            is UCResult.Failure -> emitEffect(CreateUpdateShopFlowEffect.ShowError(result.error))
+            is DomainResult.Failure -> emitEffect(CreateUpdateShopFlowEffect.ShowError(result.error))
         }
     }
 }

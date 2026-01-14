@@ -5,7 +5,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.data.shop1
 import com.tondracek.myfarmer.shop.domain.model.Shop
@@ -54,27 +54,27 @@ class GetShopsByUserUCTest {
 
         val result = uc().first()
 
-        assertThat(result).isInstanceOf(UCResult.Failure::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
     }
 
     @Test
     fun `returns shops for logged in user`() = runTest {
         whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(UCResult.Success(sampleUser)))
+            .thenReturn(flowOf(DomainResult.Success(sampleUser)))
 
         whenever(shopRepository.getByOwnerId(any()))
             .thenReturn(flowOf(listOf(shop0, shop1)))
 
         val result = uc().first()
 
-        assertThat(result).isInstanceOf(UCResult.Success::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Success::class.java)
         assertThat(result.getOrNull()).containsExactly(shop0, shop1)
     }
 
     @Test
     fun `returns empty list when user has no shops`() = runTest {
         whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(UCResult.Success(sampleUser)))
+            .thenReturn(flowOf(DomainResult.Success(sampleUser)))
 
         whenever(shopRepository.getByOwnerId(any()))
             .thenReturn(flowOf(emptyList()))
@@ -87,13 +87,13 @@ class GetShopsByUserUCTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `flows react to repository emissions`() = runTest {
-        val userFlow = flowOf(UCResult.Success(sampleUser))
+        val userFlow = flowOf(DomainResult.Success(sampleUser))
         val shopFlow = MutableStateFlow(listOf(shop0))
 
         whenever(getLoggedInUserUC()).thenReturn(userFlow)
         whenever(shopRepository.getByOwnerId(any())).thenReturn(shopFlow)
 
-        val emissions = mutableListOf<UCResult<List<Shop>>>()
+        val emissions = mutableListOf<DomainResult<List<Shop>>>()
 
         val job = launch {
             uc().collect { emissions.add(it) }
@@ -113,13 +113,13 @@ class GetShopsByUserUCTest {
     @Test
     fun `errors in repository flow are converted to UCResult_Failure`() = runTest {
         whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(UCResult.Success(sampleUser)))
+            .thenReturn(flowOf(DomainResult.Success(sampleUser)))
 
         whenever(shopRepository.getByOwnerId(any()))
             .thenReturn(flow { throw RuntimeException("DB crashed") })
 
         val result = uc().first()
 
-        assertThat(result).isInstanceOf(UCResult.Failure::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
     }
 }

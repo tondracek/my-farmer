@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.ui.core.uiState
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transformLatest
@@ -16,15 +16,15 @@ inline fun <T> UiState<T>.getOrReturn(block: () -> Nothing): T = when (this) {
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-fun <T> Flow<UCResult<T>>.asUiState(
+fun <T> Flow<DomainResult<T>>.asUiState(
     defaultValue: T,
-    onError: suspend (UCResult.Failure) -> Unit = {},
+    onError: suspend (DomainResult.Failure) -> Unit = {},
 ): Flow<UiState<T>> = transformLatest { result ->
     emit(UiState.Loading)
 
     when (result) {
-        is UCResult.Success -> emit(UiState.Success(result.data))
-        is UCResult.Failure -> {
+        is DomainResult.Success -> emit(UiState.Success(result.data))
+        is DomainResult.Failure -> {
             onError(result)
             emit(UiState.Success(defaultValue))
         }

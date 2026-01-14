@@ -12,7 +12,7 @@ import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGet
 import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetByIds
 import com.tondracek.myfarmer.core.domain.domainerror.UserError
 import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntityId
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultNonNull
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
@@ -34,31 +34,31 @@ class FirestoreUserRepository @Inject constructor() : UserRepository {
     )
 
     override suspend fun create(item: SystemUser) =
-        UCResult.of(UserError.CreationFailed) {
+        DomainResult.of(UserError.CreationFailed) {
             helper.create(item.toEntity()).toUserId()
         }
 
     override suspend fun update(item: SystemUser) =
-        UCResult.of(UserError.UpdateFailed) {
+        DomainResult.of(UserError.UpdateFailed) {
             helper.update(item.toEntity())
         }
 
     override suspend fun delete(id: UserId) =
-        UCResult.of(UserError.DeletionFailed) {
+        DomainResult.of(UserError.DeletionFailed) {
             helper.delete(id.toFirestoreId())
         }
 
-    override fun getById(id: UserId): Flow<UCResult<SystemUser>> =
+    override fun getById(id: UserId): Flow<DomainResult<SystemUser>> =
         helper.getById(id.toFirestoreId())
             .mapToModel()
             .toUCResultNonNull(UserError.NotFound, UserError.Unknown)
 
-    override fun getAll(): Flow<UCResult<List<SystemUser>>> =
+    override fun getAll(): Flow<DomainResult<List<SystemUser>>> =
         helper.getAll()
             .mapToModelList()
             .toUCResult(UserError.FetchingFailed)
 
-    override fun getByIds(userIds: List<UserId>): Flow<UCResult<List<SystemUser>>> =
+    override fun getByIds(userIds: List<UserId>): Flow<DomainResult<List<SystemUser>>> =
         firestoreGetByIds(
             collection = collection,
             ids = userIds.map { it.toFirestoreId() },
@@ -67,7 +67,7 @@ class FirestoreUserRepository @Inject constructor() : UserRepository {
             .mapToModelList()
             .toUCResult(UserError.FetchingFailed)
 
-    override fun getUserByAuthId(authId: AuthId): Flow<UCResult<SystemUser?>> =
+    override fun getUserByAuthId(authId: AuthId): Flow<DomainResult<SystemUser?>> =
         firestoreGetByField(
             collection = collection,
             entityClass = UserEntity::class,

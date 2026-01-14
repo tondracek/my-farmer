@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.auth.domain.usecase
 
 import com.tondracek.myfarmer.auth.domain.repository.AuthRepository
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import javax.inject.Inject
 
 class RegisterUserUC @Inject constructor(
@@ -10,7 +10,7 @@ class RegisterUserUC @Inject constructor(
     suspend operator fun invoke(
         email: String,
         password: String,
-    ): UCResult<Unit> = authRepository.registerUser(
+    ): DomainResult<Unit> = authRepository.registerUser(
         email = email,
         password = password,
     )

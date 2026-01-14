@@ -9,7 +9,7 @@ import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGet
 import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetPaginatedById
 import com.tondracek.myfarmer.core.domain.domainerror.ShopError
 import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntityId
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultNonNull
 import com.tondracek.myfarmer.location.data.GeoHashUtils
@@ -38,8 +38,8 @@ class FirestoreShopRepository @Inject constructor(
         entityClass = ShopEntity::class,
     )
 
-    override suspend fun getAllPaginated(limit: Int?, after: ShopId?): UCResult<List<Shop>> =
-        UCResult.of(ShopError.FetchingFailed) {
+    override suspend fun getAllPaginated(limit: Int?, after: ShopId?): DomainResult<List<Shop>> =
+        DomainResult.of(ShopError.FetchingFailed) {
             firestoreGetPaginatedById(
                 collection = collection,
                 entityClass = ShopEntity::class,
@@ -48,79 +48,82 @@ class FirestoreShopRepository @Inject constructor(
             ).map { it.toModel() }
         }
 
-    override fun getByOwnerId(ownerId: UserId): Flow<UCResult<List<Shop>>> = firestoreGetByField(
-        collection = collection,
-        entityClass = ShopEntity::class,
-        field = FieldPath.of(ShopEntity::ownerId.name),
-        value = ownerId.toFirestoreId(),
-    ).mapToModelList()
-        .toUCResult(ShopError.FetchingFailed)
+    override fun getByOwnerId(ownerId: UserId): Flow<DomainResult<List<Shop>>> =
+        firestoreGetByField(
+            collection = collection,
+            entityClass = ShopEntity::class,
+            field = FieldPath.of(ShopEntity::ownerId.name),
+            value = ownerId.toFirestoreId(),
+        ).mapToModelList()
+            .toUCResult(ShopError.FetchingFailed)
 
     override suspend fun getPagedByDistance(
         center: Location,
         pageSize: Int,
         cursor: DistancePagingCursor?,
         rings: List<DistanceRing>
-    ): UCResult<Pair<List<Shop>, DistancePagingCursor?>> = UCResult.of(ShopError.FetchingFailed) {
-        val ringIndex = cursor?.ringIndex ?: 0
-        val afterGeohash = cursor?.afterGeohash
+    ): DomainResult<Pair<List<Shop>, DistancePagingCursor?>> =
+        DomainResult.of(ShopError.FetchingFailed) {
+            val ringIndex = cursor?.ringIndex ?: 0
+            val afterGeohash = cursor?.afterGeohash
 
-        val ring = rings.getOrNull(ringIndex)
-        if (ring == null)
-            return UCResult.Success(emptyList<Shop>() to null) // No more rings available
+            val ring = rings.getOrNull(ringIndex)
+            if (ring == null)
+                return DomainResult.Success(emptyList<Shop>() to null) // No more rings available
 
-        val ranges = GeoHashUtils.ranges(
-            center = center,
-            ring = ring
-        )
-
-        val results = mutableListOf<ShopEntity>()
-        for (range in ranges) {
-            val query = firestoreGetByGeohashPaged(
-                collection = collection,
-                range = range,
-                limit = pageSize + 1,
-                afterGeohash = afterGeohash,
+            val ranges = GeoHashUtils.ranges(
+                center = center,
+                ring = ring
             )
 
-            results += query
+            val results = mutableListOf<ShopEntity>()
+            for (range in ranges) {
+                val query = firestoreGetByGeohashPaged(
+                    collection = collection,
+                    range = range,
+                    limit = pageSize + 1,
+                    afterGeohash = afterGeohash,
+                )
 
-            if (results.size > pageSize) break
+                results += query
+
+                if (results.size > pageSize) break
+            }
+
+            val page = results.take(pageSize)
+
+            val nextCursor = when {
+                results.size > pageSize -> // More data available in the current ring
+                    DistancePagingCursor(ringIndex, page.last().location.geohash)
+
+                else -> // Move to the next ring
+                    DistancePagingCursor(ringIndex + 1, afterGeohash)
+            }
+
+            val domainPage = page.map { it.toModel() }
+                .sortedBy { measureMapDistance(it.location, center) }
+
+            domainPage to nextCursor
         }
 
-        val page = results.take(pageSize)
-
-        val nextCursor = when {
-            results.size > pageSize -> // More data available in the current ring
-                DistancePagingCursor(ringIndex, page.last().location.geohash)
-
-            else -> // Move to the next ring
-                DistancePagingCursor(ringIndex + 1, afterGeohash)
-        }
-
-        val domainPage = page.map { it.toModel() }
-            .sortedBy { measureMapDistance(it.location, center) }
-        return UCResult.Success(domainPage to nextCursor)
-    }
-
-    override suspend fun create(item: Shop): UCResult<ShopId> =
-        UCResult.of(ShopError.CreationFailed) {
+    override suspend fun create(item: Shop): DomainResult<ShopId> =
+        DomainResult.of(ShopError.CreationFailed) {
             helper.create(item.toEntity()).toShopId()
         }
 
-    override suspend fun update(item: Shop) = UCResult.of(ShopError.UpdateFailed) {
+    override suspend fun update(item: Shop) = DomainResult.of(ShopError.UpdateFailed) {
         helper.update(item.toEntity())
     }
 
-    override suspend fun delete(id: ShopId) = UCResult.of(ShopError.DeletionFailed) {
+    override suspend fun delete(id: ShopId) = DomainResult.of(ShopError.DeletionFailed) {
         helper.delete(id.toFirestoreId())
     }
 
-    override fun getById(id: ShopId): Flow<UCResult<Shop>> =
+    override fun getById(id: ShopId): Flow<DomainResult<Shop>> =
         helper.getById(id.toFirestoreId()).mapToModel()
             .toUCResultNonNull(ShopError.NotFound, ShopError.Unknown)
 
-    override fun getAll(): Flow<UCResult<List<Shop>>> =
+    override fun getAll(): Flow<DomainResult<List<Shop>>> =
         helper.getAll()
             .mapToModelList()
             .toUCResult(ShopError.FetchingFailed)

@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.shop.domain.usecase
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.location.model.DistanceRings
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.shop.domain.model.Shop
@@ -16,7 +16,7 @@ class GetShopsByDistancePagedUC @Inject constructor(
         center: Location,
         pageSize: Int,
         cursor: DistancePagingCursor?,
-    ): UCResult<Pair<List<Shop>, DistancePagingCursor?>> =
+    ): DomainResult<Pair<List<Shop>, DistancePagingCursor?>> =
         shopRepository.getPagedByDistance(
             center = center,
             pageSize = pageSize,

@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.review.data
 
 import com.tondracek.myfarmer.core.domain.domainerror.ReviewError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultNonNull
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewId
@@ -16,40 +16,40 @@ class FakeReviewRepository : ReviewRepository {
 
     val items: MutableMap<ReviewId, MutableStateFlow<Review>> = mutableMapOf()
 
-    override suspend fun create(item: Review): UCResult<ReviewId> {
+    override suspend fun create(item: Review): DomainResult<ReviewId> {
         val id = item.id
         items[id] = MutableStateFlow(item)
-        return UCResult.Success(id)
+        return DomainResult.Success(id)
     }
 
-    override suspend fun update(item: Review): UCResult<Unit> {
+    override suspend fun update(item: Review): DomainResult<Unit> {
         items[item.id]?.value = item
-        return UCResult.Success(Unit)
+        return DomainResult.Success(Unit)
     }
 
-    override suspend fun delete(id: ReviewId): UCResult<Unit> {
+    override suspend fun delete(id: ReviewId): DomainResult<Unit> {
         items.remove(id)
-        return UCResult.Success(Unit)
+        return DomainResult.Success(Unit)
     }
 
-    override fun getById(id: ReviewId): MutableStateFlow<UCResult<Review>> =
+    override fun getById(id: ReviewId): MutableStateFlow<DomainResult<Review>> =
         items[id]
-            ?.let { MutableStateFlow(UCResult.Success(it.value)) }
-            ?: MutableStateFlow(UCResult.Failure(ReviewError.NotFound))
+            ?.let { MutableStateFlow(DomainResult.Success(it.value)) }
+            ?: MutableStateFlow(DomainResult.Failure(ReviewError.NotFound))
 
-    override fun getAll(): Flow<UCResult<List<Review>>> =
+    override fun getAll(): Flow<DomainResult<List<Review>>> =
         combine(items.values) { values ->
-            UCResult.Success(values.toList())
+            DomainResult.Success(values.toList())
         }
 
     override fun getShopReviews(
         shopId: ShopId,
         limit: Int?
-    ): Flow<UCResult<List<Review>>> {
+    ): Flow<DomainResult<List<Review>>> {
         val filtered = items.values
             .filter { it.value.shopId == shopId }
         return combine(filtered) { values ->
-            UCResult.Success(values.toList())
+            DomainResult.Success(values.toList())
         }
     }
 
@@ -57,7 +57,7 @@ class FakeReviewRepository : ReviewRepository {
         shopId: ShopId,
         limit: Int,
         after: ReviewId?
-    ): UCResult<List<Review>> {
+    ): DomainResult<List<Review>> {
         val filtered = items.values
             .map { it.value }
             .filter { it.shopId == shopId }
@@ -73,13 +73,13 @@ class FakeReviewRepository : ReviewRepository {
             filtered.drop(startIndex)
         }
 
-        return UCResult.Success(pagedItems)
+        return DomainResult.Success(pagedItems)
     }
 
     override fun getUserReviewOnShop(
         shopId: ShopId,
         userId: UserId
-    ): Flow<UCResult<Review>> = combine(items.values) { values ->
+    ): Flow<DomainResult<Review>> = combine(items.values) { values ->
         values.firstOrNull { it.shopId == shopId && it.userId == userId }
     }.toUCResultNonNull(ReviewError.NotFound, ReviewError.FetchingFailed)
 

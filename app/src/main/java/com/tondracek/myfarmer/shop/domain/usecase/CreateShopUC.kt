@@ -4,7 +4,7 @@ import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.common.image.data.PhotoStorage
 import com.tondracek.myfarmer.common.image.data.PhotoStorageFolder
 import com.tondracek.myfarmer.common.image.data.Quality
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
@@ -21,7 +21,7 @@ class CreateShopUC @Inject constructor(
     private val photoStorage: PhotoStorage,
 ) {
 
-    suspend operator fun invoke(input: ShopInput): UCResult<Unit> {
+    suspend operator fun invoke(input: ShopInput): DomainResult<Unit> {
         val user = getLoggedInUser().first()
             .getOrReturn { return it }
 
@@ -43,7 +43,7 @@ class CreateShopUC @Inject constructor(
      * - retrieves their newly generated URLs
      * - updates the shop with the new photo URLs
      */
-    private suspend fun Shop.updatePhotos(shopId: ShopId): UCResult<Shop> {
+    private suspend fun Shop.updatePhotos(shopId: ShopId): DomainResult<Shop> {
         val newImages = this.images
             .map { UUID.randomUUID().toString() to it }
             .let {
@@ -56,6 +56,6 @@ class CreateShopUC @Inject constructor(
             .getOrReturn { return it }
 
         return this.copy(images = newImages)
-            .let { UCResult.Success(it) }
+            .let { DomainResult.Success(it) }
     }
 }

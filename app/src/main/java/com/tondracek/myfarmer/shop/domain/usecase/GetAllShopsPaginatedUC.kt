@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.shop.domain.usecase
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
@@ -13,6 +13,6 @@ class GetAllShopsPaginatedUC @Inject constructor(
     suspend operator fun invoke(
         limit: Int? = null,
         after: ShopId? = null,
-    ): UCResult<List<Shop>> =
+    ): DomainResult<List<Shop>> =
         shopRepository.getAllPaginated(limit = limit, after = after)
 }

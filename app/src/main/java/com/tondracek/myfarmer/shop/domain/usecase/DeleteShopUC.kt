@@ -3,7 +3,7 @@ package com.tondracek.myfarmer.shop.domain.usecase
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.common.image.data.PhotoStorage
 import com.tondracek.myfarmer.core.domain.domainerror.ShopError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
@@ -15,13 +15,13 @@ class DeleteShopUC @Inject constructor(
     private val shopRepository: ShopRepository,
     private val photoStorage: PhotoStorage,
 ) {
-    suspend operator fun invoke(shopId: ShopId): UCResult<Unit> {
+    suspend operator fun invoke(shopId: ShopId): DomainResult<Unit> {
         val currentUser = getLoggedInUserUC().first()
             .getOrReturn { return it }
         val shop = shopRepository.getById(shopId).first()
             .getOrReturn { return it }
         if (shop.ownerId != currentUser.id)
-            return UCResult.Failure(ShopError.NotOwner)
+            return DomainResult.Failure(ShopError.NotOwner)
 
         val photosToDelete = shop.images
         photoStorage.deletePhotos(photosToDelete).getOrReturn { return it }

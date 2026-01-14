@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.location.model.Distance
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.location.usecase.MeasureDistanceFromMeUC
@@ -71,7 +71,7 @@ class ApplyFiltersUCTest {
         whenever(getAverageRatingsByShopUC())
             .thenReturn(
                 flowOf(
-                    UCResult.Success(
+                    DomainResult.Success(
                         mapOf(
                             shopA.id to Rating(5),
                             shopB.id to Rating(2)
@@ -97,7 +97,7 @@ class ApplyFiltersUCTest {
     @Test
     fun `filters shops by distance`() = runTest {
         whenever(getAverageRatingsByShopUC())
-            .thenReturn(flowOf(UCResult.Success(emptyMap())))
+            .thenReturn(flowOf(DomainResult.Success(emptyMap())))
 
         whenever(measureDistanceFromMeUC(shopA.location)).thenReturn(Distance(3.0))
         whenever(measureDistanceFromMeUC(shopB.location)).thenReturn(Distance(15.0))
@@ -117,7 +117,7 @@ class ApplyFiltersUCTest {
     @Test
     fun `filters shops by category`() = runTest {
         whenever(getAverageRatingsByShopUC())
-            .thenReturn(flowOf(UCResult.Success(emptyMap())))
+            .thenReturn(flowOf(DomainResult.Success(emptyMap())))
 
         whenever(measureDistanceFromMeUC(any())).thenReturn(null)
 
@@ -136,7 +136,7 @@ class ApplyFiltersUCTest {
     @Test
     fun `rating falls back to ZERO when shop has no rating`() = runTest {
         whenever(getAverageRatingsByShopUC())
-            .thenReturn(flowOf(UCResult.Success(emptyMap())))
+            .thenReturn(flowOf(DomainResult.Success(emptyMap())))
 
         whenever(measureDistanceFromMeUC(any())).thenReturn(null)
 
@@ -157,7 +157,7 @@ class ApplyFiltersUCTest {
         whenever(getAverageRatingsByShopUC())
             .thenReturn(
                 flowOf(
-                    UCResult.Success(
+                    DomainResult.Success(
                         mapOf(
                             shopA.id to Rating(5),
                             shopB.id to Rating(2),

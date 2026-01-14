@@ -7,7 +7,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.flatMap
 import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
 import com.tondracek.myfarmer.review.domain.model.Review
@@ -49,7 +49,7 @@ class ShopReviewsViewModel @Inject constructor(
     private val createShopReview: CreateShopReviewUC,
 ) : BaseViewModel<ShopReviewsEffect>() {
 
-    private val currentUser: Flow<UCResult<SystemUser>> = getLoggedInUserUC()
+    private val currentUser: Flow<DomainResult<SystemUser>> = getLoggedInUserUC()
 
     private val shopId: ShopId = savedStateHandle.getReviewsScreenShopId()
 

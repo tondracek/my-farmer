@@ -5,7 +5,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
 import com.tondracek.myfarmer.common.image.data.FakePhotoStorage
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.shop.data.getFakeShopRepository
 import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
@@ -62,7 +62,7 @@ class CreateShopUCTest {
         val failure = MissingShopInputDataUCResult
 
         whenever(getLoggedInUser())
-            .thenReturn(flowOf(UCResult.Success(user)))
+            .thenReturn(flowOf(DomainResult.Success(user)))
 
         val result = uc(input)
 
@@ -77,11 +77,11 @@ class CreateShopUCTest {
         val input = shop.toShopInput()
 
         whenever(getLoggedInUser())
-            .thenReturn(flowOf(UCResult.Success(user)))
+            .thenReturn(flowOf(DomainResult.Success(user)))
 
         val result = uc(input)
 
-        assertThat(result).isInstanceOf(UCResult.Success::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Success::class.java)
 
         val shops = repo.getAll().first()
 

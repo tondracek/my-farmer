@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.review.domain.usecase
 
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.core.domain.domainerror.ReviewError
-import com.tondracek.myfarmer.core.domain.usecaseresult.UCResult
+import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
 import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
 import com.tondracek.myfarmer.review.domain.model.ReviewInput
@@ -22,12 +22,12 @@ class CreateShopReviewUC @Inject constructor(
     suspend operator fun invoke(
         shopId: ShopId,
         reviewInput: ReviewInput,
-    ): UCResult<Unit> {
+    ): DomainResult<Unit> {
         val user = getLoggedInUserUC().first().getOrReturn { return it }
 
         val shop = shopRepository.getById(shopId).first().getOrReturn { return it }
         if (shop.ownerId == user.id)
-            return UCResult.Failure(ReviewError.CreatingToOwnShopNotAllowed)
+            return DomainResult.Failure(ReviewError.CreatingToOwnShopNotAllowed)
 
         val review = reviewInput.toReview(shopId, user.id)
         return reviewRepository.create(review).mapSuccess { }
