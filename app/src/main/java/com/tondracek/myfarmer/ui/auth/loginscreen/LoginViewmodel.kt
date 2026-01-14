@@ -3,6 +3,8 @@ package com.tondracek.myfarmer.ui.auth.loginscreen
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.auth.domain.usecase.LoginUserUC
 import com.tondracek.myfarmer.auth.domain.usecase.LoginWithGoogleUC
+import com.tondracek.myfarmer.auth.domain.usecase.SendForgotPasswordEmailUC
+import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.ui.auth.loginscreen.components.LoginInput
@@ -23,22 +25,27 @@ import javax.inject.Inject
 class LoginViewmodel @Inject constructor(
     private val loginUserUC: LoginUserUC,
     private val loginWithGoogleUC: LoginWithGoogleUC,
+    private val sendForgotPasswordEmail: SendForgotPasswordEmailUC,
 ) : BaseViewModel<LoginEffect>() {
 
     private val _loginInProgress = MutableStateFlow(false)
 
     private val _input = MutableStateFlow(LoginInput.Empty)
 
+    private val _showForgotPassword = MutableStateFlow(false)
+
     private val _validation: MutableStateFlow<LoginValidation> =
         MutableStateFlow(LoginValidation.Valid)
 
     val state: StateFlow<LoginState> = combine(
         _input,
+        _showForgotPassword,
         _validation,
         _loginInProgress,
-    ) { input, validation, loginInProgress ->
+    ) { input, showForgotPassword, validation, loginInProgress ->
         LoginState.Input(
             input = input,
+            showForgotPassword = showForgotPassword,
             validation = validation,
             loginInProgress = loginInProgress,
         )
@@ -65,7 +72,11 @@ class LoginViewmodel @Inject constructor(
                 emitEffect(LoginEffect.GoToProfileScreen)
             }
 
-            is DomainResult.Failure -> emitEffect(LoginEffect.ShowError(result.error))
+            is DomainResult.Failure -> {
+                if (result.error is AuthError.InvalidCredentials)
+                    _showForgotPassword.emit(true)
+                emitEffect(LoginEffect.ShowError(result.error))
+            }
         }
     }
 
@@ -95,14 +106,21 @@ class LoginViewmodel @Inject constructor(
             }
 
             /** Button events */
+            LoginEvent.LoginButtonClicked -> submitLogin()
             LoginEvent.GoToRegistrationScreenClicked ->
                 emitEffect(LoginEffect.GoToRegistrationScreen)
 
-            LoginEvent.LoginButtonClicked -> submitLogin()
+            /** Forgot password */
+            LoginEvent.ForgotPasswordClicked ->
+                emitEffect(LoginEffect.OpenForgotPasswordDialog)
 
-            LoginEvent.GoogleSignInClicked -> emitEffect(LoginEffect.LaunchGoogleSignIn)
+            is LoginEvent.SendForgotPasswordEmailClicked ->
+                sendForgotPasswordEmail(event.email)
+                    .withFailure { emitEffect(LoginEffect.ShowError(it.error)) }
+                    .withSuccess { emitEffect(LoginEffect.ShowSentPasswordResetEmailSuccessfully) }
 
             /** Google Sign-In */
+            LoginEvent.GoogleSignInClicked -> emitEffect(LoginEffect.LaunchGoogleSignIn)
             is LoginEvent.GoogleTokenReceived -> submitGoogleLogin(event.token)
         }
     }
@@ -112,6 +130,7 @@ sealed interface LoginState {
 
     data class Input(
         val input: LoginInput,
+        val showForgotPassword: Boolean,
         val validation: LoginValidation,
         val loginInProgress: Boolean,
     ) : LoginState
@@ -123,14 +142,18 @@ sealed interface LoginEvent {
     /** Input events */
     data class EmailChanged(val email: String) : LoginEvent
     data class PasswordChanged(val password: String) : LoginEvent
-    data class GoogleTokenReceived(val token: String) : LoginEvent
 
     /** Button events */
     data object LoginButtonClicked : LoginEvent
+    data object GoToRegistrationScreenClicked : LoginEvent
 
     /** Google Sign-In */
     data object GoogleSignInClicked : LoginEvent
-    data object GoToRegistrationScreenClicked : LoginEvent
+    data class GoogleTokenReceived(val token: String) : LoginEvent
+
+    /** Forgot password */
+    data object ForgotPasswordClicked : LoginEvent
+    data class SendForgotPasswordEmailClicked(val email: String) : LoginEvent
 }
 
 sealed interface LoginEffect {
@@ -142,4 +165,7 @@ sealed interface LoginEffect {
 
     data class ShowError(val error: DomainError) : LoginEffect
     data object ShowLoginSuccessfully : LoginEffect
+    data object ShowSentPasswordResetEmailSuccessfully : LoginEffect
+
+    data object OpenForgotPasswordDialog : LoginEffect
 }

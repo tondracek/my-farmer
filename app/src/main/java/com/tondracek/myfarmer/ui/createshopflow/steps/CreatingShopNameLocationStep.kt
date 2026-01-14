@@ -188,7 +188,7 @@ fun PickLocationMap(
             properties = MapProperties(
                 isMyLocationEnabled = isPermissionGranted,
                 isBuildingEnabled = true,
-                mapType = MapType.SATELLITE,
+                mapType = MapType.HYBRID,
             ),
             uiSettings = MapUiSettings(
                 rotationGesturesEnabled = false,

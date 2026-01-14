@@ -25,4 +25,5 @@ interface AuthRepository {
     fun getCurrentUserAuthId(): Flow<DomainResult<AuthId?>>
 
     fun isLoggedIn(): Flow<DomainResult<Boolean>>
+    suspend fun sendPasswordResetEmail(email: String): DomainResult<Unit>
 }

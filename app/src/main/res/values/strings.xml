@@ -140,10 +140,15 @@
     <string name="you_are_not_the_author_of_this_review">You are not the author of this review.</string>
     <string name="write_a_review">Write a review</string>
     <string name="delete">Delete</string>
-    <string name="you_cannot_create_a_review_for_your_own_shop">You cannot create a review for your own shop.</string>
+    <string name="you_cannot_write_a_review_for_your_own_shop">You cannot write a review for your own shop.</string>
     <string name="my_review">My Review</string>
     <string name="other_reviews">Other Reviews</string>
     <string name="please_provide_a_location_for_the_shop">Please provide a location for the shop.</string>
     <string name="you_must_be_logged_in_to_write_a_review">You must be logged in to write a review</string>
     <string name="you_have_already_written_a_review">You have already written a review.</string>
+    <string name="send_password_reset_email">Send Password Reset Email</string>
+    <string name="password_reset_mail_sent_to_your_address">Email for password reset was sent on your email address.</string>
+    <string name="reviews_preview">Reviews Preview</string>
+    <string name="see_all_reviews">See all reviews ›</string>
+    <string name="no_reviews_in_shop_yet">This shop has no reviews yet.</string>
 </resources>

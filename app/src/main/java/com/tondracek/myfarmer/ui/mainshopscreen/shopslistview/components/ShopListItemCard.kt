@@ -45,7 +45,8 @@ fun ShopListItemCard(
                     modifier = Modifier
                         .sizeIn(maxHeight = 120.dp, maxWidth = 120.dp)
                         .clip(RoundedCornerShape(12.dp)),
-                    imageResource = shop.image
+                    imageResource = shop.image,
+                    openable = false
                 )
                 Column {
                     if (!shop.name.isNullOrBlank())

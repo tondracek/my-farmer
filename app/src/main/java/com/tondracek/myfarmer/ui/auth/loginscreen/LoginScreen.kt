@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.ui.auth.loginscreen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -63,11 +64,25 @@ fun LoginInputScreen(
             onInputChanged = { onEvent(LoginEvent.EmailChanged(it)) },
         )
 
-        PasswordInput(
-            input = state.input.password,
-            error = state.validation.passwordError,
-            onInputChanged = { onEvent(LoginEvent.PasswordChanged(it)) },
-        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            PasswordInput(
+                input = state.input.password,
+                error = state.validation.passwordError,
+                onInputChanged = { onEvent(LoginEvent.PasswordChanged(it)) },
+            )
+
+            AnimatedVisibility(state.showForgotPassword) {
+                TextButton(
+                    onClick = { onEvent(LoginEvent.ForgotPasswordClicked) }
+                ) {
+                    Text(
+                        text = "Forgot Password? Click here to reset it.",
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+        }
+
 
         Button(
             modifier = Modifier.fillMaxWidth(),
@@ -98,6 +113,7 @@ private fun LoginScreenPreview() {
         LoginScreen(
             state = LoginState.Input(
                 input = LoginInput.Empty,
+                showForgotPassword = true,
                 validation = LoginValidation.Valid,
                 loginInProgress = false,
             ),

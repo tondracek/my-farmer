@@ -7,9 +7,18 @@ import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 
 data class ShopsMapViewState(
-    val initialCameraBounds: LatLngBounds? = null,
-    val shops: Set<ShopMapItem> = emptySet(),
-)
+    val initialCameraBounds: LatLngBounds?,
+    val selectedShop: ShopMapItem?,
+    val shops: Set<ShopMapItem>,
+) {
+    companion object {
+        val Empty = ShopsMapViewState(
+            initialCameraBounds = null,
+            selectedShop = null,
+            shops = emptySet(),
+        )
+    }
+}
 
 data class ShopMapItem(
     val id: ShopId,

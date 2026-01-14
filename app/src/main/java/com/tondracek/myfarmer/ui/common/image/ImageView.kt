@@ -21,6 +21,7 @@ fun ImageView(
     modifier: Modifier = Modifier,
     imageResource: ImageResource,
     contentScale: ContentScale = ContentScale.Fit,
+    openable: Boolean = true
 ) {
     var openImageDialog by remember { mutableStateOf(false) }
 
@@ -28,10 +29,11 @@ fun ImageView(
         value = imageResource.getImageUrl()
     }
 
+    val clickableModifier = Modifier.clickable(enabled = imageResource != ImageResource.EMPTY) {
+        openImageDialog = true
+    }
     AsyncImage(
-        modifier = modifier.clickable(enabled = imageResource != ImageResource.EMPTY) {
-            openImageDialog = true
-        },
+        modifier = modifier.then(if (openable) clickableModifier else Modifier),
         model = model,
         contentDescription = null,
         placeholder = painterResource(R.drawable.ic_launcher_foreground),

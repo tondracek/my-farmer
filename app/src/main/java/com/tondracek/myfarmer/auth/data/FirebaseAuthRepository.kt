@@ -84,4 +84,9 @@ class FirebaseAuthRepository @Inject constructor(
 
     override fun signOut() =
         domainResultOf(AuthError.LogoutFailed) { auth.signOut() }
+
+    override suspend fun sendPasswordResetEmail(email: String): DomainResult<Unit> =
+        domainResultOf(AuthError.Unknown) {
+            auth.sendPasswordResetEmail(email).await()
+        }
 }

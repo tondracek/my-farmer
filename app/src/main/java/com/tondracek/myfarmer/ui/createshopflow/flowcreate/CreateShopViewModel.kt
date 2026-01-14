@@ -7,6 +7,7 @@ import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowEffect
 import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowState
 import com.tondracek.myfarmer.ui.createshopflow.CreateUpdateShopFlowViewmodel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,6 +16,10 @@ import javax.inject.Inject
 class CreateShopViewModel @Inject constructor(
     private val createShop: CreateShopUC,
 ) : CreateUpdateShopFlowViewmodel() {
+
+
+    override val mutableState: MutableStateFlow<CreateUpdateShopFlowState> =
+        MutableStateFlow(CreateUpdateShopFlowState.Creating.initial())
 
     fun submitCreating() = viewModelScope.launch {
         val currentState = mutableState.value

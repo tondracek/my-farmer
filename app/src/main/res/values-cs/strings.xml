@@ -141,9 +141,15 @@
     <string name="you_are_not_the_author_of_this_review">Nejste autorem této recenze.</string>
     <string name="write_a_review">Napsat recenzi</string>
     <string name="delete">Smazat</string>
-    <string name="you_cannot_create_a_review_for_your_own_shop">Nemůžete napsat recenzi na vlastní obchod.</string>
+    <string name="you_cannot_write_a_review_for_your_own_shop">Nemůžete napsat recenzi na vlastní obchod.</string>
     <string name="my_review">Moje recenze</string>
     <string name="other_reviews">Ostatní recenze</string>
     <string name="please_provide_a_location_for_the_shop">Prosím, zvolte polohu obchodu.</string>
     <string name="you_must_be_logged_in_to_write_a_review">Pro napsání recenze musíte být přihlášeni</string>
+    <string name="you_have_already_written_a_review">Již jste napsal(a) recenzi pro tento obchod.</string>
+    <string name="send_password_reset_email">Odeslat e-mail pro obnovení hesla</string>
+    <string name="password_reset_mail_sent_to_your_address">E-mail pro obnovení hesla byl odeslán na vaši adresu.</string>
+    <string name="reviews_preview">Náhled recenzí</string>
+    <string name="see_all_reviews">Zobrazit všechny recenze</string>
+    <string name="no_reviews_in_shop_yet">V tomto obchodě zatím nejsou žádné recenze.</string>
 </resources>

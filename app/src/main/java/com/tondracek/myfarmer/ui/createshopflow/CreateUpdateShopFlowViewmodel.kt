@@ -17,11 +17,9 @@ import kotlinx.coroutines.launch
 
 const val NEW_CATEGORY_DIALOG_VALUE = "new_category_dialog_value"
 
-open class CreateUpdateShopFlowViewmodel() : BaseViewModel<CreateUpdateShopFlowEffect>() {
+abstract class CreateUpdateShopFlowViewmodel() : BaseViewModel<CreateUpdateShopFlowEffect>() {
 
-    protected val mutableState = MutableStateFlow<CreateUpdateShopFlowState>(
-        CreateUpdateShopFlowState.Creating.initial(shopInput = ShopInput())
-    )
+    protected abstract val mutableState: MutableStateFlow<CreateUpdateShopFlowState>
 
     val state: StateFlow<CreateUpdateShopFlowState> = mutableState
 

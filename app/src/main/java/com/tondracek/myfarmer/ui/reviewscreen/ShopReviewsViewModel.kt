@@ -9,6 +9,8 @@ import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.flatMap
+import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
+import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
 import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewId
@@ -57,11 +59,27 @@ class ShopReviewsViewModel @Inject constructor(
         .withFailure { emitEffect(ShopReviewsEffect.ShowError(it.error)) }
         .map { it.getOrNull() }
 
-    private val isLoggedIn: Flow<Boolean> = currentUser.map { it.isSuccess() }
-
     private val myReview: Flow<Review?> = currentUser
         .flatMap { getUserReviewOnShopUC(shopId = shopId, userId = it.id) }
         .map { it.getOrNull() }
+
+    private val isMyShop: Flow<Boolean> = combine(shop, currentUser) { shop, userResult ->
+        userResult.mapSuccess { shop?.ownerId == it.id }
+            .getOrElse(false)
+    }
+
+    private val isLoggedIn: Flow<Boolean> = currentUser.map { it.isSuccess() }
+
+    private val myReviewUiState: Flow<ReviewUiState?> = combine(
+        myReview,
+        currentUser,
+    ) { review, userResult ->
+        val author = userResult.getOrNull() ?: return@combine null
+        when (review) {
+            null -> null
+            else -> review.toUiState(author)
+        }
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _reviewsWithAuthors: Flow<PagingData<Pair<Review, SystemUser>>> =
@@ -83,27 +101,18 @@ class ShopReviewsViewModel @Inject constructor(
             pagingData.map { (review, author) -> review.toUiState(author) }
         }
 
-    private val myReviewUiState: Flow<ReviewUiState?> = combine(
-        myReview,
-        currentUser,
-    ) { review, userResult ->
-        val author = userResult.getOrNull() ?: return@combine null
-        when (review) {
-            null -> null
-            else -> review.toUiState(author)
-        }
-    }
-
     val state: StateFlow<ShopReviewsScreenState> = combine(
         shop,
-        isLoggedIn,
+        isMyShop,
         myReviewUiState,
+        isLoggedIn,
         flowOf(_reviewsUiState)
-    ) { shop, isLoggedIn, myReview, reviews ->
+    ) { shop, isMyShop, myReview, isLoggedIn, reviews ->
         ShopReviewsScreenState.Success(
             shopName = shop?.name,
-            isLoggedIn = isLoggedIn,
+            isMyShop = isMyShop,
             myReview = myReview,
+            isLoggedIn = isLoggedIn,
             reviews = reviews,
         )
     }.stateIn(

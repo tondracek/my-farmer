@@ -1,11 +1,10 @@
 package com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLngBounds
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
+import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.location.model.meters
 import com.tondracek.myfarmer.location.usecase.measureMapDistanceNotNull
@@ -23,35 +22,40 @@ import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.usecase.GetUsersByIdsUC
 import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
+import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ShopsMapViewModel @Inject constructor(
-    getShopsByDistancePaged: GetShopsByDistancePagedUC,
-    getAllShopsPaginated: GetAllShopsPaginatedUC,
-    applyFilters: ApplyFiltersUC,
+    private val getShopsByDistancePaged: GetShopsByDistancePagedUC,
+    private val getAllShopsPaginated: GetAllShopsPaginatedUC,
+    private val applyFilters: ApplyFiltersUC,
     getUserLocation: GetUserLocationUC,
     getClosestShops: GetClosestShopsUC,
     getShopFilters: GetShopFiltersUC,
     getUsersByIds: GetUsersByIdsUC,
     private val getInitialCameraBounds: GetMapViewInitialCameraBoundsUC,
-) : ViewModel() {
+) : BaseViewModel<ShopsMapViewEffect>() {
+
+    private val _selectedShopId = MutableStateFlow<ShopId?>(null)
+    val selectedShopId: StateFlow<ShopId?> = _selectedShopId
 
     private val filters: StateFlow<ShopFilters> =
         getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
@@ -71,43 +75,9 @@ class ShopsMapViewModel @Inject constructor(
         .distinctUntilChanged()
         .combine(filters) { location, filters -> location to filters }
         .flatMapLatest { (location, filters) ->
-            when {
-                location != null -> channelFlow {
-                    val shops = mutableSetOf<Shop>()
-                    var cursor: DistancePagingCursor? = null
-
-                    do {
-                        getShopsByDistancePaged(
-                            center = location,
-                            pageSize = 20,
-                            cursor = cursor,
-                        ).withSuccess { (list, nextCursor) ->
-                            val filtered = applyFilters.sync(shops = list, filters = filters)
-                            shops.addAll(filtered)
-
-                            send(shops.toList())
-                            cursor = nextCursor
-                        }
-                    } while (cursor != null)
-                }
-
-                else -> channelFlow {
-                    val shops = mutableSetOf<Shop>()
-                    var cursor: ShopId? = null
-
-                    do {
-                        getAllShopsPaginated(
-                            limit = 20,
-                            after = cursor
-                        ).withSuccess {
-                            val filtered = applyFilters.sync(shops = it, filters = filters)
-                            shops.addAll(filtered)
-
-                            send(shops.toList())
-                            cursor = it.lastOrNull()?.id
-                        }
-                    } while (cursor != null)
-                }
+            when (location) {
+                null -> getAllShopsPagingFLow(filters)
+                else -> getShopsByDistancePagingFlow(location, filters)
             }
         }
 
@@ -116,20 +86,11 @@ class ShopsMapViewModel @Inject constructor(
             val ownerIds = it.map(Shop::ownerId).distinct()
             getUsersByIds(ownerIds)
         }
-        .getOrEmitError(emptyList())
+        .withFailure { emitEffect(ShopsMapViewEffect.ShowError(it.error)) }
+        .getOrElse(emptyList())
         .distinctUntilChanged()
 
-    private val _closestShops: Flow<List<Shop>> = _shops
-        .map { getClosestShops(it, count = 3) }
-        .distinctUntilChanged()
-
-    private val _initialCameraBounds: Flow<LatLngBounds?> = _closestShops
-        .map { shops ->
-            val locations = shops.map { it.location.toLatLng() }
-            getInitialCameraBounds(locations)
-        }
-
-    private val _shopUiItems: Flow<Set<ShopMapItem>> = combine(
+    private val shopUiItems: Flow<Set<ShopMapItem>> = combine(
         _shops,
         _shopOwners,
     ) { shops, shopOwners ->
@@ -140,31 +101,88 @@ class ShopsMapViewModel @Inject constructor(
         }.toSet()
     }
 
+    private val selectedShop: Flow<ShopMapItem?> = combine(
+        _selectedShopId,
+        shopUiItems,
+    ) { selectedShopId, shopUiItems ->
+        shopUiItems.firstOrNull { it.id == selectedShopId }
+    }.distinctUntilChanged()
+
+    private val initialCameraBounds = MutableStateFlow<LatLngBounds?>(null)
+
     val state: StateFlow<ShopsMapViewState> = combine(
-        _shopUiItems,
-        _initialCameraBounds,
-    ) { shopUiItems, initialCameraBounds ->
+        shopUiItems,
+        selectedShop,
+        initialCameraBounds,
+    ) { shopUiItems, selectedShop, initialCameraBounds ->
         ShopsMapViewState(
             shops = shopUiItems,
+            selectedShop = selectedShop,
             initialCameraBounds = initialCameraBounds,
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = ShopsMapViewState()
+        initialValue = ShopsMapViewState.Empty,
     )
 
-    fun onShopSelected(shopId: ShopId) = viewModelScope.launch {
-        _effects.emit(ShopsMapViewEffect.OpenShopDetail(shopId))
+    init {
+        viewModelScope.launch {
+            val closestShopLocations = _shops
+                .map { getClosestShops(it, count = 3) }
+                .first()
+                .map { it.location.toLatLng() }
+            val bounds = getInitialCameraBounds(closestShopLocations)
+
+            initialCameraBounds.emit(bounds)
+        }
     }
 
-    private val _effects = MutableSharedFlow<ShopsMapViewEffect>(extraBufferCapacity = 1)
-    val effects: SharedFlow<ShopsMapViewEffect> = _effects
+    fun onShopSelected(shopId: ShopId) = viewModelScope.launch {
+        emitEffect(ShopsMapViewEffect.OpenShopDetail(shopId))
+        _selectedShopId.update { shopId }
+    }
 
-    private fun <T> Flow<DomainResult<T>>.getOrEmitError(defaultValue: T): Flow<T> = map { result ->
-        result
-            .withFailure { _effects.emit(ShopsMapViewEffect.ShowError(it.error)) }
-            .getOrElse(defaultValue)
+    fun onShopDeselected() = _selectedShopId.update { null }
+
+    private fun getShopsByDistancePagingFlow(
+        location: Location,
+        filters: ShopFilters
+    ): Flow<Collection<Shop>> = channelFlow {
+        val shops = mutableSetOf<Shop>()
+        var cursor: DistancePagingCursor? = null
+
+        do {
+            getShopsByDistancePaged(
+                center = location,
+                pageSize = 20,
+                cursor = cursor,
+            ).withSuccess { (list, nextCursor) ->
+                val filtered = applyFilters.sync(shops = list, filters = filters)
+                shops.addAll(filtered)
+
+                send(shops.toList())
+                cursor = nextCursor
+            }
+        } while (cursor != null)
+    }
+
+    private fun getAllShopsPagingFLow(filters: ShopFilters): Flow<Collection<Shop>> = channelFlow {
+        val shops = mutableSetOf<Shop>()
+        var cursor: ShopId? = null
+
+        do {
+            getAllShopsPaginated(
+                limit = 20,
+                after = cursor
+            ).withSuccess {
+                val filtered = applyFilters.sync(shops = it, filters = filters)
+                shops.addAll(filtered)
+
+                send(shops.toList())
+                cursor = it.lastOrNull()?.id
+            }
+        } while (cursor != null)
     }
 }
 

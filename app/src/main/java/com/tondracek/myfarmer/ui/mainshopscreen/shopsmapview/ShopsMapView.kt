@@ -53,6 +53,7 @@ import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.tondracek.myfarmer.R
+import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.map.mapbox.CLUSTER_LAYER_ID
 import com.tondracek.myfarmer.ui.common.map.mapbox.MapboxMapView
@@ -141,19 +142,6 @@ fun ShopsMapView(
             }
         }
     }
-
-    var hasSetInitialBounds by remember { mutableStateOf(false) }
-    LaunchedEffect(state.initialCameraBounds, mapboxMap) {
-        if (hasSetInitialBounds) return@LaunchedEffect
-
-        val initialCameraBounds = state.initialCameraBounds ?: return@LaunchedEffect
-        val mapboxMap = mapboxMap ?: return@LaunchedEffect
-
-        initialCameraBounds.let {
-            mapboxMap.zoomToBounds(it)
-            hasSetInitialBounds = true
-        }
-    }
 }
 
 @Composable
@@ -228,6 +216,25 @@ private fun MapboxShopMap(
         }
     )
 
+    var hasSetInitialPosition by remember { mutableStateOf(false) }
+    LaunchedEffect(state.initialCameraBounds, mapboxMap) {
+        if (hasSetInitialPosition) return@LaunchedEffect
+        if (state.selectedShop != null) return@LaunchedEffect
+
+        val initialCameraBounds = state.initialCameraBounds ?: return@LaunchedEffect
+        val mapboxMap = mapboxMap ?: return@LaunchedEffect
+
+        mapboxMap.zoomToBounds(initialCameraBounds)
+        hasSetInitialPosition = true
+    }
+
+    LaunchedEffect(mapboxMap, state.selectedShop) {
+        val mapboxMap = mapboxMap ?: return@LaunchedEffect
+        val selectedShop = state.selectedShop ?: return@LaunchedEffect
+
+        zoomToLocation(mapboxMap, selectedShop.location)
+    }
+
     LaunchedEffect(mapboxMapView, state.shops) {
         val mapboxMapView = mapboxMapView ?: return@LaunchedEffect
 
@@ -279,10 +286,7 @@ private fun handleShopClick(
     )
 
     val options = RenderedQueryOptions(
-        listOf(
-            CLUSTER_LAYER_ID,
-            SHOP_LAYER_ID
-        ),
+        listOf(CLUSTER_LAYER_ID, SHOP_LAYER_ID),
         null
     )
 
@@ -298,9 +302,6 @@ private fun handleShopClick(
                 else -> feature.getStringProperty(PROP_ID)
                     ?.let(ShopId::fromString)
                     ?.let(onShopSelected)
-                    ?.also {
-                        zoomToShop(mapboxMap, feature)
-                    }
             }
         }
 
@@ -326,12 +327,18 @@ private fun zoomIntoCluster(
     )
 }
 
-private fun zoomToShop(
+private fun zoomToLocation(
     mapboxMap: MapboxMap,
-    feature: Feature,
+    point: Location,
 ) {
-    val geometry = feature.geometry() as? Point ?: return
+    val geometry = Point.fromLngLat(
+        point.longitude,
+        point.latitude
+    )
+    zoomToLocation(mapboxMap, geometry)
+}
 
+private fun zoomToLocation(mapboxMap: MapboxMap, geometry: Point?) {
     mapboxMap.easeTo(
         CameraOptions.Builder()
             .center(geometry)
@@ -362,21 +369,7 @@ private fun zoomToUser(
 ) {
     val listener = object : (Point) -> Unit {
         override fun invoke(point: Point) {
-            val userPoint = Point.fromLngLat(
-                point.longitude(),
-                point.latitude()
-            )
-
-            mapboxMap.easeTo(
-                CameraOptions.Builder()
-                    .center(userPoint)
-                    .zoom(15.5) // good “nearby shops” zoom
-                    .build(),
-                MapAnimationOptions.mapAnimationOptions {
-                    duration(500)
-                }
-            )
-
+            zoomToLocation(mapboxMap, point)
             mapView.location.removeOnIndicatorPositionChangedListener(this)
         }
     }
@@ -389,7 +382,7 @@ private fun zoomToUser(
 private fun ShopsMapViewPreview() {
     MyFarmerTheme {
         ShopsMapView(
-            state = ShopsMapViewState(),
+            state = ShopsMapViewState.Empty,
             navController = NavHostController(LocalContext.current),
             onShopSelected = {},
             modifier = Modifier.fillMaxSize(),

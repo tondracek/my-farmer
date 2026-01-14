@@ -9,8 +9,9 @@ sealed interface ShopReviewsScreenState {
     data class Success(
         val shopName: String?,
         val myReview: ReviewUiState?,
+        val isMyShop: Boolean,
         val isLoggedIn: Boolean,
-        val reviews: Flow<PagingData<ReviewUiState>>
+        val reviews: Flow<PagingData<ReviewUiState>>,
     ) : ShopReviewsScreenState
 
     data object Loading : ShopReviewsScreenState
