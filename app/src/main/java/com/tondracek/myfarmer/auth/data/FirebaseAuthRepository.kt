@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.auth.domain.repository.AuthRepository
+import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.mapFlow
@@ -25,7 +26,7 @@ class FirebaseAuthRepository @Inject constructor(
 ) : AuthRepository {
 
     override suspend fun loginUser(email: String, password: String): DomainResult<Unit> =
-        DomainResult.of(
+        domainResultOf(
             AuthError.Unknown,
             FirebaseAuthInvalidUserException::class to AuthError.UserNotFound,
             FirebaseAuthInvalidCredentialsException::class to AuthError.InvalidCredentials,
@@ -35,7 +36,7 @@ class FirebaseAuthRepository @Inject constructor(
                 .await()
         }
 
-    override suspend fun loginWithGoogle(idToken: String): DomainResult<Unit> = DomainResult.of(
+    override suspend fun loginWithGoogle(idToken: String): DomainResult<Unit> = domainResultOf(
         AuthError.Unknown,
         FirebaseAuthInvalidUserException::class to AuthError.UserNotFound,
         FirebaseAuthInvalidCredentialsException::class to AuthError.InvalidCredentials,
@@ -48,7 +49,7 @@ class FirebaseAuthRepository @Inject constructor(
     }
 
     override suspend fun registerUser(email: String, password: String): DomainResult<Unit> =
-        DomainResult.of(
+        domainResultOf(
             AuthError.Unknown,
             FirebaseAuthUserCollisionException::class to AuthError.EmailAlreadyInUse,
             FirebaseAuthInvalidCredentialsException::class to AuthError.InvalidCredentials,
@@ -82,5 +83,5 @@ class FirebaseAuthRepository @Inject constructor(
         getCurrentUserAuthId().mapFlow { it != null }
 
     override fun signOut() =
-        DomainResult.of(AuthError.LogoutFailed) { auth.signOut() }
+        domainResultOf(AuthError.LogoutFailed) { auth.signOut() }
 }

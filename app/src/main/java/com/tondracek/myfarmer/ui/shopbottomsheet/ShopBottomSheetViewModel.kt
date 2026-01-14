@@ -46,7 +46,6 @@ class ShopBottomSheetViewModel @Inject constructor(
 ) : BaseViewModel<ShopBottomSheetEffect>() {
 
     private val _openedShopId = MutableStateFlow<ShopId?>(null)
-    val openedShopId = _openedShopId
 
     fun openShop(id: ShopId?) = _openedShopId.update { id }
 

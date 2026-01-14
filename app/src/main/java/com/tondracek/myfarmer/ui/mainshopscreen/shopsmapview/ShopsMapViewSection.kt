@@ -7,8 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.core.appstate.AppUiController
 import com.tondracek.myfarmer.ui.core.navigation.Route.ShopReviews
 import com.tondracek.myfarmer.ui.shopbottomsheet.ShopBottomSheetContent
@@ -26,6 +30,7 @@ fun ShopsMapViewSection(
 
     val viewmodel: ShopBottomSheetViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()
+    var openedShopId by remember { mutableStateOf<ShopId?>(null) }
 
     ShopsMapView(
         navController = navController,
@@ -36,8 +41,10 @@ fun ShopsMapViewSection(
     LaunchedEffect(Unit) {
         shopsMapViewModel.effects.collect { event ->
             when (event) {
-                is ShopsMapViewEffect.OpenShopDetail ->
+                is ShopsMapViewEffect.OpenShopDetail -> {
+                    openedShopId = event.shopId
                     viewmodel.openShop(event.shopId)
+                }
 
                 is ShopsMapViewEffect.ShowError ->
                     appUiController.showError(event.error)
@@ -46,10 +53,12 @@ fun ShopsMapViewSection(
     }
 
     val sheetState = rememberModalBottomSheetState()
-    val openedShopId by viewmodel.openedShopId.collectAsState()
     if (openedShopId != null)
         ModalBottomSheet(
-            onDismissRequest = { viewmodel.openShop(null) },
+            onDismissRequest = {
+                openedShopId = null
+                viewmodel.openShop(null)
+            },
             sheetState = sheetState,
         ) {
             ShopBottomSheetContent(

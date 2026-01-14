@@ -41,7 +41,6 @@ import kotlinx.coroutines.flow.flowOf
 fun ShopReviewsScreen(
     state: ShopReviewsScreenState,
     onSubmitReview: (reviewInput: ReviewInput) -> Unit,
-    onBackClick: () -> Unit,
     onReviewDeleteClick: (ReviewId) -> Unit,
 ) {
     when (state) {
@@ -72,16 +71,22 @@ private fun Content(
             onReviewDeleteClick = onReviewDeleteClick,
         )
 
-        if (state.myReview == null)
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(MyFarmerTheme.paddings.bottomButtons)
-                    .align(Alignment.BottomCenter),
-                onClick = { showNewReviewBottomSheet = true }
-            ) {
-                Text(stringResource(R.string.write_a_review))
-            }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(MyFarmerTheme.paddings.bottomButtons)
+                .align(Alignment.BottomCenter),
+            onClick = { showNewReviewBottomSheet = true },
+            enabled = state.isLoggedIn && state.myReview == null
+        ) {
+            Text(
+                when {
+                    !state.isLoggedIn -> stringResource(R.string.you_must_be_logged_in_to_write_a_review)
+                    state.myReview != null -> stringResource(R.string.you_have_already_written_a_review)
+                    else -> stringResource(R.string.write_a_review)
+                }
+            )
+        }
     }
 
     if (showNewReviewBottomSheet) {
@@ -145,11 +150,11 @@ private fun ShopReviewsScreenPreview() {
         ShopReviewsScreen(
             state = ShopReviewsScreenState.Success(
                 shopName = "Sample Shop long long long long long long long long long long long long name",
+                isLoggedIn = true,
                 myReview = sampleReviewsUI.first(),
                 reviews = flowOf(PagingData.from(sampleReviewsUI))
             ),
             onSubmitReview = {},
-            onBackClick = {},
             onReviewDeleteClick = {},
         )
     }
@@ -162,11 +167,11 @@ private fun ShopReviewsScreenPreviewSingleReview() {
         ShopReviewsScreen(
             state = ShopReviewsScreenState.Success(
                 shopName = "Sample Shop",
+                isLoggedIn = true,
                 myReview = null,
                 reviews = flowOf(PagingData.from(listOf(sampleReviewsUI.first())))
             ),
             onSubmitReview = {},
-            onBackClick = {},
             onReviewDeleteClick = {},
         )
     }
@@ -179,11 +184,11 @@ private fun ShopReviewsScreenPreviewNoReview() {
         ShopReviewsScreen(
             state = ShopReviewsScreenState.Success(
                 shopName = "Sample Shop",
+                isLoggedIn = false,
                 myReview = null,
                 reviews = flowOf(PagingData.from(emptyList()))
             ),
             onSubmitReview = {},
-            onBackClick = {},
             onReviewDeleteClick = {},
         )
     }

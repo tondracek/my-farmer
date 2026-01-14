@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.core.data.firestore.FirestoreCollectionNames
+import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
 import com.tondracek.myfarmer.core.data.firestore.helpers.FirestoreCrudHelper
 import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetByField
 import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetByIds
@@ -34,17 +35,17 @@ class FirestoreUserRepository @Inject constructor() : UserRepository {
     )
 
     override suspend fun create(item: SystemUser) =
-        DomainResult.of(UserError.CreationFailed) {
+        domainResultOf(UserError.CreationFailed) {
             helper.create(item.toEntity()).toUserId()
         }
 
     override suspend fun update(item: SystemUser) =
-        DomainResult.of(UserError.UpdateFailed) {
+        domainResultOf(UserError.UpdateFailed) {
             helper.update(item.toEntity())
         }
 
     override suspend fun delete(id: UserId) =
-        DomainResult.of(UserError.DeletionFailed) {
+        domainResultOf(UserError.DeletionFailed) {
             helper.delete(id.toFirestoreId())
         }
 

@@ -4,6 +4,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.firestore
 import com.tondracek.myfarmer.core.data.firestore.FirestoreCollectionNames
+import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
 import com.tondracek.myfarmer.core.data.firestore.helpers.FirestoreCrudHelper
 import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetByField
 import com.tondracek.myfarmer.core.data.firestore.helpers.functions.firestoreGetPaginatedById
@@ -39,7 +40,7 @@ class FirestoreShopRepository @Inject constructor(
     )
 
     override suspend fun getAllPaginated(limit: Int?, after: ShopId?): DomainResult<List<Shop>> =
-        DomainResult.of(ShopError.FetchingFailed) {
+        domainResultOf(ShopError.FetchingFailed) {
             firestoreGetPaginatedById(
                 collection = collection,
                 entityClass = ShopEntity::class,
@@ -63,7 +64,7 @@ class FirestoreShopRepository @Inject constructor(
         cursor: DistancePagingCursor?,
         rings: List<DistanceRing>
     ): DomainResult<Pair<List<Shop>, DistancePagingCursor?>> =
-        DomainResult.of(ShopError.FetchingFailed) {
+        domainResultOf(ShopError.FetchingFailed) {
             val ringIndex = cursor?.ringIndex ?: 0
             val afterGeohash = cursor?.afterGeohash
 
@@ -107,15 +108,15 @@ class FirestoreShopRepository @Inject constructor(
         }
 
     override suspend fun create(item: Shop): DomainResult<ShopId> =
-        DomainResult.of(ShopError.CreationFailed) {
+        domainResultOf(ShopError.CreationFailed) {
             helper.create(item.toEntity()).toShopId()
         }
 
-    override suspend fun update(item: Shop) = DomainResult.of(ShopError.UpdateFailed) {
+    override suspend fun update(item: Shop) = domainResultOf(ShopError.UpdateFailed) {
         helper.update(item.toEntity())
     }
 
-    override suspend fun delete(id: ShopId) = DomainResult.of(ShopError.DeletionFailed) {
+    override suspend fun delete(id: ShopId) = domainResultOf(ShopError.DeletionFailed) {
         helper.delete(id.toFirestoreId())
     }
 

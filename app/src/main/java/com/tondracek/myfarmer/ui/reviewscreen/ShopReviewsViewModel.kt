@@ -57,6 +57,8 @@ class ShopReviewsViewModel @Inject constructor(
         .withFailure { emitEffect(ShopReviewsEffect.ShowError(it.error)) }
         .map { it.getOrNull() }
 
+    private val isLoggedIn: Flow<Boolean> = currentUser.map { it.isSuccess() }
+
     private val myReview: Flow<Review?> = currentUser
         .flatMap { getUserReviewOnShopUC(shopId = shopId, userId = it.id) }
         .map { it.getOrNull() }
@@ -94,11 +96,13 @@ class ShopReviewsViewModel @Inject constructor(
 
     val state: StateFlow<ShopReviewsScreenState> = combine(
         shop,
+        isLoggedIn,
         myReviewUiState,
         flowOf(_reviewsUiState)
-    ) { shop, myReview, reviews ->
+    ) { shop, isLoggedIn, myReview, reviews ->
         ShopReviewsScreenState.Success(
             shopName = shop?.name,
+            isLoggedIn = isLoggedIn,
             myReview = myReview,
             reviews = reviews,
         )
@@ -115,10 +119,6 @@ class ShopReviewsViewModel @Inject constructor(
         ).withFailure { emitEffect(ShopReviewsEffect.ShowError(it.error)) }
     }
 
-    fun onNavigateBack() = viewModelScope.launch {
-        emitEffect(ShopReviewsEffect.NavigateBack)
-    }
-
     fun onReviewDeleteClick(reviewId: ReviewId) = viewModelScope.launch {
         deleteReviewUC(reviewId)
             .withFailure { emitEffect(ShopReviewsEffect.ShowError(it.error)) }
@@ -126,7 +126,5 @@ class ShopReviewsViewModel @Inject constructor(
 }
 
 sealed interface ShopReviewsEffect {
-    object NavigateBack : ShopReviewsEffect
-
     data class ShowError(val error: DomainError) : ShopReviewsEffect
 }

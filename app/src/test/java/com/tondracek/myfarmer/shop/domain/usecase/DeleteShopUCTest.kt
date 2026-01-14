@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
 import com.tondracek.myfarmer.common.image.data.FakePhotoStorage
+import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.shop.data.getFakeShopRepository
 import com.tondracek.myfarmer.shop.data.shop0
@@ -48,7 +49,7 @@ class DeleteShopUCTest {
         val shopId = UUID.randomUUID()
 
         whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(DomainResult.of(sampleUsers.first())))
+            .thenReturn(flowOf(domainResultOf(sampleUsers.first())))
 
         val result = uc(shopId)
 
@@ -76,7 +77,7 @@ class DeleteShopUCTest {
 
         val otherUser = sampleUsers.first { it.id != shop.ownerId }
         whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(DomainResult.of(otherUser)))
+            .thenReturn(flowOf(domainResultOf(otherUser)))
 
         val result = uc(shopId)
 
@@ -92,7 +93,7 @@ class DeleteShopUCTest {
 
         val user = sampleUsers.find { it.id == shop.ownerId }!!
         whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(DomainResult.of(user)))
+            .thenReturn(flowOf(domainResultOf(user)))
 
         val shops0 = shopRepository.getAll().first()
         println(shops0)

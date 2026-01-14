@@ -10,6 +10,7 @@ import androidx.core.net.toUri
 import androidx.exifinterface.media.ExifInterface
 import com.google.firebase.storage.FirebaseStorage
 import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
 import com.tondracek.myfarmer.core.domain.domainerror.PhotoError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultList
@@ -32,7 +33,7 @@ class PhotoStorageImpl @Inject constructor(
         name: String,
         folder: PhotoStorageFolder,
         quality: Quality,
-    ): DomainResult<ImageResource> = DomainResult.of(PhotoError.UploadFailed) {
+    ): DomainResult<ImageResource> = domainResultOf(PhotoError.UploadFailed) {
         val localUri = imageResource.uri
             ?: return DomainResult.Success(ImageResource.EMPTY)
 
@@ -71,9 +72,7 @@ class PhotoStorageImpl @Inject constructor(
     }
 
     override suspend fun deletePhoto(imageResource: ImageResource): DomainResult<Unit> =
-        DomainResult.of(
-            PhotoError.DeletionFailed
-        ) {
+        domainResultOf(PhotoError.DeletionFailed) {
             if (!imageResource.isFirebaseStoragePath())
                 return DomainResult.Success(Unit)
                     .also { Timber.d("ImageResource $imageResource is not a Firebase Storage path, skipping deletion.") }
@@ -93,9 +92,7 @@ class PhotoStorageImpl @Inject constructor(
         }
 
     override suspend fun deletePhotos(imageResources: Collection<ImageResource>): DomainResult<Unit> =
-        DomainResult.of(
-            PhotoError.DeletionFailed
-        ) {
+        domainResultOf(PhotoError.DeletionFailed) {
             coroutineScope {
                 imageResources.map { imageResource ->
                     async { deletePhoto(imageResource) }

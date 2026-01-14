@@ -9,9 +9,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
-import kotlin.coroutines.cancellation.CancellationException
-import kotlin.reflect.KClass
 
 sealed interface DomainResult<out T> {
 
@@ -21,6 +18,8 @@ sealed interface DomainResult<out T> {
         val error: DomainError,
         val cause: Throwable? = null
     ) : DomainResult<Nothing>
+
+    fun isSuccess(): Boolean = this is Success
 
     suspend fun withSuccess(block: suspend (T) -> Unit): DomainResult<T> = apply {
         if (this is Success) block(this.data)
@@ -45,40 +44,6 @@ sealed interface DomainResult<out T> {
         is Success -> onSuccess(data)
         is Failure -> onFailure(this)
     }
-
-    companion object {
-
-        /**
-         * Executes the given [block] and wraps its result into [DomainResult].
-         *
-         * The [errorMappings] are evaluated ⚠️**in order**⚠️; the first matching exception
-         * type (using `is` / `isInstance`) is used. More specific exception types must
-         * therefore come **before** more general ones.
-         *
-         * Coroutine cancellation is respected: [CancellationException] is rethrown
-         * and never wrapped into [DomainResult.Failure].
-         *
-         * @param errorMappings ordered pairs of exception types to corresponding domain errors
-         * @param defaultError domain error used when no mapping matches
-         * @param block suspend operation that may throw
-         */
-        inline fun <T> of(
-            defaultError: DomainError,
-            vararg errorMappings: Pair<KClass<out Throwable>, DomainError>,
-            block: () -> T,
-        ): DomainResult<T> = try {
-            Success(block())
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Throwable) {
-            val domainError = errorMappings
-                .firstOrNull { (klass, _) -> klass.isInstance(e) }
-                ?.second
-                ?: defaultError
-
-            Failure(domainError, e)
-        }
-    }
 }
 
 inline fun <T, R> DomainResult<T>.mapSuccess(transform: (T) -> R): DomainResult<R> = when (this) {
@@ -102,14 +67,6 @@ inline fun <T, R> DomainResult<T>.mapFlatten(transform: (T) -> DomainResult<R>):
         is Success -> transform(data)
         is Failure -> this
     }
-
-
-fun <T> DomainResult<T>.log() = this.also {
-    when (it) {
-        is Success -> Timber.d("UCResult Success: ${it.data}")
-        is Failure -> Timber.e(it.cause, "UCResult Failure: ${it.error}")
-    }
-}
 
 /**
  * - For `UseCaseResult.Success` returns the `data` value

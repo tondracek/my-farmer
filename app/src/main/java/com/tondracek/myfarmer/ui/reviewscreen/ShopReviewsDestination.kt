@@ -25,7 +25,6 @@ fun NavGraphBuilder.shopReviewsScreenDestination(
     LaunchedEffect(Unit) {
         viewmodel.effects.collect { event ->
             when (event) {
-                is ShopReviewsEffect.NavigateBack -> navController.navigateUp()
                 is ShopReviewsEffect.ShowError -> appUiController.showError(event.error)
             }
         }
@@ -34,7 +33,6 @@ fun NavGraphBuilder.shopReviewsScreenDestination(
     ShopReviewsScreen(
         state = state,
         onSubmitReview = viewmodel::onSubmitReview,
-        onBackClick = viewmodel::onNavigateBack,
         onReviewDeleteClick = viewmodel::onReviewDeleteClick,
     )
 }

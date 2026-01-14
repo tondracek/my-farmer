@@ -4,6 +4,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.snapshots
 import com.tondracek.myfarmer.core.data.firestore.FirestoreCollectionNames
+import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
 import com.tondracek.myfarmer.core.data.firestore.helpers.applyIfNotNull
 import com.tondracek.myfarmer.core.data.firestore.helpers.getEntities
 import com.tondracek.myfarmer.core.data.firestore.helpers.getEntitiesFlow
@@ -11,7 +12,6 @@ import com.tondracek.myfarmer.core.data.firestore.helpers.mapToDomain
 import com.tondracek.myfarmer.core.domain.domainerror.ReviewError
 import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.log
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultNonNull
 import com.tondracek.myfarmer.review.domain.model.Review
@@ -27,8 +27,6 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 private class ReviewAlreadyExistsException : Exception()
-
-private class ReviewNotFoundException : Exception()
 
 class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
 
@@ -60,14 +58,14 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
         shopId: ShopId,
         limit: Int,
         after: ReviewId?
-    ): DomainResult<List<Review>> = DomainResult.of(ReviewError.FetchingFailed) {
+    ): DomainResult<List<Review>> = domainResultOf(ReviewError.FetchingFailed) {
         reviewsCollection(shopId)
             .orderBy(ReviewEntity::id.name)
             .applyIfNotNull(after) { id -> this.startAfter(id.toFirestoreId()) }
             .limit(limit.toLong())
             .getEntities(ReviewEntity::class)
             .map { it.toModel() }
-    }.log()
+    }
 
     override fun getUserReviewOnShop(
         shopId: ShopId,
@@ -78,7 +76,10 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
             .mapToDomain(ReviewEntity::class) { it.toModel() }
             .toUCResultNonNull(ReviewError.NotFound, ReviewError.FetchingFailed)
 
-    override suspend fun create(item: Review): DomainResult<ReviewId> = try {
+    override suspend fun create(item: Review): DomainResult<ReviewId> = domainResultOf(
+        ReviewError.CreationFailed,
+        ReviewAlreadyExistsException::class to ReviewError.AlreadyExists
+    ) {
         firestore.runTransaction { tx ->
             val docRef = reviewsCollection(item.shopId, item.userId)
 
@@ -87,23 +88,19 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
 
             tx.set(docRef, item.toEntity())
 
-            DomainResult.Success(item.id)
+            item.id
         }.await()
-    } catch (e: ReviewAlreadyExistsException) {
-        DomainResult.Failure(ReviewError.AlreadyExists, e)
-    } catch (e: Exception) {
-        DomainResult.Failure(ReviewError.CreationFailed, e)
-    }.log()
+    }
 
     override suspend fun update(item: Review): DomainResult<Unit> =
-        DomainResult.of(ReviewError.UpdateFailed) {
+        domainResultOf(ReviewError.UpdateFailed) {
             reviewsCollection(item.shopId, item.userId)
                 .set(item.toEntity())
                 .await()
         }
 
     override suspend fun delete(id: ReviewId): DomainResult<Unit> =
-        DomainResult.of(ReviewError.DeletionFailed) {
+        domainResultOf(ReviewError.DeletionFailed) {
             val entity = allReviewsCollection()
                 .whereEqualTo(ReviewEntity::id.name, id.toFirestoreId())
                 .getEntities(ReviewEntity::class)
