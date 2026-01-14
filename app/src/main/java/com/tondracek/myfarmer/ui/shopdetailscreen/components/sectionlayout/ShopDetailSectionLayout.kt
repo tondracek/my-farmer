@@ -9,35 +9,43 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 class ShopDetailSectionScope {
-    private val items = mutableListOf<@Composable () -> Unit>()
+    private val items: MutableStateFlow<List<@Composable (() -> Unit)>> =
+        MutableStateFlow(emptyList())
 
-    fun item(content: @Composable () -> Unit) {
-        items += content
+    fun item(content: @Composable () -> Unit) = items.update {
+        listOf(*it.toTypedArray(), content)
     }
 
-    fun <T> item(input: T, transform: @Composable (T) -> Unit) {
-        items += { transform(input) }
+    fun <T> item(input: T, transform: @Composable (T) -> Unit) = items.update {
+        listOf(*it.toTypedArray(), { transform(input) })
     }
 
-    fun <T> itemNotNull(input: T?, transform: @Composable (T) -> Unit) {
-        if (input == null) return
-        items += { transform(input) }
+    fun <T> itemNotNull(input: T?, transform: @Composable (T) -> Unit) = when (input) {
+        null -> Unit
+        else -> items.update {
+            listOf(*it.toTypedArray(), { transform(input) })
+        }
     }
 
-    fun <T> items(inputs: Iterable<T>, transform: @Composable (T) -> Unit) {
-        items += inputs.map { item -> { transform(item) } }
+    fun <T> items(inputs: Iterable<T>, transform: @Composable (T) -> Unit) = items.update {
+        inputs.map { item -> { transform(item) } }
     }
 
     @Composable
     internal fun Render(content: @Composable (List<@Composable () -> Unit>) -> Unit) {
-        content(items)
+        val itemsCollected by items.collectAsState()
+        content(itemsCollected)
     }
 }
 
