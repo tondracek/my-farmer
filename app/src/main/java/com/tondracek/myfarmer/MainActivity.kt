@@ -52,9 +52,8 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController(bottomSheetNavigator)
                 val current by navController.currentBackStackEntryAsState()
-                LaunchedEffect(current) {
-                    println("XXX Current destination: ${current?.destination?.route}")
-                }
+                LaunchedEffect(current) { Timber.d("Current destination: ${current?.destination?.route}") }
+
                 val appUiController = remember { AppUiController() }
 
                 AppScaffold(navController, appUiController) {
