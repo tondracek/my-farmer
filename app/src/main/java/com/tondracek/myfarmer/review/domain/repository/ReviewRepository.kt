@@ -7,6 +7,7 @@ import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.systemuser.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
+import java.time.Instant
 
 interface ReviewRepository : Repository<Review, ReviewId> {
 
@@ -18,8 +19,13 @@ interface ReviewRepository : Repository<Review, ReviewId> {
     suspend fun getShopReviewsPaged(
         shopId: ShopId,
         limit: Int,
-        after: ReviewId?
-    ): DomainResult<List<Review>>
+        after: ReviewPageCursor?,
+    ): DomainResult<Pair<List<Review>, ReviewPageCursor?>>
 
     fun getUserReviewOnShop(shopId: ShopId, userId: UserId): Flow<DomainResult<Review>>
 }
+
+data class ReviewPageCursor(
+    val createdAt: Instant,
+    val id: ReviewId
+)

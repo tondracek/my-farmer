@@ -5,7 +5,7 @@ import com.tondracek.myfarmer.core.domain.usecaseresult.flatMap
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
 import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
 import com.tondracek.myfarmer.review.domain.model.Review
-import com.tondracek.myfarmer.review.domain.model.ReviewId
+import com.tondracek.myfarmer.review.domain.repository.ReviewPageCursor
 import com.tondracek.myfarmer.review.domain.repository.ReviewRepository
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
@@ -49,25 +49,27 @@ class GetShopReviewsWithAuthorsUC @Inject constructor(
     suspend fun paged(
         shopId: ShopId,
         limit: Int,
-        after: ReviewId?,
-    ): DomainResult<List<Pair<Review, SystemUser>>> {
-        val reviews = reviewRepository.getShopReviewsPaged(
+        after: ReviewPageCursor?
+    ): DomainResult<Pair<List<Pair<Review, SystemUser>>, ReviewPageCursor?>> {
+        val (reviews, nextCursor) = reviewRepository.getShopReviewsPaged(
             shopId = shopId,
             limit = limit,
             after = after
         ).getOrReturn { return it }
 
-        if (reviews.isEmpty()) return DomainResult.Success(emptyList())
+        if (reviews.isEmpty())
+            return DomainResult.Success(emptyList<Pair<Review, SystemUser>>() to nextCursor)
 
         val authorIds = reviews.map { it.userId }.distinct()
-        return userRepository
+        val authors: DomainResult<List<SystemUser>> = userRepository
             .getByIds(authorIds)
-            .first().mapSuccess { list ->
-                val authors = list.associateBy { it.id }
+            .first()
+        return authors.mapSuccess { list ->
+            val authors = list.associateBy { it.id }
 
-                reviews.mapNotNull { review ->
-                    authors[review.userId]?.let { review to it }
-                }
-            }
+            reviews.mapNotNull { review ->
+                authors[review.userId]?.let { review to it }
+            } to nextCursor
+        }
     }
 }

@@ -4,6 +4,7 @@ import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 
 /**
  * Extension function to convert a Flow<T> into a Flow<UCResult<T>>.
@@ -17,7 +18,10 @@ fun <T> Flow<T>.toUCResult(
     error: DomainError
 ): Flow<DomainResult<T>> =
     this.map { DomainResult.Success(it) as DomainResult<T> }
-        .catch { e -> emit(DomainResult.Failure(error, e)) }
+        .catch { e ->
+            Timber.e(e, "Error in toUCResult flow extension")
+            emit(DomainResult.Failure(error, e))
+        }
 
 fun <T> Flow<T?>.toUCResultNonNull(
     nullError: DomainError,
@@ -28,4 +32,7 @@ fun <T> Flow<T?>.toUCResultNonNull(
             null -> DomainResult.Failure(nullError)
             else -> DomainResult.Success(it)
         }
-    }.catch { e -> emit(DomainResult.Failure(defaultError, e)) }
+    }.catch { e ->
+        Timber.e(e, "Error in toUCResultNonNull flow extension")
+        emit(DomainResult.Failure(defaultError, e))
+    }

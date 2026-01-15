@@ -1,6 +1,8 @@
 package com.tondracek.myfarmer.review.data
 
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.snapshots
 import com.tondracek.myfarmer.core.data.firestore.FirestoreCollectionNames
@@ -16,6 +18,7 @@ import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultNonNull
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewId
+import com.tondracek.myfarmer.review.domain.repository.ReviewPageCursor
 import com.tondracek.myfarmer.review.domain.repository.ReviewRepository
 import com.tondracek.myfarmer.shop.data.toFirestoreId
 import com.tondracek.myfarmer.shop.domain.model.ShopId
@@ -49,6 +52,7 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
         shopId: ShopId,
         limit: Int?,
     ): Flow<DomainResult<List<Review>>> = reviewsCollection(shopId)
+        .orderBy(ReviewEntity::createdAt.name, Query.Direction.DESCENDING)
         .applyIfNotNull(limit) { this.limit(it.toLong()) }
         .getEntitiesFlow(ReviewEntity::class)
         .mapToModelList()
@@ -57,15 +61,37 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
     override suspend fun getShopReviewsPaged(
         shopId: ShopId,
         limit: Int,
-        after: ReviewId?
-    ): DomainResult<List<Review>> = domainResultOf(ReviewError.FetchingFailed) {
-        reviewsCollection(shopId)
-            .orderBy(ReviewEntity::id.name)
-            .applyIfNotNull(after) { id -> this.startAfter(id.toFirestoreId()) }
-            .limit(limit.toLong())
-            .getEntities(ReviewEntity::class)
-            .map { it.toModel() }
-    }
+        after: ReviewPageCursor?,
+    ): DomainResult<Pair<List<Review>, ReviewPageCursor?>> =
+        domainResultOf(ReviewError.FetchingFailed) {
+            val afterEntity = after?.let { Timestamp(it.createdAt) to it.id.toFirestoreId() }
+
+            val reviewEntities = reviewsCollection(shopId)
+                .orderBy(ReviewEntity::createdAt.name, Query.Direction.DESCENDING)
+                .orderBy(ReviewEntity::id.name, Query.Direction.DESCENDING)
+                .applyIfNotNull(afterEntity) { this.startAfter(it.first, it.second) }
+                .limit(limit.toLong())
+                .getEntities(ReviewEntity::class)
+
+            val nextCursor = when {
+                reviewEntities.size < limit -> null
+                else -> {
+                    val last = reviewEntities.last()
+                    val createdAt = last.createdAt?.toInstant()
+                    val id = last.id.toReviewId()
+
+                    if (createdAt != null)
+                        ReviewPageCursor(
+                            createdAt = createdAt,
+                            id = id
+                        )
+                    else null
+                }
+            }
+
+            val reviews = reviewEntities.map { it.toModel() }
+            reviews to nextCursor
+        }
 
     override fun getUserReviewOnShop(
         shopId: ShopId,
