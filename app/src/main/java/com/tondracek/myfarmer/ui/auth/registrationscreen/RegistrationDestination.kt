@@ -12,7 +12,9 @@ import com.tondracek.myfarmer.ui.auth.common.google.rememberGoogleSignInClient
 import com.tondracek.myfarmer.ui.auth.common.google.rememberGoogleSignInLauncher
 import com.tondracek.myfarmer.ui.auth.loginscreen.LoginRoute
 import com.tondracek.myfarmer.ui.core.appstate.AppUiController
+import com.tondracek.myfarmer.ui.core.navigation.NavGraph
 import com.tondracek.myfarmer.ui.core.navigation.Route
+import com.tondracek.myfarmer.ui.core.navigation.navigateToGraph
 import com.tondracek.myfarmer.ui.core.viewmodel.CollectEffects
 import kotlinx.serialization.Serializable
 
@@ -47,10 +49,12 @@ fun NavGraphBuilder.registrationDestination(
     viewmodel.CollectEffects { effect ->
         when (effect) {
             RegistrationEffect.GoToLoginScreen ->
-                navController.navigate(LoginRoute)
+                navController.navigate(LoginRoute) {
+                    popUpTo(RegistrationRoute) { inclusive = true }
+                }
 
             RegistrationEffect.GoToProfileScreen ->
-                navController.navigate(Route.EditProfileScreenRoute)
+                navController.navigateToGraph(NavGraph.MainFlow.Profile, saveState = false)
 
             is RegistrationEffect.ShowError ->
                 appUiController.showError(effect.error)

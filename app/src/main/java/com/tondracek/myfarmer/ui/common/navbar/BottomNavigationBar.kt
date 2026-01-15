@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.tondracek.myfarmer.ui.core.navigation.isInNavGraph
+import com.tondracek.myfarmer.ui.core.navigation.navigateToGraph
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
@@ -26,13 +27,7 @@ fun BottomNavigationBar(
                 text = it.text,
                 imageVector = it.imageVector,
                 selected = selected,
-                onClick = {
-                    navController.navigate(it.navGraph) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
+                onClick = { navController.navigateToGraph(it.navGraph) }
             )
         }
     }

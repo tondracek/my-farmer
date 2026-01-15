@@ -9,7 +9,6 @@ import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
-import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.usecase.UpdateUserUC
 import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
@@ -40,7 +39,7 @@ class EditProfileViewModel @Inject constructor(
         )
 
     private val loggedInUser: StateFlow<DomainResult<SystemUser>> = loggedInUserFlow
-        .withFailure { emitEffect(EditProfileScreenEffect.GoToLogin) }
+//        .withFailure { emitEffect(EditProfileScreenEffect.GoToLogin) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
@@ -120,7 +119,6 @@ class EditProfileViewModel @Inject constructor(
 }
 
 sealed interface EditProfileScreenEffect {
-    data object GoBack : EditProfileScreenEffect
 
     data object GoToLogin : EditProfileScreenEffect
 

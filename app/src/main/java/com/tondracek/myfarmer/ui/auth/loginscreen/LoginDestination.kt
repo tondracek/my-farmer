@@ -16,7 +16,9 @@ import com.tondracek.myfarmer.ui.auth.common.google.rememberGoogleSignInLauncher
 import com.tondracek.myfarmer.ui.auth.loginscreen.components.ForgotPasswordDialog
 import com.tondracek.myfarmer.ui.auth.registrationscreen.RegistrationRoute
 import com.tondracek.myfarmer.ui.core.appstate.AppUiController
+import com.tondracek.myfarmer.ui.core.navigation.NavGraph
 import com.tondracek.myfarmer.ui.core.navigation.Route
+import com.tondracek.myfarmer.ui.core.navigation.navigateToGraph
 import com.tondracek.myfarmer.ui.core.viewmodel.CollectEffects
 import kotlinx.serialization.Serializable
 
@@ -53,10 +55,12 @@ fun NavGraphBuilder.loginDestination(
     viewmodel.CollectEffects { effect ->
         when (effect) {
             LoginEffect.GoToRegistrationScreen ->
-                navController.navigate(RegistrationRoute)
+                navController.navigate(RegistrationRoute) {
+                    popUpTo(LoginRoute) { inclusive = true }
+                }
 
             LoginEffect.GoToProfileScreen ->
-                navController.navigate(Route.EditProfileScreenRoute)
+                navController.navigateToGraph(NavGraph.MainFlow.Profile, saveState = false)
 
             is LoginEffect.ShowError ->
                 appUiController.showError(effect.error)

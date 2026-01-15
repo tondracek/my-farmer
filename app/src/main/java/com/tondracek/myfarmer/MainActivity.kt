@@ -6,9 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.stefanoq21.material3.navigation.ModalBottomSheetLayout
@@ -48,6 +51,10 @@ class MainActivity : ComponentActivity() {
                 val bottomSheetNavigator = rememberBottomSheetNavigator()
 
                 val navController = rememberNavController(bottomSheetNavigator)
+                val current by navController.currentBackStackEntryAsState()
+                LaunchedEffect(current) {
+                    println("XXX Current destination: ${current?.destination?.route}")
+                }
                 val appUiController = remember { AppUiController() }
 
                 AppScaffold(navController, appUiController) {

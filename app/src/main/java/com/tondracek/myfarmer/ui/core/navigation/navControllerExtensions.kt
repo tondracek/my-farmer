@@ -14,6 +14,16 @@ val navigationJson = Json {
     encodeDefaults = true
 }
 
+fun NavController.navigateToGraph(navGraph: NavGraph, saveState: Boolean = true) {
+    val navController = this
+    println("XXX Navigating to graph: $navGraph")
+    navController.navigate(navGraph) {
+        popUpTo(navController.graph.startDestinationId) { this.saveState = saveState }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
+
 @Composable
 fun NavController.isInNavGraph(navGraph: NavGraph): Boolean {
     val navBackStackEntry by this.currentBackStackEntryAsState()
