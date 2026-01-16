@@ -19,7 +19,8 @@ const val NEW_CATEGORY_DIALOG_VALUE = "new_category_dialog_value"
 
 abstract class CreateUpdateShopFlowViewmodel() : BaseViewModel<CreateUpdateShopFlowEffect>() {
 
-    protected abstract val mutableState: MutableStateFlow<CreateUpdateShopFlowState>
+    protected val mutableState: MutableStateFlow<CreateUpdateShopFlowState> =
+        MutableStateFlow(CreateUpdateShopFlowState.Loading)
 
     val state: StateFlow<CreateUpdateShopFlowState> = mutableState
 
