@@ -36,15 +36,13 @@ class UpdateUserUC @Inject constructor(
     private suspend fun SystemUser.loadNewPhoto(original: SystemUser): DomainResult<SystemUser> =
         when (original.profilePicture == this.profilePicture) {
             true -> DomainResult.Success(this)
-            false ->
+            false -> {
                 photoStorage.deletePhoto(original.profilePicture)
-                    .mapFlatten {
-                        photoStorage.uploadPhoto(
-                            imageResource = this.profilePicture,
-                            name = this.id.toString(),
-                            folder = PhotoStorageFolder.ProfilePictures,
-                            quality = Quality.HD
-                        ).mapSuccess { this.copy(profilePicture = it) }
-                    }
+                photoStorage.uploadPhoto(
+                    imageResource = this.profilePicture,
+                    folder = PhotoStorageFolder.ProfilePictures(this.id),
+                    quality = Quality.HD
+                ).mapSuccess { this.copy(profilePicture = it) }
+            }
         }
 }

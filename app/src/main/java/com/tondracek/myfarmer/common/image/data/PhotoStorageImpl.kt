@@ -20,6 +20,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
+import java.util.UUID
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -30,7 +31,6 @@ class PhotoStorageImpl @Inject constructor(
 
     override suspend fun uploadPhoto(
         imageResource: ImageResource,
-        name: String,
         folder: PhotoStorageFolder,
         quality: Quality,
     ): DomainResult<ImageResource> = domainResultOf(PhotoError.UploadFailed) {
@@ -42,6 +42,7 @@ class PhotoStorageImpl @Inject constructor(
         val resizedBitmap = resizeBitmapForQuality(bitmap, quality)
         val bytes = compressBitmap(resizedBitmap)
 
+        val name = UUID.randomUUID().toString()
         val fileName = "$name.jpg"
         val storagePath = folder.getPath(fileName)
 
@@ -55,15 +56,14 @@ class PhotoStorageImpl @Inject constructor(
     }
 
     override suspend fun uploadPhotos(
-        imageResources: Collection<Pair<String, ImageResource>>,
+        imageResources: Collection<ImageResource>,
         folder: PhotoStorageFolder,
         quality: Quality,
     ): DomainResult<List<ImageResource>> = coroutineScope {
         imageResources.map {
             async {
                 uploadPhoto(
-                    imageResource = it.second,
-                    name = it.first,
+                    imageResource = it,
                     folder = folder,
                     quality = quality
                 )

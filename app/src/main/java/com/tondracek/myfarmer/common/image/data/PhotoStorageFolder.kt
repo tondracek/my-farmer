@@ -1,10 +1,11 @@
 package com.tondracek.myfarmer.common.image.data
 
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.systemuser.domain.model.UserId
 
 sealed class PhotoStorageFolder(val path: String) {
 
-    data object ProfilePictures : PhotoStorageFolder("profile_pictures")
+    data class ProfilePictures(internal val userId: UserId) : PhotoStorageFolder("profile_pictures")
 
     /**
      * @param shopId photos will be stored under folder with shopId name
@@ -13,7 +14,7 @@ sealed class PhotoStorageFolder(val path: String) {
     data object None : PhotoStorageFolder("")
 
     open fun getPath(fileName: String): String = when (this) {
-        is ProfilePictures -> "${this.path}/$fileName"
+        is ProfilePictures -> "${this.path}/${this.userId}/$fileName"
         is ShopPhotos -> "${this.path}/${this.shopId}/$fileName"
         is None -> fileName
     }

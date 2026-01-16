@@ -3,6 +3,7 @@ package com.tondracek.myfarmer.common.image.data
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultList
+import java.util.UUID
 
 class FakePhotoStorage() : PhotoStorage {
 
@@ -10,24 +11,22 @@ class FakePhotoStorage() : PhotoStorage {
 
     override suspend fun uploadPhoto(
         imageResource: ImageResource,
-        name: String,
         folder: PhotoStorageFolder,
         quality: Quality,
     ): DomainResult<ImageResource> {
-        val path = folder.getPath(name)
+        val path = folder.getPath(UUID.randomUUID().toString())
 
         images[path] = imageResource
         return DomainResult.Success(imageResource)
     }
 
     override suspend fun uploadPhotos(
-        imageResources: Collection<Pair<String, ImageResource>>,
+        imageResources: Collection<ImageResource>,
         folder: PhotoStorageFolder,
-        quality: Quality,
-    ): DomainResult<List<ImageResource>> = imageResources.map { (name, imageResource) ->
+        quality: Quality
+    ): DomainResult<List<ImageResource>> = imageResources.map { imageResource ->
         uploadPhoto(
             imageResource = imageResource,
-            name = name,
             folder = folder,
             quality = quality
         )

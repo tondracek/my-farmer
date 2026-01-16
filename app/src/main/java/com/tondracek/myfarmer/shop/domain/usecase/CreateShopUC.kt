@@ -12,7 +12,6 @@ import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShop
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import kotlinx.coroutines.flow.first
-import java.util.UUID
 import javax.inject.Inject
 
 class CreateShopUC @Inject constructor(
@@ -44,16 +43,11 @@ class CreateShopUC @Inject constructor(
      * - updates the shop with the new photo URLs
      */
     private suspend fun Shop.updatePhotos(shopId: ShopId): DomainResult<Shop> {
-        val newImages = this.images
-            .map { UUID.randomUUID().toString() to it }
-            .let {
-                photoStorage.uploadPhotos(
-                    imageResources = it,
-                    folder = PhotoStorageFolder.ShopPhotos(shopId),
-                    quality = Quality.FULL_HD,
-                )
-            }
-            .getOrReturn { return it }
+        val newImages = photoStorage.uploadPhotos(
+            imageResources = this.images,
+            folder = PhotoStorageFolder.ShopPhotos(shopId),
+            quality = Quality.FULL_HD,
+        ).getOrReturn { return it }
 
         return this.copy(images = newImages)
             .let { DomainResult.Success(it) }

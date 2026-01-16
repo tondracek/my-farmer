@@ -14,7 +14,6 @@ import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShop
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import kotlinx.coroutines.flow.first
-import java.util.UUID
 import javax.inject.Inject
 
 class UpdateShopUC @Inject constructor(
@@ -43,7 +42,7 @@ class UpdateShopUC @Inject constructor(
     private suspend fun Shop.updatePhotos(originalImages: List<ImageResource>): DomainResult<Shop> {
         val photosToUpload = images.filter { it !in originalImages }
         val uploadedPhotos = photoStorage.uploadPhotos(
-            imageResources = photosToUpload.map { UUID.randomUUID().toString() to it },
+            imageResources = photosToUpload,
             folder = PhotoStorageFolder.ShopPhotos(this.id),
             quality = Quality.FULL_HD,
         ).getOrReturn { return it }
