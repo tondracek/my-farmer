@@ -18,40 +18,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
-import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
-import com.tondracek.myfarmer.shop.data.shop0
+import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
 import com.tondracek.myfarmer.ui.common.productmenu.InStockLabel
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
-fun ProductMenuList(
-    menu: ProductMenu,
-    onEdit: (MenuItem) -> Unit,
-    onDelete: (MenuItem) -> Unit,
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        if (menu.items.isEmpty()) {
-            Text(
-                text = stringResource(R.string.no_products_yet),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        } else {
-            menu.items.forEach { item ->
-                MenuItem(item, onEdit, onDelete)
-            }
-        }
-    }
-}
-
-@Composable
-private fun MenuItem(
+fun MenuItemEdit(
     item: MenuItem,
     onEdit: (MenuItem) -> Unit,
     onDelete: (MenuItem) -> Unit
@@ -103,12 +80,15 @@ private fun MenuItem(
 
 @Preview
 @Composable
-private fun ProductMenuListPreview() {
-    val sampleMenu = shop0.menu
-
+private fun MenuItemPreview() {
     MyFarmerPreview {
-        ProductMenuList(
-            menu = sampleMenu,
+        MenuItemEdit(
+            item = MenuItem(
+                name = "Sample Item",
+                description = "This is a sample description for the menu item.",
+                price = PriceLabel("$9.99 per kg"),
+                inStock = true
+            ),
             onEdit = {},
             onDelete = {}
         )

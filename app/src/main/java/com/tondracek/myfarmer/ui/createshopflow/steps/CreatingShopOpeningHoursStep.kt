@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -30,6 +33,7 @@ import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShopInput
+import com.tondracek.myfarmer.ui.common.lazycolumn.fadingEdges
 import com.tondracek.myfarmer.ui.common.openinghours.getDayOfWeekString
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewDark
@@ -189,11 +193,14 @@ private fun DayToDayOpeningHoursInput(
     dayInput: Map<DayOfWeek, String>,
     onDayInputChange: (Map<DayOfWeek, String>) -> Unit,
 ) {
-    Column(
-        modifier = modifier,
+    val listState = rememberLazyListState()
+
+    LazyColumn(
+        modifier = modifier.fadingEdges(listState),
+        state = listState,
         verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.smallMedium),
     ) {
-        DayOfWeek.entries.forEach { day ->
+        items(DayOfWeek.entries) { day ->
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = dayInput[day] ?: "",
@@ -205,6 +212,7 @@ private fun DayToDayOpeningHoursInput(
                 label = {
                     Text(stringResource(R.string.write_message_for_x_here, getDayOfWeekString(day)))
                 },
+                singleLine = true,
             )
         }
     }
