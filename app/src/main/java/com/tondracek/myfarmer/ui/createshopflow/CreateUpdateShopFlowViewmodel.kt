@@ -6,6 +6,7 @@ import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
+import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
@@ -45,21 +46,8 @@ abstract class CreateUpdateShopFlowViewmodel() : BaseViewModel<CreateUpdateShopF
         emitEffect(CreateUpdateShopFlowEffect.OpenAddCategoryDialog)
     }
 
-    fun addCategory(category: ShopCategory) = mutableState.updateShopInput { shopInput ->
-        val newCategories = (shopInput.categories + category).distinctBy(ShopCategory::name)
-        shopInput.copy(categories = newCategories)
-    }
-
-    fun updateCategories(categories: List<ShopCategory>) = mutableState.updateShopInput {
-        it.copy(categories = categories.distinctBy(ShopCategory::name))
-    }
-
     fun updateImages(images: List<ImageResource>) = mutableState.updateShopInput {
         it.copy(images = images)
-    }
-
-    fun updateMenu(menu: ProductMenu) = mutableState.updateShopInput {
-        it.copy(menu = menu)
     }
 
     fun updateLocation(location: Location) = mutableState.updateShopInput {
@@ -68,6 +56,41 @@ abstract class CreateUpdateShopFlowViewmodel() : BaseViewModel<CreateUpdateShopF
 
     fun updateOpeningHours(openingHours: OpeningHours) = mutableState.updateShopInput {
         it.copy(openingHours = openingHours)
+    }
+
+    /** menu update */
+
+    fun addMenuItem(item: MenuItem) = mutableState.updateShopInput { shopInput ->
+        val newMenuItems = shopInput.menu.items + item
+        shopInput.copy(menu = ProductMenu(newMenuItems))
+    }
+
+    fun editMenuItem(editedItem: MenuItem) = mutableState.updateShopInput { shopInput ->
+        val newMenuItems = shopInput.menu.items.map {
+            if (it.id == editedItem.id) editedItem else it
+        }
+        shopInput.copy(menu = ProductMenu(newMenuItems))
+    }
+
+    fun deleteMenuItem(itemToDelete: MenuItem) = mutableState.updateShopInput { shopInput ->
+        val newMenuItems = shopInput.menu.items.filter { it.id != itemToDelete.id }
+        shopInput.copy(menu = ProductMenu(newMenuItems))
+    }
+
+    /** category update */
+    fun addCategory(category: ShopCategory) = mutableState.updateShopInput { shopInput ->
+        when (shopInput.categories.any { it.name == category.name }) {
+            true -> shopInput
+            false -> {
+                val newCategories = shopInput.categories + category
+                shopInput.copy(categories = newCategories)
+            }
+        }
+    }
+
+    fun deleteCategory(categoryToDelete: ShopCategory) = mutableState.updateShopInput { shopInput ->
+        val newCategories = shopInput.categories.filter { it.name != categoryToDelete.name }
+        shopInput.copy(categories = newCategories)
     }
 
     /* PRIVATE HELPERS */

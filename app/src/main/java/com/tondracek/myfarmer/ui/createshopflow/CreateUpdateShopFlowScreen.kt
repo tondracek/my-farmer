@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
-import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
+import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.createshopflow.steps.CreatingShopCategoriesMenuStep
@@ -20,12 +20,17 @@ fun CreateUpdateShopFlowScreen(
     onPreviousStep: () -> Unit,
     onUpdateName: (String) -> Unit,
     onUpdateDescription: (String) -> Unit,
-    onOpenAddCategoryDialog: () -> Unit,
-    onUpdateCategories: (List<ShopCategory>) -> Unit,
     onUpdateImages: (List<ImageResource>) -> Unit,
     onUpdateLocation: (Location) -> Unit,
     onUpdateOpeningHours: (OpeningHours) -> Unit,
-    onUpdateMenu: (ProductMenu) -> Unit,
+
+    onOpenAddCategoryDialog: () -> Unit,
+    onDeleteCategory: (ShopCategory) -> Unit,
+
+    onAddMenuItem: (MenuItem) -> Unit,
+    onEditMenuItem: (MenuItem) -> Unit,
+    onDeleteMenuItem: (MenuItem) -> Unit,
+
     onSubmitCreating: () -> Unit,
 ) {
     when (state) {
@@ -40,9 +45,14 @@ fun CreateUpdateShopFlowScreen(
 
             CreateUpdateShopFlowState.Creating.CreateShopStateCreatingStep.CATEGORIES_MENU -> CreatingShopCategoriesMenuStep(
                 shopInput = state.shopInput,
+
                 onOpenAddCategoryDialog = onOpenAddCategoryDialog,
-                onUpdateCategories = onUpdateCategories,
-                onUpdateMenu = onUpdateMenu,
+                onDeleteCategory = onDeleteCategory,
+
+                onAddMenuItem = onAddMenuItem,
+                onEditMenuItem = onEditMenuItem,
+                onDeleteMenuItem = onDeleteMenuItem,
+
                 onNextStep = onNextStep,
                 onPreviousStep = onPreviousStep,
             )

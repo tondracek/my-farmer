@@ -37,7 +37,9 @@ import com.tondracek.myfarmer.ui.createshopflow.components.MenuItemEdit
 @Composable
 fun MenuItemsSection(
     menu: ProductMenu,
-    onUpdateMenu: (ProductMenu) -> Unit,
+    onAddMenuItem: (MenuItem) -> Unit,
+    onEditMenuItem: (MenuItem) -> Unit,
+    onDeleteMenuItem: (MenuItem) -> Unit,
 ) {
     var showAddMenuItemDialog by remember { mutableStateOf(false) }
     var editMenuItemDialog by remember { mutableStateOf<MenuItem?>(null) }
@@ -66,13 +68,8 @@ fun MenuItemsSection(
                     .fillMaxWidth()
                     .weight(1f, fill = false),
                 menu = menu,
-                onEdit = { itemToEdit ->
-                    editMenuItemDialog = itemToEdit
-                },
-                onDelete = { itemToDelete ->
-                    val newItems = menu.items - itemToDelete
-                    onUpdateMenu(menu.copy(newItems))
-                }
+                onEdit = { itemToEdit -> editMenuItemDialog = itemToEdit },
+                onDelete = onDeleteMenuItem,
             )
 
             Button(onClick = { showAddMenuItemDialog = true }) {
@@ -84,8 +81,7 @@ fun MenuItemsSection(
     if (showAddMenuItemDialog) {
         AddMenuItemDialog(
             onAdd = { newItem ->
-                val newMenu = menu.copy(menu.items + newItem)
-                onUpdateMenu(newMenu)
+                onAddMenuItem(newItem)
                 showAddMenuItemDialog = false
             },
             onDismiss = { showAddMenuItemDialog = false }
@@ -96,8 +92,7 @@ fun MenuItemsSection(
         EditMenuItemDialog(
             menuItem = itemToEdit,
             onUpdate = { updatedItem ->
-                val newItems = menu.items - itemToEdit + updatedItem
-                onUpdateMenu(menu.copy(newItems))
+                onEditMenuItem(updatedItem)
                 editMenuItemDialog = null
             },
             onDismiss = { editMenuItemDialog = null }
@@ -167,7 +162,9 @@ private fun MenuItemsSectionPreview() {
     MyFarmerPreview {
         MenuItemsSection(
             menu = sampleMenu,
-            onUpdateMenu = {}
+            onAddMenuItem = { },
+            onEditMenuItem = { },
+            onDeleteMenuItem = { },
         )
     }
 }
@@ -180,7 +177,9 @@ private fun MenuItemsSectionEmptyPreview() {
     MyFarmerPreview {
         MenuItemsSection(
             menu = emptyMenu,
-            onUpdateMenu = {}
+            onAddMenuItem = { },
+            onEditMenuItem = { },
+            onDeleteMenuItem = { },
         )
     }
 }

@@ -20,7 +20,7 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 fun CategoriesSection(
     categories: List<ShopCategory>,
     onOpenAddCategoryDialog: () -> Unit,
-    onUpdateCategories: (List<ShopCategory>) -> Unit,
+    onDeleteCategory: (ShopCategory) -> Unit,
 ) {
     Card(
         colors = MyFarmerTheme.cardColors.primary,
@@ -44,10 +44,7 @@ fun CategoriesSection(
 
             FlowCategoryChips(
                 categories = categories,
-                onRemove = { categoryToRemove ->
-                    val newCategories = categories - categoryToRemove
-                    onUpdateCategories(newCategories)
-                }
+                onRemove = onDeleteCategory,
             )
 
             Button(onClick = onOpenAddCategoryDialog) {

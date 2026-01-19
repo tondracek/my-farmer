@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import com.stefanoq21.material3.navigation.bottomSheet
+import androidx.navigation.compose.dialog
 import com.tondracek.myfarmer.shopcategory.domain.model.toSerializable
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.navigation.setResult
@@ -14,7 +14,7 @@ import com.tondracek.myfarmer.ui.createshopflow.NEW_CATEGORY_DIALOG_VALUE
 
 fun NavGraphBuilder.addCategoryDialogDestination(
     navController: NavController
-) = bottomSheet<Route.AddCategoryDialog> {
+) = dialog<Route.AddCategoryDialog> {
     val viewmodel: AddCategoryViewModel = hiltViewModel()
     val state by viewmodel.state.collectAsState()
 

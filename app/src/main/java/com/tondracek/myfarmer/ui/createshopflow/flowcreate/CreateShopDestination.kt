@@ -64,12 +64,17 @@ fun NavGraphBuilder.createShopDestination(
             onPreviousStep = viewModel::goToPreviousStep,
             onUpdateName = viewModel::updateName,
             onUpdateDescription = viewModel::updateDescription,
-            onOpenAddCategoryDialog = viewModel::onOpenAddCategoryDialog,
-            onUpdateCategories = viewModel::updateCategories,
             onUpdateImages = viewModel::updateImages,
             onUpdateLocation = viewModel::updateLocation,
             onUpdateOpeningHours = viewModel::updateOpeningHours,
-            onUpdateMenu = viewModel::updateMenu,
+
+            onOpenAddCategoryDialog = viewModel::onOpenAddCategoryDialog,
+            onDeleteCategory = viewModel::deleteCategory,
+
+            onAddMenuItem = viewModel::addMenuItem,
+            onEditMenuItem = viewModel::editMenuItem,
+            onDeleteMenuItem = viewModel::deleteMenuItem,
+
             onSubmitCreating = viewModel::submitCreating
         )
     }

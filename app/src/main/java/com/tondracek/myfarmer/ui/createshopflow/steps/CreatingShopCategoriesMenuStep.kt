@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
+import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShopInput
@@ -21,9 +21,14 @@ import com.tondracek.myfarmer.ui.createshopflow.components.productmenu.MenuItems
 @Composable
 fun CreatingShopCategoriesMenuStep(
     shopInput: ShopInput,
+
     onOpenAddCategoryDialog: () -> Unit,
-    onUpdateCategories: (List<ShopCategory>) -> Unit,
-    onUpdateMenu: (ProductMenu) -> Unit,
+    onDeleteCategory: (ShopCategory) -> Unit,
+
+    onAddMenuItem: (MenuItem) -> Unit,
+    onEditMenuItem: (MenuItem) -> Unit,
+    onDeleteMenuItem: (MenuItem) -> Unit,
+
     onNextStep: () -> Unit,
     onPreviousStep: () -> Unit,
 ) {
@@ -37,12 +42,14 @@ fun CreatingShopCategoriesMenuStep(
             CategoriesSection(
                 categories = shopInput.categories,
                 onOpenAddCategoryDialog = onOpenAddCategoryDialog,
-                onUpdateCategories = onUpdateCategories,
+                onDeleteCategory = onDeleteCategory,
             )
 
             MenuItemsSection(
                 menu = shopInput.menu,
-                onUpdateMenu = onUpdateMenu,
+                onAddMenuItem = onAddMenuItem,
+                onEditMenuItem = onEditMenuItem,
+                onDeleteMenuItem = onDeleteMenuItem,
             )
         }
 
@@ -62,9 +69,14 @@ private fun CreatingShopCategoriesMenuStepPreview() {
 
         CreatingShopCategoriesMenuStep(
             shopInput = shopInput,
+
             onOpenAddCategoryDialog = {},
-            onUpdateCategories = {},
-            onUpdateMenu = {},
+            onDeleteCategory = {},
+
+            onAddMenuItem = {},
+            onEditMenuItem = {},
+            onDeleteMenuItem = {},
+
             onNextStep = {},
             onPreviousStep = {}
         )

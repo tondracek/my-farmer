@@ -1,5 +1,7 @@
 package com.tondracek.myfarmer.productmenu.domain.model
 
+import java.util.UUID
+
 data class ProductMenu(
     val items: List<MenuItem>
 ) {
@@ -8,7 +10,15 @@ data class ProductMenu(
     }
 }
 
+@JvmInline
+value class MenuItemId(val value: UUID) {
+    companion object {
+        fun new() = MenuItemId(UUID.randomUUID())
+    }
+}
+
 data class MenuItem(
+    val id: MenuItemId = MenuItemId.new(),
     val name: String,
     val description: String,
     val price: PriceLabel,
