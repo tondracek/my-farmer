@@ -15,8 +15,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -135,6 +138,8 @@ private fun Content(
 private val DEFAULT_LAT_LNG = LatLng(49.8175, 15.4730)
 private const val DEFAULT_ZOOM = 6.5f
 
+private const val MAX_ZOOM = 18f
+
 @OptIn(ExperimentalPermissionsApi::class)
 @SuppressLint("MissingPermission")
 @Composable
@@ -146,6 +151,8 @@ fun PickLocationMap(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
+    var isMapReady by remember { mutableStateOf(false) }
+
     val locationClient = remember {
         LocationServices.getFusedLocationProviderClient(context)
     }
@@ -154,10 +161,14 @@ fun PickLocationMap(
         position = CameraPosition.fromLatLngZoom(DEFAULT_LAT_LNG, DEFAULT_ZOOM)
     }
 
-    fun zoomToLocation(latLng: LatLng, zoom: Float = 18f) = coroutineScope.launch {
+    fun zoomToLocation(latLng: LatLng) = coroutineScope.launch {
         val currentZoom = cameraPositionState.position.zoom
-        if (currentZoom < zoom)
-            cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
+        val newZoom = (currentZoom + 2).coerceAtMost(MAX_ZOOM)
+        cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(latLng, newZoom))
+    }
+
+    fun zoomFullyToLocation(latLng: LatLng) = coroutineScope.launch {
+        cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(latLng, MAX_ZOOM))
     }
 
     val permission = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -167,15 +178,16 @@ fun PickLocationMap(
         }
     }
     val isPermissionGranted = permission.status.isGranted
-    LaunchedEffect(isPermissionGranted, location) {
+    LaunchedEffect(isPermissionGranted, isMapReady) {
         when {
             !isPermissionGranted -> {}
-            location != null -> zoomToLocation(location.toLatLng())
+            !isMapReady -> {}
+            location != null -> zoomFullyToLocation(location.toLatLng())
             else -> locationClient.lastLocation.addOnSuccessListener { newLocation: android.location.Location? ->
                 if (newLocation == null) return@addOnSuccessListener
 
                 val latLng = LatLng(newLocation.latitude, newLocation.longitude)
-                zoomToLocation(latLng)
+                zoomFullyToLocation(latLng)
                 onLocationSelected(Location(latLng))
             }
         }
@@ -192,23 +204,33 @@ fun PickLocationMap(
             ),
             uiSettings = MapUiSettings(
                 rotationGesturesEnabled = false,
+                tiltGesturesEnabled = false,
             ),
             onMapClick = { latLng ->
                 onLocationSelected(Location(latLng))
-            }
+                zoomToLocation(latLng)
+            },
+            onMapLoaded = { isMapReady = true }
         ) {
-            if (location != null)
-                SimpleMarker(position = location.toLatLng())
+            location?.toLatLng()?.let { latLng ->
+                SimpleMarker(
+                    position = latLng,
+                    onClick = { zoomToLocation(latLng) }
+                )
+            }
         }
     }
 }
 
 @Composable
-fun SimpleMarker(position: LatLng) {
+fun SimpleMarker(position: LatLng, onClick: () -> Unit) {
     val state = rememberUpdatedMarkerState(position)
     Marker(
         state = state,
-        onClick = { true }
+        onClick = {
+            onClick()
+            true
+        }
     )
 }
 
