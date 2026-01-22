@@ -8,11 +8,16 @@ import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.domain.domainerror.ShopError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
+import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
+import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultList
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShop
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
@@ -40,19 +45,27 @@ class UpdateShopUC @Inject constructor(
     }
 
     private suspend fun Shop.updatePhotos(originalImages: List<ImageResource>): DomainResult<Shop> {
-        val photosToUpload = images.filter { it !in originalImages }
-        val uploadedPhotos = photoStorage.uploadPhotos(
-            imageResources = photosToUpload,
-            folder = PhotoStorageFolder.ShopPhotos(this.id),
-            quality = Quality.FULL_HD,
-        ).getOrReturn { return it }
+        val shopId = this.id
 
         val photosToDelete = originalImages.filter { it !in images }
-        val photosToKeep = originalImages.filter { it in images }
         photoStorage.deletePhotos(photosToDelete).getOrReturn { return it }
 
-        val newImages = photosToKeep + uploadedPhotos
+        val newImages = coroutineScope {
+            images.mapIndexed { i, image ->
+                async {
+                    when {
+                        image in originalImages -> DomainResult.Success(image)
 
-        return DomainResult.Success(this.copy(images = newImages))
+                        else -> photoStorage.uploadPhoto(
+                            imageResource = image,
+                            folder = PhotoStorageFolder.ShopPhotos(shopId),
+                            quality = Quality.FULL_HD,
+                        )
+                    }
+                }
+            }.awaitAll().toUCResultList()
+        }
+
+        return newImages.mapSuccess { this.copy(images = it) }
     }
 }
