@@ -21,6 +21,7 @@ import com.tondracek.myfarmer.ui.auth.registrationscreen.RegistrationRoute
 import com.tondracek.myfarmer.ui.auth.registrationscreen.registrationDestination
 import com.tondracek.myfarmer.ui.common.scaffold.AppScaffold
 import com.tondracek.myfarmer.ui.core.appstate.AppUiController
+import com.tondracek.myfarmer.ui.core.logging.FarmerDebugTree
 import com.tondracek.myfarmer.ui.core.navigation.NavGraph
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -42,8 +43,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        if (BuildConfig.DEBUG)
-            Timber.plant(Timber.DebugTree())
+        if (BuildConfig.DEBUG) Timber.plant(FarmerDebugTree())
 
         setContent {
             MyFarmerTheme {

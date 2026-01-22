@@ -32,8 +32,7 @@ class UpdateShopViewModel @Inject constructor(
     private val getShopById: GetShopByIdUC,
 ) : BaseViewModel<UpdateShopEffect>() {
 
-    private val shopId: ShopId =
-        savedStateHandle.getUpdateShopScreenShopId()
+    private val shopId: ShopId = savedStateHandle.getUpdateShopScreenShopId()
 
     private val _step = MutableStateFlow(ShopFlowStep.Initial)
     private val _input = MutableStateFlow(ShopInput.Empty)
