@@ -17,7 +17,11 @@ data class ShopInput(
     val menu: ProductMenu = ProductMenu.Empty,
     val location: Location? = null,
     val openingHours: OpeningHours = OpeningHours.Empty,
-)
+) {
+    companion object {
+        val Empty = ShopInput()
+    }
+}
 
 fun ShopInput.toShop(
     shopId: ShopId,

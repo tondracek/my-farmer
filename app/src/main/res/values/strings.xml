@@ -151,4 +151,5 @@
     <string name="reviews_preview">Reviews Preview</string>
     <string name="see_all_reviews">See all reviews ›</string>
     <string name="no_reviews_in_shop_yet">This shop has no reviews yet.</string>
+    <string name="close">Close</string>
 </resources>

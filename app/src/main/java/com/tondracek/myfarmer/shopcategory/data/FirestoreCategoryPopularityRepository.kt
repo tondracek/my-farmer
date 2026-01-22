@@ -18,6 +18,7 @@ class FirestoreCategoryPopularityRepository @Inject constructor() : CategoryPopu
 
     override fun getMostPopularCategories(limit: Int) = collection
         .orderBy(CategoryPopularityEntity::count.name, Direction.DESCENDING)
+        .whereGreaterThan(CategoryPopularityEntity::count.name, 0)
         .limit(limit.toLong())
         .snapshots()
         .mapToDomains(CategoryPopularityEntity::class) { it.toModel() }

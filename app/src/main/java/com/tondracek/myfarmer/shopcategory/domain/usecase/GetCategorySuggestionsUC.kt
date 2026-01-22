@@ -18,8 +18,8 @@ class GetCategorySuggestionsUC @Inject constructor() {
                 compareByDescending<Pair<CategoryPopularity, Int>> { (popularity, _) -> popularity.count }
                     .thenByDescending { (_, score) -> score }
             )
-            .distinctBy { (popularity, _) -> popularity.name }
+            .map { (popularity, _) -> popularity }
+            .distinctBy { it.name }
             .take(6)
-            .map { (categoryPopularity, _) -> categoryPopularity }
     }
 }

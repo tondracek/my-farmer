@@ -51,7 +51,8 @@ fun MyShopsListItemView(
                 Box(Modifier.sizeIn(maxHeight = 120.dp, maxWidth = 120.dp)) {
                     ImageView(
                         modifier = Modifier.clip(RoundedCornerShape(12.dp)),
-                        imageResource = shop.image
+                        imageResource = shop.image,
+                        openable = false,
                     )
                 }
                 Column {

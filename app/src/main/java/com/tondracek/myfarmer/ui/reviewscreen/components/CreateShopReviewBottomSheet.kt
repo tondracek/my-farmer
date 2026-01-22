@@ -13,7 +13,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.ReviewInput
 import com.tondracek.myfarmer.ui.common.button.ButtonRow
@@ -68,12 +70,12 @@ private fun Content(
 
             ButtonRow(
                 onClick1 = onDismissRequest,
-                text1 = "Close",
+                text1 = stringResource(R.string.close),
                 onClick2 = {
                     onSubmitReview(ReviewInput(rating, message))
                     onDismissRequest()
                 },
-                text2 = "Submit"
+                text2 = stringResource(R.string.submit),
             )
         }
     }

@@ -8,6 +8,11 @@ import kotlinx.coroutines.flow.transformLatest
 sealed interface UiState<out T> {
     data class Success<out T>(val data: T) : UiState<T>
     data object Loading : UiState<Nothing>
+
+    fun <R> map(transform: (T) -> R): UiState<R> = when (this) {
+        is Success -> Success(transform(this.data))
+        Loading -> Loading
+    }
 }
 
 inline fun <T> UiState<T>.getOrReturn(block: () -> Nothing): T = when (this) {
@@ -18,15 +23,11 @@ inline fun <T> UiState<T>.getOrReturn(block: () -> Nothing): T = when (this) {
 @OptIn(ExperimentalCoroutinesApi::class)
 fun <T> Flow<DomainResult<T>>.asUiState(
     defaultValue: T,
-    onError: suspend (DomainResult.Failure) -> Unit = {},
 ): Flow<UiState<T>> = transformLatest { result ->
     emit(UiState.Loading)
 
     when (result) {
         is DomainResult.Success -> emit(UiState.Success(result.data))
-        is DomainResult.Failure -> {
-            onError(result)
-            emit(UiState.Success(defaultValue))
-        }
+        is DomainResult.Failure -> emit(UiState.Success(defaultValue))
     }
 }

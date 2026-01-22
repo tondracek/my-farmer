@@ -22,19 +22,6 @@ sealed interface CreateUpdateShopFlowState {
             CreateShopStateCreatingStep.OPENING_HOURS -> this.copy(step = CreateShopStateCreatingStep.REVIEW_AND_SUBMIT)
             CreateShopStateCreatingStep.REVIEW_AND_SUBMIT -> this
         }
-
-        fun previous(): Creating = when (this.step) {
-            CreateShopStateCreatingStep.NAME_LOCATION -> this
-            CreateShopStateCreatingStep.CATEGORIES_MENU -> this.copy(step = CreateShopStateCreatingStep.NAME_LOCATION)
-            CreateShopStateCreatingStep.PHOTOS_DESCRIPTION -> this.copy(step = CreateShopStateCreatingStep.CATEGORIES_MENU)
-            CreateShopStateCreatingStep.OPENING_HOURS -> this.copy(step = CreateShopStateCreatingStep.PHOTOS_DESCRIPTION)
-            CreateShopStateCreatingStep.REVIEW_AND_SUBMIT -> this.copy(step = CreateShopStateCreatingStep.OPENING_HOURS)
-        }
-
-        companion object {
-            fun initial(shopInput: ShopInput = ShopInput()) =
-                Creating(shopInput = shopInput, step = CreateShopStateCreatingStep.NAME_LOCATION)
-        }
     }
 
     data object Loading : CreateUpdateShopFlowState
