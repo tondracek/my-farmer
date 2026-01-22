@@ -152,4 +152,9 @@
     <string name="reviews_preview">Náhled recenzí</string>
     <string name="see_all_reviews">Zobrazit všechny recenze</string>
     <string name="no_reviews_in_shop_yet">V tomto obchodě zatím nejsou žádné recenze.</string>
+    <string name="close">Zavřít</string>
+    <string name="confirm">Potvrdit</string>
+    <string name="exit_shop_update_confirmation">Opravdu chcete opustit úpravu obchodu? Neuložené změny budou ztraceny.</string>
+    <string name="exit_shop_creation_confirmation">Opravdu chcete opustit vytváření obchodu? Neuložené změny budou ztraceny.</string>
+    <string name="shop_deletion_confirmation">Opravdu chcete tento obchod smazat?</string>
 </resources>

@@ -17,9 +17,10 @@ import androidx.compose.material3.InputChip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,35 +39,46 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.createshopflow.common.ShopFormEvent
 import java.time.DayOfWeek
 
-enum class OpeningHoursMode {
-    DAY_TO_DAY, MESSAGE;
-
-    companion object {
-        fun fromOpeningHours(openingHours: OpeningHours) = when (openingHours) {
-            is OpeningHours.Time -> DAY_TO_DAY
-            is OpeningHours.Message -> MESSAGE
-        }
-    }
-}
+enum class OpeningHoursMode { DAY_TO_DAY, MESSAGE; }
 
 @Composable
 fun ShopFlowOpeningHoursStep(
     shopInput: ShopInput,
     onShopFormEvent: (ShopFormEvent) -> Unit,
 ) {
-    fun onUpdateOpeningHours(newOpeningHours: OpeningHours) {
-        onShopFormEvent(ShopFormEvent.UpdateOpeningHours(newOpeningHours))
+    fun onUpdateOpeningHours(openingHours: OpeningHours) =
+        onShopFormEvent(ShopFormEvent.UpdateOpeningHours(openingHours))
+
+    var mode by remember {
+        mutableStateOf(
+            when (shopInput.openingHours) {
+                is OpeningHours.Time -> OpeningHoursMode.DAY_TO_DAY
+                is OpeningHours.Message -> OpeningHoursMode.MESSAGE
+            }
+        )
     }
 
-    var savedDayInput: Map<DayOfWeek, String> by rememberSaveable { mutableStateOf(emptyMap()) }
-    var savedMessageInput by rememberSaveable { mutableStateOf("") }
+    var dayInput: Map<DayOfWeek, String> by remember {
+        mutableStateOf(
+            mapOf(
+                DayOfWeek.MONDAY to "",
+                DayOfWeek.TUESDAY to "",
+                DayOfWeek.WEDNESDAY to "",
+                DayOfWeek.THURSDAY to "",
+                DayOfWeek.FRIDAY to "",
+                DayOfWeek.SATURDAY to "",
+                DayOfWeek.SUNDAY to "",
+            )
+        )
+    }
 
-    fun loadSavedInput(mode: OpeningHoursMode) {
-        val newOpeningHours = when (mode) {
-            OpeningHoursMode.DAY_TO_DAY -> OpeningHours.Time(dayToHours = savedDayInput)
-            OpeningHoursMode.MESSAGE -> OpeningHours.Message(message = savedMessageInput)
+    var messageInput by remember { mutableStateOf("") }
+
+    LaunchedEffect(shopInput.openingHours) {
+        when (shopInput.openingHours) {
+            is OpeningHours.Time -> dayInput = shopInput.openingHours.dayToHours
+            is OpeningHours.Message -> messageInput = shopInput.openingHours.message
         }
-        onUpdateOpeningHours(newOpeningHours)
     }
 
     Card(
@@ -87,25 +99,30 @@ fun ShopFlowOpeningHoursStep(
                 textAlign = TextAlign.Center
             )
 
-            ModeRow(
-                mode = OpeningHoursMode.fromOpeningHours(shopInput.openingHours),
-                onModeChange = { loadSavedInput(it) }
-            )
+            ModeRow(mode = mode, onModeChange = {
+                mode = it
+                onUpdateOpeningHours(
+                    when (it) {
+                        OpeningHoursMode.DAY_TO_DAY -> OpeningHours.Time(dayToHours = dayInput)
+                        OpeningHoursMode.MESSAGE -> OpeningHours.Message(message = messageInput)
+                    }
+                )
+            })
 
-            when (shopInput.openingHours) {
-                is OpeningHours.Message -> MessageOpeningHoursInput(
-                    messageInput = shopInput.openingHours.message,
-                    onMessageInputChange = {
-                        savedMessageInput = it
-                        onUpdateOpeningHours(OpeningHours.Message(it))
+            when (mode) {
+                OpeningHoursMode.DAY_TO_DAY -> DayToDayOpeningHoursInput(
+                    dayInput = dayInput,
+                    onDayInputChange = {
+                        dayInput = it
+                        onUpdateOpeningHours(OpeningHours.Time(dayToHours = it))
                     }
                 )
 
-                is OpeningHours.Time -> DayToDayOpeningHoursInput(
-                    dayInput = shopInput.openingHours.dayToHours,
-                    onDayInputChange = {
-                        savedDayInput = it
-                        onUpdateOpeningHours(OpeningHours.Time(it))
+                OpeningHoursMode.MESSAGE -> MessageOpeningHoursInput(
+                    messageInput = messageInput,
+                    onMessageInputChange = {
+                        messageInput = it
+                        onUpdateOpeningHours(OpeningHours.Message(message = it))
                     }
                 )
             }

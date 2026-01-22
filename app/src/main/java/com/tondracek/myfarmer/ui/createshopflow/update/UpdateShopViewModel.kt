@@ -92,7 +92,7 @@ class UpdateShopViewModel @Inject constructor(
         is ShopFlowEvent.GoToPreviousStep -> _step.update { it.previous() }
         is ShopFlowEvent.Submit -> submitShop()
         ShopFlowEvent.ExitShopFlow -> viewModelScope.launch {
-            emitEffect(UpdateShopEffect.ExitShopUpdate)
+            emitEffect(UpdateShopEffect.RequestExitShopUpdateConfirmation)
         }
     }
 }
@@ -104,4 +104,6 @@ sealed interface UpdateShopEffect {
     data object ShowUpdatedSuccessfully : UpdateShopEffect
 
     data object ExitShopUpdate : UpdateShopEffect
+
+    data object RequestExitShopUpdateConfirmation : UpdateShopEffect
 }

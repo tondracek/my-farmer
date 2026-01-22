@@ -32,6 +32,8 @@ fun NavGraphBuilder.createShopDestination(
     }
 
     val shopSuccessfullyCreatedMessage = stringResource(R.string.shop_created_successfully)
+    val exitShopCreationConfirmationMessage =
+        stringResource(R.string.exit_shop_creation_confirmation)
     viewModel.CollectEffects {
         when (it) {
             CreateShopEffect.ShowCreatedSuccessfully ->
@@ -42,6 +44,11 @@ fun NavGraphBuilder.createShopDestination(
 
             CreateShopEffect.ExitShopCreation ->
                 navController.navigateUp()
+
+            CreateShopEffect.RequestExitShopCreationConfirmation -> appUiController.raiseConfirmationDialog(
+                message = exitShopCreationConfirmationMessage,
+                onConfirm = { navController.navigateUp() }
+            )
         }
     }
 }

@@ -52,11 +52,8 @@ class MyShopsViewModel @Inject constructor(
     )
 
     fun deleteShop(shopId: ShopId) = viewModelScope.launch {
-        deleteShopUC(shopId)
-    }
-
-    fun navigateBack() = viewModelScope.launch {
-        emitEffect(MyShopsEffect.OnGoBack)
+        val onConfirm: () -> Unit = { viewModelScope.launch { deleteShopUC(shopId) } }
+        emitEffect(MyShopsEffect.RequestShopDeletionConfirmation(onConfirm))
     }
 
     fun navigateToShopDetail(shopId: ShopId) = viewModelScope.launch {
@@ -76,11 +73,11 @@ sealed interface MyShopsEffect {
 
     data class ShowError(val error: DomainError) : MyShopsEffect
 
-    data object OnGoBack : MyShopsEffect
-
     data class OpenShopDetail(val shopId: ShopId) : MyShopsEffect
 
     data object OpenCreateShop : MyShopsEffect
 
     data class OpenUpdateShop(val shopId: ShopId) : MyShopsEffect
+
+    data class RequestShopDeletionConfirmation(val deleteShop: () -> Unit) : MyShopsEffect
 }

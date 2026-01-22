@@ -20,10 +20,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ChatGPT chat - https://chatgpt.com/c/696f86bf-2bc4-8333-8080-8a50c812605d
- */
-
 @HiltViewModel
 class CreateShopViewModel @Inject constructor(
     private val createShop: CreateShopUC,
@@ -74,7 +70,7 @@ class CreateShopViewModel @Inject constructor(
         is ShopFlowEvent.GoToPreviousStep -> _step.update { it.previous() }
         is ShopFlowEvent.Submit -> submitShop()
         ShopFlowEvent.ExitShopFlow -> viewModelScope.launch {
-            emitEffect(CreateShopEffect.ExitShopCreation)
+            emitEffect(CreateShopEffect.RequestExitShopCreationConfirmation)
         }
     }
 }
@@ -86,4 +82,6 @@ sealed interface CreateShopEffect {
     data object ShowCreatedSuccessfully : CreateShopEffect
 
     data object ExitShopCreation : CreateShopEffect
+
+    data object RequestExitShopCreationConfirmation : CreateShopEffect
 }

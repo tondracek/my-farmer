@@ -79,23 +79,19 @@ fun MenuItemsSection(
     }
 
     if (showAddMenuItemDialog) {
-        AddMenuItemDialog(
-            onAdd = { newItem ->
-                onAddMenuItem(newItem)
-                showAddMenuItemDialog = false
-            },
-            onDismiss = { showAddMenuItemDialog = false }
+        MenuItemDialog(
+            mode = MenuItemDialogMode.ADD,
+            onConfirm = { newItem -> onAddMenuItem(newItem) },
+            onDismiss = { showAddMenuItemDialog = false },
         )
     }
 
     editMenuItemDialog?.let { itemToEdit ->
-        EditMenuItemDialog(
-            menuItem = itemToEdit,
-            onUpdate = { updatedItem ->
-                onEditMenuItem(updatedItem)
-                editMenuItemDialog = null
-            },
-            onDismiss = { editMenuItemDialog = null }
+        MenuItemDialog(
+            initial = itemToEdit,
+            mode = MenuItemDialogMode.EDIT,
+            onConfirm = { onEditMenuItem(it) },
+            onDismiss = { editMenuItemDialog = null },
         )
     }
 }

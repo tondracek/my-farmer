@@ -39,6 +39,7 @@ fun NavGraphBuilder.updateShopDestination(
     }
 
     val shopSuccessfullyUpdatedMessage = stringResource(R.string.shop_updated_successfully)
+    val exitShopUpdateConfirmationMessage = stringResource(R.string.exit_shop_update_confirmation)
     viewModel.CollectEffects {
         when (it) {
             UpdateShopEffect.ShowUpdatedSuccessfully ->
@@ -49,6 +50,11 @@ fun NavGraphBuilder.updateShopDestination(
 
             UpdateShopEffect.ExitShopUpdate ->
                 navController.navigateUp()
+
+            UpdateShopEffect.RequestExitShopUpdateConfirmation -> appUiController.raiseConfirmationDialog(
+                message = exitShopUpdateConfirmationMessage,
+                onConfirm = { navController.navigateUp() }
+            )
         }
     }
 }

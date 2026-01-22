@@ -25,4 +25,23 @@ class AppUiController {
     val successMessages = _successMessages.asSharedFlow()
 
     fun showSuccessMessage(message: String) = _successMessages.tryEmit(message)
+
+    private val _confirmationDialogs =
+        MutableSharedFlow<ConfirmationDialogRequest>(extraBufferCapacity = 1)
+    val confirmationDialogs = _confirmationDialogs.asSharedFlow()
+
+    fun raiseConfirmationDialog(
+        message: String,
+        onConfirm: () -> Unit,
+    ) = _confirmationDialogs.tryEmit(
+        ConfirmationDialogRequest(
+            message = message,
+            onConfirm = onConfirm,
+        )
+    )
 }
+
+data class ConfirmationDialogRequest(
+    val message: String,
+    val onConfirm: () -> Unit,
+)
