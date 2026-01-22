@@ -34,17 +34,16 @@ fun PictureFromGalleryIconButton(
         mutableStateOf(ImageResource.EMPTY)
     }
     LaunchedEffect(newPicture.uri) {
-        if (newPicture != ImageResource.EMPTY)
+        if (newPicture != ImageResource.EMPTY) {
             onPictureSelected(newPicture)
+            newPicture = ImageResource.EMPTY
+        }
     }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            uri?.let { newPicture = ImageResource(it) }
-        }
+        onResult = { uri -> uri?.let { newPicture = ImageResource(it) } }
     )
-
 
     when (useLabel) {
         true -> Button(

@@ -42,8 +42,10 @@ fun PictureFromCameraIconButton(
         mutableStateOf(ImageResource.EMPTY)
     }
     LaunchedEffect(newPicture.uri) {
-        if (newPicture != ImageResource.EMPTY)
+        if (newPicture != ImageResource.EMPTY) {
             onPictureTaken(newPicture)
+            newPicture = ImageResource.EMPTY
+        }
     }
 
     var cameraLauncherUri by remember { mutableStateOf(Uri.EMPTY) }
