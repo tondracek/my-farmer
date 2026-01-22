@@ -15,10 +15,13 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
       - name: Check if version changed
         id: version_check
         run: |
-          if git diff HEAD^ HEAD -- app/build.gradle.kts | grep -E "version(Code|Name)"; then
+          if (git diff HEAD~1..HEAD -- app/build.gradle.kts || true) | grep -E "version(Code|Name)"; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
@@ -31,21 +34,48 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Setup Gradle cache
+        if: steps.version_check.outputs.changed == 'true'
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Inject map secrets
+        if: steps.version_check.outputs.changed == 'true'
+        run: |
+          mkdir -p app/src/debug/res/values
+          cat <<EOF > app/src/debug/res/values/api_keys.xml
+          <resources>
+              <string name="google_maps_key">${{ secrets.GOOGLE_MAPS_KEY }}</string>
+              <string name="mapbox_access_token">${{ secrets.MAPBOX_ACCESS_TOKEN }}</string>
+          </resources>
+          EOF
+
       - name: Build debug APK
         if: steps.version_check.outputs.changed == 'true'
         run: ./gradlew assembleDebug
 
-      - name: Rename APK with version + commit
+      - name: Resolve version for artifact naming
+        id: resolve_version
+        if: steps.version_check.outputs.changed == 'true'
+        run: |
+          VERSION=$(./gradlew -q printVersionName 2>/dev/null || true)
+          
+          if [ -n "$VERSION" ]; then
+            echo "value=$VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "value=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Rename APK
         if: steps.version_check.outputs.changed == 'true'
         run: |
           APK_DIR=app/build/outputs/apk/debug
           APK_NAME=$(ls $APK_DIR/*.apk | head -n 1)
-          mv "$APK_NAME" "$APK_DIR/app-debug-${GITHUB_SHA::7}.apk"
+          mv "$APK_NAME" "$APK_DIR/app-debug-${{ steps.resolve_version.outputs.value }}.apk"
 
       - name: Upload APK artifact
         if: steps.version_check.outputs.changed == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: test-debug-apk
+          name: test-debug-apk-${{ steps.resolve_version.outputs.value }}
           path: app/build/outputs/apk/debug/*.apk
-          retention-days: 14
+          retention-days: 7
