@@ -21,8 +21,8 @@ android {
         applicationId = "com.tondracek.myfarmer"
         minSdk = 27
         targetSdk = 36
-        versionCode = 6
-        versionName = "1.3.1"
+        versionCode = 7
+        versionName = "1.3.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -123,4 +123,10 @@ dependencies {
 
     implementation(libs.maps.compose)
     implementation(libs.mapbox.android.ndk27)
+}
+
+tasks.register("printVersionName") {
+    doLast {
+        println(android.defaultConfig.versionName)
+    }
 }
