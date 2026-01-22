@@ -1,0 +1,51 @@
+name: Build test APK on version change
+
+on:
+  push:
+    paths:
+      - "app/build.gradle.kts"
+
+jobs:
+  build-test-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check if version changed
+        id: version_check
+        run: |
+          if git diff HEAD^ HEAD -- app/build.gradle.kts | grep -E "version(Code|Name)"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up JDK
+        if: steps.version_check.outputs.changed == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build debug APK
+        if: steps.version_check.outputs.changed == 'true'
+        run: ./gradlew assembleDebug
+
+      - name: Rename APK with version + commit
+        if: steps.version_check.outputs.changed == 'true'
+        run: |
+          APK_DIR=app/build/outputs/apk/debug
+          APK_NAME=$(ls $APK_DIR/*.apk | head -n 1)
+          mv "$APK_NAME" "$APK_DIR/app-debug-${GITHUB_SHA::7}.apk"
+
+      - name: Upload APK artifact
+        if: steps.version_check.outputs.changed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 14
