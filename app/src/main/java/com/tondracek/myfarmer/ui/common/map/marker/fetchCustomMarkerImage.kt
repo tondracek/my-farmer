@@ -3,6 +3,7 @@ package com.tondracek.myfarmer.ui.common.map.marker
 import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
+import androidx.appcompat.content.res.AppCompatResources
 import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.ErrorResult
@@ -15,7 +16,7 @@ suspend fun fetchCustomMarkerImage(
     imageUrl: String?,
     @DrawableRes fallback: Int
 ): Drawable {
-    if (imageUrl == null) return context.getDrawable(fallback)!!
+    if (imageUrl == null) return AppCompatResources.getDrawable(context, fallback)!!
 
     val imageRequest = ImageRequest.Builder(context)
         .data(imageUrl)
@@ -25,7 +26,7 @@ suspend fun fetchCustomMarkerImage(
     val imageResult = context.imageLoader.execute(imageRequest)
 
     return when (imageResult) {
-        is ErrorResult -> context.getDrawable(fallback)!!
+        is ErrorResult -> AppCompatResources.getDrawable(context, fallback)!!
         is SuccessResult -> imageResult.image.asDrawable(context.resources)
     }
 }

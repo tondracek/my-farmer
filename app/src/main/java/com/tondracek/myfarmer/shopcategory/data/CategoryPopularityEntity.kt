@@ -8,11 +8,6 @@ data class CategoryPopularityEntity(
     var count: Int = 0
 ) : FirestoreEntity
 
-fun CategoryPopularity.toEntity() = CategoryPopularityEntity(
-    id = name,
-    count = count
-)
-
 fun CategoryPopularityEntity.toModel() = CategoryPopularity(
     name = id,
     count = count

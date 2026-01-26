@@ -189,7 +189,6 @@ private class ReviewsPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<ReviewPageCursor, Pair<Review, SystemUser>>): ReviewPageCursor? {
-        return null
-    }
+    override fun getRefreshKey(state: PagingState<ReviewPageCursor, Pair<Review, SystemUser>>) =
+        null
 }

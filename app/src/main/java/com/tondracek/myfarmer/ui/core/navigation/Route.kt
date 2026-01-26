@@ -44,7 +44,4 @@ interface Route {
 
     @Serializable
     data class UpdateShop(val shopId: String) : Route
-
-    @Serializable
-    data object AddCategoryDialog : Route
 }
