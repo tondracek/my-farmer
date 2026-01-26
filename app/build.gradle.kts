@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.googleid)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotlinx.coroutines.test)
@@ -83,6 +84,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.material)
+    implementation(libs.androidx.constraintlayout.compose)
 
     ksp(libs.kotlin.metadata.jvm)
 
@@ -112,6 +114,8 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
 
     implementation(libs.jakewharton.timber)
 

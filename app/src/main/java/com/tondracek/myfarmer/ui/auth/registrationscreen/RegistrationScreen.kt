@@ -90,7 +90,7 @@ fun RegistrationInputScreen(
             }
         }
 
-        GoogleSignInButton { onEvent(RegistrationEvent.GoogleSignInClicked) }
+        GoogleSignInButton { onEvent(RegistrationEvent.OnGoogleSignInClicked) }
 
         TextButton(onClick = { onEvent(RegistrationEvent.GoToLoginScreenClicked) }) {
             Text(

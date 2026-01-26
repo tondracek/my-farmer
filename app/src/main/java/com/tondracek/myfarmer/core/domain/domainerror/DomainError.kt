@@ -3,17 +3,20 @@ package com.tondracek.myfarmer.core.domain.domainerror
 sealed interface DomainError
 
 sealed interface AuthError : DomainError {
-    object NotLoggedIn : AuthError
-    object UserNotFound : AuthError
-    object InvalidCredentials : AuthError
-    object EmailAlreadyInUse : AuthError
-    object WeakPassword : AuthError
+    data object NotLoggedIn : AuthError
+    data object UserNotFound : AuthError
+    data object InvalidCredentials : AuthError
+    data object EmailAlreadyInUse : AuthError
+    data object WeakPassword : AuthError
 
-    object LogoutFailed : AuthError
+    data object GoogleSignInFailedError : DomainError
+    data object GoogleSignInCancelledError : DomainError
 
-    object Forbidden : AuthError
+    data object LogoutFailed : AuthError
 
-    object Unknown : AuthError
+    data object Forbidden : AuthError
+
+    data object Unknown : AuthError
 }
 
 sealed interface PhotoError : DomainError {

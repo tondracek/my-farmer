@@ -157,4 +157,7 @@
     <string name="exit_shop_update_confirmation">Opravdu chcete opustit úpravu obchodu? Neuložené změny budou ztraceny.</string>
     <string name="exit_shop_creation_confirmation">Opravdu chcete opustit vytváření obchodu? Neuložené změny budou ztraceny.</string>
     <string name="shop_deletion_confirmation">Opravdu chcete tento obchod smazat?</string>
+    <string name="sign_in_with_google_failed_message">Přihlášení pomocí Google se nezdařilo. Zkuste to prosím znovu.</string>
+    <string name="google_sign_in_was_cancelled">Přihlášení pomocí Google bylo zrušeno.</string>
+    <string name="logout_successful">Odhlášení proběhlo úspěšně.</string>
 </resources>

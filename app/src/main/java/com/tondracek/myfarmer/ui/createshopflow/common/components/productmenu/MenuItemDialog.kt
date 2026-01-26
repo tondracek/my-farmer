@@ -87,6 +87,7 @@ fun MenuItemDialog(
                         inStock = inStock,
                     )
                 )
+                onDismiss()
             }) {
                 val onConfirmText = when (mode) {
                     MenuItemDialogMode.ADD -> stringResource(R.string.add)

@@ -30,6 +30,7 @@ class FirebaseAuthRepository @Inject constructor(
             AuthError.Unknown,
             FirebaseAuthInvalidUserException::class to AuthError.UserNotFound,
             FirebaseAuthInvalidCredentialsException::class to AuthError.InvalidCredentials,
+            IllegalArgumentException::class to AuthError.InvalidCredentials,
         ) {
             firebaseAuth
                 .signInWithEmailAndPassword(email, password)

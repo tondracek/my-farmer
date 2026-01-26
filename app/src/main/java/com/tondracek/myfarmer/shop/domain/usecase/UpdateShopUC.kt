@@ -9,7 +9,7 @@ import com.tondracek.myfarmer.core.domain.domainerror.ShopError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
 import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
-import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultList
+import com.tondracek.myfarmer.core.domain.usecaseresult.toResultList
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
@@ -63,7 +63,7 @@ class UpdateShopUC @Inject constructor(
                         )
                     }
                 }
-            }.awaitAll().toUCResultList()
+            }.awaitAll().toResultList()
         }
 
         return newImages.mapSuccess { this.copy(images = it) }

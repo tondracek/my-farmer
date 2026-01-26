@@ -7,6 +7,8 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.snapshots
 import com.tondracek.myfarmer.core.data.firestore.FirestoreCollectionNames
 import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
+import com.tondracek.myfarmer.core.data.firestore.domainresult.toDomainResult
+import com.tondracek.myfarmer.core.data.firestore.domainresult.toDomainResultNonNull
 import com.tondracek.myfarmer.core.data.firestore.helpers.applyIfNotNull
 import com.tondracek.myfarmer.core.data.firestore.helpers.getEntities
 import com.tondracek.myfarmer.core.data.firestore.helpers.getEntitiesFlow
@@ -14,8 +16,6 @@ import com.tondracek.myfarmer.core.data.firestore.helpers.mapToDomain
 import com.tondracek.myfarmer.core.domain.domainerror.ReviewError
 import com.tondracek.myfarmer.core.domain.repository.firestore.FirestoreEntityId
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultNonNull
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.review.domain.repository.ReviewPageCursor
@@ -56,7 +56,7 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
         .applyIfNotNull(limit) { this.limit(it.toLong()) }
         .getEntitiesFlow(ReviewEntity::class)
         .mapToModelList()
-        .toUCResult(ReviewError.FetchingFailed)
+        .toDomainResult(ReviewError.FetchingFailed)
 
     override suspend fun getShopReviewsPaged(
         shopId: ShopId,
@@ -100,7 +100,7 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
         reviewsCollection(shopId, userId)
             .snapshots()
             .mapToDomain(ReviewEntity::class) { it.toModel() }
-            .toUCResultNonNull(ReviewError.NotFound, ReviewError.FetchingFailed)
+            .toDomainResultNonNull(ReviewError.NotFound, ReviewError.FetchingFailed)
 
     override suspend fun create(item: Review): DomainResult<ReviewId> = domainResultOf(
         ReviewError.CreationFailed,
@@ -147,14 +147,14 @@ class FirestoreReviewRepository @Inject constructor() : ReviewRepository {
             .getEntitiesFlow(ReviewEntity::class)
             .mapToModelList()
             .map { it.firstOrNull() }
-            .toUCResultNonNull(ReviewError.NotFound, ReviewError.FetchingFailed)
+            .toDomainResultNonNull(ReviewError.NotFound, ReviewError.FetchingFailed)
 
 
     override fun getAll(): Flow<DomainResult<List<Review>>> =
         allReviewsCollection()
             .getEntitiesFlow(ReviewEntity::class)
             .mapToModelList()
-            .toUCResult(ReviewError.FetchingFailed)
+            .toDomainResult(ReviewError.FetchingFailed)
 }
 
 private fun Flow<List<ReviewEntity>>.mapToModelList(): Flow<List<Review>> =

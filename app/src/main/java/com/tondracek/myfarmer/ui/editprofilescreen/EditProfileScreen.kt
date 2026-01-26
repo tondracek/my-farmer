@@ -3,7 +3,6 @@ package com.tondracek.myfarmer.ui.editprofilescreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -26,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
-import com.tondracek.myfarmer.systemuser.data.user0
+import com.tondracek.myfarmer.ui.common.button.ButtonRow
 import com.tondracek.myfarmer.ui.common.layout.CardMessageLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
@@ -37,20 +35,17 @@ import com.tondracek.myfarmer.ui.editprofilescreen.components.ProfilePictureEdit
 @Composable
 fun EditProfileScreen(
     state: EditProfileScreenState,
-    onNameChange: (String) -> Unit = {},
-    onProfilePictureChange: (ImageResource) -> Unit,
-    onContactInfoChange: (ContactInfo) -> Unit,
-    onLogout: () -> Unit,
-    onSaveClick: () -> Unit,
+    onFormEvent: (EditProfileFormEvent) -> Unit,
+    onScreenEvent: (EditProfileScreenEvent) -> Unit,
 ) {
     when (state) {
         is EditProfileScreenState.Success -> SuccessScreen(
-            state = state,
-            onNameChange = onNameChange,
-            onProfilePictureChange = onProfilePictureChange,
-            onContactInfoChange = onContactInfoChange,
-            onLogout = onLogout,
-            onSaveClick = onSaveClick,
+            input = state.userInput,
+            onNameChange = { onFormEvent(EditProfileFormEvent.OnNameChange(it)) },
+            onProfilePictureChange = { onFormEvent(EditProfileFormEvent.OnProfilePictureChange(it)) },
+            onContactInfoChange = { onFormEvent(EditProfileFormEvent.OnContactInfoChange(it)) },
+            onCancelClicked = { onScreenEvent(EditProfileScreenEvent.OnCancelClicked) },
+            onSaveClicked = { onScreenEvent(EditProfileScreenEvent.OnSaveClicked) },
         )
 
         EditProfileScreenState.UpdatingProfile -> UpdatingProfileLayout()
@@ -71,12 +66,12 @@ private fun UpdatingProfileLayout(modifier: Modifier = Modifier) {
 
 @Composable
 private fun SuccessScreen(
-    state: EditProfileScreenState.Success,
+    input: EditUserUiState,
     onNameChange: (String) -> Unit,
     onProfilePictureChange: (ImageResource) -> Unit,
     onContactInfoChange: (ContactInfo) -> Unit,
-    onLogout: () -> Unit,
-    onSaveClick: () -> Unit,
+    onCancelClicked: () -> Unit,
+    onSaveClicked: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -87,46 +82,38 @@ private fun SuccessScreen(
                 .align(Alignment.Center)
                 .verticalScroll(state = scrollState),
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.you_are_logged_in_as, state.name),
-                    style = MyFarmerTheme.typography.titleMedium
-                )
-                Button(onClick = onLogout) {
-                    Text(text = stringResource(R.string.logout))
-                }
-            }
             ProfilePictureEdit(
-                state = state,
+                profilePicture = input.profilePicture,
                 onProfilePictureChange = onProfilePictureChange,
             )
 
             NameField(
                 modifier = Modifier.fillMaxWidth(),
-                name = state.name,
+                name = input.name,
                 onNameChange = onNameChange,
             )
 
             HorizontalDivider(Modifier.padding(horizontal = MyFarmerTheme.paddings.large))
 
             ContactInfoEdit(
-                contactInfo = state.contactInfo,
+                contactInfo = input.contactInfo,
                 onContactInfoChange = onContactInfoChange,
             )
 
             Spacer(Modifier.height(64.dp))
         }
-        Button(
+
+        ButtonRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(MyFarmerTheme.paddings.medium),
-            onClick = onSaveClick
-        ) { Text(text = "Save") }
+                .align(Alignment.BottomCenter),
+            buttonColors1 = MyFarmerTheme.buttonColors.error,
+            text1 = stringResource(R.string.cancel),
+            onClick1 = onCancelClicked,
+            buttonColors2 = MyFarmerTheme.buttonColors.primary,
+            text2 = stringResource(R.string.save),
+            onClick2 = onSaveClicked,
+        )
     }
 }
 
@@ -157,12 +144,16 @@ private fun NameField(
 private fun EditProfileScreenPreview() {
     MyFarmerPreview {
         EditProfileScreen(
-            state = user0.toUiState(),
-            onNameChange = {},
-            onProfilePictureChange = {},
-            onContactInfoChange = {},
-            onLogout = {},
-            onSaveClick = {},
+            state = EditProfileScreenState.Success(
+                userInput = EditUserUiState(
+                    name = "John Doe",
+                    profilePicture = ImageResource.EMPTY,
+                    contactInfo = ContactInfo.EMPTY
+                ),
+                wasChanged = false
+            ),
+            onFormEvent = {},
+            onScreenEvent = {},
         )
     }
 }
@@ -173,11 +164,8 @@ private fun EditProfileUpdatingScreenPreview() {
     MyFarmerPreview {
         EditProfileScreen(
             state = EditProfileScreenState.UpdatingProfile,
-            onNameChange = {},
-            onProfilePictureChange = {},
-            onContactInfoChange = {},
-            onLogout = {},
-            onSaveClick = {},
+            onFormEvent = {},
+            onScreenEvent = {},
         )
     }
 }

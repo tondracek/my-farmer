@@ -9,6 +9,7 @@ import com.tondracek.myfarmer.location.model.Location
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.cancellation.CancellationException
 
 @Singleton
 class LocationProvider @Inject constructor(
@@ -31,6 +32,8 @@ class LocationProvider @Inject constructor(
             latitude = location.latitude,
             longitude = location.longitude
         )
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: SecurityException) {
         null
     } catch (e: Exception) {

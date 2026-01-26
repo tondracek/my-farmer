@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.common.image.data
 
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultList
+import com.tondracek.myfarmer.core.domain.usecaseresult.toResultList
 import java.util.UUID
 
 class FakePhotoStorage() : PhotoStorage {
@@ -30,7 +30,7 @@ class FakePhotoStorage() : PhotoStorage {
             folder = folder,
             quality = quality
         )
-    }.toUCResultList()
+    }.toResultList()
 
     override suspend fun deletePhoto(imageResource: ImageResource): DomainResult<Unit> {
         val entry = images.entries.find { it.value == imageResource }?.key

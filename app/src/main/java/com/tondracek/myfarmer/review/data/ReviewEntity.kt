@@ -29,6 +29,7 @@ fun ReviewEntity.toModel(): Review = Review(
     userId = UserId.fromString(userId),
     rating = Rating(rating),
     comment = comment,
+    createdAt = createdAt?.toInstant(),
 )
 
 fun Review.toEntity(): ReviewEntity = ReviewEntity(

@@ -13,7 +13,7 @@ import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
 import com.tondracek.myfarmer.core.domain.domainerror.PhotoError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultList
+import com.tondracek.myfarmer.core.domain.usecaseresult.toResultList
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -68,7 +68,7 @@ class PhotoStorageImpl @Inject constructor(
                     quality = quality
                 )
             }
-        }.awaitAll().toUCResultList()
+        }.awaitAll().toResultList()
     }
 
     override suspend fun deletePhoto(imageResource: ImageResource): DomainResult<Unit> =

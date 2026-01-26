@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.auth.registrationscreen
+package com.tondracek.myfarmer.ui.profilescreen
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -11,24 +11,24 @@ import com.tondracek.myfarmer.ui.core.navigation.Route
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object RegistrationRoute : Route
+data object ProfileScreenRoute : Route
 
-fun NavGraphBuilder.registrationDestination(
+fun NavGraphBuilder.profileScreenDestination(
     navController: NavController,
     appUiController: AppUiController,
-) = composable<RegistrationRoute> {
+) = composable<ProfileScreenRoute> {
 
-    val viewmodel: RegistrationViewmodel = hiltViewModel()
-    val state by viewmodel.state.collectAsState()
+    val viewModel: ProfileScreenViewModel = hiltViewModel()
+    val state by viewModel.state.collectAsState()
 
-    RegistrationScreen(
+    ProfileScreen(
         state = state,
-        onEvent = viewmodel::onEvent,
+        onEvent = viewModel::onEvent,
     )
 
-    RegistrationEffects(
-        viewmodel = viewmodel,
+    ProfileEffects(
         navController = navController,
-        appUiController = appUiController
+        appUiController = appUiController,
+        viewModel = viewModel,
     )
 }

@@ -1,8 +1,8 @@
 package com.tondracek.myfarmer.review.data
 
+import com.tondracek.myfarmer.core.data.firestore.domainresult.toDomainResultNonNull
 import com.tondracek.myfarmer.core.domain.domainerror.ReviewError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.toUCResultNonNull
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.review.domain.repository.ReviewPageCursor
@@ -67,6 +67,6 @@ class FakeReviewRepository : ReviewRepository {
         userId: UserId
     ): Flow<DomainResult<Review>> = combine(items.values) { values ->
         values.firstOrNull { it.shopId == shopId && it.userId == userId }
-    }.toUCResultNonNull(ReviewError.NotFound, ReviewError.FetchingFailed)
+    }.toDomainResultNonNull(ReviewError.NotFound, ReviewError.FetchingFailed)
 
 }

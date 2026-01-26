@@ -21,6 +21,8 @@ fun DomainError.toUserFriendlyMessage(context: Context) = when (this) {
     is AuthError.LogoutFailed -> context.getString(R.string.failed_to_log_out)
     AuthError.Forbidden -> context.getString(R.string.you_do_not_have_permission_to_perform_this_action)
     is AuthError.Unknown -> context.getString(R.string.an_unknown_authentication_error_occurred)
+    is AuthError.GoogleSignInFailedError -> context.getString(R.string.sign_in_with_google_failed_message)
+    is AuthError.GoogleSignInCancelledError -> context.getString(R.string.google_sign_in_was_cancelled)
 
     is PhotoError.UploadFailed -> context.getString(R.string.failed_to_upload_photo)
     is PhotoError.DeletionFailed -> context.getString(R.string.failed_to_delete_photo)

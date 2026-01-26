@@ -40,10 +40,11 @@ sealed interface DomainResult<out T> {
         is Failure -> null
     }
 
-    fun <R> fold(onSuccess: (T) -> R, onFailure: (Failure) -> R) = when (this) {
-        is Success -> onSuccess(data)
-        is Failure -> onFailure(this)
-    }
+    suspend fun <R> fold(onSuccess: suspend (T) -> R, onFailure: suspend (Failure) -> R) =
+        when (this) {
+            is Success -> onSuccess(data)
+            is Failure -> onFailure(this)
+        }
 }
 
 inline fun <T, R> DomainResult<T>.mapSuccess(transform: (T) -> R): DomainResult<R> = when (this) {
@@ -51,7 +52,7 @@ inline fun <T, R> DomainResult<T>.mapSuccess(transform: (T) -> R): DomainResult<
     is Failure -> this
 }
 
-fun <T> List<DomainResult<T>>.toUCResultList(): DomainResult<List<T>> {
+fun <T> List<DomainResult<T>>.toResultList(): DomainResult<List<T>> {
     val resultList = mutableListOf<T>()
     for (result in this) {
         when (result) {

@@ -111,17 +111,15 @@ class LoginViewmodel @Inject constructor(
                 emitEffect(LoginEffect.GoToRegistrationScreen)
 
             /** Forgot password */
-            LoginEvent.ForgotPasswordClicked ->
-                emitEffect(LoginEffect.OpenForgotPasswordDialog)
-
+            LoginEvent.ForgotPasswordClicked -> emitEffect(LoginEffect.OpenForgotPasswordDialog)
             is LoginEvent.SendForgotPasswordEmailClicked ->
                 sendForgotPasswordEmail(event.email)
                     .withFailure { emitEffect(LoginEffect.ShowError(it.error)) }
                     .withSuccess { emitEffect(LoginEffect.ShowSentPasswordResetEmailSuccessfully) }
 
             /** Google Sign-In */
-            LoginEvent.GoogleSignInClicked -> emitEffect(LoginEffect.LaunchGoogleSignIn)
-            is LoginEvent.GoogleTokenReceived -> submitGoogleLogin(event.token)
+            LoginEvent.OnGoogleSignInClicked -> emitEffect(LoginEffect.RequestGoogleSignIn)
+            is LoginEvent.OnGoogleTokenReceived -> submitGoogleLogin(event.token)
         }
     }
 }
@@ -148,8 +146,8 @@ sealed interface LoginEvent {
     data object GoToRegistrationScreenClicked : LoginEvent
 
     /** Google Sign-In */
-    data object GoogleSignInClicked : LoginEvent
-    data class GoogleTokenReceived(val token: String) : LoginEvent
+    data object OnGoogleSignInClicked : LoginEvent
+    data class OnGoogleTokenReceived(val token: String) : LoginEvent
 
     /** Forgot password */
     data object ForgotPasswordClicked : LoginEvent
@@ -158,14 +156,18 @@ sealed interface LoginEvent {
 
 sealed interface LoginEffect {
 
+    /** Navigation */
     data object GoToProfileScreen : LoginEffect
     data object GoToRegistrationScreen : LoginEffect
 
-    data object LaunchGoogleSignIn : LoginEffect
-
+    /** Messages */
     data class ShowError(val error: DomainError) : LoginEffect
     data object ShowLoginSuccessfully : LoginEffect
     data object ShowSentPasswordResetEmailSuccessfully : LoginEffect
 
+    /** Dialogs */
     data object OpenForgotPasswordDialog : LoginEffect
+
+    /** Google Sign-In */
+    data object RequestGoogleSignIn : LoginEffect
 }

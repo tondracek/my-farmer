@@ -84,7 +84,7 @@ class RegistrationViewmodel @Inject constructor(
 
     fun onEvent(event: RegistrationEvent) = viewModelScope.launch {
         when (event) {
-            /* INPUT EVENTS */
+            /** input events */
             is RegistrationEvent.EmailChanged -> {
                 _input.update { it.copy(email = event.email) }
                 _validation.update { it.copy(emailError = null) }
@@ -100,19 +100,13 @@ class RegistrationViewmodel @Inject constructor(
                 _validation.update { it.copy(confirmPasswordError = null) }
             }
 
-            /* BUTTON EVENTS */
-            RegistrationEvent.GoToLoginScreenClicked ->
-                emitEffect(RegistrationEffect.GoToLoginScreen)
-
+            /** button events */
+            RegistrationEvent.GoToLoginScreenClicked -> emitEffect(RegistrationEffect.GoToLoginScreen)
             RegistrationEvent.RegisterButtonClicked -> submitRegistration()
 
-            RegistrationEvent.GoogleSignInClicked -> {
-                _registrationInProgress.emit(true)
-                emitEffect(RegistrationEffect.LaunchGoogleSignIn)
-            }
-
-            is RegistrationEvent.GoogleTokenReceived ->
-                submitGoogleLogin(event.idToken)
+            /** Google sign-in */
+            is RegistrationEvent.OnGoogleTokenReceived -> submitGoogleLogin(event.idToken)
+            RegistrationEvent.OnGoogleSignInClicked -> emitEffect(RegistrationEffect.RequestGoogleSignIn)
         }
     }
 }
@@ -139,20 +133,20 @@ sealed interface RegistrationEvent {
     data object GoToLoginScreenClicked : RegistrationEvent
 
     /** Google sign-in */
-    data object GoogleSignInClicked : RegistrationEvent
-    data class GoogleTokenReceived(val idToken: String) : RegistrationEvent
+    data class OnGoogleTokenReceived(val idToken: String) : RegistrationEvent
+    data object OnGoogleSignInClicked : RegistrationEvent
 }
 
 sealed interface RegistrationEffect {
 
+    /** Navigation */
     data object GoToProfileScreen : RegistrationEffect
-
     data object GoToLoginScreen : RegistrationEffect
 
+    /** Google sign-in */
+    data object RequestGoogleSignIn : RegistrationEffect
 
-    data object LaunchGoogleSignIn : RegistrationEffect
-
-
+    /** Messages */
     data class ShowError(val error: DomainError) : RegistrationEffect
     data object ShowRegisteredSuccessfully : RegistrationEffect
     data object ShowLoggedInSuccessfully : RegistrationEffect

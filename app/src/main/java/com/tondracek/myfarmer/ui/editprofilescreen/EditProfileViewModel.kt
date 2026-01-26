@@ -2,23 +2,21 @@ package com.tondracek.myfarmer.ui.editprofilescreen
 
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
-import com.tondracek.myfarmer.auth.domain.usecase.LogoutUC
 import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
-import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
+import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
+import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
 import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.systemuser.domain.usecase.UpdateUserUC
 import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,101 +26,116 @@ import javax.inject.Inject
 class EditProfileViewModel @Inject constructor(
     getLoggedInUserUC: GetLoggedInUserUC,
     private val updateUserUC: UpdateUserUC,
-    private val logout: LogoutUC,
 ) : BaseViewModel<EditProfileScreenEffect>() {
 
-    private val loggedInUserFlow: SharedFlow<DomainResult<SystemUser>> = getLoggedInUserUC()
-        .shareIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            replay = 1
-        )
-
-    private val loggedInUser: StateFlow<DomainResult<SystemUser>> = loggedInUserFlow
-//        .withFailure { emitEffect(EditProfileScreenEffect.GoToLogin) }
+    private val loggedInUser: StateFlow<SystemUser?> = getLoggedInUserUC()
+        .withFailure { emitEffect(EditProfileScreenEffect.GoToAuth) }
+        .getOrElse(null)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = DomainResult.Failure(AuthError.NotLoggedIn)
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = null,
         )
 
-    private val _state: MutableStateFlow<EditProfileScreenState> =
-        MutableStateFlow(EditProfileScreenState.Loading)
+    private val _input = MutableStateFlow(EditUserUiState.Empty)
 
-    val state: StateFlow<EditProfileScreenState> = _state
+    private val wasChanged: StateFlow<Boolean> = combine(loggedInUser, _input) { user, input ->
+        user != null && !input.isEqual(user)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = false,
+    )
 
-    private suspend fun emitError(result: DomainResult.Failure) =
-        emitEffect(EditProfileScreenEffect.ShowError(result.error))
+    private val _isSaving = MutableStateFlow(false)
+
+    val state: StateFlow<EditProfileScreenState> = combine(
+        _isSaving,
+        _input,
+        wasChanged,
+    ) { isSaving, input, changed ->
+        when (isSaving) {
+            true -> EditProfileScreenState.UpdatingProfile
+            false -> EditProfileScreenState.Success(
+                userInput = input,
+                wasChanged = changed,
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = EditProfileScreenState.Loading,
+    )
 
     init {
-        viewModelScope.launch {
-            loadUserData()
-        }
+        viewModelScope.launch { loadNewData() }
     }
 
-    fun onNameChange(newName: String) = updateState {
-        it.copy(name = newName)
-    }
+    private suspend fun loadNewData() = loggedInUser
+        .filterNotNull()
+        .first()
+        .let { user -> _input.update { EditUserUiState.fromUser(user) } }
 
-    fun onProfilePictureChange(newProfilePicture: ImageResource) = updateState {
-        it.copy(profilePicture = newProfilePicture)
-    }
+    private fun onSaveProfile() = viewModelScope.launch {
+        val loggedUser = loggedInUser.value ?: return@launch
+        val userInput = _input.value
 
-    fun onContactInfoChange(newContactInfo: ContactInfo) = updateState {
-        it.copy(contactInfo = newContactInfo)
-    }
+        _isSaving.update { true }
 
-    fun onLogout() = viewModelScope.launch {
-        emitEffect(EditProfileScreenEffect.GoToLogin)
-        logout().withFailure { emitError(it) }
-    }
-
-    fun onSaveProfile() = viewModelScope.launch {
-        val currentState = _state.value as? EditProfileScreenState.Success ?: return@launch
-        val loggedUser = loggedInUser.value
-            .withFailure { emitError(it) }
-            .withFailure { emitEffect(EditProfileScreenEffect.GoToLogin) }
-            .getOrReturn { return@launch }
-
-        _state.update { EditProfileScreenState.UpdatingProfile }
-
-        val updateUser = currentState.toSystemUser(id = loggedUser.id, authId = loggedUser.authId)
-
-        when (val updateResult = updateUserUC(updateUser)) {
-            is DomainResult.Success -> {
+        val updateUser = userInput.toSystemUser(id = loggedUser.id, authId = loggedUser.authId)
+        updateUserUC(updateUser)
+            .withFailure { emitEffect(EditProfileScreenEffect.ShowError(it.error)) }
+            .withSuccess {
+                emitEffect(EditProfileScreenEffect.NavigateBack)
                 emitEffect(EditProfileScreenEffect.ShowSavedProfileMessage)
-                loadUserData()
             }
 
-            is DomainResult.Failure -> {
-                emitError(updateResult)
-                _state.update { currentState }
-            }
-        }
+        _isSaving.update { false }
     }
 
-    /* PRIVATE HELPERS */
+    fun onFormEvent(event: EditProfileFormEvent) =
+        _input.update { it.applyEvent(event) }
 
-    private fun updateState(update: (EditProfileScreenState.Success) -> EditProfileScreenState) =
-        _state.update {
-            when (it) {
-                is EditProfileScreenState.Success -> update(it)
-                else -> it
+    fun onScreenEvent(event: EditProfileScreenEvent) = viewModelScope.launch {
+        when (event) {
+            EditProfileScreenEvent.OnSaveClicked -> onSaveProfile()
+
+            EditProfileScreenEvent.OnCancelClicked -> when (wasChanged.value) {
+                true -> emitEffect(EditProfileScreenEffect.RequestCancelConfirmation)
+                false -> emitEffect(EditProfileScreenEffect.NavigateBack)
             }
-        }
 
-    private suspend fun loadUserData() = loggedInUserFlow.first().getOrNull().let { user ->
-        _state.update {
-            user?.toUiState() ?: EditProfileScreenState.Empty
+            EditProfileScreenEvent.OnCancelConfirmed -> emitEffect(EditProfileScreenEffect.NavigateBack)
         }
     }
 }
 
 sealed interface EditProfileScreenEffect {
 
-    data object GoToLogin : EditProfileScreenEffect
+    /** navigation **/
+    data object GoToAuth : EditProfileScreenEffect
+    data object NavigateBack : EditProfileScreenEffect
 
+    /** messages **/
     data object ShowSavedProfileMessage : EditProfileScreenEffect
-
     data class ShowError(val error: DomainError) : EditProfileScreenEffect
+
+    /** actions **/
+    data object RequestCancelConfirmation : EditProfileScreenEffect
+}
+
+sealed interface EditProfileFormEvent {
+    data class OnNameChange(val name: String) : EditProfileFormEvent
+    data class OnProfilePictureChange(val profilePicture: ImageResource) : EditProfileFormEvent
+    data class OnContactInfoChange(val contactInfo: ContactInfo) : EditProfileFormEvent
+}
+
+sealed interface EditProfileScreenEvent {
+
+    /** button clicks **/
+    data object OnSaveClicked : EditProfileScreenEvent
+    data object OnCancelClicked : EditProfileScreenEvent
+
+    /** confirmations **/
+    data object OnCancelConfirmed : EditProfileScreenEvent
 }
