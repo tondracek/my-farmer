@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.core.uievents
+package com.tondracek.myfarmer.ui.core.snackbar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -11,7 +11,9 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarData
+import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,39 +38,43 @@ fun MyFarmerSnackBar(
         else -> MyFarmerTheme.colors.surfaceVariant.toCardColors()
     }
 
-    Card(
-        shape = CircleShape,
-        colors = cardColors,
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MyFarmerTheme.paddings.small),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            when (type) {
-                SnackBarType.ERROR -> ErrorIcon()
-                SnackBarType.SUCCESS -> SuccessIcon()
-            }
+    SwipeToDismissBox(
+        state = rememberSwipeToDismissBoxState(),
+        onDismiss = { snackbarData.dismiss() },
+        backgroundContent = {},
+        content = {
+            Card(
+                shape = CircleShape,
+                colors = cardColors,
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(MyFarmerTheme.paddings.small),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    when (type) {
+                        SnackBarType.ERROR -> ErrorIcon()
+                        SnackBarType.SUCCESS -> SuccessIcon()
+                    }
 
-            Text(
-                modifier = Modifier.weight(1f),
-                text = snackbarData.visuals.message,
-                textAlign = TextAlign.Center,
-                style = MyFarmerTheme.typography.titleSmall,
-            )
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = snackbarData.visuals.message,
+                        textAlign = TextAlign.Center,
+                        style = MyFarmerTheme.typography.titleSmall,
+                    )
+                }
+            }
         }
-    }
+    )
 }
 
 @Composable
 private fun ErrorIcon() {
     Icon(
         modifier = Modifier
-            .background(
-                MyFarmerTheme.colors.error,
-                shape = CircleShape
-            )
+            .background(MyFarmerTheme.colors.error, CircleShape)
             .padding(MyFarmerTheme.paddings.extraSmall),
         imageVector = Icons.Default.Close,
         contentDescription = null,
@@ -80,10 +86,7 @@ private fun ErrorIcon() {
 private fun SuccessIcon() {
     Icon(
         modifier = Modifier
-            .background(
-                MyFarmerTheme.colors.success,
-                shape = CircleShape
-            )
+            .background(MyFarmerTheme.colors.success, CircleShape)
             .padding(MyFarmerTheme.paddings.extraSmall),
         imageVector = Icons.Default.Check,
         contentDescription = null,

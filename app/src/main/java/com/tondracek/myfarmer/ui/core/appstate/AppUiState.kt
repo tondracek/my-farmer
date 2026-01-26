@@ -2,6 +2,7 @@ package com.tondracek.myfarmer.ui.core.appstate
 
 import androidx.compose.runtime.compositionLocalOf
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
+import com.tondracek.myfarmer.ui.core.confirmationdialog.ConfirmationDialogRequest
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
@@ -40,8 +41,3 @@ class AppUiController {
         )
     )
 }
-
-data class ConfirmationDialogRequest(
-    val message: String,
-    val onConfirm: () -> Unit,
-)
