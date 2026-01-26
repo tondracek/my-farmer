@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -60,22 +59,15 @@ fun MainShopsScreen(
         pagerState.animateScrollToPage(page)
     }
 
-    ScreenScaffold(
-        title = when (currentPage.toShopsViewMode()) {
-            ShopsViewMode.Map -> stringResource(R.string.shops_map)
-            ShopsViewMode.List -> stringResource(R.string.shops_list)
-        },
-        applyTopBarPadding = false,
-    ) {
-        MainShopsScreenWrapper(
-            pagerState = pagerState,
-            mapView = mapView,
-            listView = listView,
-            onSwitchMode = { switchPage(it.toPage()) },
-            currentMode = currentPage.toShopsViewMode(),
-            onOpenFiltersDialog = onOpenFiltersDialog,
-        )
-    }
+
+    MainShopsScreenWrapper(
+        pagerState = pagerState,
+        mapView = mapView,
+        listView = listView,
+        onSwitchMode = { switchPage(it.toPage()) },
+        currentMode = currentPage.toShopsViewMode(),
+        onOpenFiltersDialog = onOpenFiltersDialog,
+    )
 }
 
 @Composable

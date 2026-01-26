@@ -7,9 +7,8 @@ import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
 import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.location.model.meters
-import com.tondracek.myfarmer.location.usecase.measureMapDistanceNotNull
 import com.tondracek.myfarmer.map.GetMapViewInitialCameraBoundsUC
-import com.tondracek.myfarmer.map.GetUserLocationUC
+import com.tondracek.myfarmer.map.GetUserApproximateLocationUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.repository.DistancePagingCursor
@@ -26,6 +25,7 @@ import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.scan
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -47,7 +47,7 @@ class ShopsMapViewModel @Inject constructor(
     private val getShopsByDistancePaged: GetShopsByDistancePagedUC,
     private val getAllShopsPaginated: GetAllShopsPaginatedUC,
     private val applyFilters: ApplyFiltersUC,
-    getUserLocation: GetUserLocationUC,
+    getUserApproximateLocation: GetUserApproximateLocationUC,
     getClosestShops: GetClosestShopsUC,
     getShopFilters: GetShopFiltersUC,
     getUsersByIds: GetUsersByIdsUC,
@@ -57,29 +57,28 @@ class ShopsMapViewModel @Inject constructor(
     private val _selectedShopId = MutableStateFlow<ShopId?>(null)
     val selectedShopId: StateFlow<ShopId?> = _selectedShopId
 
+    private val _isLoading = MutableStateFlow(false)
+
     private val filters: StateFlow<ShopFilters> =
         getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
 
-    private val userLocation: Flow<Location?> = getUserLocation()
-        .distinctUntilChanged()
+    private val userApproximateLocation = getUserApproximateLocation(50.meters)
 
-    private val _shops: Flow<Collection<Shop>> = userLocation
-        .scan<Location?, Location?>(null) { lastAccepted, current ->
-            if (lastAccepted == null) return@scan current
-            if (current == null) return@scan lastAccepted
+    private val _refreshTrigger = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    private val refreshTrigger = _refreshTrigger.onStart { emit(Unit) }
 
-            val d = measureMapDistanceNotNull(lastAccepted, current)
-
-            if (d > 50.meters) current else lastAccepted
+    private val _shops: Flow<Collection<Shop>> = combine(
+        userApproximateLocation,
+        filters,
+        refreshTrigger,
+    ) { location, filters, _ ->
+        location to filters
+    }.flatMapLatest { (location, filters) ->
+        when (location) {
+            null -> getAllShopsPagingFLow(filters)
+            else -> getShopsByDistancePagingFlow(location, filters)
         }
-        .distinctUntilChanged()
-        .combine(filters) { location, filters -> location to filters }
-        .flatMapLatest { (location, filters) ->
-            when (location) {
-                null -> getAllShopsPagingFLow(filters)
-                else -> getShopsByDistancePagingFlow(location, filters)
-            }
-        }
+    }
 
     private val _shopOwners: Flow<List<SystemUser>> = _shops
         .flatMapLatest {
@@ -112,11 +111,13 @@ class ShopsMapViewModel @Inject constructor(
 
     val state: StateFlow<ShopsMapViewState> = combine(
         shopUiItems,
+        _isLoading,
         selectedShop,
         initialCameraBounds,
-    ) { shopUiItems, selectedShop, initialCameraBounds ->
+    ) { shopUiItems, isLoading, selectedShop, initialCameraBounds ->
         ShopsMapViewState(
             shops = shopUiItems,
+            isLoading = isLoading,
             selectedShop = selectedShop,
             initialCameraBounds = initialCameraBounds,
         )
@@ -143,12 +144,17 @@ class ShopsMapViewModel @Inject constructor(
         _selectedShopId.update { shopId }
     }
 
+    fun refreshShops() =
+        viewModelScope.launch { _refreshTrigger.emit(Unit) }
+
     fun onShopDeselected() = _selectedShopId.update { null }
 
     private fun getShopsByDistancePagingFlow(
         location: Location,
         filters: ShopFilters
     ): Flow<Collection<Shop>> = channelFlow {
+        _isLoading.emit(true)
+
         val shops = mutableSetOf<Shop>()
         var cursor: DistancePagingCursor? = null
 
@@ -165,9 +171,13 @@ class ShopsMapViewModel @Inject constructor(
                 cursor = nextCursor
             }
         } while (cursor != null)
+
+        _isLoading.emit(false)
     }
 
     private fun getAllShopsPagingFLow(filters: ShopFilters): Flow<Collection<Shop>> = channelFlow {
+        _isLoading.emit(true)
+
         val shops = mutableSetOf<Shop>()
         var cursor: ShopId? = null
 
@@ -183,6 +193,8 @@ class ShopsMapViewModel @Inject constructor(
                 cursor = it.lastOrNull()?.id
             }
         } while (cursor != null)
+
+        _isLoading.emit(false)
     }
 }
 

@@ -24,6 +24,8 @@ fun ScreenScaffold(
     title: String = stringResource(R.string.app_name),
     showTopBar: Boolean = true,
     applyTopBarPadding: Boolean = true,
+    leftIconContent: @Composable (() -> Unit) = {},
+    rightIconContent: @Composable (() -> Unit) = {},
     content: @Composable BoxScope.() -> Unit,
 ) {
     val localDensity = LocalDensity.current
@@ -52,7 +54,9 @@ fun ScreenScaffold(
                                 topContentPadding = coordinates.size.height.toDp()
                         }
                     },
-                title = title
+                title = title,
+                rightIconContent = rightIconContent,
+                leftIconContent = leftIconContent,
             )
     }
 }

@@ -1,24 +1,17 @@
 package com.tondracek.myfarmer.ui.mainshopscreen.shopslistview
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
 import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
 import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.location.model.meters
 import com.tondracek.myfarmer.location.usecase.measureMapDistance
-import com.tondracek.myfarmer.location.usecase.measureMapDistanceNotNull
-import com.tondracek.myfarmer.map.GetUserLocationUC
+import com.tondracek.myfarmer.map.GetUserApproximateLocationUC
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.usecase.GetAverageRatingsByShopUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
@@ -29,97 +22,66 @@ import com.tondracek.myfarmer.shop.domain.usecase.GetShopsByDistancePagedUC
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
 import com.tondracek.myfarmer.shopfilters.domain.usecase.ApplyFiltersUC
 import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
-import com.tondracek.myfarmer.ui.common.paging.getUCResultPageFlow
+import com.tondracek.myfarmer.ui.common.paging.getDomainResultPageFlow
 import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
-import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.ShopListViewItem
+import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
 import com.tondracek.myfarmer.ui.mainshopscreen.shopslistview.components.toListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.scan
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ShopsListViewModel @Inject constructor(
     getAverageRatingsByShopUC: GetAverageRatingsByShopUC,
-    getUserLocation: GetUserLocationUC,
-    getAllShopsPaginated: GetAllShopsPaginatedUC,
+    getUserApproximateLocationUC: GetUserApproximateLocationUC,
     getShopFilters: GetShopFiltersUC,
-    getShopsByDistancePaged: GetShopsByDistancePagedUC,
-    applyFiltersUC: ApplyFiltersUC,
-) : ViewModel() {
+    private val getAllShopsPaginated: GetAllShopsPaginatedUC,
+    private val getShopsByDistancePaged: GetShopsByDistancePagedUC,
+    private val applyFiltersUC: ApplyFiltersUC,
+) : BaseViewModel<ShopsListViewEffect>() {
 
     private val filters: StateFlow<ShopFilters> =
         getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
 
-    private val userLocation: Flow<Location?> = getUserLocation()
-        .distinctUntilChanged()
+    private val approximateLocation = getUserApproximateLocationUC(50.meters)
+
+    private val _refreshTrigger = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    private val refreshTrigger = _refreshTrigger.onStart { emit(Unit) }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val shops: Flow<PagingData<Shop>> = userLocation
-        .scan<Location?, Location?>(null) { lastAccepted, current ->
-            if (lastAccepted == null) return@scan current
-            if (current == null) return@scan lastAccepted
-
-            val d = measureMapDistanceNotNull(lastAccepted, current)
-
-            if (d > 50.meters) current else lastAccepted
-        }
-        .distinctUntilChanged()
-        .combine(filters) { location, filters -> location to filters }
+    private val shops = combine(
+        approximateLocation,
+        refreshTrigger,
+        filters,
+    ) { location, _, filters -> location to filters }
         .flatMapLatest { (location, filters) ->
             when (location) {
-                null -> getUCResultPageFlow(
-                    getDataKey = { shop: Shop -> shop.id },
-                    pageSize = 20,
-                    showError = { _effects.emit(ShopsListViewEffect.ShowError(it)) }
-                ) { limit, after ->
-                    getAllShopsPaginated(
-                        limit = limit,
-                        after = after
-                    ).mapSuccess {
-                        applyFiltersUC.sync(
-                            shops = it,
-                            filters = filters,
-                        )
-                    }
-                }
-
-                else -> getShopsByDistancePageFlow(
-                    center = location,
-                    pageSize = 20,
-                    showError = { _effects.emit(ShopsListViewEffect.ShowError(it)) },
-                ) { center, pageSize, cursor ->
-                    getShopsByDistancePaged(
-                        center = center,
-                        pageSize = pageSize,
-                        cursor = cursor
-                    ).mapSuccess { (shops, nextCursor) ->
-                        val filteredShops = applyFiltersUC.sync(
-                            shops = shops,
-                            filters = filters,
-                        )
-                        filteredShops to nextCursor
-                    }
-                }
+                null -> getShopsGenericPageFlow(filters)
+                else -> getShopsByDistancePageFlow(location, filters)
             }
-        }.cachedIn(viewModelScope)
+        }
+        .cachedIn(viewModelScope)
 
     private val averageRatings: Flow<Map<ShopId, Rating>> = getAverageRatingsByShopUC()
-        .withFailure { _effects.emit(ShopsListViewEffect.ShowError(it.error)) }
+        .withFailure { emitEffect(ShopsListViewEffect.ShowError(it.error)) }
         .getOrElse(emptyMap())
         .distinctUntilChanged()
 
-    val shopsUiData: Flow<PagingData<ShopListViewItem>> = combine(
+    private val shopsUiData = combine(
         shops,
-        userLocation,
+        approximateLocation,
         averageRatings
     ) { shopsPagingData, userLocation, ratings ->
         shopsPagingData.map { shop ->
@@ -129,79 +91,62 @@ class ShopsListViewModel @Inject constructor(
         }
     }
 
-    private val _effects = MutableSharedFlow<ShopsListViewEffect>(extraBufferCapacity = 1)
-    val effects: SharedFlow<ShopsListViewEffect> = _effects
+    val state: StateFlow<ShopsListViewState> = flowOf(shopsUiData)
+        .map { shopsPaging ->
+            ShopsListViewState.Success(shopsPaging = shopsPaging)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = ShopsListViewState.Loading,
+        )
 
     fun openShopDetail(shopId: ShopId) = viewModelScope.launch {
-        _effects.emit(ShopsListViewEffect.OpenShopDetail(shopId))
+        emitEffect(ShopsListViewEffect.OpenShopDetail(shopId))
     }
 
-}
+    fun refreshShopsList() =
+        viewModelScope.launch { _refreshTrigger.emit(Unit) }
 
-sealed interface ShopsListViewEffect {
-    data class OpenShopDetail(val shopId: ShopId) : ShopsListViewEffect
+    // ----------------
+    // Paging flows
+    // ----------------
 
-    data object OnBackClicked : ShopsListViewEffect
-
-    data class ShowError(val error: DomainError) : ShopsListViewEffect
-}
-
-fun getShopsByDistancePageFlow(
-    center: Location,
-    pageSize: Int,
-    showError: suspend (error: DomainError) -> Unit,
-    getShops: suspend (center: Location, pageSize: Int, cursor: DistancePagingCursor?) -> DomainResult<Pair<List<Shop>, DistancePagingCursor?>>,
-): Flow<PagingData<Shop>> = Pager(
-    config = PagingConfig(
-        pageSize = pageSize,
-        enablePlaceholders = false,
-    ),
-    pagingSourceFactory = {
-        ShopsByDistancePagingSource(
-            center = center,
-            pageSize = pageSize,
-            showError = showError,
-            getShops = getShops,
-        )
-    }
-).flow
-
-
-class ShopsByDistancePagingSource(
-    private val center: Location,
-    private val pageSize: Int,
-    private val showError: suspend (error: DomainError) -> Unit,
-    private val getShops: suspend (center: Location, pageSize: Int, cursor: DistancePagingCursor?) -> DomainResult<Pair<List<Shop>, DistancePagingCursor?>>,
-) : PagingSource<DistancePagingCursor, Shop>() {
-
-    override suspend fun load(
-        params: LoadParams<DistancePagingCursor>
-    ): LoadResult<DistancePagingCursor, Shop> {
-        val cursor = params.key
-
-        val result = getShops(center, pageSize, cursor)
-
-        return when (result) {
-            is DomainResult.Success<Pair<List<Shop>, DistancePagingCursor?>> -> {
-                val (shops, nextCursor) = result.data
-                LoadResult.Page(
-                    data = shops,
-                    prevKey = null,
-                    nextKey = nextCursor,
-                )
-            }
-
-            is DomainResult.Failure -> result
-                .withFailure { showError(it.error) }
-                .let { LoadResult.Error(result.cause ?: Exception()) }
+    private fun getShopsGenericPageFlow(
+        filters: ShopFilters
+    ): Flow<PagingData<Shop>> = getDomainResultPageFlow<Shop, ShopId>(
+        showError = { emitEffect(ShopsListViewEffect.ShowError(it)) }
+    ) { pageSize, cursor ->
+        getAllShopsPaginated(
+            limit = pageSize,
+            after = cursor,
+        ).mapSuccess {
+            val filtered = applyFiltersUC.sync(shops = it, filters = filters)
+            val nextCursor = it.lastOrNull()?.id
+            filtered to nextCursor
         }
     }
 
-
-    override fun getRefreshKey(
-        state: PagingState<DistancePagingCursor, Shop>
-    ): DistancePagingCursor? {
-        // Always restart from the beginning
-        return null
+    private fun getShopsByDistancePageFlow(
+        location: Location,
+        filters: ShopFilters
+    ): Flow<PagingData<Shop>> = getDomainResultPageFlow<Shop, DistancePagingCursor>(
+        showError = { emitEffect(ShopsListViewEffect.ShowError(it)) },
+    ) { pageSize, cursor ->
+        getShopsByDistancePaged(
+            center = location,
+            pageSize = pageSize,
+            cursor = cursor
+        ).mapSuccess { (shops, nextCursor) ->
+            val filtered = applyFiltersUC.sync(shops = shops, filters = filters)
+            filtered to nextCursor
+        }
     }
+}
+
+sealed interface ShopsListViewEffect {
+
+    data class OpenShopDetail(val shopId: ShopId) : ShopsListViewEffect
+
+    data class ShowError(val error: DomainError) : ShopsListViewEffect
 }

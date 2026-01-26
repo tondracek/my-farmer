@@ -14,21 +14,21 @@ data class MyFarmerChipColors(
 val MyFarmerTheme.filterChipColors
     @Composable get() = MyFarmerChipColors(
         base = FilterChipDefaults.filterChipColors(
-            containerColor = MyFarmerTheme.colors.surfaceVariant,
-            labelColor = MyFarmerTheme.colors.onSurfaceVariant,
-            selectedContainerColor = MyFarmerTheme.colors.primaryContainer,
-            selectedLabelColor = MyFarmerTheme.colors.onPrimaryContainer,
+            containerColor = this.colors.surfaceVariant,
+            labelColor = this.colors.onSurfaceVariant,
+            selectedContainerColor = this.colors.primaryContainer,
+            selectedLabelColor = this.colors.onPrimaryContainer,
         ),
         primary = FilterChipDefaults.filterChipColors(
-            containerColor = MyFarmerTheme.colors.primaryContainer,
-            labelColor = MyFarmerTheme.colors.onPrimaryContainer,
-            selectedContainerColor = MyFarmerTheme.colors.primary,
-            selectedLabelColor = MyFarmerTheme.colors.onPrimary,
+            containerColor = this.colors.primaryContainer,
+            labelColor = this.colors.onPrimaryContainer,
+            selectedContainerColor = this.colors.primary,
+            selectedLabelColor = this.colors.onPrimary,
         ),
         secondary = FilterChipDefaults.filterChipColors(
-            containerColor = MyFarmerTheme.colors.secondaryContainer,
-            labelColor = MyFarmerTheme.colors.onSecondaryContainer,
-            selectedContainerColor = MyFarmerTheme.colors.secondary,
-            selectedLabelColor = MyFarmerTheme.colors.onSecondary,
+            containerColor = this.colors.secondaryContainer,
+            labelColor = this.colors.onSecondaryContainer,
+            selectedContainerColor = this.colors.secondary,
+            selectedLabelColor = this.colors.onSecondary,
         ),
     )

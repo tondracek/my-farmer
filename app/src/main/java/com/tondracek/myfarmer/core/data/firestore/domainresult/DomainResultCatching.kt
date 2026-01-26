@@ -24,3 +24,4 @@ inline fun <T> domainResultOf(
         Timber.e(e, "domainResultOf caught an exception, mapped to DomainError: $domainError")
     }
 }
+

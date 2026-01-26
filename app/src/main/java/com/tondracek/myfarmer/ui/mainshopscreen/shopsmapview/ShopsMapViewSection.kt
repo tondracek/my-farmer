@@ -41,6 +41,7 @@ fun ShopsMapViewSection(
         navController = navController,
         state = mapState,
         onShopSelected = mapViewModel::onShopSelected,
+        onRefreshClick = mapViewModel::refreshShops,
     )
 
     mapViewModel.CollectEffects { effect ->

@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -55,6 +56,7 @@ import com.mapbox.maps.plugin.locationcomponent.location
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.location.model.Location
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.ui.common.button.RefreshIconButton
 import com.tondracek.myfarmer.ui.common.map.mapbox.CLUSTER_LAYER_ID
 import com.tondracek.myfarmer.ui.common.map.mapbox.MapboxMapView
 import com.tondracek.myfarmer.ui.common.map.mapbox.PROP_ID
@@ -65,6 +67,7 @@ import com.tondracek.myfarmer.ui.common.map.mapbox.addShopLayers
 import com.tondracek.myfarmer.ui.common.map.mapbox.shopsToFeatureCollection
 import com.tondracek.myfarmer.ui.common.map.mapbox.toStyleIconId
 import com.tondracek.myfarmer.ui.common.map.marker.ShopMarkerIconLoader
+import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import kotlinx.coroutines.launch
@@ -85,10 +88,40 @@ fun <R : Route> rememberIsLeaving(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ShopsMapView(
-    modifier: Modifier = Modifier,
     navController: NavHostController,
     state: ShopsMapViewState,
     onShopSelected: (ShopId) -> Unit,
+    onRefreshClick: () -> Unit,
+) {
+    val isLeaving = rememberIsLeaving(
+        navController,
+        Route.MainShopsRoute::class,
+    )
+
+    ScreenScaffold(
+        title = stringResource(R.string.shops_map),
+        applyTopBarPadding = false,
+        rightIconContent = {
+            RefreshIconButton(
+                isRefreshing = state.isLoading,
+                onClick = onRefreshClick,
+            )
+        }
+    ) {
+        ShopsMapViewContent(
+            state = state,
+            isLeaving = isLeaving,
+            onShopSelected = onShopSelected
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalPermissionsApi::class)
+private fun ShopsMapViewContent(
+    state: ShopsMapViewState,
+    isLeaving: Boolean,
+    onShopSelected: (ShopId) -> Unit
 ) {
     val fineLocationPermission = rememberPermissionState(
         Manifest.permission.ACCESS_FINE_LOCATION
@@ -103,8 +136,8 @@ fun ShopsMapView(
     var mapboxMapView by remember { mutableStateOf<MapView?>(null) }
     var mapboxMap by remember { mutableStateOf<MapboxMap?>(null) }
 
-    Box(modifier = modifier) {
-        FadingOverlay(navController) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        FadingOverlay(isLeaving) {
             MapboxShopMap(
                 state = state,
                 onShopSelected = onShopSelected,
@@ -146,14 +179,9 @@ fun ShopsMapView(
 
 @Composable
 fun FadingOverlay(
-    navController: NavHostController,
+    isLeaving: Boolean,
     content: @Composable () -> Unit
 ) {
-    val isLeaving = rememberIsLeaving(
-        navController,
-        Route.MainShopsRoute::class,
-    )
-
     val alpha by animateFloatAsState(
         targetValue = if (isLeaving) 0f else 1f,
         animationSpec = tween(
@@ -385,7 +413,7 @@ private fun ShopsMapViewPreview() {
             state = ShopsMapViewState.Empty,
             navController = NavHostController(LocalContext.current),
             onShopSelected = {},
-            modifier = Modifier.fillMaxSize(),
+            onRefreshClick = {},
         )
     }
 }

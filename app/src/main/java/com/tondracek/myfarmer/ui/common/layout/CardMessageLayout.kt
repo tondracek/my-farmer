@@ -7,13 +7,8 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,24 +40,5 @@ fun CardMessageLayout(
                 content()
             }
         }
-    }
-}
-
-@Composable
-fun CardSuccessMessageLayout(
-    modifier: Modifier = Modifier,
-    title: String,
-) {
-    CardMessageLayout(modifier = modifier) {
-        Icon(
-            modifier = Modifier.size(48.dp),
-            imageVector = Icons.Default.CheckCircle,
-            contentDescription = "Success icon",
-            tint = MyFarmerTheme.colors.success,
-        )
-        Text(
-            text = title,
-            style = MyFarmerTheme.typography.textLarge,
-        )
     }
 }

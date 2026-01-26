@@ -1,8 +1,7 @@
 package com.tondracek.myfarmer.ui.common.topbar
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -15,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.ui.common.button.RefreshIconButton
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
@@ -36,24 +36,26 @@ fun FloatingTopBar(
         tonalElevation = 4.dp,
         shadowElevation = 4.dp,
     ) {
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 8.dp)
                 .heightIn(min = 48.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            leftIconContent()
+            Box(modifier = Modifier.align(Alignment.CenterStart)) {
+                leftIconContent()
+            }
             Text(
                 modifier = Modifier
-                    .weight(1f)
+                    .align(Alignment.Center)
                     .animateContentSize(),
                 text = title,
                 textAlign = TextAlign.Center,
                 style = MyFarmerTheme.typography.topbarTitle,
             )
-            rightIconContent()
+            Box(modifier = Modifier.align(Alignment.CenterEnd)) {
+                rightIconContent()
+            }
         }
     }
 }
@@ -64,6 +66,9 @@ private fun RoundedTopBarPreview() {
     MyFarmerTheme {
         FloatingTopBar(
             title = "My Farmer",
+            rightIconContent = {
+                RefreshIconButton { }
+            }
         )
     }
 }
