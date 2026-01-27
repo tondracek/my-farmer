@@ -45,7 +45,7 @@ fun ShopsListView(
 
         ShopsListViewState.Loading -> ScreenScaffold(
             title = stringResource(R.string.shops_list),
-            applyTopBarPadding = false,
+            applyContentPaddingInternally = false,
         ) {
             LoadingLayout(modifier = modifier)
         }
@@ -64,7 +64,7 @@ private fun SuccessLayout(
 
     ScreenScaffold(
         title = stringResource(R.string.shops_list),
-        applyTopBarPadding = false,
+        applyContentPaddingInternally = false,
         rightIconContent = {
             RefreshIconButton(
                 isRefreshing = isRefreshing,

@@ -3,10 +3,12 @@ package com.tondracek.myfarmer.ui.profilescreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -19,8 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
+import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.ui.common.image.ImageView
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
@@ -32,17 +36,13 @@ fun ProfileScreen(
     state: ProfileScreenState,
     onEvent: (ProfileScreenEvent) -> Unit,
 ) {
-    ScreenScaffold(
-        title = stringResource(R.string.profile)
-    ) {
-        when (state) {
-            is ProfileScreenState.Success -> Content(
-                state = state.user,
-                onEvent = onEvent,
-            )
+    when (state) {
+        is ProfileScreenState.Success -> Content(
+            state = state.user,
+            onEvent = onEvent,
+        )
 
-            ProfileScreenState.Loading -> LoadingLayout()
-        }
+        ProfileScreenState.Loading -> LoadingLayout()
     }
 }
 
@@ -51,48 +51,91 @@ private fun Content(
     state: UserUiState,
     onEvent: (ProfileScreenEvent) -> Unit,
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    ScreenScaffold(
+        title = stringResource(R.string.profile),
+        applyContentPaddingInternally = false,
+        bottomBar = { BottomButtons(onEvent = onEvent) }
+    ) { contentPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(MyFarmerTheme.paddings.medium)
-                .align(Alignment.TopCenter)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.medium)
+            verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.medium),
         ) {
-            ImageView(
-                modifier = Modifier
-                    .widthIn(max = 200.dp)
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .clip(CircleShape),
-                imageResource = state.profilePicture,
-                contentScale = ContentScale.Crop,
-            )
+            Spacer(Modifier.size(contentPadding.calculateTopPadding()))
 
-            Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = state.name,
-                style = MyFarmerTheme.typography.titleLarge,
-            )
+            ProfilePicture(state.profilePicture)
 
-            ContactInfoSection(
-                contactInfo = state.contactInfo,
-                showErrorMessage = { onEvent(ProfileScreenEvent.OnShowErrorMessage(it)) }
-            )
+            ProfileName(state.name)
+
+            ProfileContactInfo(state, onEvent)
+
+            Spacer(Modifier.size(contentPadding.calculateBottomPadding()))
         }
-
-        BottomButtons(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            onEvent = onEvent,
-        )
     }
 }
 
 @Composable
+private fun ProfilePicture(profilePicture: ImageResource) = when {
+    profilePicture == ImageResource.EMPTY -> Box(
+        modifier = Modifier
+            .widthIn(max = 200.dp)
+            .fillMaxWidth()
+            .aspectRatio(1f),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = stringResource(R.string.profile_picture_not_set),
+            textAlign = TextAlign.Center,
+        )
+    }
+
+    else -> ImageView(
+        modifier = Modifier
+            .widthIn(max = 200.dp)
+            .fillMaxWidth()
+            .aspectRatio(1f)
+            .clip(CircleShape),
+        imageResource = profilePicture,
+        contentScale = ContentScale.Crop,
+    )
+}
+
+@Composable
+private fun ProfileName(name: String) = when {
+    name.isBlank() -> Text(
+        text = stringResource(R.string.name_not_set),
+        style = MyFarmerTheme.typography.titleLarge,
+    )
+
+    else -> Text(
+        text = name,
+        style = MyFarmerTheme.typography.titleLarge,
+    )
+}
+
+@Composable
+private fun ProfileContactInfo(
+    state: UserUiState,
+    onEvent: (ProfileScreenEvent) -> Unit
+) = when {
+    !state.contactInfo.isEmpty() -> ContactInfoSection(
+        contactInfo = state.contactInfo,
+        showErrorMessage = { onEvent(ProfileScreenEvent.OnShowErrorMessage(it)) }
+    )
+
+    else -> Text(
+        text = stringResource(R.string.contact_information_not_set),
+        style = MyFarmerTheme.typography.textMedium,
+    )
+}
+
+
+@Composable
 private fun BottomButtons(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     onEvent: (ProfileScreenEvent) -> Unit,
 ) {
     Column(

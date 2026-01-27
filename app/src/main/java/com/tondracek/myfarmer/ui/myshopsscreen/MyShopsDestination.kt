@@ -24,7 +24,7 @@ fun NavGraphBuilder.myShopsScreenDestination(
     ScreenScaffold(
         title = stringResource(R.string.my_shops),
         showTopBar = true,
-        applyTopBarPadding = false,
+        applyContentPaddingInternally = false,
     ) {
         MyShopsScreen(
             state = state,

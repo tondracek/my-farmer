@@ -83,10 +83,11 @@ fun ShopDetailLayout(
             menu = state.menu
         )
 
-        ContactInfoSection(
-            contactInfo = state.owner.contactInfo,
-            showErrorMessage = showErrorMessage,
-        )
+        if (!state.owner.contactInfo.isEmpty())
+            ContactInfoSection(
+                contactInfo = state.owner.contactInfo,
+                showErrorMessage = showErrorMessage,
+            )
 
         OpeningHoursSection(
             modifier = Modifier.padding(vertical = MyFarmerTheme.paddings.small),

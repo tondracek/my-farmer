@@ -121,9 +121,8 @@ private fun PhoneEditor(
     var input by remember { mutableStateOf(initialPhone) }
     var touched by remember { mutableStateOf(false) }
 
-    val isValid = remember(input) {
-        input.isEmpty() || Patterns.PHONE.matcher(input).matches()
-    }
+    val isEmpty = remember(input) { input.isBlank() }
+    val isValid = remember(input) { Patterns.PHONE.matcher(input).matches() }
 
     Column(horizontalAlignment = Alignment.End) {
         OutlinedTextField(
@@ -158,7 +157,7 @@ private fun PhoneEditor(
             }
 
             Button(
-                enabled = isValid,
+                enabled = isValid || isEmpty,
                 colors = MyFarmerTheme.buttonColors.custom(Color(0xFF25D366)),
                 onClick = {
                     onSave(input.takeIf { it.isNotBlank() })

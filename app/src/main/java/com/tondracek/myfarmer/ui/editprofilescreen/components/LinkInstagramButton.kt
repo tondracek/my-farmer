@@ -127,9 +127,8 @@ private fun InstagramEditor(
     var touched by remember { mutableStateOf(false) }
 
     val username = remember(input) { input.toInstagramUsername() }
-    val isValid = remember(username) {
-        username.isEmpty() || isUserNameValid(username)
-    }
+    val isEmpty = remember(username) { username.isBlank() }
+    val isValid = remember(username) { isUserNameValid(username) }
 
     Column(horizontalAlignment = Alignment.End) {
         Row(
@@ -189,7 +188,7 @@ private fun InstagramEditor(
             }
 
             Button(
-                enabled = isValid,
+                enabled = isValid || isEmpty,
                 colors = MyFarmerTheme.buttonColors.custom(Color(0xFFE1306C)),
                 onClick = {
                     onSave(

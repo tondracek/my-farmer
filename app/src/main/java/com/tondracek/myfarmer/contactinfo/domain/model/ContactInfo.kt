@@ -16,4 +16,10 @@ data class ContactInfo(
             instagramLink = null,
         )
     }
+
+    fun isEmpty() = phoneNumber.isNullOrBlank() &&
+            email.isNullOrBlank() &&
+            website.isNullOrBlank() &&
+            facebookLink.isNullOrBlank() &&
+            instagramLink.isNullOrBlank()
 }

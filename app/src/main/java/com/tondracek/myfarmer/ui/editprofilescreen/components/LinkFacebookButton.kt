@@ -127,9 +127,8 @@ private fun FacebookEditor(
     var touched by remember { mutableStateOf(false) }
 
     val normalizedUrl = remember(input) { normalizeFacebookUrl(input) }
-    val isValid = remember(normalizedUrl) {
-        normalizedUrl.isEmpty() || isFacebookUrl(normalizedUrl)
-    }
+    val isEmpty = remember(normalizedUrl) { normalizedUrl.isBlank() }
+    val isValid = remember(normalizedUrl) { isFacebookUrl(normalizedUrl) }
 
     Column(horizontalAlignment = Alignment.End) {
         Row(
@@ -180,7 +179,7 @@ private fun FacebookEditor(
             }
 
             Button(
-                enabled = isValid,
+                enabled = isValid || isEmpty,
                 colors = MyFarmerTheme.buttonColors.custom(Color(0xFF4267B2)),
                 onClick = {
                     onSave(normalizedUrl.takeIf { it.isNotBlank() })

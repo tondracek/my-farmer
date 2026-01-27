@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.ui.common.scaffold
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -22,15 +22,27 @@ import com.tondracek.myfarmer.ui.common.topbar.FloatingTopBar
 fun ScreenScaffold(
     modifier: Modifier = Modifier,
     title: String = stringResource(R.string.app_name),
+
     showTopBar: Boolean = true,
-    applyTopBarPadding: Boolean = true,
+    applyContentPaddingInternally: Boolean = true,
+
+    bottomBar: @Composable () -> Unit = {},
+
     leftIconContent: @Composable (() -> Unit) = {},
     rightIconContent: @Composable (() -> Unit) = {},
-    content: @Composable BoxScope.() -> Unit,
+
+    content: @Composable (contentPadding: PaddingValues) -> Unit,
 ) {
     val localDensity = LocalDensity.current
 
     var topContentPadding by remember { mutableStateOf(0.dp) }
+    var bottomContentPadding by remember { mutableStateOf(0.dp) }
+
+    val contentPadding by remember(topContentPadding, bottomContentPadding) {
+        val paddingValues = PaddingValues(top = topContentPadding, bottom = bottomContentPadding)
+        mutableStateOf(paddingValues)
+    }
+
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -38,10 +50,10 @@ fun ScreenScaffold(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = topContentPadding),
+                .padding(if (applyContentPaddingInternally) contentPadding else PaddingValues(0.dp)),
             contentAlignment = Alignment.Center,
         ) {
-            content()
+            content(contentPadding)
         }
 
         if (showTopBar)
@@ -49,14 +61,21 @@ fun ScreenScaffold(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .onGloballyPositioned { coordinates ->
-                        with(localDensity) {
-                            if (applyTopBarPadding)
-                                topContentPadding = coordinates.size.height.toDp()
-                        }
+                        with(localDensity) { topContentPadding = coordinates.size.height.toDp() }
                     },
                 title = title,
                 rightIconContent = rightIconContent,
                 leftIconContent = leftIconContent,
             )
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .onGloballyPositioned { coordinates ->
+                    with(localDensity) { bottomContentPadding = coordinates.size.height.toDp() }
+                },
+        ) {
+            bottomBar()
+        }
     }
 }

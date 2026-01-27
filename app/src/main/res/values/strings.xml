@@ -178,4 +178,7 @@
     <string name="facebook_profile_link">Facebook profile link</string>
     <string name="enter_a_valid_facebook_profile_link">Enter a valid Facebook profile link</string>
     <string name="edit_your_name">Edit your name:</string>
+    <string name="profile_picture_not_set">Profile picture not set</string>
+    <string name="name_not_set">Name not set</string>
+    <string name="contact_information_not_set">Contact information not set.</string>
 </resources>

@@ -64,37 +64,47 @@ private fun Content(
     var showNewReviewBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     ScreenScaffold(
-        title = state.shopName ?: stringResource(R.string.app_name)
+        title = state.shopName ?: stringResource(R.string.app_name),
+        bottomBar = {
+            WriteReviewButton(
+                state = state,
+                onOpenBottomSheetRequest = { showNewReviewBottomSheet = true },
+            )
+        }
     ) {
-
         ReviewsList(
             state = state,
             onReviewDeleteClick = onReviewDeleteClick,
         )
-
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MyFarmerTheme.paddings.bottomButtons)
-                .align(Alignment.BottomCenter),
-            onClick = { showNewReviewBottomSheet = true },
-            enabled = state.isLoggedIn && state.myReview == null && !state.isMyShop,
-        ) {
-            Text(
-                when {
-                    !state.isLoggedIn -> stringResource(R.string.you_must_be_logged_in_to_write_a_review)
-                    state.isMyShop -> stringResource(R.string.you_cannot_write_a_review_for_your_own_shop)
-                    state.myReview != null -> stringResource(R.string.you_have_already_written_a_review)
-                    else -> stringResource(R.string.write_a_review)
-                }
-            )
-        }
     }
 
     if (showNewReviewBottomSheet) {
         CreateShopReviewBottomSheet(
             onDismissRequest = { showNewReviewBottomSheet = false },
             onSubmitReview = { reviewInput -> onSubmitReview(reviewInput) }
+        )
+    }
+}
+
+@Composable
+private fun WriteReviewButton(
+    state: ShopReviewsScreenState.Success,
+    onOpenBottomSheetRequest: () -> Unit,
+) {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(MyFarmerTheme.paddings.bottomButtons),
+        onClick = onOpenBottomSheetRequest,
+        enabled = state.isLoggedIn && state.myReview == null && !state.isMyShop,
+    ) {
+        Text(
+            when {
+                !state.isLoggedIn -> stringResource(R.string.you_must_be_logged_in_to_write_a_review)
+                state.isMyShop -> stringResource(R.string.you_cannot_write_a_review_for_your_own_shop)
+                state.myReview != null -> stringResource(R.string.you_have_already_written_a_review)
+                else -> stringResource(R.string.write_a_review)
+            }
         )
     }
 }

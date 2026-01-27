@@ -100,7 +100,7 @@ fun ShopsMapView(
 
     ScreenScaffold(
         title = stringResource(R.string.shops_map),
-        applyTopBarPadding = false,
+        applyContentPaddingInternally = false,
         rightIconContent = {
             RefreshIconButton(
                 isRefreshing = state.isLoading,

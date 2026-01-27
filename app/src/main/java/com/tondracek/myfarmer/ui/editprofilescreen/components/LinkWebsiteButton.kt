@@ -126,9 +126,8 @@ private fun WebsiteEditor(
     var touched by remember { mutableStateOf(false) }
 
     val normalizedUrl = remember(input) { normalizeWebsite(input) }
-    val isValid = remember(normalizedUrl) {
-        normalizedUrl.isEmpty() || isValidWebsite(normalizedUrl)
-    }
+    val isEmpty = remember(normalizedUrl) { normalizedUrl.isBlank() }
+    val isValid = remember(normalizedUrl) { isValidWebsite(normalizedUrl) }
 
     Column(horizontalAlignment = Alignment.End) {
         Row(
@@ -179,7 +178,7 @@ private fun WebsiteEditor(
             }
 
             Button(
-                enabled = isValid,
+                enabled = isValid || isEmpty,
                 colors = MyFarmerTheme.buttonColors.custom(Color(0xFFFF9E0F)),
                 onClick = {
                     onSave(normalizedUrl.takeIf { it.isNotBlank() })

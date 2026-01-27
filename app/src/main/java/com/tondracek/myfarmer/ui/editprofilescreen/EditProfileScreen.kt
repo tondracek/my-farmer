@@ -1,10 +1,8 @@
 package com.tondracek.myfarmer.ui.editprofilescreen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,9 +25,14 @@ import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.ui.common.button.ButtonRow
 import com.tondracek.myfarmer.ui.common.layout.CardMessageLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
+import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
-import com.tondracek.myfarmer.ui.editprofilescreen.components.ContactInfoEdit
+import com.tondracek.myfarmer.ui.editprofilescreen.components.LinkEmailButton
+import com.tondracek.myfarmer.ui.editprofilescreen.components.LinkFacebookButton
+import com.tondracek.myfarmer.ui.editprofilescreen.components.LinkInstagramButton
+import com.tondracek.myfarmer.ui.editprofilescreen.components.LinkPhoneButton
+import com.tondracek.myfarmer.ui.editprofilescreen.components.LinkWebsiteButton
 import com.tondracek.myfarmer.ui.editprofilescreen.components.ProfilePictureEdit
 
 @Composable
@@ -54,13 +57,15 @@ fun EditProfileScreen(
 }
 
 @Composable
-private fun UpdatingProfileLayout(modifier: Modifier = Modifier) {
-    CardMessageLayout(modifier = modifier) {
-        CircularProgressIndicator(modifier = Modifier.size(48.dp))
-        Text(
-            text = stringResource(R.string.updating_profile_please_wait),
-            style = MyFarmerTheme.typography.textLarge,
-        )
+private fun UpdatingProfileLayout() {
+    ScreenScaffold(title = stringResource(R.string.edit_profile)) {
+        CardMessageLayout {
+            CircularProgressIndicator(modifier = Modifier.size(48.dp))
+            Text(
+                text = stringResource(R.string.updating_profile_please_wait),
+                style = MyFarmerTheme.typography.textLarge,
+            )
+        }
     }
 }
 
@@ -75,13 +80,29 @@ private fun SuccessScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    ScreenScaffold(
+        title = stringResource(R.string.edit_profile),
+        applyContentPaddingInternally = false,
+        bottomBar = {
+            ButtonRow(
+                modifier = Modifier.fillMaxWidth(),
+                buttonColors1 = MyFarmerTheme.buttonColors.error,
+                text1 = stringResource(R.string.cancel),
+                onClick1 = onCancelClicked,
+                buttonColors2 = MyFarmerTheme.buttonColors.primary,
+                text2 = stringResource(R.string.save),
+                onClick2 = onSaveClicked,
+            )
+        }
+    ) { contentPadding ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.Center)
                 .verticalScroll(state = scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Spacer(Modifier.height(contentPadding.calculateTopPadding()))
+
             ProfilePictureEdit(
                 profilePicture = input.profilePicture,
                 onProfilePictureChange = onProfilePictureChange,
@@ -100,20 +121,8 @@ private fun SuccessScreen(
                 onContactInfoChange = onContactInfoChange,
             )
 
-            Spacer(Modifier.height(64.dp))
+            Spacer(Modifier.height(contentPadding.calculateBottomPadding()))
         }
-
-        ButtonRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter),
-            buttonColors1 = MyFarmerTheme.buttonColors.error,
-            text1 = stringResource(R.string.cancel),
-            onClick1 = onCancelClicked,
-            buttonColors2 = MyFarmerTheme.buttonColors.primary,
-            text2 = stringResource(R.string.save),
-            onClick2 = onSaveClicked,
-        )
     }
 }
 
@@ -135,6 +144,47 @@ private fun NameField(
             modifier = modifier,
             value = name,
             onValueChange = { newValue -> onNameChange(newValue) },
+        )
+    }
+}
+
+@Composable
+private fun ContactInfoEdit(
+    contactInfo: ContactInfo,
+    onContactInfoChange: (ContactInfo) -> Unit
+) {
+    Column(
+        modifier = Modifier.padding(MyFarmerTheme.paddings.medium),
+        verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = stringResource(R.string.edit_your_contact_information),
+            style = MyFarmerTheme.typography.textMedium,
+        )
+        LinkPhoneButton(
+            phone = contactInfo.phoneNumber,
+            onPhoneChange = { onContactInfoChange(contactInfo.copy(phoneNumber = it)) }
+        )
+
+        LinkEmailButton(
+            email = contactInfo.email,
+            onEmailChange = { onContactInfoChange(contactInfo.copy(email = it)) }
+        )
+
+        LinkInstagramButton(
+            link = contactInfo.instagramLink,
+            onLinkClick = { onContactInfoChange(contactInfo.copy(instagramLink = it)) }
+        )
+
+        LinkWebsiteButton(
+            website = contactInfo.website,
+            onWebsiteChange = { onContactInfoChange(contactInfo.copy(website = it)) }
+        )
+
+        LinkFacebookButton(
+            facebookLink = contactInfo.facebookLink,
+            onFacebookChange = { onContactInfoChange(contactInfo.copy(facebookLink = it)) }
         )
     }
 }

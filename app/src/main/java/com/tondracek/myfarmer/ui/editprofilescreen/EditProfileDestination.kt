@@ -10,7 +10,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.appstate.AppUiController
 import com.tondracek.myfarmer.ui.core.navigation.NavGraph
 import com.tondracek.myfarmer.ui.core.navigation.Route
@@ -30,15 +29,11 @@ fun NavGraphBuilder.editProfileDestination(
         appUiController = appUiController
     )
 
-    ScreenScaffold(
-        title = stringResource(R.string.edit_profile)
-    ) {
-        EditProfileScreen(
-            state = state,
-            onFormEvent = viewmodel::onFormEvent,
-            onScreenEvent = viewmodel::onScreenEvent,
-        )
-    }
+    EditProfileScreen(
+        state = state,
+        onFormEvent = viewmodel::onFormEvent,
+        onScreenEvent = viewmodel::onScreenEvent,
+    )
 
     BackHandler {
         when (state) {

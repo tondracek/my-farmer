@@ -121,9 +121,8 @@ private fun EmailEditor(
     var input by remember { mutableStateOf(initialEmail) }
     var touched by remember { mutableStateOf(false) }
 
-    val isValid = remember(input) {
-        input.isEmpty() || isValidEmail(input)
-    }
+    val isEmpty = remember(input) { input.isBlank() }
+    val isValid = remember(input) { isValidEmail(input) }
 
     Column(horizontalAlignment = Alignment.End) {
         OutlinedTextField(
@@ -158,7 +157,7 @@ private fun EmailEditor(
             }
 
             Button(
-                enabled = isValid,
+                enabled = isValid || isEmpty,
                 colors = MyFarmerTheme.buttonColors.custom(Color(0xFFBB001B)),
                 onClick = {
                     onSave(input.takeIf { it.isNotBlank() })
