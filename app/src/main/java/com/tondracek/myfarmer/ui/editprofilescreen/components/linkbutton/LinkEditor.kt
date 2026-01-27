@@ -74,7 +74,7 @@ fun LinkEditor(
             if (openPreview != null) {
                 AnimatedVisibility(isValid) {
                     IconButton(
-                        onClick = { openPreview(input) },
+                        onClick = { if (validator(input)) openPreview(input) },
                         colors = color.toIconButtonColors()
                     ) {
                         Icon(
@@ -101,7 +101,11 @@ fun LinkEditor(
                 enabled = isValid || isEmpty,
                 colors = MyFarmerTheme.buttonColors.custom(color),
                 onClick = {
-                    onSave(input.takeIf { it.isNotBlank() })
+                    val finalInput = input
+                    when {
+                        finalInput.isBlank() -> onSave(null)
+                        validator(finalInput) -> onSave(finalInput)
+                    }
                     onClose()
                 }
             ) {

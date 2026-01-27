@@ -42,7 +42,7 @@ private fun String.normalizeWebsite(): String = when {
 }
 
 private fun isValidWebsite(url: String): Boolean =
-    runCatching { url.toUri() }.isSuccess
+    android.util.Patterns.WEB_URL.matcher(url).matches()
 
 private fun prettifyWebsite(website: String): String =
     website
