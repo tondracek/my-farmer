@@ -164,4 +164,6 @@
     <string name="save">Save</string>
     <string name="enter_a_valid_instagram_username">Enter a valid Instagram username</string>
     <string name="link_instagram">Link Instagram</string>
+    <string name="instagram_username">Instagram username</string>
+    <string name="enter_a_valid_email">Enter a valid email</string>
 </resources>

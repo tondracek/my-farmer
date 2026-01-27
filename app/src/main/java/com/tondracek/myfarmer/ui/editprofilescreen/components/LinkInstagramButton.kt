@@ -32,10 +32,10 @@ import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.toIconButtonColors
 
-private sealed interface InstagramLinkState {
-    data object NotLinked : InstagramLinkState
-    data class Linked(val username: String) : InstagramLinkState
-    data object Linking : InstagramLinkState
+private enum class InstagramUiState {
+    NOT_LINKED,
+    LINKED,
+    EDITING
 }
 
 @Composable
@@ -43,52 +43,54 @@ fun LinkInstagramButton(
     link: String?,
     onLinkClick: (String?) -> Unit
 ) {
-    var state by remember(link) {
+    val initialUsername = remember(link) {
+        link?.toInstagramUsername().orEmpty()
+    }
+
+    var state by remember {
         mutableStateOf(
             when {
-                link.isNullOrBlank() -> InstagramLinkState.NotLinked
-                else -> InstagramLinkState.Linked(link.toInstagramUsername())
+                initialUsername.isBlank() -> InstagramUiState.NOT_LINKED
+                else -> InstagramUiState.LINKED
             }
         )
     }
 
     AnimatedContent(
         targetState = state,
-        label = "LinkInstagramButtonAnimation"
+        label = "InstagramLinkAnimation",
     ) { s ->
         when (s) {
-            is InstagramLinkState.Linked -> InstagramButton(
-                state = s,
-                onStateChange = { state = it }
+            InstagramUiState.NOT_LINKED,
+            InstagramUiState.LINKED -> InstagramActionButton(
+                username = initialUsername,
+                isLinked = s == InstagramUiState.LINKED,
+                onEdit = { state = InstagramUiState.EDITING }
             )
 
-            InstagramLinkState.Linking -> InstagramInput(
-                link = link.orEmpty(),
-                onSaveLink = {
+            InstagramUiState.EDITING -> InstagramEditor(
+                initialUsername = initialUsername,
+                onSave = {
                     onLinkClick(it)
                     state = when (it) {
-                        null -> InstagramLinkState.NotLinked
-                        else -> InstagramLinkState.Linked(it.toInstagramUsername())
+                        null -> InstagramUiState.NOT_LINKED
+                        else -> InstagramUiState.LINKED
                     }
                 }
-            )
-
-            InstagramLinkState.NotLinked -> InstagramButton(
-                state = s,
-                onStateChange = { state = it }
             )
         }
     }
 }
 
 @Composable
-private fun InstagramButton(
-    state: InstagramLinkState,
-    onStateChange: (InstagramLinkState) -> Unit
+private fun InstagramActionButton(
+    username: String,
+    isLinked: Boolean,
+    onEdit: () -> Unit,
 ) {
     Button(
         colors = MyFarmerTheme.buttonColors.custom(Color(0xFFE1306C)),
-        onClick = { onStateChange(InstagramLinkState.Linking) }
+        onClick = onEdit,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -100,13 +102,13 @@ private fun InstagramButton(
             )
 
             Text(
-                text = when (state) {
-                    is InstagramLinkState.Linked -> state.username
-                    else -> stringResource(R.string.link_instagram)
+                text = when (isLinked) {
+                    true -> username
+                    false -> stringResource(R.string.link_instagram)
                 }
             )
 
-            if (state is InstagramLinkState.Linked)
+            if (isLinked)
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = null,
@@ -115,83 +117,58 @@ private fun InstagramButton(
     }
 }
 
-private fun String.toInstagramUsername() = this
-    .trim()
-    .removePrefix("@")
-    .substringAfter("instagram.com/", this)
-    .substringBefore("/")
-    .lowercase()
-
-private fun String.toInstagramUrl() = "https://www.instagram.com/$this"
-
-private fun isUserNameValid(username: String): Boolean = username.isNotBlank() &&
-        username.length in 1..30 &&
-        username.matches(Regex("^[a-z0-9._]+$")) &&
-        !username.startsWith(".") &&
-        !username.endsWith(".")
-
 @Composable
-private fun InstagramInput(
-    link: String,
-    onSaveLink: (String?) -> Unit,
+private fun InstagramEditor(
+    initialUsername: String,
+    onSave: (String?) -> Unit,
 ) {
     val context = LocalContext.current
 
-    var input by remember { mutableStateOf(link.toInstagramUsername()) }
+    var input by remember { mutableStateOf(initialUsername) }
     var touched by remember { mutableStateOf(false) }
 
-    val username = remember(input) {
-        input.toInstagramUsername()
+    val username = remember(input) { input.toInstagramUsername() }
+    val isValid = remember(username) {
+        username.isEmpty() || isUserNameValid(username)
     }
-
-    val isFormatValid = remember(username) {
-        isUserNameValid(username) || username.isEmpty()
-    }
-
-    val profileUrl = "https://www.instagram.com/$username"
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
     ) {
-
         OutlinedTextField(
             value = input,
             onValueChange = {
                 touched = true
                 input = it
             },
+            modifier = Modifier.weight(1f),
             singleLine = true,
-            label = { Text("Instagram username") },
+            label = { Text(stringResource(R.string.instagram_username)) },
             leadingIcon = {
-                Text(
-                    text = "@",
-                    style = MyFarmerTheme.typography.textLarge,
-                )
+                Text("@", style = MyFarmerTheme.typography.textLarge)
             },
-            isError = touched && !isFormatValid,
+            isError = touched && !isValid,
             supportingText = {
-                if (touched && !isFormatValid) {
+                if (touched && !isValid) {
                     Text(
-                        text = stringResource(R.string.enter_a_valid_instagram_username),
+                        stringResource(R.string.enter_a_valid_instagram_username),
                         color = MyFarmerTheme.colors.error
                     )
                 }
-            },
-            modifier = Modifier.weight(1f)
+            }
         )
 
-        AnimatedVisibility(isFormatValid) {
+        AnimatedVisibility(isValid) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
             ) {
                 IconButton(
                     onClick = {
                         openInstagramProfile(
-                            context = context,
-                            username = username,
-                            fallbackUrl = profileUrl
+                            context,
+                            username,
+                            username.toInstagramUrl()
                         )
                     },
                     colors = Color(0xFFE1306C).toIconButtonColors()
@@ -202,16 +179,35 @@ private fun InstagramInput(
                     )
                 }
 
-                Button(onClick = {
-                    val newLink: String? = username.takeIf { it.isNotBlank() }?.toInstagramUrl()
-                    onSaveLink(newLink)
-                }) {
+                Button(
+                    onClick = {
+                        onSave(
+                            username.takeIf { it.isNotBlank() }
+                                ?.toInstagramUrl()
+                        )
+                    }
+                ) {
                     Text(stringResource(R.string.save))
                 }
             }
         }
     }
 }
+
+private fun String.toInstagramUsername() = trim()
+    .removePrefix("@")
+    .substringAfter("instagram.com/", this)
+    .substringBefore("/")
+    .lowercase()
+
+private fun String.toInstagramUrl() =
+    "https://www.instagram.com/$this"
+
+private fun isUserNameValid(username: String) =
+    username.length in 1..30 &&
+            username.matches(Regex("^[a-z0-9._]+$")) &&
+            !username.startsWith(".") &&
+            !username.endsWith(".")
 
 private fun openInstagramProfile(
     context: Context,

@@ -38,13 +38,9 @@ fun ContactInfoEdit(
             modifier = Modifier.fillMaxWidth()
         )
 
-        OutlinedTextField(
-            value = contactInfo.email.orEmpty(),
-            onValueChange = { onContactInfoChange(contactInfo.copy(email = it)) },
-            label = { Text("Email") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            modifier = Modifier.fillMaxWidth()
+        EmailEditor(
+            email = contactInfo.email,
+            onEmailChange = { onContactInfoChange(contactInfo.copy(email = it)) }
         )
 
         LinkInstagramButton(
