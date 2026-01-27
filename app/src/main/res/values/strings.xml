@@ -177,4 +177,5 @@
     <string name="add_facebook">Add Facebook</string>
     <string name="facebook_profile_link">Facebook profile link</string>
     <string name="enter_a_valid_facebook_profile_link">Enter a valid Facebook profile link</string>
+    <string name="edit_your_name">Edit your name:</string>
 </resources>

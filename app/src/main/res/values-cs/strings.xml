@@ -178,4 +178,5 @@
     <string name="add_facebook">Přidat Facebook</string>
     <string name="facebook_profile_link">Odkaz na Facebook profil</string>
     <string name="enter_a_valid_facebook_profile_link">Zadejte platný odkaz na Facebook profil</string>
+    <string name="edit_your_name">Upravit jméno:</string>
 </resources>

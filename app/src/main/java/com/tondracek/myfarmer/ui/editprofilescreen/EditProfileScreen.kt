@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -81,8 +80,7 @@ private fun SuccessScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center)
-                .verticalScroll(state = scrollState)
-                .imePadding(),
+                .verticalScroll(state = scrollState),
         ) {
             ProfilePictureEdit(
                 profilePicture = input.profilePicture,
@@ -130,7 +128,7 @@ private fun NameField(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
-            text = "Edit your name:",
+            text = stringResource(R.string.edit_your_name),
             style = MyFarmerTheme.typography.textMedium,
         )
         TextField(

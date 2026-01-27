@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.ui.editprofilescreen.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,7 +28,8 @@ fun ProfilePictureEdit(
             .fillMaxWidth()
             .padding(MyFarmerTheme.paddings.medium)
     ) {
-        val (image, galleryButton, cameraButton) = createRefs()
+        val (image, buttonsColumn) = createRefs()
+        val farmerPaddings = MyFarmerTheme.paddings
 
         ImageView(
             modifier = Modifier
@@ -42,18 +44,15 @@ fun ProfilePictureEdit(
             contentScale = ContentScale.Crop,
         )
 
-        PictureFromGalleryIconButton(
-            modifier = Modifier.constrainAs(galleryButton) {
-                start.linkTo(image.end, margin = 16.dp)
+        Column(
+            modifier = Modifier.constrainAs(buttonsColumn) {
+                start.linkTo(image.end, margin = farmerPaddings.small)
                 top.linkTo(image.top)
+                bottom.linkTo(image.bottom)
             }
-        ) { onProfilePictureChange(it) }
-
-        PictureFromCameraIconButton(
-            modifier = Modifier.constrainAs(cameraButton) {
-                start.linkTo(image.end, margin = 16.dp)
-                top.linkTo(galleryButton.bottom, margin = 8.dp)
-            }
-        ) { onProfilePictureChange(it) }
+        ) {
+            PictureFromGalleryIconButton { onProfilePictureChange(it) }
+            PictureFromCameraIconButton { onProfilePictureChange(it) }
+        }
     }
 }
