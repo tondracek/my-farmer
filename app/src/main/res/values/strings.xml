@@ -162,4 +162,6 @@
     <string name="logout_successful">Logout successful.</string>
     <string name="discard_changes_message">Are you sure you want to discard changes?</string>
     <string name="save">Save</string>
+    <string name="enter_a_valid_instagram_username">Enter a valid Instagram username</string>
+    <string name="link_instagram">Link Instagram</string>
 </resources>

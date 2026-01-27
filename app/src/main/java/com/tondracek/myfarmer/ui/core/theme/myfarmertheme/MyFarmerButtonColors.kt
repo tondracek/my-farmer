@@ -58,6 +58,8 @@ data class MyFarmerIconButtonColors(
     val base: IconButtonColors,
     val primary: IconButtonColors,
     val secondary: IconButtonColors,
+
+    val custom: @Composable (containerColor: Color) -> IconButtonColors,
 )
 
 val myFarmerIconButtonColors
@@ -71,4 +73,13 @@ val myFarmerIconButtonColors
             containerColor = MyFarmerTheme.colors.secondary,
             contentColor = MyFarmerTheme.colors.onSecondary,
         ),
+        custom = { containerColor ->
+            IconButtonDefaults.iconButtonColors(
+                containerColor = containerColor,
+                contentColor = contrastColor(containerColor)
+            )
+        }
     )
+
+@Composable
+fun Color.toIconButtonColors(): IconButtonColors = MyFarmerTheme.iconButtonColors.custom(this)

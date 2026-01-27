@@ -10,8 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
+import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
@@ -45,6 +47,11 @@ fun ContactInfoEdit(
             modifier = Modifier.fillMaxWidth()
         )
 
+        LinkInstagramButton(
+            link = contactInfo.instagramLink,
+            onLinkClick = { onContactInfoChange(contactInfo.copy(instagramLink = it)) }
+        )
+
         OutlinedTextField(
             value = contactInfo.website.orEmpty(),
             onValueChange = { onContactInfoChange(contactInfo.copy(website = it)) },
@@ -62,14 +69,15 @@ fun ContactInfoEdit(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
             modifier = Modifier.fillMaxWidth()
         )
+    }
+}
 
-        OutlinedTextField(
-            value = contactInfo.instagramLink.orEmpty(),
-            onValueChange = { onContactInfoChange(contactInfo.copy(instagramLink = it)) },
-            label = { Text("Instagram") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
-            modifier = Modifier.fillMaxWidth()
-        )
+@Preview
+@Composable
+private fun ContactInfoEditPreview() {
+    MyFarmerPreview {
+        ContactInfoEdit(
+            contactInfo = ContactInfo.EMPTY
+        ) {}
     }
 }
