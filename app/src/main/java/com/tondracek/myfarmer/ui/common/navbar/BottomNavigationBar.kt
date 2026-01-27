@@ -17,10 +17,13 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
 fun BottomNavigationBar(
+    modifier: Modifier = Modifier,
     state: NavBarState,
     navController: NavController,
 ) {
-    NavigationBar {
+    NavigationBar(
+        modifier = modifier,
+    ) {
         navBarDestinations(state.isLoggedIn).forEach {
             val selected = navController.isInNavGraph(it.navGraph)
             NavigationBarButton(

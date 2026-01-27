@@ -2,25 +2,33 @@ package com.tondracek.myfarmer.ui.common.scaffold
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.tondracek.myfarmer.ui.common.navbar.BottomNavigationBar
 import com.tondracek.myfarmer.ui.common.navbar.NavBarViewModel
@@ -34,6 +42,8 @@ import com.tondracek.myfarmer.ui.core.snackbar.MyFarmerSnackBar
 import com.tondracek.myfarmer.ui.core.snackbar.SnackBarType
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.core.util.toUserFriendlyMessage
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 
 @Composable
 fun AppScaffold(
@@ -42,35 +52,23 @@ fun AppScaffold(
     content: @Composable BoxScope.() -> Unit,
 ) {
     val context = LocalContext.current
+    val density = LocalDensity.current
 
     val navBarViewModel: NavBarViewModel = hiltViewModel()
-    val navBarState by navBarViewModel.state.collectAsState()
+    val navBarState by navBarViewModel.state.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        appUiController.errors.collect { message ->
-            snackbarHostState.showSnackbar(
-                message = message.toUserFriendlyMessage(context),
-                actionLabel = SnackBarType.ERROR,
-                duration = SnackbarDuration.Short,
-            )
-        }
-    }
-    LaunchedEffect(Unit) {
-        appUiController.errorMessages.collect { message ->
+        val messageToTypeFlow = merge(
+            appUiController.errorMessages.map { it to SnackBarType.ERROR },
+            appUiController.errors.map { it.toUserFriendlyMessage(context) to SnackBarType.ERROR },
+            appUiController.successMessages.map { it to SnackBarType.SUCCESS },
+        )
+        messageToTypeFlow.collect { (message, type) ->
             snackbarHostState.showSnackbar(
                 message = message,
-                actionLabel = SnackBarType.ERROR,
-                duration = SnackbarDuration.Short,
-            )
-        }
-    }
-    LaunchedEffect(Unit) {
-        appUiController.successMessages.collect { message ->
-            snackbarHostState.showSnackbar(
-                message = message,
-                actionLabel = SnackBarType.SUCCESS,
+                actionLabel = type,
                 duration = SnackbarDuration.Short,
             )
         }
@@ -81,30 +79,46 @@ fun AppScaffold(
     CompositionLocalProvider(
         LocalAppUiController provides appUiController,
     ) {
-        Scaffold(
-            containerColor = MyFarmerTheme.colors.surface,
-            bottomBar = {
-                if (showBottomBar)
-                    BottomNavigationBar(
-                        state = navBarState,
-                        navController = navController,
-                    )
-            },
-            snackbarHost = {
-                SnackbarHost(
-                    modifier = Modifier.padding(16.dp),
-                    hostState = snackbarHostState,
-                    snackbar = { MyFarmerSnackBar(snackbarData = it) }
-                )
-            }
-        ) { innerPadding ->
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MyFarmerTheme.colors.surface,
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center,
+                    .windowInsetsPadding(WindowInsets.systemBars)
             ) {
-                content()
+                var navBarHeight by remember { mutableStateOf(0.dp) }
+                val bottomContentPadding = if (showBottomBar) navBarHeight else 0.dp
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = bottomContentPadding)
+                        .imeWithoutAppBottomBar(bottomContentPadding),
+                ) {
+                    content()
+
+                    SnackbarHost(
+                        hostState = snackbarHostState,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(16.dp),
+                        snackbar = { MyFarmerSnackBar(snackbarData = it) }
+                    )
+                }
+
+                if (showBottomBar) {
+                    BottomNavigationBar(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .onGloballyPositioned { coordinates ->
+                                with(density) { navBarHeight = coordinates.size.height.toDp() }
+                            },
+                        state = navBarState,
+                        navController = navController,
+                    )
+                }
             }
         }
     }
@@ -121,3 +135,7 @@ fun AppScaffold(
         onDismissRequest = { confirmationDialog = null },
     )
 }
+
+@Composable
+fun Modifier.imeWithoutAppBottomBar(bottomBarHeight: Dp): Modifier =
+    windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets(bottom = bottomBarHeight)))

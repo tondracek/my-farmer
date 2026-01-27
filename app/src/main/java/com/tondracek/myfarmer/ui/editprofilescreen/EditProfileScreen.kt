@@ -3,9 +3,9 @@ package com.tondracek.myfarmer.ui.editprofilescreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -98,7 +98,7 @@ private fun SuccessScreen(
     ) { contentPadding ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .verticalScroll(state = scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -155,9 +155,7 @@ private fun ContactInfoEdit(
     onContactInfoChange: (ContactInfo) -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .padding(MyFarmerTheme.paddings.medium)
-            .imePadding(),
+        modifier = Modifier.padding(MyFarmerTheme.paddings.medium),
         verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
