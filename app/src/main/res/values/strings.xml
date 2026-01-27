@@ -166,4 +166,15 @@
     <string name="link_instagram">Link Instagram</string>
     <string name="instagram_username">Instagram username</string>
     <string name="enter_a_valid_email">Enter a valid email</string>
+    <string name="edit_your_contact_information">Edit your contact information:</string>
+    <string name="phone_number">Phone number</string>
+    <string name="website">Website</string>
+    <string name="facebook">Facebook</string>
+    <string name="add_phone_number">Add phone number</string>
+    <string name="invalid_phone_number">Invalid phone number</string>
+    <string name="invalid_website_url">Invalid website URL</string>
+    <string name="add_website">Add Website</string>
+    <string name="add_facebook">Add Facebook</string>
+    <string name="facebook_profile_link">Facebook profile link</string>
+    <string name="enter_a_valid_facebook_profile_link">Enter a valid Facebook profile link</string>
 </resources>

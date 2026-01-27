@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -18,55 +19,54 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
-private enum class EmailUiState {
+private enum class PhoneUiState {
     NOT_SET,
     SET,
     EDITING
 }
 
 @Composable
-fun EmailEditor(
-    email: String?,
-    onEmailChange: (String?) -> Unit
+fun LinkPhoneButton(
+    phone: String?,
+    onPhoneChange: (String?) -> Unit
 ) {
-    val initialEmail = remember(email) {
-        email.orEmpty()
-    }
+    val initialPhone = remember(phone) { phone.orEmpty() }
 
-    var state by remember {
+    var state by remember(initialPhone) {
         mutableStateOf(
             when {
-                initialEmail.isBlank() -> EmailUiState.NOT_SET
-                else -> EmailUiState.SET
+                initialPhone.isBlank() -> PhoneUiState.NOT_SET
+                else -> PhoneUiState.SET
             }
         )
     }
 
     AnimatedContent(
         targetState = state,
-        label = "EmailEditorAnimation",
+        label = "PhoneLinkAnimation",
     ) { s ->
         when (s) {
-            EmailUiState.NOT_SET,
-            EmailUiState.SET -> EmailActionButton(
-                email = initialEmail,
-                isSet = s == EmailUiState.SET,
-                onEdit = { state = EmailUiState.EDITING }
+            PhoneUiState.NOT_SET,
+            PhoneUiState.SET -> PhoneActionButton(
+                phone = initialPhone,
+                isSet = s == PhoneUiState.SET,
+                onEdit = { state = PhoneUiState.EDITING }
             )
 
-            EmailUiState.EDITING -> EmailEditorInput(
-                initialEmail = initialEmail,
+            PhoneUiState.EDITING -> PhoneEditor(
+                initialPhone = initialPhone,
                 onSave = {
-                    onEmailChange(it)
-                    state = when (it) {
-                        null -> EmailUiState.NOT_SET
-                        else -> EmailUiState.SET
+                    onPhoneChange(it)
+                    state = when {
+                        it.isNullOrBlank() -> PhoneUiState.NOT_SET
+                        else -> PhoneUiState.SET
                     }
                 }
             )
@@ -75,43 +75,50 @@ fun EmailEditor(
 }
 
 @Composable
-private fun EmailActionButton(
-    email: String,
+private fun PhoneActionButton(
+    phone: String,
     isSet: Boolean,
     onEdit: () -> Unit,
 ) {
-    Button(onClick = onEdit) {
+    Button(
+        colors = MyFarmerTheme.buttonColors.custom(Color(0xFF25D366)),
+        onClick = onEdit,
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.extraSmall),
         ) {
+            Icon(
+                imageVector = Icons.Default.Phone,
+                contentDescription = null,
+            )
+
             Text(
                 text = when (isSet) {
-                    true -> email
-                    false -> "Set email"
+                    true -> phone
+                    false -> stringResource(R.string.add_phone_number)
                 }
             )
 
-            if (isSet) {
+            if (isSet)
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = null,
                 )
-            }
         }
     }
 }
 
 @Composable
-private fun EmailEditorInput(
-    initialEmail: String,
+private fun PhoneEditor(
+    initialPhone: String,
     onSave: (String?) -> Unit,
 ) {
-    var input by remember { mutableStateOf(initialEmail) }
+    var input by remember { mutableStateOf(initialPhone) }
     var touched by remember { mutableStateOf(false) }
 
     val isValid = remember(input) {
-        input.isEmpty() || isValidEmail(input)
+        input.isEmpty() || Patterns.PHONE.matcher(input).matches()
     }
 
     Row(
@@ -126,12 +133,12 @@ private fun EmailEditorInput(
             },
             modifier = Modifier.weight(1f),
             singleLine = true,
-            label = { Text(stringResource(R.string.email)) },
+            label = { Text("Phone number") },
             isError = touched && !isValid,
             supportingText = {
                 if (touched && !isValid) {
                     Text(
-                        stringResource(R.string.enter_a_valid_email),
+                        text = stringResource(R.string.invalid_phone_number),
                         color = MyFarmerTheme.colors.error
                     )
                 }
@@ -139,38 +146,31 @@ private fun EmailEditorInput(
         )
 
         AnimatedVisibility(isValid) {
-            Button(
-                onClick = {
-                    onSave(input.takeIf { it.isNotBlank() })
-                }
-            ) {
+            Button(onClick = { onSave(input.takeIf { it.isNotBlank() }) }) {
                 Text(stringResource(R.string.save))
             }
         }
     }
 }
 
-private fun isValidEmail(email: String): Boolean =
-    Patterns.EMAIL_ADDRESS.matcher(email).matches()
-
 @Preview
 @Composable
-private fun EmailEditorPreview() {
+private fun LinkPhoneButtonPreview() {
     MyFarmerPreview {
-        EmailEditor(
-            email = null,
-            onEmailChange = {}
+        LinkPhoneButton(
+            phone = null,
+            onPhoneChange = {}
         )
     }
 }
 
 @Preview
 @Composable
-private fun EmailEditorSetPreview() {
+private fun LinkedPhoneButtonPreview() {
     MyFarmerPreview {
-        EmailEditor(
-            email = "hello@example.com",
-            onEmailChange = {}
+        LinkPhoneButton(
+            phone = "+420 777 123 456",
+            onPhoneChange = {}
         )
     }
 }

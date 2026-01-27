@@ -1,5 +1,6 @@
 package com.tondracek.myfarmer.ui.editprofilescreen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,6 +38,15 @@ fun NavGraphBuilder.editProfileDestination(
             onFormEvent = viewmodel::onFormEvent,
             onScreenEvent = viewmodel::onScreenEvent,
         )
+    }
+
+    BackHandler {
+        when (state) {
+            is EditProfileScreenState.Success ->
+                viewmodel.onScreenEvent(EditProfileScreenEvent.OnCancelClicked)
+
+            else -> navController.navigateUp()
+        }
     }
 }
 

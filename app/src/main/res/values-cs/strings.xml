@@ -159,5 +159,23 @@
     <string name="shop_deletion_confirmation">Opravdu chcete tento obchod smazat?</string>
     <string name="sign_in_with_google_failed_message">Přihlášení pomocí Google se nezdařilo. Zkuste to prosím znovu.</string>
     <string name="google_sign_in_was_cancelled">Přihlášení pomocí Google bylo zrušeno.</string>
+    <string name="are_you_sure_you_want_to_log_out">Opravdu se chcete odhlásit?</string>
     <string name="logout_successful">Odhlášení proběhlo úspěšně.</string>
+    <string name="discard_changes_message">Opravdu chcete zahodit provedené změny?</string>
+    <string name="save">Uložit</string>
+    <string name="enter_a_valid_instagram_username">Zadejte platné uživatelské jméno na Instagramu</string>
+    <string name="link_instagram">Přidat Instagram</string>
+    <string name="instagram_username">Uživatelské jméno na Instagramu</string>
+    <string name="enter_a_valid_email">Zadejte platnou e-mailovou adresu</string>
+    <string name="edit_your_contact_information">Upravit kontaktní údaje:</string>
+    <string name="phone_number">Telefonní číslo</string>
+    <string name="website">Webová stránka</string>
+    <string name="facebook">Facebook</string>
+    <string name="add_phone_number">Přidat telefonní číslo</string>
+    <string name="invalid_phone_number">Neplatné telefonní číslo</string>
+    <string name="invalid_website_url">Neplatná adresa webové stránky</string>
+    <string name="add_website">Přidat webovou stránku</string>
+    <string name="add_facebook">Přidat Facebook</string>
+    <string name="facebook_profile_link">Odkaz na Facebook profil</string>
+    <string name="enter_a_valid_facebook_profile_link">Zadejte platný odkaz na Facebook profil</string>
 </resources>

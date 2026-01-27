@@ -2,16 +2,13 @@ package com.tondracek.myfarmer.ui.editprofilescreen.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -23,22 +20,18 @@ fun ContactInfoEdit(
 ) {
     Column(
         modifier = Modifier.padding(MyFarmerTheme.paddings.medium),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
     ) {
         Text(
-            text = "Edit your contact information:",
+            text = stringResource(R.string.edit_your_contact_information),
             style = MyFarmerTheme.typography.textMedium,
         )
-        OutlinedTextField(
-            value = contactInfo.phoneNumber.orEmpty(),
-            onValueChange = { onContactInfoChange(contactInfo.copy(phoneNumber = it)) },
-            label = { Text("Phone number") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            modifier = Modifier.fillMaxWidth()
+        LinkPhoneButton(
+            phone = contactInfo.phoneNumber,
+            onPhoneChange = { onContactInfoChange(contactInfo.copy(phoneNumber = it)) }
         )
 
-        EmailEditor(
+        LinkEmailButton(
             email = contactInfo.email,
             onEmailChange = { onContactInfoChange(contactInfo.copy(email = it)) }
         )
@@ -48,22 +41,14 @@ fun ContactInfoEdit(
             onLinkClick = { onContactInfoChange(contactInfo.copy(instagramLink = it)) }
         )
 
-        OutlinedTextField(
-            value = contactInfo.website.orEmpty(),
-            onValueChange = { onContactInfoChange(contactInfo.copy(website = it)) },
-            label = { Text("Website") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
-            modifier = Modifier.fillMaxWidth()
+        LinkWebsiteButton(
+            website = contactInfo.website,
+            onWebsiteChange = { onContactInfoChange(contactInfo.copy(website = it)) }
         )
 
-        OutlinedTextField(
-            value = contactInfo.facebookLink.orEmpty(),
-            onValueChange = { onContactInfoChange(contactInfo.copy(facebookLink = it)) },
-            label = { Text("Facebook") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
-            modifier = Modifier.fillMaxWidth()
+        LinkFacebookButton(
+            facebookLink = contactInfo.facebookLink,
+            onFacebookChange = { onContactInfoChange(contactInfo.copy(facebookLink = it)) }
         )
     }
 }

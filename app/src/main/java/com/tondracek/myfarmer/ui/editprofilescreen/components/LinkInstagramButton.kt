@@ -43,11 +43,8 @@ fun LinkInstagramButton(
     link: String?,
     onLinkClick: (String?) -> Unit
 ) {
-    val initialUsername = remember(link) {
-        link?.toInstagramUsername().orEmpty()
-    }
-
-    var state by remember {
+    val initialUsername = remember(link) { link?.toInstagramUsername().orEmpty() }
+    var state by remember(initialUsername) {
         mutableStateOf(
             when {
                 initialUsername.isBlank() -> InstagramUiState.NOT_LINKED
