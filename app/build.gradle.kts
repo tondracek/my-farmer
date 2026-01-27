@@ -21,8 +21,8 @@ android {
         applicationId = "com.tondracek.myfarmer"
         minSdk = 27
         targetSdk = 36
-        versionCode = 9
-        versionName = "1.4.1"
+        versionCode = 10
+        versionName = "1.4.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
