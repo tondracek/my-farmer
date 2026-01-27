@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -67,13 +68,13 @@ fun LinkFacebookButton(
 
             FacebookUiState.EDITING -> FacebookEditor(
                 initialLink = initialLink,
-                onSave = {
-                    onFacebookChange(it)
+                onClose = {
                     state = when {
-                        it.isNullOrBlank() -> FacebookUiState.NOT_SET
+                        initialLink.isBlank() -> FacebookUiState.NOT_SET
                         else -> FacebookUiState.SET
                     }
-                }
+                },
+                onSave = { onFacebookChange(it) }
             )
         }
     }
@@ -117,6 +118,7 @@ private fun FacebookActionButton(
 @Composable
 private fun FacebookEditor(
     initialLink: String,
+    onClose: () -> Unit,
     onSave: (String?) -> Unit,
 ) {
     val context = LocalContext.current
@@ -129,31 +131,31 @@ private fun FacebookEditor(
         normalizedUrl.isEmpty() || isFacebookUrl(normalizedUrl)
     }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
-    ) {
-        OutlinedTextField(
-            value = input,
-            onValueChange = {
-                touched = true
-                input = it
-            },
-            modifier = Modifier.weight(1f),
-            singleLine = true,
-            label = { Text(stringResource(R.string.facebook_profile_link)) },
-            isError = touched && !isValid,
-            supportingText = {
-                if (touched && !isValid)
-                    Text(
-                        text = stringResource(R.string.enter_a_valid_facebook_profile_link),
-                        color = MyFarmerTheme.colors.error
-                    )
-            }
-        )
+    Column(horizontalAlignment = Alignment.End) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
+        ) {
+            OutlinedTextField(
+                value = input,
+                onValueChange = {
+                    touched = true
+                    input = it
+                },
+                modifier = Modifier.weight(1f),
+                singleLine = true,
+                label = { Text(stringResource(R.string.facebook_profile_link)) },
+                isError = touched && !isValid,
+                supportingText = {
+                    if (touched && !isValid)
+                        Text(
+                            text = stringResource(R.string.enter_a_valid_facebook_profile_link),
+                            color = MyFarmerTheme.colors.error
+                        )
+                }
+            )
 
-        AnimatedVisibility(isValid) {
-            Row(horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)) {
+            AnimatedVisibility(isValid) {
                 IconButton(
                     onClick = { openFacebook(context, normalizedUrl) },
                     colors = Color(0xFF4267B2).toIconButtonColors()
@@ -163,12 +165,29 @@ private fun FacebookEditor(
                         contentDescription = null
                     )
                 }
+            }
+        }
 
-                Button(
-                    onClick = { onSave(normalizedUrl.takeIf { it.isNotBlank() }) }
-                ) {
-                    Text(stringResource(R.string.save))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
+        ) {
+            Button(
+                colors = MyFarmerTheme.buttonColors.secondary,
+                onClick = onClose,
+            ) {
+                Text(stringResource(R.string.cancel))
+            }
+
+            Button(
+                enabled = isValid,
+                colors = MyFarmerTheme.buttonColors.custom(Color(0xFF4267B2)),
+                onClick = {
+                    onSave(normalizedUrl.takeIf { it.isNotBlank() })
+                    onClose()
                 }
+            ) {
+                Text(stringResource(R.string.save))
             }
         }
     }

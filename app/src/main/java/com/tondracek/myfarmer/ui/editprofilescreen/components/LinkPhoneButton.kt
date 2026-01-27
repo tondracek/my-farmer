@@ -2,9 +2,11 @@ package com.tondracek.myfarmer.ui.editprofilescreen.components
 
 import android.util.Patterns
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Phone
@@ -21,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
@@ -62,13 +65,13 @@ fun LinkPhoneButton(
 
             PhoneUiState.EDITING -> PhoneEditor(
                 initialPhone = initialPhone,
-                onSave = {
-                    onPhoneChange(it)
+                onClose = {
                     state = when {
-                        it.isNullOrBlank() -> PhoneUiState.NOT_SET
+                        initialPhone.isBlank() -> PhoneUiState.NOT_SET
                         else -> PhoneUiState.SET
                     }
-                }
+                },
+                onSave = { onPhoneChange(it) }
             )
         }
     }
@@ -112,6 +115,7 @@ private fun PhoneActionButton(
 @Composable
 private fun PhoneEditor(
     initialPhone: String,
+    onClose: () -> Unit,
     onSave: (String?) -> Unit,
 ) {
     var input by remember { mutableStateOf(initialPhone) }
@@ -121,32 +125,46 @@ private fun PhoneEditor(
         input.isEmpty() || Patterns.PHONE.matcher(input).matches()
     }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
-    ) {
+    Column(horizontalAlignment = Alignment.End) {
         OutlinedTextField(
             value = input,
             onValueChange = {
                 touched = true
                 input = it
             },
-            modifier = Modifier.weight(1f),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            label = { Text("Phone number") },
+            label = { Text(stringResource(R.string.phone_number)) },
             isError = touched && !isValid,
             supportingText = {
-                if (touched && !isValid) {
+                if (touched && !isValid)
                     Text(
                         text = stringResource(R.string.invalid_phone_number),
                         color = MyFarmerTheme.colors.error
                     )
-                }
             }
         )
 
-        AnimatedVisibility(isValid) {
-            Button(onClick = { onSave(input.takeIf { it.isNotBlank() }) }) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
+        ) {
+            Button(
+                colors = MyFarmerTheme.buttonColors.secondary,
+                onClick = onClose,
+            ) {
+                Text(stringResource(R.string.cancel))
+            }
+
+            Button(
+                enabled = isValid,
+                colors = MyFarmerTheme.buttonColors.custom(Color(0xFF25D366)),
+                onClick = {
+                    onSave(input.takeIf { it.isNotBlank() })
+                    onClose()
+                }
+            ) {
                 Text(stringResource(R.string.save))
             }
         }

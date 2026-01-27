@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -67,13 +68,13 @@ fun LinkInstagramButton(
 
             InstagramUiState.EDITING -> InstagramEditor(
                 initialUsername = initialUsername,
-                onSave = {
-                    onLinkClick(it)
-                    state = when (it) {
-                        null -> InstagramUiState.NOT_LINKED
+                onClose = {
+                    state = when {
+                        initialUsername.isBlank() -> InstagramUiState.NOT_LINKED
                         else -> InstagramUiState.LINKED
                     }
-                }
+                },
+                onSave = { onLinkClick(it) }
             )
         }
     }
@@ -117,6 +118,7 @@ private fun InstagramActionButton(
 @Composable
 private fun InstagramEditor(
     initialUsername: String,
+    onClose: () -> Unit,
     onSave: (String?) -> Unit,
 ) {
     val context = LocalContext.current
@@ -129,37 +131,34 @@ private fun InstagramEditor(
         username.isEmpty() || isUserNameValid(username)
     }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
-    ) {
-        OutlinedTextField(
-            value = input,
-            onValueChange = {
-                touched = true
-                input = it
-            },
-            modifier = Modifier.weight(1f),
-            singleLine = true,
-            label = { Text(stringResource(R.string.instagram_username)) },
-            leadingIcon = {
-                Text("@", style = MyFarmerTheme.typography.textLarge)
-            },
-            isError = touched && !isValid,
-            supportingText = {
-                if (touched && !isValid) {
-                    Text(
-                        stringResource(R.string.enter_a_valid_instagram_username),
-                        color = MyFarmerTheme.colors.error
-                    )
+    Column(horizontalAlignment = Alignment.End) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
+        ) {
+            OutlinedTextField(
+                value = input,
+                onValueChange = {
+                    touched = true
+                    input = it
+                },
+                modifier = Modifier.weight(1f),
+                singleLine = true,
+                label = { Text(stringResource(R.string.instagram_username)) },
+                leadingIcon = {
+                    Text("@", style = MyFarmerTheme.typography.textLarge)
+                },
+                isError = touched && !isValid,
+                supportingText = {
+                    if (touched && !isValid)
+                        Text(
+                            text = stringResource(R.string.enter_a_valid_instagram_username),
+                            color = MyFarmerTheme.colors.error
+                        )
                 }
-            }
-        )
+            )
 
-        AnimatedVisibility(isValid) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
-            ) {
+            AnimatedVisibility(isValid) {
                 IconButton(
                     onClick = {
                         openInstagramProfile(
@@ -175,17 +174,32 @@ private fun InstagramEditor(
                         contentDescription = null
                     )
                 }
+            }
+        }
 
-                Button(
-                    onClick = {
-                        onSave(
-                            username.takeIf { it.isNotBlank() }
-                                ?.toInstagramUrl()
-                        )
-                    }
-                ) {
-                    Text(stringResource(R.string.save))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
+        ) {
+            Button(
+                colors = MyFarmerTheme.buttonColors.secondary,
+                onClick = onClose,
+            ) {
+                Text(stringResource(R.string.cancel))
+            }
+
+            Button(
+                enabled = isValid,
+                colors = MyFarmerTheme.buttonColors.custom(Color(0xFFE1306C)),
+                onClick = {
+                    onSave(
+                        username.takeIf { it.isNotBlank() }
+                            ?.toInstagramUrl()
+                    )
+                    onClose()
                 }
+            ) {
+                Text(stringResource(R.string.save))
             }
         }
     }

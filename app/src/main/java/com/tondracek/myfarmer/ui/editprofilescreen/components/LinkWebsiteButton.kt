@@ -67,13 +67,13 @@ fun LinkWebsiteButton(
 
             WebsiteUiState.EDITING -> WebsiteEditor(
                 initialWebsite = initialWebsite,
-                onSave = {
-                    onWebsiteChange(it)
-                    state = when (it) {
-                        null -> WebsiteUiState.NOT_SET
+                onClose = {
+                    state = when {
+                        initialWebsite.isBlank() -> WebsiteUiState.NOT_SET
                         else -> WebsiteUiState.SET
                     }
-                }
+                },
+                onSave = { onWebsiteChange(it) }
             )
         }
     }
@@ -117,6 +117,7 @@ private fun WebsiteActionButton(
 @Composable
 private fun WebsiteEditor(
     initialWebsite: String,
+    onClose: () -> Unit,
     onSave: (String?) -> Unit,
 ) {
     val context = LocalContext.current
@@ -129,31 +130,31 @@ private fun WebsiteEditor(
         normalizedUrl.isEmpty() || isValidWebsite(normalizedUrl)
     }
 
-    Column(
-        horizontalAlignment = Alignment.End,
-        verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
-    ) {
-        OutlinedTextField(
-            value = input,
-            onValueChange = {
-                touched = true
-                input = it
-            },
-            modifier = Modifier.weight(1f),
-            singleLine = true,
-            label = { Text(stringResource(R.string.website)) },
-            isError = touched && !isValid,
-            supportingText = {
-                if (touched && !isValid)
-                    Text(
-                        text = stringResource(R.string.invalid_website_url),
-                        color = MyFarmerTheme.colors.error
-                    )
-            }
-        )
+    Column(horizontalAlignment = Alignment.End) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
+        ) {
+            OutlinedTextField(
+                value = input,
+                onValueChange = {
+                    touched = true
+                    input = it
+                },
+                modifier = Modifier.weight(1f),
+                singleLine = true,
+                label = { Text(stringResource(R.string.website)) },
+                isError = touched && !isValid,
+                supportingText = {
+                    if (touched && !isValid)
+                        Text(
+                            text = stringResource(R.string.invalid_website_url),
+                            color = MyFarmerTheme.colors.error
+                        )
+                }
+            )
 
-        AnimatedVisibility(isValid) {
-            Row(horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)) {
+            AnimatedVisibility(isValid) {
                 IconButton(
                     onClick = { openWebsite(context, normalizedUrl) },
                     colors = Color(0xFFFF9E0F).toIconButtonColors()
@@ -163,12 +164,29 @@ private fun WebsiteEditor(
                         contentDescription = null
                     )
                 }
+            }
+        }
 
-                Button(
-                    onClick = { onSave(normalizedUrl.takeIf { it.isNotBlank() }) }
-                ) {
-                    Text(stringResource(R.string.save))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small)
+        ) {
+            Button(
+                colors = MyFarmerTheme.buttonColors.secondary,
+                onClick = onClose,
+            ) {
+                Text(stringResource(R.string.cancel))
+            }
+
+            Button(
+                enabled = isValid,
+                colors = MyFarmerTheme.buttonColors.custom(Color(0xFFFF9E0F)),
+                onClick = {
+                    onSave(normalizedUrl.takeIf { it.isNotBlank() })
+                    onClose()
                 }
+            ) {
+                Text(stringResource(R.string.save))
             }
         }
     }
