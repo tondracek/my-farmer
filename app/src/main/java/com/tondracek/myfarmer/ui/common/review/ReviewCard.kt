@@ -29,6 +29,27 @@ import com.tondracek.myfarmer.ui.common.rating.RatingStars
 import com.tondracek.myfarmer.ui.common.user.UserPreviewCard
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.Locale
+
+@Composable
+fun Instant?.toLocalDate(): String? {
+    if (this == null) return null
+
+    val formatter = DateTimeFormatter
+        .ofLocalizedDate(FormatStyle.MEDIUM)
+        .withLocale(Locale.getDefault())
+
+    val zone = ZoneId.systemDefault()
+
+    return LocalDateTime.ofInstant(this, zone)
+        .toLocalDate()
+        .format(formatter)
+}
 
 @Composable
 fun ReviewCard(
@@ -57,7 +78,19 @@ fun ReviewCard(
                     colors = MyFarmerTheme.cardColors.next(colors),
                 )
 
-                RatingStars(rating = review.rating)
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    review.createdAt.toLocalDate()?.let {
+                        Text(
+                            modifier = Modifier.padding(end = 4.dp),
+                            text = it,
+                            style = MyFarmerTheme.typography.textSmall
+                        )
+                    }
+                    RatingStars(rating = review.rating)
+                }
             }
 
             if (!review.comment.isNullOrBlank()) SelectionContainer {
@@ -107,7 +140,8 @@ private fun ReviewCardPreview1() {
                     contactInfo = ContactInfo.EMPTY
                 ),
                 rating = Rating(4),
-                comment = "Great service and friendly staff! Super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super long comment."
+                comment = "Great service and friendly staff! Super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super long comment.",
+                createdAt = Instant.now(),
             ),
             onDeleteClick = {},
         )
