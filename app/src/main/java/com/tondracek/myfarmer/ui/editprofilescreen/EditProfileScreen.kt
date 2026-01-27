@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -28,12 +29,12 @@ import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
-import com.tondracek.myfarmer.ui.editprofilescreen.components.LinkEmailButton
-import com.tondracek.myfarmer.ui.editprofilescreen.components.LinkFacebookButton
-import com.tondracek.myfarmer.ui.editprofilescreen.components.LinkInstagramButton
-import com.tondracek.myfarmer.ui.editprofilescreen.components.LinkPhoneButton
-import com.tondracek.myfarmer.ui.editprofilescreen.components.LinkWebsiteButton
 import com.tondracek.myfarmer.ui.editprofilescreen.components.ProfilePictureEdit
+import com.tondracek.myfarmer.ui.editprofilescreen.components.linkbutton.LinkEmailButton
+import com.tondracek.myfarmer.ui.editprofilescreen.components.linkbutton.LinkFacebookButton
+import com.tondracek.myfarmer.ui.editprofilescreen.components.linkbutton.LinkInstagramButton
+import com.tondracek.myfarmer.ui.editprofilescreen.components.linkbutton.LinkPhoneButton
+import com.tondracek.myfarmer.ui.editprofilescreen.components.linkbutton.LinkWebsiteButton
 
 @Composable
 fun EditProfileScreen(
@@ -154,7 +155,9 @@ private fun ContactInfoEdit(
     onContactInfoChange: (ContactInfo) -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(MyFarmerTheme.paddings.medium),
+        modifier = Modifier
+            .padding(MyFarmerTheme.paddings.medium)
+            .imePadding(),
         verticalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -164,27 +167,27 @@ private fun ContactInfoEdit(
         )
         LinkPhoneButton(
             phone = contactInfo.phoneNumber,
-            onPhoneChange = { onContactInfoChange(contactInfo.copy(phoneNumber = it)) }
+            onSavePhone = { onContactInfoChange(contactInfo.copy(phoneNumber = it)) },
         )
 
         LinkEmailButton(
             email = contactInfo.email,
-            onEmailChange = { onContactInfoChange(contactInfo.copy(email = it)) }
+            onSaveEmail = { onContactInfoChange(contactInfo.copy(email = it)) },
         )
 
         LinkInstagramButton(
             link = contactInfo.instagramLink,
-            onLinkClick = { onContactInfoChange(contactInfo.copy(instagramLink = it)) }
+            onSaveLink = { onContactInfoChange(contactInfo.copy(instagramLink = it)) },
         )
 
         LinkWebsiteButton(
             website = contactInfo.website,
-            onWebsiteChange = { onContactInfoChange(contactInfo.copy(website = it)) }
+            onSaveLink = { onContactInfoChange(contactInfo.copy(website = it)) },
         )
 
         LinkFacebookButton(
             facebookLink = contactInfo.facebookLink,
-            onFacebookChange = { onContactInfoChange(contactInfo.copy(facebookLink = it)) }
+            onSaveLink = { onContactInfoChange(contactInfo.copy(facebookLink = it)) },
         )
     }
 }

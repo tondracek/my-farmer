@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -62,13 +63,15 @@ fun PasswordInput(
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done,
         ),
         trailingIcon = {
             VisibilityIcon(
                 passwordVisible = passwordVisible,
                 onIconClick = { passwordVisible = !passwordVisible }
             )
-        }
+        },
+        singleLine = true,
     )
 }
 

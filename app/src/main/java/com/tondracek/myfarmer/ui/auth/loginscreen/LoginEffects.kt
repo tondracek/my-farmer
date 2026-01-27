@@ -51,7 +51,7 @@ fun LoginEffects(
 
             LoginEffect.RequestGoogleSignIn -> scope.launch {
                 signInWithGoogleCredentialManager(context, serverClientId)
-                    .withSuccess { viewmodel.onEvent(LoginEvent.OnGoogleTokenReceived(it)) }
+                    .withSuccess { passToken(it, viewmodel::onEvent) }
                     .withFailure { appUiController.showError(it.error) }
             }
 
@@ -59,3 +59,8 @@ fun LoginEffects(
         }
     }
 }
+
+private fun passToken(string: String?, onEvent: (LoginEvent) -> Unit) =
+    string?.let { token ->
+        onEvent(LoginEvent.OnGoogleTokenReceived(token))
+    }

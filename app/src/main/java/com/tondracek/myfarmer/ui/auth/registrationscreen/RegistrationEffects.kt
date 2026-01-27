@@ -46,7 +46,7 @@ fun RegistrationEffects(
 
             RegistrationEffect.RequestGoogleSignIn -> scope.launch {
                 signInWithGoogleCredentialManager(context, serverClientId)
-                    .withSuccess { viewmodel.onEvent(RegistrationEvent.OnGoogleTokenReceived(it)) }
+                    .withSuccess { passToken(it, viewmodel::onEvent) }
                     .withFailure { appUiController.showError(it.error) }
             }
 
@@ -55,3 +55,8 @@ fun RegistrationEffects(
         }
     }
 }
+
+private fun passToken(string: String?, onEvent: (RegistrationEvent) -> Unit) =
+    string?.let { idToken ->
+        onEvent(RegistrationEvent.OnGoogleTokenReceived(idToken))
+    }

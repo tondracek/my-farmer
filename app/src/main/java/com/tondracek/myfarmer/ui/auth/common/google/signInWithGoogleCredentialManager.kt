@@ -11,11 +11,12 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import timber.log.Timber
 
 suspend fun signInWithGoogleCredentialManager(
     context: Context,
     serverClientId: String,
-): DomainResult<String> {
+): DomainResult<String?> {
     val credentialManager = CredentialManager.create(context)
 
     val googleIdOption = GetGoogleIdOption.Builder()
@@ -45,7 +46,8 @@ suspend fun signInWithGoogleCredentialManager(
             DomainResult.Failure(AuthError.GoogleSignInFailedError)
         }
     } catch (e: GetCredentialCancellationException) {
-        DomainResult.Failure(AuthError.GoogleSignInCancelledError, e)
+        Timber.w(e, "Google Sign-In was cancelled by the user.")
+        DomainResult.Success(null)
     } catch (e: GetCredentialInterruptedException) {
         DomainResult.Failure(AuthError.GoogleSignInCancelledError, e)
     } catch (e: GetCredentialException) {
