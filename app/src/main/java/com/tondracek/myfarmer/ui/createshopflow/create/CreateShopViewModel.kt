@@ -49,8 +49,7 @@ class CreateShopViewModel @Inject constructor(
         _isLoading.update { true }
         val shopInput: ShopInput = _input.value
 
-        val result = createShop(shopInput)
-        when (result) {
+        when (val result = createShop(shopInput)) {
             is DomainResult.Success -> {
                 emitEffect(CreateShopEffect.ShowCreatedSuccessfully)
                 emitEffect(CreateShopEffect.ExitShopCreation)

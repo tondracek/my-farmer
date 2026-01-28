@@ -70,17 +70,13 @@ class RegistrationViewmodel @Inject constructor(
         }
     }
 
-    private suspend fun submitGoogleLogin(token: String) {
-        val result = loginWithGoogleUC(token)
-        when (result) {
-            is DomainResult.Success -> {
+    private suspend fun submitGoogleLogin(token: String) =
+        loginWithGoogleUC(token)
+            .withFailure { emitEffect(RegistrationEffect.ShowError(it.error)) }
+            .withSuccess {
                 emitEffect(RegistrationEffect.ShowLoggedInSuccessfully)
                 emitEffect(RegistrationEffect.GoToProfileScreen)
             }
-
-            is DomainResult.Failure -> emitEffect(RegistrationEffect.ShowError(result.error))
-        }
-    }
 
     fun onEvent(event: RegistrationEvent) = viewModelScope.launch {
         when (event) {

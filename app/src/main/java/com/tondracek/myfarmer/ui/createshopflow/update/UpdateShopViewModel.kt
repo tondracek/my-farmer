@@ -3,7 +3,6 @@ package com.tondracek.myfarmer.ui.createshopflow.update
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShopInput
@@ -69,16 +68,13 @@ class UpdateShopViewModel @Inject constructor(
         _isLoading.update { true }
         val shopInput = _input.value
 
-        val result = updateShop(shopId, shopInput)
-        when (result) {
-            is DomainResult.Success -> {
+        updateShop(shopId, shopInput)
+            .withFailure { emitEffect(UpdateShopEffect.ShowError(it.error)) }
+            .withSuccess {
                 emitEffect(UpdateShopEffect.ShowUpdatedSuccessfully)
                 emitEffect(UpdateShopEffect.ExitShopUpdate)
             }
 
-            is DomainResult.Failure ->
-                emitEffect(UpdateShopEffect.ShowError(result.error))
-        }
         _isLoading.update { false }
     }
 

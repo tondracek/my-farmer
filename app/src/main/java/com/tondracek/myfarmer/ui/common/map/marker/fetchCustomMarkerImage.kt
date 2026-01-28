@@ -23,9 +23,7 @@ suspend fun fetchCustomMarkerImage(
         .allowHardware(false)
         .build()
 
-    val imageResult = context.imageLoader.execute(imageRequest)
-
-    return when (imageResult) {
+    return when (val imageResult = context.imageLoader.execute(imageRequest)) {
         is ErrorResult -> AppCompatResources.getDrawable(context, fallback)!!
         is SuccessResult -> imageResult.image.asDrawable(context.resources)
     }
