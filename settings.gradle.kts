@@ -24,4 +24,13 @@ dependencyResolutionManagement {
 
 rootProject.name = "My Farmer"
 include(":app")
- 
+include(":feature:shop")
+include(":feature:core")
+include(":feature:location")
+include(":feature:auth")
+include(":feature:image")
+include(":feature:user")
+include(":feature:shopcategory")
+include(":feature:common")
+include(":feature:review")
+include(":feature:shopfilters")

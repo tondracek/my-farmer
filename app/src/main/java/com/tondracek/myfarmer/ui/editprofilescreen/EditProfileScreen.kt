@@ -21,8 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
+import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.ui.common.button.ButtonRow
 import com.tondracek.myfarmer.ui.common.layout.CardMessageLayout
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout

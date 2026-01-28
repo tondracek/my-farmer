@@ -11,14 +11,14 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.location.model.km
+import com.tondracek.myfarmer.location.domain.model.km
 import com.tondracek.myfarmer.review.domain.model.Rating
-import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.button.RefreshIconButton
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.common.paging.isLoading
 import com.tondracek.myfarmer.ui.common.paging.paginatedItems
+import com.tondracek.myfarmer.ui.common.sample.sampleShops
 import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewApi34

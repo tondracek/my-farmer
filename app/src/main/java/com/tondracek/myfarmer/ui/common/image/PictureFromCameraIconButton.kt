@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.FileProvider
 import com.tondracek.myfarmer.BuildConfig
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import java.io.File
 import java.util.UUID

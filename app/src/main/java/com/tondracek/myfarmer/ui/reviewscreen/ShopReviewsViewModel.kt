@@ -9,7 +9,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.flatMap
@@ -27,10 +26,11 @@ import com.tondracek.myfarmer.review.domain.usecase.GetUserReviewOnShopUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.usecase.GetShopByIdUC
-import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.ui.common.review.ReviewUiState
 import com.tondracek.myfarmer.ui.common.review.toUiState
 import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
+import com.tondracek.myfarmer.user.domain.model.SystemUser
+import com.tondracek.myfarmer.user.domain.usecase.GetLoggedInUserUC
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

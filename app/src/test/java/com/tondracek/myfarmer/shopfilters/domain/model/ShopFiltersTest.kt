@@ -2,11 +2,11 @@ package com.tondracek.myfarmer.shopfilters.domain.model
 
 import androidx.compose.ui.graphics.Color
 import com.google.common.truth.Truth.assertThat
-import com.tondracek.myfarmer.location.model.Distance
+import com.tondracek.myfarmer.location.domain.model.Distance
 import com.tondracek.myfarmer.review.domain.model.Rating
-import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
+import com.tondracek.myfarmer.ui.common.sample.sampleShops
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test

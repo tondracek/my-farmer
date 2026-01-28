@@ -24,12 +24,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.location.model.Distance
-import com.tondracek.myfarmer.location.model.km
+import com.tondracek.myfarmer.location.domain.model.Distance
 import com.tondracek.myfarmer.review.domain.model.Rating
-import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
-import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
-import com.tondracek.myfarmer.ui.common.category.CategoryNameInputState
+import com.tondracek.myfarmer.ui.common.distance.toStringTranslated
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.filterChipColors
@@ -61,15 +58,8 @@ fun ShopFilterDialog(
             )
         },
         text = {
-            var openedSection by remember { mutableStateOf(ShopFilterSection.NONE) }
-
             Content(
                 state = state,
-                openedSection = openedSection,
-                onOpenedSectionClick = { section ->
-                    openedSection =
-                        if (openedSection == section) ShopFilterSection.NONE else section
-                },
                 onCategoryFilterInputChange = onCategoryFilterInputChange,
                 onSelectedCategoriesAdd = onSelectedCategoriesAdd,
                 onSelectedCategoriesRemove = onSelectedCategoriesRemove,
@@ -97,14 +87,14 @@ private enum class ShopFilterSection {
 private fun Content(
     modifier: Modifier = Modifier,
     state: ShopFilterDialogState,
-    openedSection: ShopFilterSection,
-    onOpenedSectionClick: (ShopFilterSection) -> Unit,
     onCategoryFilterInputChange: (String) -> Unit,
     onSelectedCategoriesAdd: (String) -> Unit,
     onSelectedCategoriesRemove: (String) -> Unit,
     onMaxDistanceChange: (Distance?) -> Unit,
     onMinRatingChange: (Rating) -> Unit
 ) {
+    var openedSection by remember { mutableStateOf(ShopFilterSection.NONE) }
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -112,7 +102,7 @@ private fun Content(
         ChipRow(
             state = state,
             openedSection = openedSection,
-            onOpenedSectionClick = onOpenedSectionClick
+            onOpenedSectionClick = { openedSection = it }
         )
 
         when (openedSection) {
@@ -177,11 +167,11 @@ private fun ChipRow(
             Text(text)
         }
         Chip(ShopFilterSection.DISTANCE) {
-            val text = when (state.filters.maxDistanceKm) {
+            val text = when (val maxDistanceKm = state.filters.maxDistanceKm) {
                 null -> stringResource(R.string.distance_filter_no_filter)
                 else -> stringResource(
                     R.string.distance_filter,
-                    state.filters.maxDistanceKm.toStringTranslated()
+                    maxDistanceKm.toStringTranslated()
                 )
             }
             Text(text)
@@ -209,37 +199,6 @@ private fun ShopFilterDialogPreview() {
             onMinRatingChange = {},
             onApplyFiltersClick = {},
             onCancelClick = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun ShopFilterDialogCategoryPreview() {
-    MyFarmerPreview {
-        Content(
-            state = ShopFilterDialogState(
-                filters = ShopFilters(
-                    maxDistanceKm = 50.km,
-                    minRating = Rating(4),
-                    categories = sortedSetOf("Fruits", "Vegetables", "Dairy")
-                ),
-                categoryNameInputState = CategoryNameInputState(
-                    categoryName = "Meat",
-                    suggestions = listOf(
-                        CategoryPopularity("Meat", 120),
-                        CategoryPopularity("Bakery", 100),
-                        CategoryPopularity("Beverages", 80),
-                    )
-                )
-            ),
-            openedSection = ShopFilterSection.CATEGORIES,
-            onOpenedSectionClick = {},
-            onCategoryFilterInputChange = {},
-            onSelectedCategoriesAdd = {},
-            onSelectedCategoriesRemove = {},
-            onMaxDistanceChange = {},
-            onMinRatingChange = {},
         )
     }
 }

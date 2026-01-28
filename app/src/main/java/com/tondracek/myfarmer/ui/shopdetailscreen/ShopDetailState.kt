@@ -1,15 +1,15 @@
 package com.tondracek.myfarmer.ui.shopdetailscreen
 
-import com.tondracek.myfarmer.common.image.model.ImageResource
-import com.tondracek.myfarmer.location.model.Location
+import com.tondracek.myfarmer.image.model.ImageResource
+import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
 import com.tondracek.myfarmer.ui.common.review.ReviewUiState
+import com.tondracek.myfarmer.user.domain.model.SystemUser
 
 sealed interface ShopDetailState {
 

@@ -2,17 +2,17 @@ package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.whenever
-import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
 import com.tondracek.myfarmer.common.image.data.FakePhotoStorage
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
 import com.tondracek.myfarmer.shop.data.getFakeShopRepository
-import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShopInput
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import com.tondracek.myfarmer.shop.domain.result.MissingShopInputDataUCResult
-import com.tondracek.myfarmer.systemuser.data.sampleUsers
+import com.tondracek.myfarmer.ui.common.sample.sampleUsers
+import com.tondracek.myfarmer.ui.common.sample.shop0
+import com.tondracek.myfarmer.user.domain.usecase.GetLoggedInUserUC
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest

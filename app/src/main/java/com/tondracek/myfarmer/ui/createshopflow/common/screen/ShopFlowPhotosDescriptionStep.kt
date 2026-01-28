@@ -7,9 +7,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShopInput
+import com.tondracek.myfarmer.ui.common.sample.shop0
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.createshopflow.common.ShopFormEvent

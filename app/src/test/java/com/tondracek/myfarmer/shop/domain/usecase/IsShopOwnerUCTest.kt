@@ -4,9 +4,9 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.common.usecase.result.NotFoundUCResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.result.NotShopOwnerUCResult
-import com.tondracek.myfarmer.systemuser.data.sampleUsers
+import com.tondracek.myfarmer.ui.common.sample.sampleShops
+import com.tondracek.myfarmer.ui.common.sample.sampleUsers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest

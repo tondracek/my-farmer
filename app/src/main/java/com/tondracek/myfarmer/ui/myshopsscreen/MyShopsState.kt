@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.ui.myshopsscreen
 
-import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId

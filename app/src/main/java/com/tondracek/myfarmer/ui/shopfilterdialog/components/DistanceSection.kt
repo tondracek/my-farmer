@@ -14,8 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.location.model.Distance
-import com.tondracek.myfarmer.location.model.DistanceUnit
+import com.tondracek.myfarmer.location.domain.model.Distance
+import com.tondracek.myfarmer.location.domain.model.DistanceUnit
+import com.tondracek.myfarmer.ui.common.distance.toStringTranslated
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable

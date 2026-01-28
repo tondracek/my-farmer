@@ -12,7 +12,7 @@ import androidx.core.graphics.createBitmap
 import androidx.core.graphics.scale
 import androidx.core.graphics.withClip
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.farmerDarkColors
 
 suspend fun getCustomMarkerIcon(

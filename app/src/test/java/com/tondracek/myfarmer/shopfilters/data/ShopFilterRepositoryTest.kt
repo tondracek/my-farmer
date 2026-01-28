@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.shopfilters.data
 
 import com.google.common.truth.Truth.assertThat
-import com.tondracek.myfarmer.location.model.Distance
+import com.tondracek.myfarmer.location.domain.model.Distance
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
 import kotlinx.coroutines.ExperimentalCoroutinesApi

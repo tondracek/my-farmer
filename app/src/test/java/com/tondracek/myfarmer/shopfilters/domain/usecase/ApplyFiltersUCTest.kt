@@ -5,8 +5,8 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.location.model.Distance
-import com.tondracek.myfarmer.location.model.Location
+import com.tondracek.myfarmer.location.domain.model.Distance
+import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.location.usecase.MeasureDistanceFromMeUC
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
@@ -34,7 +34,7 @@ class ApplyFiltersUCTest {
     @Mock
     lateinit var getAverageRatingsByShopUC: GetAverageRatingsByShopUC
 
-    private lateinit var uc: ApplyFiltersUC
+    private lateinit var uc: ApplyShopFiltersUC
 
     private lateinit var shopA: Shop
     private lateinit var shopB: Shop
@@ -42,7 +42,7 @@ class ApplyFiltersUCTest {
 
     @Before
     fun setup() {
-        uc = ApplyFiltersUC(measureDistanceFromMeUC, getAverageRatingsByShopUC)
+        uc = ApplyShopFiltersUC(measureDistanceFromMeUC, getAverageRatingsByShopUC)
 
         shopA = fakeShop(categories = listOf("Fruit"), location = Location(0.0, 0.0))
         shopB = fakeShop(categories = listOf("Eggs"), location = Location(1.0, 1.0))

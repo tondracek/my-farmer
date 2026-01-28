@@ -4,9 +4,9 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.common.usecase.result.NotFoundUCResult
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
+import com.tondracek.myfarmer.ui.common.sample.shop0
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first

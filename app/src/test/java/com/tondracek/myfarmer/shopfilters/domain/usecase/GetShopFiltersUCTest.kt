@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.shopfilters.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
-import com.tondracek.myfarmer.location.model.km
+import com.tondracek.myfarmer.location.domain.model.km
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shopfilters.data.ShopFilterRepositoryFactory
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters

@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
@@ -44,7 +45,17 @@ android {
 }
 
 dependencies {
-    implementation(libs.googleid)
+    // --- Project modules ---
+    implementation(project(":feature:core"))
+    implementation(project(":feature:common"))
+    implementation(project(":feature:shop"))
+    implementation(project(":feature:shopcategory"))
+    implementation(project(":feature:shopfilters"))
+    implementation(project(":feature:location"))
+    implementation(project(":feature:user"))
+    implementation(project(":feature:review"))
+    implementation(project(":feature:auth"))
+    implementation(project(":feature:image"))
 
     // --- Unit tests ---
     testImplementation(libs.junit)
@@ -108,9 +119,10 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
 
-    // --- Credentials ---
+    // --- Auth/Credentials ---
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 
     // --- Paging ---
     implementation(libs.androidx.paging.runtime)
@@ -120,5 +132,5 @@ dependencies {
     implementation(libs.geofire.android.common)
     implementation(libs.maps.compose)
     implementation(libs.mapbox.android.ndk27)
-    implementation(libs.jakewharton.timber)
+    implementation(libs.timber)
 }

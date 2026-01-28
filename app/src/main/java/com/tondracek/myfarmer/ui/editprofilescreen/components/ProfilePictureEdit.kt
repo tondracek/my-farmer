@@ -12,7 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.ui.common.image.ImageView
 import com.tondracek.myfarmer.ui.common.image.PictureFromCameraIconButton
 import com.tondracek.myfarmer.ui.common.image.PictureFromGalleryIconButton
