@@ -57,7 +57,9 @@ jobs:
         id: resolve_version
         if: steps.version_check.outputs.changed == 'true'
         run: |
-          VERSION=$(./gradlew -q printVersionName 2>/dev/null || true)
+          VERSION=$(grep -E 'versionName\s*=' app/build.gradle.kts \
+            | sed -E 's/.*versionName\s*=\s*"([^"]+)".*/\1/' \
+            | head -n 1)
           
           if [ -n "$VERSION" ]; then
             echo "value=$VERSION" >> $GITHUB_OUTPUT

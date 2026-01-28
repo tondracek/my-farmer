@@ -128,9 +128,3 @@ dependencies {
     implementation(libs.maps.compose)
     implementation(libs.mapbox.android.ndk27)
 }
-
-tasks.register("printVersionName") {
-    doLast {
-        println(android.defaultConfig.versionName)
-    }
-}
