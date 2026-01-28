@@ -1,8 +1,5 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
@@ -37,13 +34,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
@@ -53,78 +45,80 @@ android {
 
 dependencies {
     implementation(libs.googleid)
-    testImplementation(libs.junit)
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // --- Unit tests ---
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
-    testImplementation(libs.jakewharton.timber)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.inline)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.kotlin)
 
+    // --- Android tests ---
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // --- Core Android ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    // --- Compose ---
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.play.services.location)
-    implementation(libs.androidx.exifinterface)
+    implementation(libs.androidx.compose.pager)
+    implementation(libs.androidx.material.icons.extended)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout.compose)
 
-    ksp(libs.kotlin.metadata.jvm)
+    // --- Location / media ---
+    implementation(libs.play.services.location)
+    implementation(libs.androidx.exifinterface)
 
+    // --- Hilt ---
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-
     implementation(libs.androidx.hilt.navigation.fragment)
+    implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.androidx.hilt.compiler)
 
+    // --- Navigation & serialization ---
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.material3.navigation)
 
-    implementation(libs.androidx.compose.pager)
-    implementation(libs.androidx.material.icons.extended)
-
+    // --- Networking / permissions ---
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.accompanist.permissions)
     implementation(libs.kotlinx.coroutines.play.services)
 
+    // --- Firebase ---
     implementation(platform(libs.firebase.bom))
-
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.ui.auth)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
+
+    // --- Credentials ---
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
 
-    implementation(libs.jakewharton.timber)
-
-    implementation(libs.androidx.paging.common)
+    // --- Paging ---
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
 
+    // --- Misc ---
     implementation(libs.geofire.android.common)
-
     implementation(libs.maps.compose)
     implementation(libs.mapbox.android.ndk27)
+    implementation(libs.jakewharton.timber)
 }
