@@ -42,19 +42,5 @@ class ApplyShopFiltersUC @Inject constructor(
     suspend fun sync(
         shops: List<Shop>,
         filters: ShopFilters,
-    ): List<Shop> {
-        val userLocation = getUserLocationUC().first()
-        val ratings = getAverageRatingsByShopUC().getOrElse(emptyMap()).first()
-
-        val distances: Map<ShopId, Distance?> = shops.associate {
-            val distance = measureMapDistance(userLocation, it.location)
-            it.id to distance
-        }
-
-        return filters.apply(
-            shops = shops,
-            distanceProvider = { shop -> distances[shop.id] },
-            ratingProvider = { shop -> ratings[shop.id] ?: Rating.ZERO }
-        )
-    }
+    ): List<Shop> = invoke(shops, filters).first()
 }

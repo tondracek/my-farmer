@@ -24,6 +24,14 @@ dependencies {
     /** Kotlin  **/
     implementation(libs.kotlinx.coroutines.core)
 
+    /** Testing **/
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.truth)
+    testImplementation(libs.kotlinx.coroutines.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+
     /** Hilt **/
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

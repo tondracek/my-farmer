@@ -10,6 +10,7 @@ import com.tondracek.myfarmer.user.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -33,8 +34,8 @@ class GetLoggedInUserUC @Inject constructor(
     private fun getOrCreateSystemUser(authId: AuthId): Flow<DomainResult<SystemUser>> =
         userRepository.getUserByAuthId(authId).flatMap { user ->
             when (user == null) {
-                true -> SystemUser.createEmpty(authId)
-                    .let { userRepository.create(it) }
+                true -> flowOf(SystemUser.createEmpty(authId))
+                    .map { userRepository.create(it) }
                     .flatMap { userRepository.getById(it) }
                     .filter { it is DomainResult.Success }
 

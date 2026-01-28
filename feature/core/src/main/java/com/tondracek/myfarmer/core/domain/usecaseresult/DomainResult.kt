@@ -101,12 +101,9 @@ inline fun <T, R> Flow<DomainResult<T>>.mapFlowUC(crossinline transform: (T) -> 
     this.map { result -> result.mapFlatten(transform) }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-fun <T, R> Flow<DomainResult<T>>.flatMap(transform: suspend (T) -> Flow<DomainResult<R>>): Flow<DomainResult<R>> =
+fun <T, R> Flow<DomainResult<T>>.flatMap(transform: (T) -> Flow<DomainResult<R>>): Flow<DomainResult<R>> =
     this.flatMapLatest { result ->
-        when (result) {
-            is Success -> transform(result.data)
-            is Failure -> flowOf(result)
-        }
+        result.flatMap(transform)
     }
 
 fun <T, R> DomainResult<T>.flatMap(transform: (T) -> Flow<DomainResult<R>>): Flow<DomainResult<R>> =

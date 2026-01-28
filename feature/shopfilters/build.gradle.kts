@@ -16,7 +16,17 @@ dependencies {
     implementation(project(":feature:shop"))
     implementation(project(":feature:shopcategory"))
     implementation(project(":feature:location"))
+    implementation(project(":feature:user"))
     implementation(project(":feature:review"))
+    implementation(project(":feature:image"))
+
+    /** Testing **/
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.truth)
+    testImplementation(libs.kotlinx.coroutines.core)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     /** Hilt **/
     implementation(libs.hilt.android)
