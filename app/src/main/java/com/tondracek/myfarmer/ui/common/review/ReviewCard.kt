@@ -20,15 +20,15 @@ import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.ReviewId
+import com.tondracek.myfarmer.review.sample.sampleReviews
 import com.tondracek.myfarmer.ui.common.button.DeleteButton
 import com.tondracek.myfarmer.ui.common.rating.RatingStars
-import com.tondracek.myfarmer.ui.common.sample.sampleReviews
-import com.tondracek.myfarmer.ui.common.sample.sampleUsers
 import com.tondracek.myfarmer.ui.common.user.UserPreviewCard
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.user.domain.model.SystemUser
 import com.tondracek.myfarmer.user.domain.model.UserId
+import com.tondracek.myfarmer.user.sample.sampleUsers
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId

@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.shop.di
 
-import com.tondracek.myfarmer.shop.data.FirestoreShopRepository
+import com.tondracek.myfarmer.shop.data.firestore.FirestoreShopRepository
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import dagger.Binds
 import dagger.Module

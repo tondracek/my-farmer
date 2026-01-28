@@ -1,22 +1,20 @@
 package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.tondracek.myfarmer.location.domain.model.LocationProvider
-import com.tondracek.myfarmer.location.domain.model.km
 import com.tondracek.myfarmer.location.domain.usecase.measureMapDistance
-import com.tondracek.myfarmer.ui.common.sample.shop0
-import com.tondracek.myfarmer.ui.common.sample.shop1
-import com.tondracek.myfarmer.ui.common.sample.shop2
+import com.tondracek.myfarmer.shop.sample.shop0
+import com.tondracek.myfarmer.shop.sample.shop1
+import com.tondracek.myfarmer.shop.sample.shop2
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 @RunWith(MockitoJUnitRunner::class)
 class GetClosestShopsUCTest {
@@ -43,40 +41,40 @@ class GetClosestShopsUCTest {
     fun `returns shops sorted by distance ascending`() = runTest {
         val shops = listOf(shop1, shop2, shop0)
 
-        whenever(locationProvider.getCurrentLocation()).thenReturn(shop0.location)
+        whenever(locationProvider.getCurrentLocation())
+            .thenReturn(shop0.location)
 
-        val shopsOrdered = shops.sortedBy {
+        val expected = shops.sortedBy {
             measureMapDistance(shop0.location, it.location)
         }
 
         val result = uc(shops, count = 3)
 
-        assertThat(result).containsExactly(*shopsOrdered.toTypedArray()).inOrder()
+        assertThat(result).containsExactlyElementsIn(expected).inOrder()
     }
 
     @Test
     fun `returns only specified count of closest shops`() = runTest {
         val shops = listOf(shop0, shop1, shop2)
 
-        whenever(locationProvider.getCurrentLocation()).thenReturn(shop0.location)
+        whenever(locationProvider.getCurrentLocation())
+            .thenReturn(shop0.location)
 
-        shops.sortedBy {
-            measureMapDistance(shop0.location, it.location)
-        }
+        val expected = shops
+            .sortedBy { measureMapDistance(shop0.location, it.location) }
+            .take(2)
 
         val result = uc(shops, count = 2)
 
-        assertThat(result).containsExactly(
-            shop1,
-            shop2
-        ).inOrder()
+        assertThat(result).containsExactlyElementsIn(expected).inOrder()
     }
 
     @Test
     fun `returns all shops when count is greater than shop size`() = runTest {
         val shops = listOf(shop0, shop1)
 
-        whenever(measureDistanceFromMeUC(any())).thenReturn(42.km)
+        whenever(locationProvider.getCurrentLocation())
+            .thenReturn(shop0.location)
 
         val result = uc(shops, count = 10)
 
@@ -84,14 +82,14 @@ class GetClosestShopsUCTest {
     }
 
     @Test
-    fun `measures distance for each shop exactly once`() = runTest {
+    fun `gets current location exactly once`() = runTest {
         val shops = listOf(shop0, shop1)
 
-        whenever(measureDistanceFromMeUC(any())).thenReturn(10.km)
+        whenever(locationProvider.getCurrentLocation())
+            .thenReturn(shop0.location)
 
         uc(shops, count = 2)
 
-        verify(measureDistanceFromMeUC).invoke(shop0.location)
-        verify(measureDistanceFromMeUC).invoke(shop1.location)
+        verify(locationProvider, times(1)).getCurrentLocation()
     }
 }

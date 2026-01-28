@@ -27,4 +27,3 @@ data class DistancePagingCursor(
     val ringIndex: Int,
     val afterGeohash: String?,
 )
-

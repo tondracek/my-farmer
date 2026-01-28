@@ -40,10 +40,12 @@ class FakeShopRepository : ShopRepository {
             ?.let { MutableStateFlow(DomainResult.Success(it)) }
             ?: MutableStateFlow(DomainResult.Failure(ShopError.NotFound))
 
-    override fun getAll(): Flow<DomainResult<List<Shop>>> =
-        combine(items.values) { values ->
+    override fun getAll(): Flow<DomainResult<List<Shop>>> = when {
+        items.isEmpty() -> MutableStateFlow(DomainResult.Success(emptyList()))
+        else -> combine(items.values) { values ->
             DomainResult.Success(values.toList())
         }
+    }
 
     override suspend fun getAllPaginated(
         limit: Int?,
@@ -66,21 +68,15 @@ class FakeShopRepository : ShopRepository {
         return DomainResult.Success(paginatedItems)
     }
 
-    override fun getByOwnerId(ownerId: UserId): Flow<DomainResult<List<Shop>>> = combine(
-        items.values
-    ) { values ->
-        val filteredItems = values.toList()
-            .filter { it.ownerId == ownerId }
-        DomainResult.Success(filteredItems)
+    override fun getByOwnerId(ownerId: UserId): Flow<DomainResult<List<Shop>>> = when {
+        items.isEmpty() -> MutableStateFlow(DomainResult.Success(emptyList()))
+        else -> combine(items.values) { values ->
+            val filteredItems = values.toList()
+                .filter { it.ownerId == ownerId }
+            DomainResult.Success(filteredItems)
+        }
     }
 
-    /*
-    data class DistancePagingCursor(
-    val ringIndex: Int,
-    val afterGeohash: String?,
-)
-
-     */
     override suspend fun getPagedByDistance(
         center: Location,
         pageSize: Int,

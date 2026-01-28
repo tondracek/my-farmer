@@ -18,7 +18,7 @@ enum class OpeningHoursType(val code: String) {
 
 fun OpeningHoursEntity.toModel(): OpeningHours = when (this.type) {
     OpeningHoursType.TIME.code -> OpeningHours.Time(
-        dayToHours = this.dayToHours!!.mapKeys { DayOfWeek.valueOf(it.key) }
+        dayToHours = this.dayToHours?.mapKeys { DayOfWeek.valueOf(it.key) } ?: emptyMap()
     )
 
     OpeningHoursType.MESSAGE.code -> OpeningHours.Message(message = this.message ?: "")

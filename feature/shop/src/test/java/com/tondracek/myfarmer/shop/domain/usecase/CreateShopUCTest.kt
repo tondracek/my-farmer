@@ -1,18 +1,18 @@
 package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.whenever
-import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
-import com.tondracek.myfarmer.common.image.data.FakePhotoStorage
+import com.tondracek.myfarmer.core.domain.domainerror.AuthError
+import com.tondracek.myfarmer.core.domain.domainerror.InputDataError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.shop.data.getFakeShopRepository
+import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
+import com.tondracek.myfarmer.image.data.FakePhotoStorage
+import com.tondracek.myfarmer.shop.data.FakeShopRepository
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShopInput
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
-import com.tondracek.myfarmer.shop.domain.result.MissingShopInputDataUCResult
-import com.tondracek.myfarmer.ui.common.sample.sampleUsers
-import com.tondracek.myfarmer.ui.common.sample.shop0
+import com.tondracek.myfarmer.shop.sample.shop0
 import com.tondracek.myfarmer.user.domain.usecase.GetLoggedInUserUC
+import com.tondracek.myfarmer.user.sample.sampleUsers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -21,11 +21,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.whenever
 
 @RunWith(MockitoJUnitRunner::class)
 class CreateShopUCTest {
 
-    private val repo: ShopRepository = getFakeShopRepository()
+    private val repo: ShopRepository = FakeShopRepository()
     private val photoStorage = FakePhotoStorage()
 
     @Mock
@@ -44,11 +45,11 @@ class CreateShopUCTest {
 
     @Test
     fun `returns failure when user is not logged in`() = runTest {
-        val failure = NotLoggedInUCResult()
+        val failure = DomainResult.Failure(AuthError.NotLoggedIn)
 
         whenever(getLoggedInUser()).thenReturn(flowOf(failure))
 
-        val result = uc(ShopInput())
+        val result = uc(ShopInput.Empty)
 
         assertThat(result).isEqualTo(failure)
     }
@@ -59,10 +60,9 @@ class CreateShopUCTest {
 
         val user = sampleUsers.find { it.id == shop.ownerId }!!
         val input = shop.toShopInput().copy(location = null)
-        val failure = MissingShopInputDataUCResult
+        val failure = DomainResult.Failure(InputDataError.MissingLocationInput)
 
-        whenever(getLoggedInUser())
-            .thenReturn(flowOf(DomainResult.Success(user)))
+        whenever(getLoggedInUser()).thenReturn(flowOf(DomainResult.Success(user)))
 
         val result = uc(input)
 
@@ -83,9 +83,11 @@ class CreateShopUCTest {
 
         assertThat(result).isInstanceOf(DomainResult.Success::class.java)
 
-        val shops = repo.getAll().first()
+        val shops = repo.getAll()
+            .first()
+            .getOrElse(emptyList())
 
-        assertThat(shops).hasSize(1)
-        assertThat(photoStorage.images).hasSize(shop0.images.size)
+        assertThat(shops.size).isEqualTo(1)
+        assertThat(photoStorage.images.size).isEqualTo(shop0.images.size)
     }
 }

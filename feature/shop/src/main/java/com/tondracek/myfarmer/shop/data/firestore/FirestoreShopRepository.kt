@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.shop.data
+package com.tondracek.myfarmer.shop.data.firestore
 
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldPath
@@ -17,7 +17,9 @@ import com.tondracek.myfarmer.location.data.GeoHashUtils
 import com.tondracek.myfarmer.location.domain.model.DistanceRing
 import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.location.domain.usecase.measureMapDistance
-import com.tondracek.myfarmer.shop.data.firestore.firestoreGetByGeohashPaged
+import com.tondracek.myfarmer.shop.data.ShopEntity
+import com.tondracek.myfarmer.shop.data.toEntity
+import com.tondracek.myfarmer.shop.data.toModel
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.repository.DistancePagingCursor

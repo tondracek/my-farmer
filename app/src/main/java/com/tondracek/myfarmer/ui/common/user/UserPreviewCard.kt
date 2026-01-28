@@ -18,12 +18,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.ui.common.image.ImageView
-import com.tondracek.myfarmer.ui.common.sample.user1
-import com.tondracek.myfarmer.ui.common.sample.user2
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewDark
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.user.domain.model.SystemUser
+import com.tondracek.myfarmer.user.sample.user1
+import com.tondracek.myfarmer.user.sample.user2
 
 @Composable
 fun UserPreviewCard(

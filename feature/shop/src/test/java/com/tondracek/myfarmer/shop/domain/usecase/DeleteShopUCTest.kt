@@ -1,20 +1,18 @@
 package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.whenever
-import com.tondracek.myfarmer.auth.domain.usecase.result.NotLoggedInUCResult
-import com.tondracek.myfarmer.common.image.data.FakePhotoStorage
 import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
+import com.tondracek.myfarmer.core.domain.domainerror.AuthError
+import com.tondracek.myfarmer.core.domain.domainerror.ShopError
 import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.shop.data.getFakeShopRepository
+import com.tondracek.myfarmer.image.data.FakePhotoStorage
+import com.tondracek.myfarmer.shop.data.FakeShopRepository
+import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
-import com.tondracek.myfarmer.shop.domain.result.NotShopOwnerUCResult
-import com.tondracek.myfarmer.shop.domain.result.ShopNotFoundUCResult
-import com.tondracek.myfarmer.ui.common.sample.sampleUsers
-import com.tondracek.myfarmer.ui.common.sample.shop0
+import com.tondracek.myfarmer.shop.sample.shop0
 import com.tondracek.myfarmer.user.domain.usecase.GetLoggedInUserUC
+import com.tondracek.myfarmer.user.sample.sampleUsers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -22,13 +20,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import java.util.UUID
+import org.mockito.kotlin.whenever
 
 
 @RunWith(MockitoJUnitRunner::class)
 class DeleteShopUCTest {
 
-    private val shopRepository: ShopRepository = getFakeShopRepository()
+    private val shopRepository: ShopRepository = FakeShopRepository()
 
     @Mock
     lateinit var getLoggedInUserUC: GetLoggedInUserUC
@@ -46,22 +44,23 @@ class DeleteShopUCTest {
 
     @Test
     fun `returns failure when shop does not exist`() = runTest {
-        val shopId = UUID.randomUUID()
+        val shopId = ShopId.newId()
 
         whenever(getLoggedInUserUC())
             .thenReturn(flowOf(domainResultOf(sampleUsers.first())))
 
         val result = uc(shopId)
 
-        assertThat(result).isInstanceOf(ShopNotFoundUCResult::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
+        assertThat((result as DomainResult.Failure).error).isInstanceOf(ShopError.NotFound::class.java)
     }
 
     @Test
     fun `returns failure when user is not logged in`() = runTest {
-        val shopId = UUID.randomUUID()
+        val shopId = ShopId.newId()
 
         whenever(getLoggedInUserUC())
-            .thenReturn(flow { NotLoggedInUCResult() })
+            .thenReturn(flowOf(DomainResult.Failure(AuthError.NotLoggedIn)))
 
         val result = uc(shopId)
 
@@ -81,7 +80,8 @@ class DeleteShopUCTest {
 
         val result = uc(shopId)
 
-        assertThat(result).isInstanceOf(NotShopOwnerUCResult::class.java)
+        assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
+        assertThat((result as DomainResult.Failure).error).isInstanceOf(ShopError.NotOwner::class.java)
     }
 
     @Test
@@ -102,8 +102,9 @@ class DeleteShopUCTest {
 
         assertThat(result).isInstanceOf(DomainResult.Success::class.java)
 
-        val shops = shopRepository.getAll().first()
-        println(shops)
+        val shops = shopRepository.getAll()
+            .first()
+            .getOrNull()
         assertThat(shops).doesNotContain(shop)
     }
 }

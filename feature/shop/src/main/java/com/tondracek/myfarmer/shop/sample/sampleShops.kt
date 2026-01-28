@@ -1,6 +1,5 @@
-package com.tondracek.myfarmer.ui.common.sample
+package com.tondracek.myfarmer.shop.sample
 
-import androidx.core.graphics.toColorInt
 import com.tondracek.myfarmer.common.color.RgbColor
 import com.tondracek.myfarmer.common.color.fromArgb
 import com.tondracek.myfarmer.image.model.ImageResource
@@ -9,14 +8,12 @@ import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
-import com.tondracek.myfarmer.review.domain.model.Rating
-import com.tondracek.myfarmer.review.domain.model.Review
-import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.ui.common.review.ReviewUiState
-import com.tondracek.myfarmer.ui.common.review.toUiState
+import com.tondracek.myfarmer.user.sample.user0
+import com.tondracek.myfarmer.user.sample.user1
+import com.tondracek.myfarmer.user.sample.user2
 import java.time.DayOfWeek
 
 val shop0 = Shop(
@@ -43,8 +40,8 @@ val shop0 = Shop(
     ),
     location = Location(49.209166, 16.556608),
     categories = listOf(
-        ShopCategory(name = "Med", color = RgbColor.fromArgb(0xFFFFC107.toColorInt())),
-        ShopCategory(name = "Včelařství", color = RgbColor.fromArgb(0xFFFF9800.toColorInt())),
+        ShopCategory(name = "Med", color = RgbColor.fromArgb(0xFFFFC107.toInt())),
+        ShopCategory(name = "Včelařství", color = RgbColor.fromArgb(0xFFFF9800.toInt())),
     ),
     menu = ProductMenu(
         listOf(
@@ -79,65 +76,6 @@ val shop0 = Shop(
     )
 )
 
-val shop0reviews = listOf(
-    Review(
-        ReviewId.fromString("ef142e15-0e63-4e58-b8dc-2d05e00a47c7"),
-        shop0.id,
-        user0.id,
-        Rating(5),
-        "Amazing"
-    ),
-    Review(
-        ReviewId.fromString("2c658b43-07f6-4b0e-aded-61a6595df277"),
-        shop0.id,
-        user2.id,
-        Rating(1),
-        "I didn't like it"
-    ),
-    Review(
-        ReviewId.fromString("898f403f-3abb-4c98-a7bb-5ce2483e26b6"),
-        shop0.id,
-        user1.id,
-        Rating(2),
-        "ExampleReview"
-    ),
-    Review(
-        ReviewId.fromString("64e80795-45a7-4972-ad11-8cd1cb298307"),
-        shop0.id,
-        user1.id,
-        Rating(2),
-        "ExampleReview"
-    ),
-    Review(
-        ReviewId.fromString("d7b90437-f337-4f0b-9983-08f16f6dd70f"),
-        shop0.id,
-        user1.id,
-        Rating(2),
-        "ExampleReview"
-    ),
-    Review(
-        ReviewId.fromString("add3fb4d-e2d8-4364-8ef5-ddc0c585349f"),
-        shop0.id,
-        user1.id,
-        Rating(2),
-        "ExampleReview"
-    ),
-    Review(
-        ReviewId.fromString("7b4ad3ff-77d7-4bc8-8941-4a649886e9c9"),
-        shop0.id,
-        user1.id,
-        Rating(2),
-        "ExampleReview"
-    ),
-    Review(
-        ReviewId.fromString("61f14112-5f1a-4385-aa0c-b9dd34aeb56e"),
-        shop0.id,
-        user1.id,
-        Rating(2),
-        "ExampleReview"
-    ),
-)
-
 val shop1 = Shop(
     id = ShopId.fromString("295d5f90-b45a-4df4-8785-fd2b6db4160e"),
     name = "FI MUNI",
@@ -158,26 +96,24 @@ val shop1 = Shop(
     description = "Na FI je všechno",
     location = Location(49.209806, 16.598833),
     categories = listOf(
-        ShopCategory(name = "Zelenina", color = RgbColor.fromArgb(0xFF067C06.toColorInt())),
-        ShopCategory(name = "Ovoce", color = RgbColor.fromArgb(0xFFE4560B.toColorInt())),
-        ShopCategory(name = "Maso", color = RgbColor.fromArgb(0xFF642000.toColorInt())),
-        ShopCategory(name = "Mléčné výrobky", color = RgbColor.fromArgb(0xFFCFCECA.toColorInt())),
-        ShopCategory(name = "Pečivo", color = RgbColor.fromArgb(0xFFCA6207.toColorInt())),
-        ShopCategory(name = "Vejce", color = RgbColor.fromArgb(0xFFBE9329.toColorInt())),
-        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFF0B5DE4.toColorInt())),
-        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFF067C06.toColorInt())),
-        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFFE4560B.toColorInt())),
-        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFF642000.toColorInt())),
-        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFFCFCECA.toColorInt())),
-        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFFCA6207.toColorInt())),
-        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFFBE9329.toColorInt())),
+        ShopCategory(name = "Zelenina", color = RgbColor.fromArgb(0xFF067C06.toInt())),
+        ShopCategory(name = "Ovoce", color = RgbColor.fromArgb(0xFFE4560B.toInt())),
+        ShopCategory(name = "Maso", color = RgbColor.fromArgb(0xFF642000.toInt())),
+        ShopCategory(name = "Mléčné výrobky", color = RgbColor.fromArgb(0xFFCFCECA.toInt())),
+        ShopCategory(name = "Pečivo", color = RgbColor.fromArgb(0xFFCA6207.toInt())),
+        ShopCategory(name = "Vejce", color = RgbColor.fromArgb(0xFFBE9329.toInt())),
+        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFF0B5DE4.toInt())),
+        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFF067C06.toInt())),
+        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFFE4560B.toInt())),
+        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFF642000.toInt())),
+        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFFCFCECA.toInt())),
+        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFFCA6207.toInt())),
+        ShopCategory(name = "Další", color = RgbColor.fromArgb(0xFFBE9329.toInt())),
     ),
     menu = ProductMenu(listOf()),
     ownerId = user1.id,
     openingHours = OpeningHours.Message(""),
 )
-
-val shop1reviews = emptyList<Review>()
 
 val shop2 = Shop(
     id = ShopId.fromString("88a35777-c323-416f-8de5-265392eb1227"),
@@ -190,7 +126,7 @@ val shop2 = Shop(
     description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
     location = Location(49.205778, 16.593361),
     categories = listOf(
-        ShopCategory(name = "Vejce", color = RgbColor.fromArgb(0xFFBE9329.toColorInt())),
+        ShopCategory(name = "Vejce", color = RgbColor.fromArgb(0xFFBE9329.toInt())),
     ),
     menu = ProductMenu(
         listOf(
@@ -216,22 +152,6 @@ val shop2 = Shop(
     ),
 )
 
-val shop2reviews = listOf(
-    Review(
-        ReviewId.fromString("37d40e5f-fa17-4c96-8fb6-4a8b38324403"),
-        shop2.id,
-        user0.id,
-        Rating(5),
-        "Amazing"
-    ),
-    Review(
-        ReviewId.fromString("578c8b8c-6dac-452a-a901-de0fbdf0cf37"),
-        shop2.id,
-        user1.id,
-        Rating(2),
-        "Nuh, average"
-    ),
-)
 
 val shop3 = Shop(
     id = ShopId.fromString("7892234a-f7dd-40dc-a528-7eec23e90589"),
@@ -241,7 +161,7 @@ val shop3 = Shop(
     description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl quis aliquam ultricies, nunc nisl ultrices odio, vitae aliquam nunc nisl vitae nunc.",
     location = Location(49.205778, 16.59),
     categories = listOf(
-        ShopCategory(name = "Maso", color = RgbColor.fromArgb(0xFF642000.toColorInt())),
+        ShopCategory(name = "Maso", color = RgbColor.fromArgb(0xFF642000.toInt())),
     ),
     menu = ProductMenu(
         listOf(
@@ -259,31 +179,6 @@ val shop3 = Shop(
     )
 )
 
-val shop3reviews = listOf(
-    Review(
-        ReviewId.fromString("59a0d8c9-4257-4407-9674-8689fe2ca903"),
-        shop3.id,
-        user0.id,
-        Rating(5),
-        "Amazing"
-    ),
-    Review(
-        ReviewId.fromString("f83e60d3-3296-4d90-ba6b-c424e890f00b"),
-        shop3.id,
-        user1.id,
-        Rating(2),
-        "Nuh, average"
-    ),
-)
-
 val sampleShops: List<Shop> by lazy {
     listOf(shop0, shop1, shop2, shop3)
-}
-
-val sampleReviews: List<Review> by lazy {
-    listOf(shop0reviews, shop1reviews, shop2reviews, shop3reviews).flatten()
-}
-val sampleReviewsUI: List<ReviewUiState> = sampleReviews.mapNotNull { review ->
-    val author = sampleUsers.find { it.id == review.userId } ?: return@mapNotNull null
-    review.toUiState(author)
 }

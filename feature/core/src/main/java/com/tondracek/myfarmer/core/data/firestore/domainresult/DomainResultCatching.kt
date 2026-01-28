@@ -28,6 +28,12 @@ inline fun <T> domainResultOf(
     }
 }
 
+fun <T> domainResultOf(value: T): DomainResult<T> =
+    DomainResult.Success(value)
+
+fun domainResultOf(error: DomainError, exception: Throwable? = null): DomainResult<Nothing> =
+    DomainResult.Failure(error, exception)
+
 /**
  * Extension function to convert a Flow<T> into a Flow<UCResult<T>>.
  * It maps successful emissions to UCResult.Success and catches exceptions,

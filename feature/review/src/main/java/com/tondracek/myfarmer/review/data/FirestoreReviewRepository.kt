@@ -20,7 +20,7 @@ import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.review.domain.repository.ReviewPageCursor
 import com.tondracek.myfarmer.review.domain.repository.ReviewRepository
-import com.tondracek.myfarmer.shop.data.toFirestoreId
+import com.tondracek.myfarmer.shop.data.firestore.toFirestoreId
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.user.data.toFirestoreId
 import com.tondracek.myfarmer.user.domain.model.UserId

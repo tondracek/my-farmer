@@ -27,9 +27,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
-import com.tondracek.myfarmer.ui.common.sample.user0
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import com.tondracek.myfarmer.user.sample.user0
 
 @Composable
 fun ContactInfoSection(

@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.ui.common.sample
+package com.tondracek.myfarmer.user.sample
 
 import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo

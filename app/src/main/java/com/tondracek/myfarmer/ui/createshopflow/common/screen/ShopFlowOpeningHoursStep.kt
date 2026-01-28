@@ -30,9 +30,9 @@ import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShopInput
+import com.tondracek.myfarmer.shop.sample.shop0
 import com.tondracek.myfarmer.ui.common.lazycolumn.fadingEdges
 import com.tondracek.myfarmer.ui.common.openinghours.getDayOfWeekString
-import com.tondracek.myfarmer.ui.common.sample.shop0
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewDark
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme

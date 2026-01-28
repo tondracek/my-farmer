@@ -11,12 +11,12 @@ class GetClosestShopsUC @Inject constructor(
     suspend operator fun invoke(
         shops: Collection<Shop>,
         count: Int
-    ): List<Shop> = shops
-        .map {
-            val currentLocation = locationProvider.getCurrentLocation()
-            it to measureMapDistance(currentLocation, it.location)
-        }
-        .sortedBy { it.second }
-        .map { it.first }
-        .take(count)
+    ): List<Shop> {
+        if (shops.isEmpty()) return emptyList()
+
+        val currentLocation = locationProvider.getCurrentLocation()
+        return shops
+            .sortedBy { measureMapDistance(currentLocation, it.location) }
+            .take(count)
+    }
 }

@@ -14,7 +14,13 @@ data class ProductMenu(
 value class MenuItemId(val value: UUID) {
     companion object {
         fun new() = MenuItemId(UUID.randomUUID())
+
+        fun fromString(value: String) = runCatching {
+            MenuItemId(UUID.fromString(value))
+        }.getOrDefault(null)
     }
+
+    override fun toString(): String = value.toString()
 }
 
 data class MenuItem(
