@@ -1,8 +1,8 @@
 package com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview
 
 import com.google.android.gms.maps.model.LatLngBounds
-import com.tondracek.myfarmer.common.image.model.ImageResource
-import com.tondracek.myfarmer.location.model.Location
+import com.tondracek.myfarmer.image.model.ImageResource
+import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 

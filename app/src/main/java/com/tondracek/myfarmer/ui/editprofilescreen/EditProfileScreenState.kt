@@ -1,10 +1,10 @@
 package com.tondracek.myfarmer.ui.editprofilescreen
 
 import com.tondracek.myfarmer.auth.domain.model.AuthId
-import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
-import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
-import com.tondracek.myfarmer.systemuser.domain.model.UserId
+import com.tondracek.myfarmer.image.model.ImageResource
+import com.tondracek.myfarmer.user.domain.model.SystemUser
+import com.tondracek.myfarmer.user.domain.model.UserId
 
 sealed interface EditProfileScreenState {
 

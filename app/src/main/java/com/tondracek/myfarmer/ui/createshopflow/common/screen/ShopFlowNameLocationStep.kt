@@ -40,7 +40,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.location.model.Location
+import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 import com.tondracek.myfarmer.ui.createshopflow.common.ShopFormEvent

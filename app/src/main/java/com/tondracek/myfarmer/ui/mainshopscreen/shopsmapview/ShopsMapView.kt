@@ -54,7 +54,7 @@ import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.location.model.Location
+import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.ui.common.button.RefreshIconButton
 import com.tondracek.myfarmer.ui.common.map.mapbox.CLUSTER_LAYER_ID

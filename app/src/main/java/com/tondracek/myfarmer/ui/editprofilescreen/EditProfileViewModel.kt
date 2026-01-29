@@ -1,15 +1,15 @@
 package com.tondracek.myfarmer.ui.editprofilescreen
 
 import androidx.lifecycle.viewModelScope
-import com.tondracek.myfarmer.auth.domain.usecase.GetLoggedInUserUC
-import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
 import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
-import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
-import com.tondracek.myfarmer.systemuser.domain.usecase.UpdateUserUC
+import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
+import com.tondracek.myfarmer.user.domain.model.SystemUser
+import com.tondracek.myfarmer.user.domain.usecase.GetLoggedInUserUC
+import com.tondracek.myfarmer.user.domain.usecase.UpdateUserUC
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

@@ -27,11 +27,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.review.domain.model.ReviewInput
-import com.tondracek.myfarmer.shop.data.sampleReviewsUI
 import com.tondracek.myfarmer.ui.common.divider.CustomHorizontalDivider
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.common.paging.paginatedItems
 import com.tondracek.myfarmer.ui.common.review.ReviewCard
+import com.tondracek.myfarmer.ui.common.sample.sampleReviewsUI
 import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme

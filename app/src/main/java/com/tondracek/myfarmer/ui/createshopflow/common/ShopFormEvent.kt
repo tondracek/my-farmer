@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.ui.createshopflow.common
 
-import com.tondracek.myfarmer.common.image.model.ImageResource
-import com.tondracek.myfarmer.location.model.Location
+import com.tondracek.myfarmer.image.model.ImageResource
+import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.shop.domain.model.ShopInput

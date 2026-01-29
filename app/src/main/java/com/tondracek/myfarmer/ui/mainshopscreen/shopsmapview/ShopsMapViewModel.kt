@@ -5,10 +5,10 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
 import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
-import com.tondracek.myfarmer.location.model.Location
-import com.tondracek.myfarmer.location.model.meters
-import com.tondracek.myfarmer.map.GetMapViewInitialCameraBoundsUC
-import com.tondracek.myfarmer.map.GetUserApproximateLocationUC
+import com.tondracek.myfarmer.location.domain.model.Location
+import com.tondracek.myfarmer.location.domain.model.meters
+import com.tondracek.myfarmer.location.domain.usecase.GetMapViewInitialCameraBoundsUC
+import com.tondracek.myfarmer.location.domain.usecase.GetUserApproximateLocationUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.repository.DistancePagingCursor
@@ -16,12 +16,12 @@ import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsPaginatedUC
 import com.tondracek.myfarmer.shop.domain.usecase.GetClosestShopsUC
 import com.tondracek.myfarmer.shop.domain.usecase.GetShopsByDistancePagedUC
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
-import com.tondracek.myfarmer.shopfilters.domain.usecase.ApplyFiltersUC
+import com.tondracek.myfarmer.shopfilters.domain.usecase.ApplyShopFiltersUC
 import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
-import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
-import com.tondracek.myfarmer.systemuser.domain.usecase.GetUsersByIdsUC
 import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
 import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
+import com.tondracek.myfarmer.user.domain.model.SystemUser
+import com.tondracek.myfarmer.user.domain.usecase.GetUsersByIdsUC
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -46,7 +46,7 @@ import javax.inject.Inject
 class ShopsMapViewModel @Inject constructor(
     private val getShopsByDistancePaged: GetShopsByDistancePagedUC,
     private val getAllShopsPaginated: GetAllShopsPaginatedUC,
-    private val applyFilters: ApplyFiltersUC,
+    private val applyFilters: ApplyShopFiltersUC,
     getUserApproximateLocation: GetUserApproximateLocationUC,
     getClosestShops: GetClosestShopsUC,
     getShopFilters: GetShopFiltersUC,

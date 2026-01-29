@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable

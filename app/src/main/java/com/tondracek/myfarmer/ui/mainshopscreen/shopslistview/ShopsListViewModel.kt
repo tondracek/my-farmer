@@ -8,10 +8,10 @@ import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
 import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
 import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
-import com.tondracek.myfarmer.location.model.Location
-import com.tondracek.myfarmer.location.model.meters
-import com.tondracek.myfarmer.location.usecase.measureMapDistance
-import com.tondracek.myfarmer.map.GetUserApproximateLocationUC
+import com.tondracek.myfarmer.location.domain.model.Location
+import com.tondracek.myfarmer.location.domain.model.meters
+import com.tondracek.myfarmer.location.domain.usecase.GetUserApproximateLocationUC
+import com.tondracek.myfarmer.location.domain.usecase.measureMapDistance
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.usecase.GetAverageRatingsByShopUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
@@ -20,7 +20,7 @@ import com.tondracek.myfarmer.shop.domain.repository.DistancePagingCursor
 import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsPaginatedUC
 import com.tondracek.myfarmer.shop.domain.usecase.GetShopsByDistancePagedUC
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
-import com.tondracek.myfarmer.shopfilters.domain.usecase.ApplyFiltersUC
+import com.tondracek.myfarmer.shopfilters.domain.usecase.ApplyShopFiltersUC
 import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
 import com.tondracek.myfarmer.ui.common.paging.getDomainResultPageFlow
 import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
@@ -49,7 +49,7 @@ class ShopsListViewModel @Inject constructor(
     getShopFilters: GetShopFiltersUC,
     private val getAllShopsPaginated: GetAllShopsPaginatedUC,
     private val getShopsByDistancePaged: GetShopsByDistancePagedUC,
-    private val applyFiltersUC: ApplyFiltersUC,
+    private val applyFiltersUC: ApplyShopFiltersUC,
 ) : BaseViewModel<ShopsListViewEffect>() {
 
     private val filters: StateFlow<ShopFilters> =

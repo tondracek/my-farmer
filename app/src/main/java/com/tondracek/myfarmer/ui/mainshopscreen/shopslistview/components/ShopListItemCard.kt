@@ -16,11 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.tondracek.myfarmer.location.model.km
+import com.tondracek.myfarmer.location.domain.model.km
 import com.tondracek.myfarmer.review.domain.model.Rating
-import com.tondracek.myfarmer.shop.data.shop0
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.shop.sample.shop0
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow
+import com.tondracek.myfarmer.ui.common.distance.toStringTranslated
 import com.tondracek.myfarmer.ui.common.image.ImageView
 import com.tondracek.myfarmer.ui.common.rating.RatingStars
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview

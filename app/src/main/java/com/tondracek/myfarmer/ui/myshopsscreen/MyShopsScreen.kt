@@ -17,8 +17,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.review.domain.model.Rating
-import com.tondracek.myfarmer.shop.data.sampleShops
 import com.tondracek.myfarmer.shop.domain.model.ShopId
+import com.tondracek.myfarmer.shop.sample.sampleShops
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme

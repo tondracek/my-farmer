@@ -18,7 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
-import com.tondracek.myfarmer.ui.common.color.contrastColor
+import com.tondracek.myfarmer.ui.common.color.toColor
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.toCardColors
 
 @Composable
 fun FlowCategoryChips(
@@ -41,10 +42,7 @@ private fun CategoryChip(
     onRemove: () -> Unit
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = category.color,
-            contentColor = contrastColor(category.color)
-        ),
+        colors = category.color.toColor().toCardColors(),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Row(

@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tondracek.myfarmer.shop.data.sampleShops
+import com.tondracek.myfarmer.shop.sample.sampleShops
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 

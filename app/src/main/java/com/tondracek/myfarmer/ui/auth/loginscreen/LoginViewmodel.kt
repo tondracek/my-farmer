@@ -80,17 +80,13 @@ class LoginViewmodel @Inject constructor(
         }
     }
 
-    private suspend fun submitGoogleLogin(token: String) {
-        val result = loginWithGoogleUC(token)
-        when (result) {
-            is DomainResult.Success -> {
+    private suspend fun submitGoogleLogin(token: String) =
+        loginWithGoogleUC(token)
+            .withFailure { emitEffect(LoginEffect.ShowError(it.error)) }
+            .withSuccess {
                 emitEffect(LoginEffect.ShowLoginSuccessfully)
                 emitEffect(LoginEffect.GoToProfileScreen)
             }
-
-            is DomainResult.Failure -> emitEffect(LoginEffect.ShowError(result.error))
-        }
-    }
 
     fun onEvent(event: LoginEvent) = viewModelScope.launch {
         when (event) {

@@ -37,12 +37,8 @@ private class DomainResultPagingSource<Item : Any, Cursor : Any>(
 
     override fun getRefreshKey(state: PagingState<Cursor, Item>) = null
 
-    override suspend fun load(
-        params: LoadParams<Cursor>
-    ): LoadResult<Cursor, Item> {
-        val result = getItems(pageSize, params.key)
-
-        return when (result) {
+    override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, Item> =
+        when (val result = getItems(pageSize, params.key)) {
             is DomainResult.Success<Pair<List<Item>, Cursor?>> -> {
                 val (items, nextCursor) = result.data
                 Timber.d("Loaded page with key=${params.key}, items=${items.size}, nextKey=$nextCursor")
@@ -58,5 +54,4 @@ private class DomainResultPagingSource<Item : Any, Cursor : Any>(
                 .withFailure { showError(it.error) }
                 .let { LoadResult.Error(result.cause ?: Exception()) }
         }
-    }
 }

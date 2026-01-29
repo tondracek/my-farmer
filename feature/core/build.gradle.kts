@@ -1,0 +1,45 @@
+plugins {
+    alias(libs.plugins.android.library)
+
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace = "com.tondracek.myfarmer.core"
+    compileSdk {
+        version = release(36)
+    }
+
+    defaultConfig {
+        minSdk = 27
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    /** Kotlin  **/
+    implementation(libs.kotlinx.coroutines.core)
+
+    /** Testing **/
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.truth)
+    testImplementation(libs.kotlinx.coroutines.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    /** Hilt **/
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    /** Logging **/
+    implementation(libs.timber)
+
+    /** Firebase **/
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+}

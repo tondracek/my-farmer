@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
-import com.tondracek.myfarmer.shop.data.shop0
+import com.tondracek.myfarmer.shop.sample.shop0
 import com.tondracek.myfarmer.ui.common.productmenu.InStockLabel
 import com.tondracek.myfarmer.ui.core.preview.PreviewDark
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme

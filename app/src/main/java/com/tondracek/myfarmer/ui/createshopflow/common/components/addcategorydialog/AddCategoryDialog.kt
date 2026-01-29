@@ -35,6 +35,7 @@ import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.ui.common.category.CategoryNameInput
 import com.tondracek.myfarmer.ui.common.category.CategoryNameInputState
+import com.tondracek.myfarmer.ui.common.color.toRgbColor
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
@@ -104,7 +105,7 @@ fun AddCategoryDialog(
                 onClick = {
                     val newCategory = ShopCategory(
                         name = state.categoryName,
-                        color = state.selectedColor
+                        color = state.selectedColor.toRgbColor()
                     )
                     onAdd(newCategory)
                     onDismiss()

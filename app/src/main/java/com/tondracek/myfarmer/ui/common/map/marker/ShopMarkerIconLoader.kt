@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.ui.common.map.marker
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.image.model.ImageResource
 
 object ShopMarkerIconLoader {
 

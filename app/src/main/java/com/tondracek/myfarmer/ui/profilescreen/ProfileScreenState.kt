@@ -1,8 +1,8 @@
 package com.tondracek.myfarmer.ui.profilescreen
 
-import com.tondracek.myfarmer.common.image.model.ImageResource
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
-import com.tondracek.myfarmer.systemuser.domain.model.SystemUser
+import com.tondracek.myfarmer.image.model.ImageResource
+import com.tondracek.myfarmer.user.domain.model.SystemUser
 
 sealed interface ProfileScreenState {
 

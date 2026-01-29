@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.ui.common.category.CategoriesRow

@@ -10,12 +10,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
+import com.tondracek.myfarmer.ui.common.color.toColor
+import com.tondracek.myfarmer.ui.common.color.toRgbColor
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 
 @Composable
 fun CategoryLabel(category: ShopCategory) {
     Card(
-        colors = MyFarmerTheme.cardColors.custom(category.color),
+        colors = MyFarmerTheme.cardColors.custom(category.color.toColor()),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Text(
@@ -29,11 +31,11 @@ fun CategoryLabel(category: ShopCategory) {
 @Preview
 @Composable
 fun CategoryLabelPrev() {
-    CategoryLabel(category = ShopCategory("Vegetables", Color.Blue))
+    CategoryLabel(category = ShopCategory("Vegetables", Color.Blue.toRgbColor()))
 }
 
 @Preview
 @Composable
 fun CategoryLabelPrev2() {
-    CategoryLabel(category = ShopCategory("Fruits", Color.White))
+    CategoryLabel(category = ShopCategory("Fruits", Color.White.toRgbColor()))
 }

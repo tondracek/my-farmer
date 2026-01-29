@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.common.image.model.ImageResource
+import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.ui.common.image.ImageView
 import com.tondracek.myfarmer.ui.common.image.PictureFromCameraIconButton
 import com.tondracek.myfarmer.ui.common.image.PictureFromGalleryIconButton
