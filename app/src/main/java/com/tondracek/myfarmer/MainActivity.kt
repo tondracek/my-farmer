@@ -5,18 +5,14 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.stefanoq21.material3.navigation.ModalBottomSheetLayout
-import com.stefanoq21.material3.navigation.rememberBottomSheetNavigator
 import com.tondracek.myfarmer.ui.auth.loginscreen.loginDestination
 import com.tondracek.myfarmer.ui.auth.registrationscreen.RegistrationRoute
 import com.tondracek.myfarmer.ui.auth.registrationscreen.registrationDestination
@@ -52,49 +48,42 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyFarmerTheme {
-                val bottomSheetNavigator = rememberBottomSheetNavigator()
-
-                val navController = rememberNavController(bottomSheetNavigator)
+                val navController = rememberNavController()
                 val current by navController.currentBackStackEntryAsState()
                 LaunchedEffect(current) { Timber.d("Current destination: ${current?.destination?.route}") }
 
                 val appUiController = remember { AppUiController() }
 
                 AppScaffold(navController, appUiController) {
-                    ModalBottomSheetLayout(
-                        modifier = Modifier.fillMaxSize(),
-                        bottomSheetNavigator = bottomSheetNavigator,
+                    NavHost(
+                        navController = navController,
+                        startDestination = NavGraph.MainFlow,
                     ) {
-                        NavHost(
-                            navController = navController,
-                            startDestination = NavGraph.MainFlow,
-                        ) {
-                            navigation<NavGraph.MainFlow>(NavGraph.MainFlow.Home) {
-                                navigation<NavGraph.MainFlow.MyShops>(Route.MyShopsRoute) {
-                                    myShopsScreenDestination(navController)
-                                }
-
-                                navigation<NavGraph.MainFlow.Home>(Route.MainShopsRoute) {
-                                    mainShopsScreenDestination(navController)
-                                }
-
-                                navigation<NavGraph.MainFlow.Profile>(ProfileScreenRoute) {
-                                    profileScreenDestination(navController, appUiController)
-                                    editProfileDestination(navController, appUiController)
-                                }
-
-                                navigation<NavGraph.MainFlow.Auth>(RegistrationRoute) {
-                                    registrationDestination(navController, appUiController)
-                                    loginDestination(navController, appUiController)
-                                }
+                        navigation<NavGraph.MainFlow>(NavGraph.MainFlow.Home) {
+                            navigation<NavGraph.MainFlow.MyShops>(Route.MyShopsRoute) {
+                                myShopsScreenDestination(navController)
                             }
 
-                            shopDetailScreenDestination(navController)
-                            shopReviewsScreenDestination(navController)
+                            navigation<NavGraph.MainFlow.Home>(Route.MainShopsRoute) {
+                                mainShopsScreenDestination(navController)
+                            }
 
-                            createShopDestination(navController, appUiController)
-                            updateShopDestination(navController, appUiController)
+                            navigation<NavGraph.MainFlow.Profile>(ProfileScreenRoute) {
+                                profileScreenDestination(navController, appUiController)
+                                editProfileDestination(navController, appUiController)
+                            }
+
+                            navigation<NavGraph.MainFlow.Auth>(RegistrationRoute) {
+                                registrationDestination(navController, appUiController)
+                                loginDestination(navController, appUiController)
+                            }
                         }
+
+                        shopDetailScreenDestination(navController)
+                        shopReviewsScreenDestination(navController)
+
+                        createShopDestination(navController, appUiController)
+                        updateShopDestination(navController, appUiController)
                     }
                 }
             }
