@@ -1,5 +1,7 @@
 package com.tondracek.myfarmer.ui.common.scaffold
 
+import android.app.Activity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -22,9 +24,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.RadialGradientShader
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -86,6 +94,7 @@ fun AppScaffold(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .appBackground()
                     .windowInsetsPadding(WindowInsets.systemBars)
             ) {
                 var navBarHeight by remember { mutableStateOf(0.dp) }
@@ -134,8 +143,33 @@ fun AppScaffold(
         confirmationDialog = confirmationDialog,
         onDismissRequest = { confirmationDialog = null },
     )
+
+    val view = LocalView.current
+    val navigationBarColor = MyFarmerTheme.colors.surfaceContainer
+    LaunchedEffect(navigationBarColor) {
+        val window = (view.context as Activity).window
+        window.navigationBarColor = navigationBarColor.toArgb()
+    }
 }
 
 @Composable
-fun Modifier.imeWithoutAppBottomBar(bottomBarHeight: Dp): Modifier =
+private fun Modifier.imeWithoutAppBottomBar(bottomBarHeight: Dp): Modifier =
     windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets(bottom = bottomBarHeight)))
+
+@Composable
+private fun Modifier.appBackground(): Modifier {
+    val colorA = MyFarmerTheme.colors.primaryContainer
+    val colorB = MyFarmerTheme.colors.surface
+
+    val customBrush = remember {
+        object : ShaderBrush() {
+            override fun createShader(size: Size) = RadialGradientShader(
+                colors = listOf(colorA, colorB),
+                center = Offset(0f, 0f),
+                radius = size.maxDimension * 0.4f,
+            )
+        }
+    }
+
+    return this.background(customBrush)
+}

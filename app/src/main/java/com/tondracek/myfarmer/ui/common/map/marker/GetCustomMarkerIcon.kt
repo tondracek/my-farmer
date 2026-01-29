@@ -2,22 +2,24 @@ package com.tondracek.myfarmer.ui.common.map.marker
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BlurMaskFilter
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.scale
 import androidx.core.graphics.withClip
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.image.model.ImageResource
-import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.farmerDarkColors
 
 suspend fun getCustomMarkerIcon(
     imageResource: ImageResource,
     context: Context,
+    color: Color,
 ): Bitmap {
     val imageUrl = imageResource.getImageUrl()
     val drawable: Drawable =
@@ -41,8 +43,9 @@ suspend fun getCustomMarkerIcon(
     }
 
     canvas.drawPath(anchorPath, Paint().apply {
-        color = farmerDarkColors.primaryContainer.toArgb()
+        this.color = color.toArgb()
         style = Paint.Style.FILL
+        maskFilter = BlurMaskFilter(2f, BlurMaskFilter.Blur.NORMAL)
     })
 
     canvas.withClip(

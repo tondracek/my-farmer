@@ -66,6 +66,7 @@ private fun Content(
                 onValueChange = onMessageChange,
                 label = { Text("Your review") },
                 minLines = 5,
+                maxLines = 10,
             )
 
             ButtonRow(

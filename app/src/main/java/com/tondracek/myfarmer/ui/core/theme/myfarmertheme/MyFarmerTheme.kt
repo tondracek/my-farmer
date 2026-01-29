@@ -1,7 +1,9 @@
 package com.tondracek.myfarmer.ui.core.theme.myfarmertheme
 
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -53,10 +55,8 @@ fun MyFarmerTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
+            getDynamicMaterialColorScheme(darkTheme)
 
         darkTheme -> materialDarkScheme
         else -> materialLightScheme
@@ -66,7 +66,8 @@ fun MyFarmerTheme(
         variant = when (darkTheme) {
             true -> MyFarmerThemeVariant.DARK
             false -> MyFarmerThemeVariant.LIGHT
-        }
+        },
+        dynamicColor = dynamicColor,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
@@ -74,4 +75,11 @@ fun MyFarmerTheme(
             content = content
         )
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+@Composable
+fun getDynamicMaterialColorScheme(darkTheme: Boolean): ColorScheme {
+    val context = LocalContext.current
+    return if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
 }

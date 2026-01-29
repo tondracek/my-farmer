@@ -23,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -70,6 +71,7 @@ import com.tondracek.myfarmer.ui.common.map.marker.ShopMarkerIconLoader
 import com.tondracek.myfarmer.ui.common.scaffold.ScreenScaffold
 import com.tondracek.myfarmer.ui.core.navigation.Route
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components.farmerDarkColors
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.math.max
@@ -216,6 +218,7 @@ private fun MapboxShopMap(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
+    val shopsColor = farmerDarkColors.primaryContainer
     MapboxMapView(
         modifier = modifier.fillMaxSize(),
         onMapReady = { mapView, map ->
@@ -238,7 +241,7 @@ private fun MapboxShopMap(
                     handleShopClick(map, point, onShopSelected)
                     true
                 }
-                addShopLayers(style, state.shops)
+                addShopLayers(style, state.shops, shopsColor)
                 map.setCamera(DEFAULT_CAMERA_POSITION)
             }
         }
@@ -270,7 +273,7 @@ private fun MapboxShopMap(
             val context = mapboxMapView.context
 
             coroutineScope.launch {
-                loadShopImages(context, style, state.shops)
+                loadShopImages(context, style, shopsColor, state.shops)
 
                 updateShopSource(style, state.shops)
             }
@@ -281,6 +284,7 @@ private fun MapboxShopMap(
 private suspend fun loadShopImages(
     context: Context,
     style: Style,
+    color: Color,
     shops: Collection<ShopMapItem>
 ) {
     shops
@@ -290,7 +294,7 @@ private suspend fun loadShopImages(
             val imageId = icon.toStyleIconId()
 
             if (!style.hasStyleImage(imageId)) {
-                val bitmap = ShopMarkerIconLoader.get(icon, context)
+                val bitmap = ShopMarkerIconLoader.get(icon, context, color)
                 style.addImage(imageId, bitmap)
             }
         }

@@ -1,9 +1,12 @@
 package com.tondracek.myfarmer.ui.core.theme.myfarmertheme.components
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerThemeVariant
+import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.getFarmerColorScheme
 
 internal val LocalMyFarmerColors = staticCompositionLocalOf { farmerLightColors }
 
@@ -179,3 +182,62 @@ data class MyFarmerColors(
     val text: Color,
     val textInvert: Color,
 )
+
+fun ColorScheme.toMyFarmerColors(variant: MyFarmerThemeVariant): MyFarmerColors =
+    MyFarmerColors(
+        primary = primary,
+        onPrimary = onPrimary,
+        primaryContainer = primaryContainer,
+        onPrimaryContainer = onPrimaryContainer,
+        inversePrimary = inversePrimary,
+
+        secondary = secondary,
+        onSecondary = onSecondary,
+        secondaryContainer = secondaryContainer,
+        onSecondaryContainer = onSecondaryContainer,
+
+        tertiary = tertiary,
+        onTertiary = onTertiary,
+        tertiaryContainer = tertiaryContainer,
+        onTertiaryContainer = onTertiaryContainer,
+
+        background = background,
+        onBackground = onBackground,
+
+        surface = surface,
+        onSurface = onSurface,
+        surfaceVariant = surfaceVariant,
+        onSurfaceVariant = onSurfaceVariant,
+        surfaceTint = surfaceTint,
+        inverseSurface = inverseSurface,
+        inverseOnSurface = inverseOnSurface,
+
+        outline = outline,
+        outlineVariant = outlineVariant,
+        scrim = scrim,
+
+        surfaceBright = surfaceBright,
+        surfaceDim = surfaceDim,
+        surfaceContainer = surfaceContainer,
+        surfaceContainerHigh = surfaceContainerHigh,
+        surfaceContainerHighest = surfaceContainerHighest,
+        surfaceContainerLow = surfaceContainerLow,
+        surfaceContainerLowest = surfaceContainerLowest,
+
+        // App-specific colors
+        success = getFarmerColorScheme(variant).success,
+        onSuccess = getFarmerColorScheme(variant).onSuccess,
+        successContainer = getFarmerColorScheme(variant).successContainer,
+        onSuccessContainer = getFarmerColorScheme(variant).onSuccessContainer,
+
+        error = getFarmerColorScheme(variant).error,
+        onError = getFarmerColorScheme(variant).onError,
+        errorContainer = getFarmerColorScheme(variant).errorContainer,
+        onErrorContainer = getFarmerColorScheme(variant).onErrorContainer,
+
+        line = getFarmerColorScheme(variant).line,
+        ratingStars = getFarmerColorScheme(variant).ratingStars,
+
+        text = getFarmerColorScheme(variant).text,
+        textInvert = getFarmerColorScheme(variant).textInvert,
+    )
