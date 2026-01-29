@@ -13,11 +13,11 @@ sealed interface UiState<out T> {
         is Success -> Success(transform(this.data))
         Loading -> Loading
     }
-}
 
-inline fun <T> UiState<T>.getOrReturn(block: () -> Nothing): T = when (this) {
-    is UiState.Success<T> -> this.data
-    UiState.Loading -> block()
+    fun getOrNull(): T? = when (this) {
+        is Success -> this.data
+        Loading -> null
+    }
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)

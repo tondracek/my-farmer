@@ -34,17 +34,18 @@ class UpdateShopViewModel @Inject constructor(
     private val shopId: ShopId = savedStateHandle.getUpdateShopScreenShopId()
 
     private val _step = MutableStateFlow(ShopFlowStep.Initial)
-    private val _input = MutableStateFlow(ShopInput.Empty)
+    private val _input: MutableStateFlow<ShopInput?> = MutableStateFlow(null)
 
-    private val _isLoading = MutableStateFlow(false)
+    private val _isSubmitting = MutableStateFlow(false)
 
     val state: StateFlow<ShopFlowState> = combine(
         _step,
         _input,
-        _isLoading,
-    ) { step, input, isLoading ->
+        _isSubmitting,
+    ) { step, input, isSubmitting ->
         when {
-            isLoading -> ShopFlowState.Loading
+            isSubmitting -> ShopFlowState.Loading
+            input == null -> ShopFlowState.Loading
             else -> ShopFlowState.Editing(step = step, input = input)
         }
     }.stateIn(
@@ -65,9 +66,9 @@ class UpdateShopViewModel @Inject constructor(
     }
 
     private fun submitShop() = viewModelScope.launch {
-        _isLoading.update { true }
-        val shopInput = _input.value
+        val shopInput = _input.value ?: return@launch
 
+        _isSubmitting.update { true }
         updateShop(shopId, shopInput)
             .withFailure { emitEffect(UpdateShopEffect.ShowError(it.error)) }
             .withSuccess {
@@ -75,12 +76,15 @@ class UpdateShopViewModel @Inject constructor(
                 emitEffect(UpdateShopEffect.ExitShopUpdate)
             }
 
-        _isLoading.update { false }
+        _isSubmitting.update { false }
     }
 
-
-    fun onShopFormEvent(event: ShopFormEvent) =
-        _input.update { ShopFormEvent.applyEvent(it, event) }
+    fun onShopFormEvent(event: ShopFormEvent) = _input.update {
+        when (it) {
+            null -> it
+            else -> ShopFormEvent.applyEvent(it, event)
+        }
+    }
 
     fun onShopFlowEvent(event: ShopFlowEvent) = when (event) {
         is ShopFlowEvent.GoToNextStep -> _step.update { it.next() }
