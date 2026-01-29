@@ -1,6 +1,5 @@
 package com.tondracek.myfarmer.core.data.firestore.helpers
 
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
@@ -25,10 +24,6 @@ fun <Entity : FirestoreEntity> QuerySnapshot.toObjectsWithId(entityClass: KClass
         doc.toObjectWithId(entityClass)
     }
 }
-
-suspend fun <Entity : FirestoreEntity> DocumentReference.getEntity(
-    entityClass: KClass<Entity>,
-) = this.get().await().toObjectWithId(entityClass)
 
 suspend fun <Entity : FirestoreEntity> Query.getEntities(
     entityClass: KClass<Entity>,

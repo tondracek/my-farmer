@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.shop.domain.usecase
+package com.tondracek.myfarmer.shopfilters.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
 import com.tondracek.myfarmer.common.color.RgbColor
@@ -13,7 +13,6 @@ import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
-import com.tondracek.myfarmer.shopfilters.domain.usecase.ApplyShopFiltersUC
 import com.tondracek.myfarmer.user.domain.model.UserId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf

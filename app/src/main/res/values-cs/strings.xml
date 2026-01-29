@@ -5,17 +5,13 @@
     <string name="list">Seznam</string>
     <string name="shops_map">Mapa Obchodů</string>
     <string name="shops_list">Seznam Obchodů</string>
-    <string name="recommended">Doporučené</string>
     <string name="home">Domů</string>
-    <string name="settings">Nastavení</string>
     <string name="gallery">Galerie</string>
-    <string name="no_pictures_found">Obrázky nenalezeny</string>
     <string name="categories">Kategorie</string>
     <string name="description">Popis</string>
     <string name="km">km</string>
     <string name="product_menu">Menu produktů</string>
     <string name="no_products">Žádné produkty</string>
-    <string name="click_here">Klikni zde</string>
     <string name="contact_info">Kontaktní údaje</string>
     <string name="out_of_stock">Není skladem</string>
     <string name="profile">Profil</string>
@@ -31,15 +27,12 @@
     <string name="friday">Pátek</string>
     <string name="saturday">Sobota</string>
     <string name="sunday">Neděle</string>
-    <string name="shop_detail">Detail obchodu</string>
     <string name="create_shop_title">Vytváření obchodu</string>
     <string name="update_shop_title">Úprava obchodu</string>
-    <string name="shop_reviews">Recenze obchodu</string>
     <string name="shop_created_successfully">Obchod úspěšně vytvořen!</string>
     <string name="shop_updated_successfully">Obchod úspěšně aktualizován!</string>
     <string name="updating_profile_please_wait">Upravování profilu, prosím čekejte!</string>
     <string name="profile_saved_successfully">Profil úspěšně uložen!</string>
-    <string name="you_are_logged_in_as">Jste přihlášeni jako %1$s</string>
     <string name="logout">Odhlásit</string>
     <string name="open_filters">Otevřít filtry</string>
     <string name="create_shop">Vytvořit obchod</string>
@@ -61,7 +54,6 @@
     <string name="select_filter_above_to_edit_it">Vyberte z filtrů nahoře pro jeho úpravu</string>
     <string name="suggestions">Doporučené</string>
     <string name="go_back">Jít zpět</string>
-    <string name="login_cancelled">Přihlašování přerušeno</string>
     <string name="apply_filters">Použít filtry</string>
     <string name="cancel">Zrušit</string>
     <string name="product_categories">Kategorie produktů</string>
@@ -176,7 +168,10 @@
     <string name="invalid_website_url">Neplatná adresa webové stránky</string>
     <string name="add_website">Přidat webovou stránku</string>
     <string name="add_facebook">Přidat Facebook</string>
-    <string name="facebook_profile_link">Odkaz na Facebook profil</string>
     <string name="enter_a_valid_facebook_profile_link">Zadejte platný odkaz na Facebook profil</string>
     <string name="edit_your_name">Upravit jméno:</string>
+    <string name="profile_picture_not_set">Profilový obrázek není nastaven</string>
+    <string name="name_not_set">Jméno není nastaveno</string>
+    <string name="contact_information_not_set">Kontaktní údaje nejsou nastaveny</string>
+    <string name="set_email">Nastavit e-mail</string>
 </resources>

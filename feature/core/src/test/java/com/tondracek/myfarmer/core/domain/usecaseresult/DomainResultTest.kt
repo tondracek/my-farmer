@@ -81,7 +81,7 @@ class DomainResultTest {
         )
 
         val failure = DomainResult.Failure(AuthError.Unknown).fold(
-            onSuccess = { it as Int },
+            onSuccess = { it },
             onFailure = { -1 }
         )
 

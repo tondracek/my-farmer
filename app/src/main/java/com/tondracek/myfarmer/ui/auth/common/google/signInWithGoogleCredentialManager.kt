@@ -7,6 +7,7 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.GetCredentialInterruptedException
+import androidx.credentials.exceptions.NoCredentialException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
@@ -48,6 +49,9 @@ suspend fun signInWithGoogleCredentialManager(
     } catch (e: GetCredentialCancellationException) {
         Timber.w(e, "Google Sign-In was cancelled by the user.")
         DomainResult.Success(null)
+    } catch (e: NoCredentialException) {
+        Timber.w(e, "No Google credentials found.")
+        DomainResult.Failure(AuthError.GoogleSignInCancelledError, e)
     } catch (e: GetCredentialInterruptedException) {
         DomainResult.Failure(AuthError.GoogleSignInCancelledError, e)
     } catch (e: GetCredentialException) {

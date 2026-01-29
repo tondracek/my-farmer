@@ -138,7 +138,6 @@ class FirestoreShopRepository @Inject constructor(
     }
 }
 
-fun ShopId?.toFirestoreId(): FirestoreEntityId? = this?.toString()
 fun ShopId.toFirestoreId(): FirestoreEntityId = this.toString()
 
 fun FirestoreEntityId.toShopId(): ShopId = ShopId.fromString(this)

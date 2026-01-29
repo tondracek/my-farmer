@@ -162,7 +162,6 @@ private fun Flow<List<ReviewEntity>>.mapToModelList(): Flow<List<Review>> =
         userEntities.map { reviewEntity -> reviewEntity.toModel() }
     }
 
-fun ReviewId?.toFirestoreId(): FirestoreEntityId? = this?.toString()
 fun ReviewId.toFirestoreId(): FirestoreEntityId = this.toString()
 
 private fun FirestoreEntityId.toReviewId() = ReviewId.fromString(this)
