@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.ui.createshopflow.create
 
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.usecase.CreateShopUC
 import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel

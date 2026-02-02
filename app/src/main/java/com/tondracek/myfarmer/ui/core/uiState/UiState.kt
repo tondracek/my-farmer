@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.ui.core.uiState
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transformLatest

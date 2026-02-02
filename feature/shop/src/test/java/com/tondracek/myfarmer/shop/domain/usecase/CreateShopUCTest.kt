@@ -3,8 +3,8 @@ package com.tondracek.myfarmer.shop.domain.usecase
 import com.google.common.truth.Truth.assertThat
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.domainerror.InputDataError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
 import com.tondracek.myfarmer.image.data.FakePhotoStorage
 import com.tondracek.myfarmer.shop.data.FakeShopRepository
 import com.tondracek.myfarmer.shop.domain.model.ShopInput

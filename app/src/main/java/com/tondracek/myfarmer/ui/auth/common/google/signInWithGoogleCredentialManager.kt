@@ -11,7 +11,7 @@ import androidx.credentials.exceptions.NoCredentialException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import timber.log.Timber
 
 suspend fun signInWithGoogleCredentialManager(

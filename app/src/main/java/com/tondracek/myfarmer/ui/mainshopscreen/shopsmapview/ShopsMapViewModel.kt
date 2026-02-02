@@ -3,8 +3,8 @@ package com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLngBounds
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
-import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
+import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
+import com.tondracek.myfarmer.core.domain.domainresult.withFailure
 import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.location.domain.model.meters
 import com.tondracek.myfarmer.location.domain.usecase.GetMapViewInitialCameraBoundsUC

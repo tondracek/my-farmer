@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.auth.domain.repository
 
 import com.tondracek.myfarmer.auth.domain.model.AuthId
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {

@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.shopfilters.domain.usecase
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
+import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
 import com.tondracek.myfarmer.location.domain.model.Distance
 import com.tondracek.myfarmer.location.domain.usecase.GetUserLocationUC
 import com.tondracek.myfarmer.location.domain.usecase.measureMapDistance

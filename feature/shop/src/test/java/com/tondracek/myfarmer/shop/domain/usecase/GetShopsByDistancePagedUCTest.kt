@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
+import com.tondracek.myfarmer.core.domain.domainresult.getOrReturn
 import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu

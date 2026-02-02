@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
+import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
 import com.tondracek.myfarmer.shop.data.FakeShopRepository
 import com.tondracek.myfarmer.shop.sample.shop0
 import com.tondracek.myfarmer.shop.sample.shop1

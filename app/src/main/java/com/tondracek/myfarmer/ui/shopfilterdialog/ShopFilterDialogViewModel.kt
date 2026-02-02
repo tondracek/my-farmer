@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.ui.shopfilterdialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
+import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
 import com.tondracek.myfarmer.location.domain.model.Distance
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity

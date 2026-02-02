@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.shop.domain.usecase
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.getOrReturn
 import com.tondracek.myfarmer.image.data.PhotoStorage
 import com.tondracek.myfarmer.image.data.PhotoStorageFolder
 import com.tondracek.myfarmer.image.data.Quality

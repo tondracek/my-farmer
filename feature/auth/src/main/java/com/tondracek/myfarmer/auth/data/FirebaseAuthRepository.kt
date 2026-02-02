@@ -8,10 +8,10 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.auth.domain.repository.AuthRepository
-import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
+import com.tondracek.myfarmer.core.data.domainResultOf
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.mapFlow
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.mapFlow
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

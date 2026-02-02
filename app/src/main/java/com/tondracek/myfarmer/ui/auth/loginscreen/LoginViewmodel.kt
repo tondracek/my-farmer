@@ -6,7 +6,7 @@ import com.tondracek.myfarmer.auth.domain.usecase.LoginWithGoogleUC
 import com.tondracek.myfarmer.auth.domain.usecase.SendForgotPasswordEmailUC
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.ui.auth.loginscreen.components.LoginInput
 import com.tondracek.myfarmer.ui.auth.loginscreen.components.LoginValidation
 import com.tondracek.myfarmer.ui.auth.loginscreen.components.validateInput

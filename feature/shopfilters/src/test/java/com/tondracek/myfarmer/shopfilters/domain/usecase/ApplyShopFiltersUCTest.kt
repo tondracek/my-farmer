@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.shopfilters.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
 import com.tondracek.myfarmer.common.color.RgbColor
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.location.domain.usecase.GetUserLocationUC
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours

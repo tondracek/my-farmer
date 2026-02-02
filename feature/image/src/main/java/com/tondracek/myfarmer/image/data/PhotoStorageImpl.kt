@@ -9,10 +9,10 @@ import androidx.core.graphics.scale
 import androidx.core.net.toUri
 import androidx.exifinterface.media.ExifInterface
 import com.google.firebase.storage.FirebaseStorage
-import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
+import com.tondracek.myfarmer.core.data.domainResultOf
 import com.tondracek.myfarmer.core.domain.domainerror.PhotoError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.toResultList
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.toResultList
 import com.tondracek.myfarmer.image.model.ImageResource
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

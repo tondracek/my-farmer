@@ -1,9 +1,9 @@
 package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
-import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
+import com.tondracek.myfarmer.core.data.domainResultOf
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import com.tondracek.myfarmer.shop.sample.shop0

@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.ui.createshopflow.common.components.addcategorydi
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
+import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
 import com.tondracek.myfarmer.shopcategory.domain.usecase.GetCategorySuggestionsUC
 import com.tondracek.myfarmer.shopcategory.domain.usecase.GetMostPopularCategoriesUC

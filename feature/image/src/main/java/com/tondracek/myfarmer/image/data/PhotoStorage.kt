@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.image.data
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.image.model.ImageResource
 
 enum class Quality {

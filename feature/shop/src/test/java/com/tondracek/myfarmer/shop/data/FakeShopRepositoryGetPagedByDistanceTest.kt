@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.shop.data
 
 import com.google.common.truth.Truth.assertThat
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.location.domain.model.DistanceRing
 import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours

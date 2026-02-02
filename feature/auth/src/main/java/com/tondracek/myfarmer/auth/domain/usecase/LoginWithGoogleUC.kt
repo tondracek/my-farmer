@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.auth.domain.usecase
 
 import com.tondracek.myfarmer.auth.domain.repository.AuthRepository
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import javax.inject.Inject
 
 class LoginWithGoogleUC @Inject constructor(

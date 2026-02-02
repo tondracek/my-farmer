@@ -3,8 +3,8 @@ package com.tondracek.myfarmer.ui.editprofilescreen
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.contactinfo.domain.model.ContactInfo
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
-import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
+import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
+import com.tondracek.myfarmer.core.domain.domainresult.withFailure
 import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
 import com.tondracek.myfarmer.user.domain.model.SystemUser

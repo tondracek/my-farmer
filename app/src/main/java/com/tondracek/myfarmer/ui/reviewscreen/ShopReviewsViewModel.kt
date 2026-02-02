@@ -6,11 +6,11 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.flatMap
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
-import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
-import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.flatMap
+import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
+import com.tondracek.myfarmer.core.domain.domainresult.mapSuccess
+import com.tondracek.myfarmer.core.domain.domainresult.withFailure
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.model.ReviewId
 import com.tondracek.myfarmer.review.domain.model.ReviewInput

@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.core.domain.repository
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
  *
  * @param Model The type of the domain model managed by the repository.
  */
-interface Repository<Model, ModelId> {
+interface CrudRepository<Model, ModelId> {
 
     suspend fun create(item: Model): DomainResult<ModelId>
 

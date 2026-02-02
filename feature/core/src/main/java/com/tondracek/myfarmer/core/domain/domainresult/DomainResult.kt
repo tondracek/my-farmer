@@ -1,8 +1,8 @@
-package com.tondracek.myfarmer.core.domain.usecaseresult
+package com.tondracek.myfarmer.core.domain.domainresult
 
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult.Failure
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult.Success
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult.Failure
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult.Success
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest

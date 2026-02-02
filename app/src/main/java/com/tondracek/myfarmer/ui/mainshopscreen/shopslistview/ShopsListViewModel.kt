@@ -5,9 +5,9 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
-import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
-import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
+import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
+import com.tondracek.myfarmer.core.domain.domainresult.mapSuccess
+import com.tondracek.myfarmer.core.domain.domainresult.withFailure
 import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.location.domain.model.meters
 import com.tondracek.myfarmer.location.domain.usecase.GetUserApproximateLocationUC

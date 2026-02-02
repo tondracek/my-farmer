@@ -1,10 +1,10 @@
 package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
-import com.tondracek.myfarmer.core.data.firestore.domainresult.domainResultOf
+import com.tondracek.myfarmer.core.data.domainResultOf
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.domainerror.ShopError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.image.data.FakePhotoStorage
 import com.tondracek.myfarmer.shop.data.FakeShopRepository
 import com.tondracek.myfarmer.shop.domain.model.ShopId

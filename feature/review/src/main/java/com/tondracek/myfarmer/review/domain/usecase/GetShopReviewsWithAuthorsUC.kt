@@ -1,9 +1,9 @@
 package com.tondracek.myfarmer.review.domain.usecase
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.flatMap
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrReturn
-import com.tondracek.myfarmer.core.domain.usecaseresult.mapSuccess
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.flatMap
+import com.tondracek.myfarmer.core.domain.domainresult.getOrReturn
+import com.tondracek.myfarmer.core.domain.domainresult.mapSuccess
 import com.tondracek.myfarmer.review.domain.model.Review
 import com.tondracek.myfarmer.review.domain.repository.ReviewPageCursor
 import com.tondracek.myfarmer.review.domain.repository.ReviewRepository

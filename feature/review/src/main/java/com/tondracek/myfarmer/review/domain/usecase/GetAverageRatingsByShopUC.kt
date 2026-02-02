@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.review.domain.usecase
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.mapFlow
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.mapFlow
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.model.toAverageRating
 import com.tondracek.myfarmer.review.domain.repository.ReviewRepository

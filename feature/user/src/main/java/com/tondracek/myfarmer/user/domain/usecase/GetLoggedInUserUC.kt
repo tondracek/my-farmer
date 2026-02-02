@@ -3,8 +3,8 @@ package com.tondracek.myfarmer.user.domain.usecase
 import com.tondracek.myfarmer.auth.domain.model.AuthId
 import com.tondracek.myfarmer.auth.domain.repository.AuthRepository
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
-import com.tondracek.myfarmer.core.domain.usecaseresult.flatMap
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.flatMap
 import com.tondracek.myfarmer.user.domain.model.SystemUser
 import com.tondracek.myfarmer.user.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow

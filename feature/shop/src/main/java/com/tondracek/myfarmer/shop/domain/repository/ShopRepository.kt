@@ -1,7 +1,7 @@
 package com.tondracek.myfarmer.shop.domain.repository
 
-import com.tondracek.myfarmer.core.domain.repository.Repository
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
+import com.tondracek.myfarmer.core.domain.repository.CrudRepository
 import com.tondracek.myfarmer.location.domain.model.DistanceRing
 import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.shop.domain.model.Shop
@@ -9,7 +9,7 @@ import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.user.domain.model.UserId
 import kotlinx.coroutines.flow.Flow
 
-interface ShopRepository : Repository<Shop, ShopId> {
+interface ShopRepository : CrudRepository<Shop, ShopId> {
 
     suspend fun getAllPaginated(limit: Int? = null, after: ShopId? = null): DomainResult<List<Shop>>
 

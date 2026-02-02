@@ -2,8 +2,8 @@ package com.tondracek.myfarmer.ui.myshopsscreen
 
 import androidx.lifecycle.viewModelScope
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
-import com.tondracek.myfarmer.core.domain.usecaseresult.getOrElse
-import com.tondracek.myfarmer.core.domain.usecaseresult.withFailure
+import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
+import com.tondracek.myfarmer.core.domain.domainresult.withFailure
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.usecase.GetAverageRatingsByShopUC
 import com.tondracek.myfarmer.shop.domain.model.Shop

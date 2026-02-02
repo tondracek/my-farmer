@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.shopcategory.domain.usecase
 
-import com.tondracek.myfarmer.core.domain.usecaseresult.DomainResult
+import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.shopcategory.domain.model.CategoryPopularity
 import com.tondracek.myfarmer.shopcategory.domain.repository.CategoryPopularityRepository
 import kotlinx.coroutines.flow.Flow

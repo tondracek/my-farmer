@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.core.domain.usecaseresult
+package com.tondracek.myfarmer.core.domain.domainresult
 
 import com.google.common.truth.Truth.assertThat
 import com.tondracek.myfarmer.core.domain.domainerror.AuthError
