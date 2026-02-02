@@ -28,15 +28,15 @@ class CreateShopViewModel @Inject constructor(
     private val _step = MutableStateFlow(ShopFlowStep.Initial)
     private val _input = MutableStateFlow(ShopInput.Empty)
 
-    private val _isLoading = MutableStateFlow(false)
+    private val _isSubmitting = MutableStateFlow(false)
 
     val state: StateFlow<ShopFlowState> = combine(
         _step,
         _input,
-        _isLoading,
-    ) { step, input, isLoading ->
+        _isSubmitting,
+    ) { step, input, isSubmitting ->
         when {
-            isLoading -> ShopFlowState.Loading
+            isSubmitting -> ShopFlowState.Loading
             else -> ShopFlowState.Editing(step = step, input = input)
         }
     }.stateIn(
@@ -46,7 +46,7 @@ class CreateShopViewModel @Inject constructor(
     )
 
     private fun submitShop() = viewModelScope.launch {
-        _isLoading.update { true }
+        _isSubmitting.update { true }
         val shopInput: ShopInput = _input.value
 
         when (val result = createShop(shopInput)) {
@@ -58,7 +58,7 @@ class CreateShopViewModel @Inject constructor(
             is DomainResult.Failure ->
                 emitEffect(CreateShopEffect.ShowError(result.error))
         }
-        _isLoading.update { false }
+        _isSubmitting.update { false }
     }
 
     fun onShopFormEvent(event: ShopFormEvent) =

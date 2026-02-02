@@ -52,9 +52,8 @@ class RegistrationViewmodel @Inject constructor(
         val currentInput = _input.value
 
         val validation = validateInput(currentInput)
-        if (!validation.isValid()) {
-            _validation.emit(validation)
-        }
+        if (!validation.isValid())
+            return _validation.emit(validation)
 
         _registrationInProgress.emit(true)
         val result = registerUserUC(currentInput.email, currentInput.password)

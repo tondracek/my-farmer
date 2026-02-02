@@ -1,6 +1,8 @@
 package com.tondracek.myfarmer.ui.auth.registrationscreen.components
 
-import android.util.Patterns
+import com.tondracek.myfarmer.common.validation.validateConfirmPassword
+import com.tondracek.myfarmer.common.validation.validateEmail
+import com.tondracek.myfarmer.common.validation.validatePassword
 import com.tondracek.myfarmer.core.domain.domainerror.ValidationError
 
 
@@ -32,38 +34,14 @@ data class RegistrationValidation(
 }
 
 fun validateInput(registrationInput: RegistrationInput): RegistrationValidation {
-    val emailResult = validateEmail(registrationInput.email)
-    val confirmPasswordResult =
+    val emailError = validateEmail(registrationInput.email)
+    val confirmPasswordError =
         validateConfirmPassword(registrationInput.password, registrationInput.confirmPassword)
-    val passwordResult = validatePassword(registrationInput.password)
+    val passwordError = validatePassword(registrationInput.password)
 
     return RegistrationValidation(
-        emailError = emailResult,
-        passwordError = passwordResult,
-        confirmPasswordError = confirmPasswordResult,
+        emailError = emailError,
+        passwordError = passwordError,
+        confirmPasswordError = confirmPasswordError,
     )
 }
-
-
-private fun validateEmail(email: String): ValidationError? =
-    when (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-        true -> null
-        false -> ValidationError.InvalidEmailFormat
-    }
-
-private fun validatePassword(password: String): ValidationError? {
-    // Minimum length check
-    if (password.length < 6) return ValidationError.PasswordMustBeAtLeast6Chars
-    // Uppercase letter check
-    if (!password.any { it.isUpperCase() }) return ValidationError.PasswordMustContainUppercaseLetter
-    // Lowercase letter check
-    if (!password.any { it.isLowerCase() }) return ValidationError.PasswordMustContainLowercaseLetter
-
-    return null
-}
-
-private fun validateConfirmPassword(password: String, confirmPassword: String): ValidationError? =
-    when (password == confirmPassword) {
-        true -> null
-        false -> ValidationError.PasswordsDoNotMatch
-    }

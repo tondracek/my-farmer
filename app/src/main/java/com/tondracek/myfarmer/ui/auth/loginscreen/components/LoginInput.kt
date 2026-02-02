@@ -1,6 +1,6 @@
 package com.tondracek.myfarmer.ui.auth.loginscreen.components
 
-import android.util.Patterns
+import com.tondracek.myfarmer.common.validation.validateEmail
 import com.tondracek.myfarmer.core.domain.domainerror.ValidationError
 
 data class LoginInput(
@@ -28,18 +28,11 @@ data class LoginValidation(
 }
 
 fun validateInput(loginInput: LoginInput): LoginValidation {
-    val emailResult = validateEmail(loginInput.email)
-    val passwordResult = null
+    val emailError = validateEmail(loginInput.email)
+    val passwordError = null
 
     return LoginValidation(
-        emailError = emailResult,
-        passwordError = passwordResult,
+        emailError = emailError,
+        passwordError = passwordError,
     )
 }
-
-
-private fun validateEmail(email: String): ValidationError? =
-    when (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-        true -> null
-        false -> ValidationError.InvalidEmailFormat
-    }
