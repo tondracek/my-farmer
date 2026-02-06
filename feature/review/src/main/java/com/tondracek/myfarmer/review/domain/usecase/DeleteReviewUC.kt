@@ -16,8 +16,7 @@ class DeleteReviewUC @Inject constructor(
 ) {
 
     suspend operator fun invoke(reviewId: ReviewId): DomainResult<Unit> {
-        val loggedUser = getLoggedInUserUC().first()
-            .getOrReturn { return it }
+        val loggedUser = getLoggedInUserUC.sync().getOrReturn { return it }
 
         val isAuthor = reviewRepository.getById(reviewId).first()
             .mapSuccess { review -> review.userId == loggedUser.id }

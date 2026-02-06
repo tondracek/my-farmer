@@ -23,7 +23,7 @@ class CreateShopReviewUC @Inject constructor(
         shopId: ShopId,
         reviewInput: ReviewInput,
     ): DomainResult<Unit> {
-        val user = getLoggedInUserUC().first().getOrReturn { return it }
+        val user = getLoggedInUserUC.sync().getOrReturn { return it }
 
         val shop = shopRepository.getById(shopId).first().getOrReturn { return it }
         if (shop.ownerId == user.id)

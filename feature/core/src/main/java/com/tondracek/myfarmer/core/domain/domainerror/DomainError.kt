@@ -24,6 +24,11 @@ sealed interface PhotoError : DomainError {
     data object DeletionFailed : PhotoError
 }
 
+sealed interface LocationError : DomainError {
+    data object FetchingFailed : LocationError
+    data object MissingLocationPermission : DomainError
+}
+
 sealed interface ShopError : DomainError {
 
     data object CreationFailed : ShopError

@@ -6,6 +6,7 @@ import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.domainerror.CategoryPopularityError
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.domainerror.InputDataError
+import com.tondracek.myfarmer.core.domain.domainerror.LocationError
 import com.tondracek.myfarmer.core.domain.domainerror.PhotoError
 import com.tondracek.myfarmer.core.domain.domainerror.ReviewError
 import com.tondracek.myfarmer.core.domain.domainerror.ShopError
@@ -62,4 +63,7 @@ fun DomainError.toUserFriendlyMessage(context: Context) = when (this) {
     ValidationError.PasswordMustContainLowercaseLetter -> context.getString(R.string.password_must_contain_at_least_one_lowercase_letter)
     ValidationError.PasswordMustContainUppercaseLetter -> context.getString(R.string.password_must_contain_at_least_one_uppercase_letter)
     ValidationError.PasswordsDoNotMatch -> context.getString(R.string.passwords_do_not_match)
+
+    LocationError.FetchingFailed -> context.getString(R.string.could_not_fetch_location)
+    LocationError.MissingLocationPermission -> context.getString(R.string.location_permission_is_missing)
 }

@@ -16,7 +16,7 @@ class DeleteShopUC @Inject constructor(
     private val photoStorage: PhotoStorage,
 ) {
     suspend operator fun invoke(shopId: ShopId): DomainResult<Unit> {
-        val currentUser = getLoggedInUserUC().first()
+        val currentUser = getLoggedInUserUC.sync()
             .getOrReturn { return it }
         val shop = shopRepository.getById(shopId).first()
             .getOrReturn { return it }

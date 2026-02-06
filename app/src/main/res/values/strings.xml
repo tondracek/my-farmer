@@ -173,4 +173,6 @@
     <string name="name_not_set">Name not set</string>
     <string name="contact_information_not_set">Contact information not set.</string>
     <string name="set_email">Set email</string>
+    <string name="could_not_fetch_location">Could not fetch location.</string>
+    <string name="location_permission_is_missing">Location permission is missing.</string>
 </resources>

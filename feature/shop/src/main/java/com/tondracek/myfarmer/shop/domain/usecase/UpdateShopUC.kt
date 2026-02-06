@@ -27,7 +27,7 @@ class UpdateShopUC @Inject constructor(
     private val photoStorage: PhotoStorage,
 ) {
     suspend operator fun invoke(shopId: ShopId, input: ShopInput): DomainResult<Unit> {
-        val user = getLoggedInUser().first().getOrReturn { return it }
+        val user = getLoggedInUser.sync().getOrReturn { return it }
 
         val originalShop = shopRepository.getById(shopId).first().getOrReturn { return it }
 

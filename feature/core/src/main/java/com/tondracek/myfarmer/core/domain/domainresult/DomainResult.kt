@@ -97,17 +97,14 @@ fun <T> Flow<DomainResult<T>>.withFailure(
 inline fun <T, R> Flow<DomainResult<T>>.mapFlow(crossinline transform: (T) -> R): Flow<DomainResult<R>> =
     this.map { result -> result.mapSuccess(transform) }
 
-inline fun <T, R> Flow<DomainResult<T>>.mapFlowUC(crossinline transform: (T) -> DomainResult<R>): Flow<DomainResult<R>> =
-    this.map { result -> result.mapFlatten(transform) }
+fun <T, R> Flow<DomainResult<T>>.mapFlowUC(transform: suspend (T) -> DomainResult<R>): Flow<DomainResult<R>> =
+    this.map { result -> result.mapFlatten { transform(it) } }
 
 @OptIn(ExperimentalCoroutinesApi::class)
 fun <T, R> Flow<DomainResult<T>>.flatMap(transform: (T) -> Flow<DomainResult<R>>): Flow<DomainResult<R>> =
     this.flatMapLatest { result ->
-        result.flatMap(transform)
-    }
-
-fun <T, R> DomainResult<T>.flatMap(transform: (T) -> Flow<DomainResult<R>>): Flow<DomainResult<R>> =
-    when (this) {
-        is Success -> transform(this.data)
-        is Failure -> flowOf(this)
+        when (result) {
+            is Success -> transform(result.data)
+            is Failure -> flowOf(result)
+        }
     }
