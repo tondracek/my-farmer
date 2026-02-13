@@ -20,7 +20,7 @@ class UpdateUserUC @Inject constructor(
 ) {
 
     suspend operator fun invoke(userToUpdate: SystemUser): DomainResult<Unit> {
-        val currentUser = getLoggedInUser().first()
+        val currentUser = getLoggedInUser.sync()
             .getOrReturn { return it }
         if (currentUser.id != userToUpdate.id)
             return DomainResult.Failure(AuthError.Forbidden)

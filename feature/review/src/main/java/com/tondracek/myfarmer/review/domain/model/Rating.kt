@@ -3,7 +3,7 @@ package com.tondracek.myfarmer.review.domain.model
 import kotlin.math.roundToInt
 
 /**
- * @property stars Number of stars in the rating (e.g., 1 to 5)
+ * @property stars Number of stars in the rating (e.g., 0 to 5)
  */
 data class Rating(
     val stars: Int,

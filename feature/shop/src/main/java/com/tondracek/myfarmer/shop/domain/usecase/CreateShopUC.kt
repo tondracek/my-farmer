@@ -11,7 +11,6 @@ import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShop
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import com.tondracek.myfarmer.user.domain.usecase.GetLoggedInUserUC
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class CreateShopUC @Inject constructor(
@@ -21,7 +20,7 @@ class CreateShopUC @Inject constructor(
 ) {
 
     suspend operator fun invoke(input: ShopInput): DomainResult<Unit> {
-        val user = getLoggedInUser().first()
+        val user = getLoggedInUser.sync()
             .getOrReturn { return it }
 
         val shop: Shop = input

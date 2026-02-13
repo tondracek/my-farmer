@@ -2,6 +2,7 @@
 
 skinparam backgroundColor #FFFFFF
 
+'value object containing URL of an image in an external storage
 class ImageResource {
     - url: String
 }
@@ -33,7 +34,7 @@ User "1" *-U- "1" ContactInfo : contactInfo >
 
 class Shop {
     - id: UUID
-    - name: String?
+    - name: String
     - description: String?
     - owner: User
     - shopCategories: List<ShopCategory>
@@ -70,6 +71,8 @@ class MenuItem {
     - inStock: Boolean
 }
 
+'price label is a string to allow user to describe a price based on amount, quantity, currency, etc.
+'price label is used only for describtion, there is no sorting, filtering etc.
 class PriceLabel {
     - price: String
 }
@@ -98,8 +101,8 @@ Shop "1" *-- "1" OpeningHours : openingHours >
 ' ----------------------------------- '
 
 class Location {
-    - latitude: BigDecimal?
-    - longitude: BigDecimal?
+    - latitude: Double
+    - longitude: Double
 }
 
 Shop "1" *-- "1" Location : location >
@@ -113,6 +116,10 @@ class Review {
     - rating: int
     - comment: String?
 }
+
+note right of Review::rating
+    from 0 to 5
+end note
 
 Shop "1" - "0..*" Review
 User "1" -- "0..*" Review : author
