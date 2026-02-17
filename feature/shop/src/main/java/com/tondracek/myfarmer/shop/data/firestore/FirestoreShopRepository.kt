@@ -60,6 +60,27 @@ class FirestoreShopRepository @Inject constructor(
         ).mapToModelList()
             .toDomainResult(ShopError.FetchingFailed)
 
+    /**
+     * Pages shops by geohash-based rings.
+     *
+     *
+     * Rings are not true circular distance bands. They are disjoint geohash range
+     * partitions constructed as nested set differences (r(Rn) - r(Rn-1)).
+     *
+     * Example:
+     *  If a shop is 8.1 km away but lies in a geohash cell included in r(8 km),
+     *  it belongs to the 0–8 km ring and will NOT appear in the 8–20 km ring.
+     *
+     * This guarantees:
+     * - No shop appears in more than one ring.
+     * - Paging is deterministic by geohash.
+     * - Distance sorting is approximate and applied only within the fetched page.
+     *
+     * Paging logic:
+     *  - primary paging mechanism is by ring index
+     *  - `pageSize` limits results within a ring; if more shops exist within the ring than `pageSize`,
+     *  the call will continue inside this ring until all shops are fetched before moving to the next ring.
+     */
     override suspend fun getPagedByDistance(
         center: Location,
         pageSize: Int,
@@ -76,14 +97,20 @@ class FirestoreShopRepository @Inject constructor(
             val ranges = GeoHashUtils.ranges(
                 center = center,
                 ring = ring
-            )
+            ).sortedBy { it.start }
 
             val results = mutableListOf<ShopEntity>()
             for (range in ranges) {
+                if (afterGeohash != null && afterGeohash >= range.end)
+                    continue
+
+                val remaining = pageSize + 1 - results.size
+                if (remaining <= 0) break
+
                 val query = firestoreGetByGeohashPaged(
                     collection = collection,
                     range = range,
-                    limit = pageSize + 1,
+                    limit = remaining,
                     afterGeohash = afterGeohash,
                 )
 
@@ -99,7 +126,7 @@ class FirestoreShopRepository @Inject constructor(
                     DistancePagingCursor(ringIndex, page.last().location.geohash)
 
                 else -> // Move to the next ring
-                    DistancePagingCursor(ringIndex + 1, afterGeohash)
+                    DistancePagingCursor(ringIndex + 1, null)
             }
 
             val domainPage = page.map { it.toModel() }

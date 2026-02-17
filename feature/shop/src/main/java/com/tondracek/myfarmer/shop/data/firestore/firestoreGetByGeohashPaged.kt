@@ -1,6 +1,7 @@
 package com.tondracek.myfarmer.shop.data.firestore
 
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.Query
 import com.tondracek.myfarmer.core.data.firestore.helpers.toObjectsWithId
 import com.tondracek.myfarmer.location.data.GeoHashRange
@@ -15,6 +16,7 @@ suspend fun firestoreGetByGeohashPaged(
 ): List<ShopEntity> =
     collection
         .orderBy("location.geohash")
+        .orderBy(FieldPath.documentId())
         .whereGreaterThanOrEqualTo("location.geohash", range.start)
         .whereLessThanOrEqualTo("location.geohash", range.end)
         .startAfterNullable(afterGeohash)

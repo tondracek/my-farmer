@@ -5,21 +5,17 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
 import com.tondracek.myfarmer.core.domain.domainresult.withFailure
-import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.location.domain.model.meters
 import com.tondracek.myfarmer.location.domain.usecase.GetMapViewInitialCameraBoundsUC
 import com.tondracek.myfarmer.location.domain.usecase.GetUserApproximateLocationUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
-import com.tondracek.myfarmer.shop.domain.repository.DistancePagingCursor
-import com.tondracek.myfarmer.shop.domain.usecase.GetAllShopsPaginatedUC
 import com.tondracek.myfarmer.shop.domain.usecase.GetClosestShopsUC
-import com.tondracek.myfarmer.shop.domain.usecase.GetShopsByDistancePagedUC
 import com.tondracek.myfarmer.shopfilters.domain.model.ShopFilters
-import com.tondracek.myfarmer.shopfilters.domain.usecase.ApplyShopFiltersUC
 import com.tondracek.myfarmer.shopfilters.domain.usecase.GetShopFiltersUC
 import com.tondracek.myfarmer.ui.common.shop.filter.ShopFiltersRepositoryKeys
 import com.tondracek.myfarmer.ui.core.viewmodel.BaseViewModel
+import com.tondracek.myfarmer.ui.mainshopscreen.shopsmapview.logic.ObserveMapShopsStream
 import com.tondracek.myfarmer.user.domain.model.SystemUser
 import com.tondracek.myfarmer.user.domain.usecase.GetUsersByIdsUC
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,15 +23,17 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -44,9 +42,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ShopsMapViewModel @Inject constructor(
-    private val getShopsByDistancePaged: GetShopsByDistancePagedUC,
-    private val getAllShopsPaginated: GetAllShopsPaginatedUC,
-    private val applyFilters: ApplyShopFiltersUC,
+    private val observeMapShopsStream: ObserveMapShopsStream,
     getUserApproximateLocation: GetUserApproximateLocationUC,
     getClosestShops: GetClosestShopsUC,
     getShopFilters: GetShopFiltersUC,
@@ -67,31 +63,32 @@ class ShopsMapViewModel @Inject constructor(
     private val _refreshTrigger = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     private val refreshTrigger = _refreshTrigger.onStart { emit(Unit) }
 
-    private val _shops: Flow<Collection<Shop>> = combine(
+    private val shops: SharedFlow<Set<Shop>> = combine(
         userApproximateLocation,
         filters,
         refreshTrigger,
     ) { location, filters, _ ->
         location to filters
     }.flatMapLatest { (location, filters) ->
-        when (location) {
-            null -> getAllShopsPagingFLow(filters)
-            else -> getShopsByDistancePagingFlow(location, filters)
-        }
-    }
+        observeMapShopsStream(location = location, filters = filters)
+            .onStart { _isLoading.update { true } }
+            .onCompletion { _isLoading.update { false } }
+    }.shareIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        replay = 1
+    )
 
-    private val _shopOwners: Flow<List<SystemUser>> = _shops
-        .flatMapLatest {
-            val ownerIds = it.map(Shop::ownerId).distinct()
-            getUsersByIds(ownerIds)
-        }
+    private val shopOwners: Flow<List<SystemUser>> = shops
+        .map { it.map(Shop::ownerId).toSet() }
+        .distinctUntilChanged()
+        .flatMapLatest { ownerIds -> getUsersByIds(ownerIds.toList()) }
         .withFailure { emitEffect(ShopsMapViewEffect.ShowError(it.error)) }
         .getOrElse(emptyList())
-        .distinctUntilChanged()
 
     private val shopUiItems: Flow<Set<ShopMapItem>> = combine(
-        _shops,
-        _shopOwners,
+        shops,
+        shopOwners,
     ) { shops, shopOwners ->
         val ownersById = shopOwners.associateBy { it.id }
         shops.mapNotNull {
@@ -129,9 +126,8 @@ class ShopsMapViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val closestShopLocations = _shops
-                .map { getClosestShops(it, count = 3) }
-                .first()
+            val loadedShops = shops.first { it.isNotEmpty() }
+            val closestShopLocations = getClosestShops(loadedShops, count = 3)
                 .map { it.location.toLatLng() }
             val bounds = getInitialCameraBounds(closestShopLocations)
 
@@ -148,54 +144,6 @@ class ShopsMapViewModel @Inject constructor(
         viewModelScope.launch { _refreshTrigger.emit(Unit) }
 
     fun onShopDeselected() = _selectedShopId.update { null }
-
-    private fun getShopsByDistancePagingFlow(
-        location: Location,
-        filters: ShopFilters
-    ): Flow<Collection<Shop>> = channelFlow {
-        _isLoading.emit(true)
-
-        val shops = mutableSetOf<Shop>()
-        var cursor: DistancePagingCursor? = null
-
-        do {
-            getShopsByDistancePaged(
-                center = location,
-                pageSize = 20,
-                cursor = cursor,
-            ).withSuccess { (list, nextCursor) ->
-                val filtered = applyFilters.sync(shops = list, filters = filters)
-                shops.addAll(filtered)
-
-                send(shops.toList())
-                cursor = nextCursor
-            }
-        } while (cursor != null)
-
-        _isLoading.emit(false)
-    }
-
-    private fun getAllShopsPagingFLow(filters: ShopFilters): Flow<Collection<Shop>> = channelFlow {
-        _isLoading.emit(true)
-
-        val shops = mutableSetOf<Shop>()
-        var cursor: ShopId? = null
-
-        do {
-            getAllShopsPaginated(
-                limit = 20,
-                after = cursor
-            ).withSuccess {
-                val filtered = applyFilters.sync(shops = it, filters = filters)
-                shops.addAll(filtered)
-
-                send(shops.toList())
-                cursor = it.lastOrNull()?.id
-            }
-        } while (cursor != null)
-
-        _isLoading.emit(false)
-    }
 }
 
 sealed interface ShopsMapViewEffect {
