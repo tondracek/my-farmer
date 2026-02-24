@@ -175,4 +175,7 @@
     <string name="set_email">Set email</string>
     <string name="could_not_fetch_location">Could not fetch location.</string>
     <string name="location_permission_is_missing">Location permission is missing.</string>
+    <string name="i_agree_with">I agree with the</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy_not_accepted">You must accept the Privacy Policy.</string>
 </resources>

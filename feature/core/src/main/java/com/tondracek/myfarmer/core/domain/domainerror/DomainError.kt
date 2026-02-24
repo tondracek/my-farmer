@@ -88,4 +88,7 @@ sealed interface ValidationError : DomainError {
 
     /** Confirm Password */
     data object PasswordsDoNotMatch : ValidationError
+
+    /** Privacy Policy */
+    data object PrivacyPolicyNotAccepted : ValidationError
 }

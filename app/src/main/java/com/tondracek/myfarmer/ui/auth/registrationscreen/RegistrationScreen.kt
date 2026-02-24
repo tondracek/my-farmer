@@ -20,6 +20,7 @@ import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.ui.auth.common.field.EmailInput
 import com.tondracek.myfarmer.ui.auth.common.field.PasswordInput
 import com.tondracek.myfarmer.ui.auth.common.google.GoogleSignInButton
+import com.tondracek.myfarmer.ui.auth.registrationscreen.components.PrivacyPolicyCheckbox
 import com.tondracek.myfarmer.ui.auth.registrationscreen.components.RegistrationInput
 import com.tondracek.myfarmer.ui.auth.registrationscreen.components.RegistrationValidation
 import com.tondracek.myfarmer.ui.common.layout.LoadingLayout
@@ -77,6 +78,12 @@ fun RegistrationInputScreen(
             onInputChanged = { onEvent(RegistrationEvent.ConfirmPasswordChanged(it)) },
             label = stringResource(R.string.confirm_password),
             contentType = ContentType.NewPassword
+        )
+
+        PrivacyPolicyCheckbox(
+            checked = state.input.privacyPolicyAccepted,
+            error = state.validation.privacyPolicyError,
+            onCheckedChange = { onEvent(RegistrationEvent.PrivacyPolicyChecked(it)) }
         )
 
         Button(

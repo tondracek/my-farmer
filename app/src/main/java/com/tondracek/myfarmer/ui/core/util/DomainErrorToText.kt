@@ -63,6 +63,7 @@ fun DomainError.toUserFriendlyMessage(context: Context) = when (this) {
     ValidationError.PasswordMustContainLowercaseLetter -> context.getString(R.string.password_must_contain_at_least_one_lowercase_letter)
     ValidationError.PasswordMustContainUppercaseLetter -> context.getString(R.string.password_must_contain_at_least_one_uppercase_letter)
     ValidationError.PasswordsDoNotMatch -> context.getString(R.string.passwords_do_not_match)
+    ValidationError.PrivacyPolicyNotAccepted -> context.getString(R.string.privacy_policy_not_accepted)
 
     LocationError.FetchingFailed -> context.getString(R.string.could_not_fetch_location)
     LocationError.MissingLocationPermission -> context.getString(R.string.location_permission_is_missing)

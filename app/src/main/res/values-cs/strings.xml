@@ -174,4 +174,9 @@
     <string name="name_not_set">Jméno není nastaveno</string>
     <string name="contact_information_not_set">Kontaktní údaje nejsou nastaveny</string>
     <string name="set_email">Nastavit e-mail</string>
+    <string name="could_not_fetch_location">Nepodařilo se získat polohu.</string>
+    <string name="location_permission_is_missing">Chybí oprávnění k přístupu k poloze.</string>
+    <string name="i_agree_with">Souhlasím se</string>
+    <string name="privacy_policy">Zásadami ochrany osobních údajů</string>
+    <string name="privacy_policy_not_accepted">Musíte souhlasit se zásadami ochrany osobních údajů.</string>
 </resources>

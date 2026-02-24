@@ -95,6 +95,11 @@ class RegistrationViewmodel @Inject constructor(
                 _validation.update { it.copy(confirmPasswordError = null) }
             }
 
+            is RegistrationEvent.PrivacyPolicyChecked -> {
+                _input.update { it.copy(privacyPolicyAccepted = event.accepted) }
+                _validation.update { it.copy(privacyPolicyError = null) }
+            }
+
             /** button events */
             RegistrationEvent.GoToLoginScreenClicked -> emitEffect(RegistrationEffect.GoToLoginScreen)
             RegistrationEvent.RegisterButtonClicked -> submitRegistration()
@@ -122,6 +127,7 @@ sealed interface RegistrationEvent {
     data class EmailChanged(val email: String) : RegistrationEvent
     data class PasswordChanged(val password: String) : RegistrationEvent
     data class ConfirmPasswordChanged(val confirmPassword: String) : RegistrationEvent
+    data class PrivacyPolicyChecked(val accepted: Boolean) : RegistrationEvent
 
     /** Button events */
     data object RegisterButtonClicked : RegistrationEvent
