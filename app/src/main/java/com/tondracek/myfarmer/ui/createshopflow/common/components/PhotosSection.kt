@@ -27,7 +27,7 @@ import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.ui.common.image.ImageView
 import com.tondracek.myfarmer.ui.common.image.PictureFromCameraIconButton
-import com.tondracek.myfarmer.ui.common.image.PictureFromGalleryIconButton
+import com.tondracek.myfarmer.ui.common.image.PicturesFromGalleryIconButton
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.preview.PreviewDark
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
@@ -36,6 +36,7 @@ import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme
 fun PhotosSection(
     images: List<ImageResource>,
     onAddImage: (ImageResource) -> Unit,
+    onAddImages: (List<ImageResource>) -> Unit,
     onMoveImageLeft: (Int) -> Unit,
     onMoveImageRight: (Int) -> Unit,
     onRemoveImage: (ImageResource) -> Unit
@@ -60,7 +61,10 @@ fun PhotosSection(
                 onRemoveImage = onRemoveImage,
             )
 
-            AddPhotoButtons { onAddImage(it) }
+            AddPhotoButtons(
+                onPhotoAdded = onAddImage,
+                onPhotosAdded = onAddImages,
+            )
         }
     }
 }
@@ -68,15 +72,16 @@ fun PhotosSection(
 @Composable
 private fun AddPhotoButtons(
     modifier: Modifier = Modifier,
-    onPhotoAdded: (ImageResource) -> Unit
+    onPhotoAdded: (ImageResource) -> Unit,
+    onPhotosAdded: (List<ImageResource>) -> Unit,
 ) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(MyFarmerTheme.paddings.small),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        PictureFromGalleryIconButton(useLabel = true) {
-            onPhotoAdded(it)
+        PicturesFromGalleryIconButton(useLabel = true) {
+            onPhotosAdded(it)
         }
         PictureFromCameraIconButton(useLabel = true) {
             onPhotoAdded(it)
@@ -162,6 +167,7 @@ private fun PhotosSectionPreview() {
                 ImageResource("https://picsum.photos/202"),
             ),
             onAddImage = {},
+            onAddImages = {},
             onMoveImageLeft = {},
             onMoveImageRight = {},
             onRemoveImage = {},

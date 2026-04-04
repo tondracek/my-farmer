@@ -27,7 +27,6 @@ class CreateShopViewModel @Inject constructor(
 
     private val _step = MutableStateFlow(ShopFlowStep.Initial)
     private val _input = MutableStateFlow(ShopInput.Empty)
-
     private val _isSubmitting = MutableStateFlow(false)
 
     val state: StateFlow<ShopFlowState> = combine(
@@ -61,26 +60,26 @@ class CreateShopViewModel @Inject constructor(
         _isSubmitting.update { false }
     }
 
+    private fun requestCreateFlowExit() = viewModelScope.launch {
+        emitEffect(CreateShopEffect.RequestExitShopCreationConfirmation)
+    }
+
     fun onShopFormEvent(event: ShopFormEvent) =
         _input.update { ShopFormEvent.applyEvent(it, event) }
 
     fun onShopFlowEvent(event: ShopFlowEvent) = when (event) {
-        is ShopFlowEvent.GoToNextStep -> _step.update { it.next() }
-        is ShopFlowEvent.GoToPreviousStep -> _step.update { it.previous() }
-        is ShopFlowEvent.Submit -> submitShop()
-        ShopFlowEvent.ExitShopFlow -> viewModelScope.launch {
-            emitEffect(CreateShopEffect.RequestExitShopCreationConfirmation)
-        }
+        ShopFlowEvent.GoToNextStep -> _step.update { it.next() }
+        ShopFlowEvent.GoToPreviousStep -> _step.update { it.previous() }
+        ShopFlowEvent.Submit -> submitShop()
+        ShopFlowEvent.ExitShopFlow -> requestCreateFlowExit()
     }
 }
 
 sealed interface CreateShopEffect {
 
     data class ShowError(val error: DomainError) : CreateShopEffect
-
     data object ShowCreatedSuccessfully : CreateShopEffect
 
     data object ExitShopCreation : CreateShopEffect
-
     data object RequestExitShopCreationConfirmation : CreateShopEffect
 }

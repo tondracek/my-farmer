@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
+import com.tondracek.myfarmer.productmenu.domain.model.MenuItemId
 import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.ui.common.lazycolumn.fadingEdges
@@ -141,12 +142,14 @@ private fun MenuItemsSectionPreview() {
     val sampleMenu = ProductMenu(
         items = listOf(
             MenuItem(
+                id = MenuItemId.new(),
                 name = "Apples",
                 description = "Fresh red apples",
                 price = PriceLabel("1.99/kg"),
                 inStock = false,
             ),
             MenuItem(
+                id = MenuItemId.new(),
                 name = "Bananas",
                 description = "Ripe yellow bananas",
                 price = PriceLabel("0.99/kg"),

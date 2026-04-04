@@ -55,14 +55,16 @@ class UpdateShopViewModel @Inject constructor(
     )
 
     init {
-        viewModelScope.launch {
-            getShopById(shopId).first()
-                .withFailure {
-                    emitEffect(UpdateShopEffect.ShowError(it.error))
-                    emitEffect(UpdateShopEffect.ExitShopUpdate)
-                }
-                .withSuccess { shop -> _input.update { shop.toShopInput() } }
-        }
+        loadInitialShopInput()
+    }
+
+    private fun loadInitialShopInput() = viewModelScope.launch {
+        getShopById(shopId).first()
+            .withFailure {
+                emitEffect(UpdateShopEffect.ShowError(it.error))
+                emitEffect(UpdateShopEffect.ExitShopUpdate)
+            }
+            .withSuccess { shop -> _input.update { shop.toShopInput() } }
     }
 
     private fun submitShop() = viewModelScope.launch {
@@ -79,6 +81,10 @@ class UpdateShopViewModel @Inject constructor(
         _isSubmitting.update { false }
     }
 
+    private fun requestUpdateFlowExit() = viewModelScope.launch {
+        emitEffect(UpdateShopEffect.RequestExitShopUpdateConfirmation)
+    }
+
     fun onShopFormEvent(event: ShopFormEvent) = _input.update {
         when (it) {
             null -> it
@@ -87,22 +93,18 @@ class UpdateShopViewModel @Inject constructor(
     }
 
     fun onShopFlowEvent(event: ShopFlowEvent) = when (event) {
-        is ShopFlowEvent.GoToNextStep -> _step.update { it.next() }
-        is ShopFlowEvent.GoToPreviousStep -> _step.update { it.previous() }
-        is ShopFlowEvent.Submit -> submitShop()
-        ShopFlowEvent.ExitShopFlow -> viewModelScope.launch {
-            emitEffect(UpdateShopEffect.RequestExitShopUpdateConfirmation)
-        }
+        ShopFlowEvent.GoToNextStep -> _step.update { it.next() }
+        ShopFlowEvent.GoToPreviousStep -> _step.update { it.previous() }
+        ShopFlowEvent.Submit -> submitShop()
+        ShopFlowEvent.ExitShopFlow -> requestUpdateFlowExit()
     }
 }
 
 sealed interface UpdateShopEffect {
 
     data class ShowError(val error: DomainError) : UpdateShopEffect
-
     data object ShowUpdatedSuccessfully : UpdateShopEffect
 
     data object ExitShopUpdate : UpdateShopEffect
-
     data object RequestExitShopUpdateConfirmation : UpdateShopEffect
 }

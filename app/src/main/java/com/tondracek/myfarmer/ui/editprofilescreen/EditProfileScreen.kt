@@ -201,7 +201,6 @@ private fun EditProfileScreenPreview() {
                     profilePicture = ImageResource.EMPTY,
                     contactInfo = ContactInfo.EMPTY
                 ),
-                wasChanged = false
             ),
             onFormEvent = {},
             onScreenEvent = {},

@@ -37,7 +37,7 @@ class FakeShopRepositoryGetPagedByDistanceTest {
         name = name,
         location = Location(lat, lon),
         images = emptyList(),
-        description = null,
+        description = "",
         categories = emptyList(),
         menu = ProductMenu.Empty,
         openingHours = OpeningHours.Empty,

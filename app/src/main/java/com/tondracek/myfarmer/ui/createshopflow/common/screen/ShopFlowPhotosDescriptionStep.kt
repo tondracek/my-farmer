@@ -33,6 +33,7 @@ fun ShopFlowPhotosDescriptionStep(
         PhotosSection(
             images = shopInput.images,
             onAddImage = { onShopFormEvent(ShopFormEvent.AddImage(it)) },
+            onAddImages = { onShopFormEvent(ShopFormEvent.AddImages(it)) },
             onMoveImageLeft = { onShopFormEvent(ShopFormEvent.MoveImageLeft(it)) },
             onMoveImageRight = { onShopFormEvent(ShopFormEvent.MoveImageRight(it)) },
             onRemoveImage = { onShopFormEvent(ShopFormEvent.RemoveImage(it)) },

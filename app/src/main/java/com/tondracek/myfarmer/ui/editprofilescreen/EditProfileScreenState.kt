@@ -10,7 +10,6 @@ sealed interface EditProfileScreenState {
 
     data class Success(
         val userInput: EditUserUiState,
-        val wasChanged: Boolean,
     ) : EditProfileScreenState
 
     data object UpdatingProfile : EditProfileScreenState

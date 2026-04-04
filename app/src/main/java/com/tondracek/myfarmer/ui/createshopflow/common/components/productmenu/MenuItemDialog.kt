@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
+import com.tondracek.myfarmer.productmenu.domain.model.MenuItemId
 import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 
@@ -33,6 +34,8 @@ fun MenuItemDialog(
     onConfirm: (MenuItem) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val id = initial?.id ?: MenuItemId.new()
+
     var name by remember { mutableStateOf(initial?.name.orEmpty()) }
     var description by remember { mutableStateOf(initial?.description.orEmpty()) }
     var price by remember { mutableStateOf(initial?.price?.value.orEmpty()) }
@@ -81,6 +84,7 @@ fun MenuItemDialog(
             TextButton(onClick = {
                 onConfirm(
                     MenuItem(
+                        id = id,
                         name = name,
                         description = description,
                         price = PriceLabel(price),

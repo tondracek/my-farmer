@@ -22,7 +22,7 @@ fun ShopCategory.toEntity() = ShopCategoryEntity(
     colorArgb = color.toArgb()
 )
 
-fun normalizeWord(input: String): String {
+private fun normalizeWord(input: String): String {
     if (input.isEmpty()) return input
     return input.take(1).uppercase() + input.substring(1).lowercase()
 }

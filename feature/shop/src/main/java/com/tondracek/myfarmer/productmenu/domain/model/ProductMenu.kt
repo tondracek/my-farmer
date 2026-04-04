@@ -24,7 +24,7 @@ value class MenuItemId(val value: UUID) {
 }
 
 data class MenuItem(
-    val id: MenuItemId = MenuItemId.new(),
+    val id: MenuItemId,
     val name: String,
     val description: String,
     val price: PriceLabel,

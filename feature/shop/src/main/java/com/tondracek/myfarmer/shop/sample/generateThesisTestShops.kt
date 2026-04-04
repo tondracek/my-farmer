@@ -6,6 +6,7 @@ import com.tondracek.myfarmer.common.color.fromArgb
 import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
+import com.tondracek.myfarmer.productmenu.domain.model.MenuItemId
 import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shop.data.toEntity
@@ -72,6 +73,7 @@ suspend fun generateThesisTestShops() {
             menu = ProductMenu(
                 listOf(
                     MenuItem(
+                        id = MenuItemId.new(),
                         name = "Test Product",
                         description = "Generated item",
                         price = PriceLabel("${100 + random.nextInt(400)} CZK"),

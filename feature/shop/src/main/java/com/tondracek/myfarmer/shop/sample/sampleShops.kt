@@ -6,6 +6,7 @@ import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
+import com.tondracek.myfarmer.productmenu.domain.model.MenuItemId
 import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shop.domain.model.Shop
@@ -46,24 +47,28 @@ val shop0 = Shop(
     menu = ProductMenu(
         listOf(
             MenuItem(
+                id = MenuItemId.new(),
                 name = "Med",
                 description = "Kvalitní med z naší domácí produkce.",
                 price = PriceLabel("150 CZK / kg"),
                 inStock = true,
             ),
             MenuItem(
+                id = MenuItemId.new(),
                 name = "Včelí vosk",
                 description = "Přírodní včelí vosk pro různé využití.",
                 price = PriceLabel("200 CZK / kg"),
                 inStock = true,
             ),
             MenuItem(
+                id = MenuItemId.new(),
                 name = "Propolis",
                 description = "Léčivá pryskyřice sbíraná včelami.",
                 price = PriceLabel("300 CZK / 100 g"),
                 inStock = false,
             ),
             MenuItem(
+                id = MenuItemId.new(),
                 name = "Rámky na plástve",
                 description = "Dřevěné rámky pro včelí plástve.",
                 price = PriceLabel("50 CZK / kus"),
@@ -131,6 +136,7 @@ val shop2 = Shop(
     menu = ProductMenu(
         listOf(
             MenuItem(
+                id = MenuItemId.new(),
                 name = "Vejce",
                 price = PriceLabel("30 CZK / 10 ks"),
                 description = "Otevřený výběh slepic",
@@ -166,6 +172,7 @@ val shop3 = Shop(
     menu = ProductMenu(
         listOf(
             MenuItem(
+                id = MenuItemId.new(),
                 name = "Vepřové maso",
                 description = "Z domácího chovu",
                 price = PriceLabel("200 CZK / kg"),

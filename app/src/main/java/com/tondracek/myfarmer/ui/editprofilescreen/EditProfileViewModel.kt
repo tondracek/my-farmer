@@ -39,27 +39,15 @@ class EditProfileViewModel @Inject constructor(
 
     private val _input = MutableStateFlow(EditUserUiState.Empty)
 
-    private val wasChanged: StateFlow<Boolean> = combine(loggedInUser, _input) { user, input ->
-        user != null && !input.isEqual(user)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = false,
-    )
-
     private val _isSaving = MutableStateFlow(false)
 
     val state: StateFlow<EditProfileScreenState> = combine(
         _isSaving,
         _input,
-        wasChanged,
-    ) { isSaving, input, changed ->
+    ) { isSaving, input ->
         when (isSaving) {
             true -> EditProfileScreenState.UpdatingProfile
-            false -> EditProfileScreenState.Success(
-                userInput = input,
-                wasChanged = changed,
-            )
+            false -> EditProfileScreenState.Success(userInput = input)
         }
     }.stateIn(
         scope = viewModelScope,
@@ -68,13 +56,15 @@ class EditProfileViewModel @Inject constructor(
     )
 
     init {
-        viewModelScope.launch { loadNewData() }
+        loadNewData()
     }
 
-    private suspend fun loadNewData() = loggedInUser
-        .filterNotNull()
-        .first()
-        .let { user -> _input.update { EditUserUiState.fromUser(user) } }
+    private fun loadNewData() = viewModelScope.launch {
+        loggedInUser
+            .filterNotNull()
+            .first()
+            .let { user -> _input.update { EditUserUiState.fromUser(user) } }
+    }
 
     private fun onSaveProfile() = viewModelScope.launch {
         val loggedUser = loggedInUser.value ?: return@launch
@@ -93,20 +83,27 @@ class EditProfileViewModel @Inject constructor(
         _isSaving.update { false }
     }
 
+    private fun requestCancel() = viewModelScope.launch {
+        val currentUser = loggedInUser.value ?: return@launch
+        val currentInput = _input.value
+
+        when (currentInput.isEqual(currentUser)) {
+            true -> emitEffect(EditProfileScreenEffect.NavigateBack)
+            false -> emitEffect(EditProfileScreenEffect.RequestCancelConfirmation)
+        }
+    }
+
+    private fun confirmCancel() = viewModelScope.launch {
+        emitEffect(EditProfileScreenEffect.NavigateBack)
+    }
+
     fun onFormEvent(event: EditProfileFormEvent) =
         _input.update { it.applyEvent(event) }
 
-    fun onScreenEvent(event: EditProfileScreenEvent) = viewModelScope.launch {
-        when (event) {
-            EditProfileScreenEvent.OnSaveClicked -> onSaveProfile()
-
-            EditProfileScreenEvent.OnCancelClicked -> when (wasChanged.value) {
-                true -> emitEffect(EditProfileScreenEffect.RequestCancelConfirmation)
-                false -> emitEffect(EditProfileScreenEffect.NavigateBack)
-            }
-
-            EditProfileScreenEvent.OnCancelConfirmed -> emitEffect(EditProfileScreenEffect.NavigateBack)
-        }
+    fun onScreenEvent(event: EditProfileScreenEvent) = when (event) {
+        EditProfileScreenEvent.OnSaveClicked -> onSaveProfile()
+        EditProfileScreenEvent.OnCancelClicked -> requestCancel()
+        EditProfileScreenEvent.OnCancelConfirmed -> confirmCancel()
     }
 }
 

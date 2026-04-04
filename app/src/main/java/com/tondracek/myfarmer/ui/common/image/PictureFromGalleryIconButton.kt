@@ -11,11 +11,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,26 +25,54 @@ fun PictureFromGalleryIconButton(
     useLabel: Boolean = false,
     onPictureSelected: (ImageResource) -> Unit,
 ) {
-    var newPicture: ImageResource by remember {
-        mutableStateOf(ImageResource.EMPTY)
-    }
-    LaunchedEffect(newPicture.uri) {
-        if (newPicture != ImageResource.EMPTY) {
-            onPictureSelected(newPicture)
-            newPicture = ImageResource.EMPTY
-        }
-    }
-
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
-        onResult = { uri -> uri?.let { newPicture = ImageResource(it) } }
+        onResult = { uri ->
+            if (uri != null) {
+                onPictureSelected(ImageResource(uri = uri))
+            }
+        }
     )
 
+    Content(
+        modifier = modifier,
+        useLabel = useLabel,
+        onClick = { galleryLauncher.launch("image/*") }
+    )
+}
+
+@Composable
+fun PicturesFromGalleryIconButton(
+    modifier: Modifier = Modifier,
+    useLabel: Boolean = false,
+    onPicturesSelected: (List<ImageResource>) -> Unit,
+) {
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetMultipleContents(),
+        onResult = { uris ->
+            val images = uris.map { ImageResource(uri = it) }
+            onPicturesSelected(images)
+        }
+    )
+
+    Content(
+        modifier = modifier,
+        useLabel = useLabel,
+        onClick = { galleryLauncher.launch("image/*") }
+    )
+}
+
+@Composable
+private fun Content(
+    modifier: Modifier = Modifier,
+    useLabel: Boolean,
+    onClick: () -> Unit,
+) {
     when (useLabel) {
         true -> Button(
             modifier = modifier,
             colors = MyFarmerTheme.buttonColors.primary,
-            onClick = { galleryLauncher.launch("image/*") },
+            onClick = onClick,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -69,7 +92,7 @@ fun PictureFromGalleryIconButton(
         false -> IconButton(
             modifier = modifier,
             colors = MyFarmerTheme.iconButtonColors.primary,
-            onClick = { galleryLauncher.launch("image/*") },
+            onClick = onClick,
         ) {
             Icon(
                 imageVector = Icons.Default.PhotoLibrary,
@@ -77,8 +100,6 @@ fun PictureFromGalleryIconButton(
             )
         }
     }
-
-
 }
 
 @Preview

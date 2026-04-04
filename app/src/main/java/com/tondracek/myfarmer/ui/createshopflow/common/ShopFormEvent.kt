@@ -18,6 +18,7 @@ sealed interface ShopFormEvent {
 
     /** images */
     data class AddImage(val image: ImageResource) : ShopFormEvent
+    data class AddImages(val images: Collection<ImageResource>) : ShopFormEvent
     data class RemoveImage(val image: ImageResource) : ShopFormEvent
 
     data class MoveImageLeft(val index: Int) : ShopFormEvent
@@ -41,6 +42,7 @@ sealed interface ShopFormEvent {
             is UpdateDescription -> shopInput.copy(description = event.description)
             is UpdateLocation -> shopInput.copy(location = event.location)
             is AddImage -> shopInput.copy(images = shopInput.images + event.image)
+            is AddImages -> shopInput.copy(images = shopInput.images + event.images)
             is RemoveImage -> shopInput.copy(images = shopInput.images - event.image)
             is MoveImageLeft -> {
                 val index = event.index
