@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.tondracek.myfarmer.common.color.RgbColor
 import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.location.domain.model.Location
-import com.tondracek.myfarmer.location.domain.usecase.GetUserLocationUC
+import com.tondracek.myfarmer.location.domain.usecase.GetUserApproximateLocationUC
 import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
 import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.review.domain.model.Rating
@@ -28,7 +28,7 @@ import org.mockito.kotlin.whenever
 class ApplyShopFiltersUCTest {
 
     @Mock
-    lateinit var getUserLocationUC: GetUserLocationUC
+    lateinit var getUserLocationUC: GetUserApproximateLocationUC
 
     @Mock
     lateinit var getAverageRatingsByShopUC: GetAverageRatingsByShopUC
@@ -47,7 +47,7 @@ class ApplyShopFiltersUCTest {
             .thenReturn(flowOf(DomainResult.Success(ratingsFlow.value)))
 
         uc = ApplyShopFiltersUC(
-            getUserLocationUC = getUserLocationUC,
+            approximateLocationUC = getUserLocationUC,
             getAverageRatingsByShopUC = getAverageRatingsByShopUC
         )
     }

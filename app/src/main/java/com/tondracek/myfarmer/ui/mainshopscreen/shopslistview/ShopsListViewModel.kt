@@ -55,7 +55,7 @@ class ShopsListViewModel @Inject constructor(
     private val filters: StateFlow<ShopFilters> =
         getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
 
-    private val approximateLocation = getUserApproximateLocationUC(50.meters)
+    private val approximateLocation = getUserApproximateLocationUC()
 
     private val _refreshTrigger = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     private val refreshTrigger = _refreshTrigger.onStart { emit(Unit) }

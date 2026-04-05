@@ -5,7 +5,6 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.tondracek.myfarmer.core.domain.domainerror.DomainError
 import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
 import com.tondracek.myfarmer.core.domain.domainresult.withFailure
-import com.tondracek.myfarmer.location.domain.model.meters
 import com.tondracek.myfarmer.location.domain.usecase.GetMapViewInitialCameraBoundsUC
 import com.tondracek.myfarmer.location.domain.usecase.GetUserApproximateLocationUC
 import com.tondracek.myfarmer.shop.domain.model.Shop
@@ -58,7 +57,7 @@ class ShopsMapViewModel @Inject constructor(
     private val filters: StateFlow<ShopFilters> =
         getShopFilters(ShopFiltersRepositoryKeys.MAIN_SHOPS_SCREEN)
 
-    private val userApproximateLocation = getUserApproximateLocation(50.meters)
+    private val userApproximateLocation = getUserApproximateLocation()
 
     private val _refreshTrigger = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     private val refreshTrigger = _refreshTrigger.onStart { emit(Unit) }

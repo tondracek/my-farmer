@@ -13,7 +13,7 @@ import com.tondracek.myfarmer.core.data.toDomainResult
 import com.tondracek.myfarmer.core.data.toDomainResultNonNull
 import com.tondracek.myfarmer.core.domain.domainerror.ShopError
 import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
-import com.tondracek.myfarmer.location.data.GeoHashUtils
+import com.tondracek.myfarmer.location.data.geohash.GeoHashUtils
 import com.tondracek.myfarmer.location.domain.model.DistanceRing
 import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.location.domain.usecase.measureMapDistance

@@ -1,5 +1,6 @@
-package com.tondracek.myfarmer.location.data
+package com.tondracek.myfarmer.location.data.entity
 
+import com.tondracek.myfarmer.location.data.geohash.GeoHashUtils
 import com.tondracek.myfarmer.location.domain.model.Location
 import kotlinx.serialization.Serializable
 

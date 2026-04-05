@@ -2,9 +2,9 @@ package com.tondracek.myfarmer.shop.data
 
 import com.tondracek.myfarmer.core.data.firestore.FirestoreEntity
 import com.tondracek.myfarmer.image.model.ImageResource
-import com.tondracek.myfarmer.location.data.LocationEntity
-import com.tondracek.myfarmer.location.data.toEntity
-import com.tondracek.myfarmer.location.data.toModel
+import com.tondracek.myfarmer.location.data.entity.LocationEntity
+import com.tondracek.myfarmer.location.data.entity.toEntity
+import com.tondracek.myfarmer.location.data.entity.toModel
 import com.tondracek.myfarmer.openinghours.data.OpeningHoursEntity
 import com.tondracek.myfarmer.openinghours.data.toEntity
 import com.tondracek.myfarmer.openinghours.data.toModel

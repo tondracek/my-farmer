@@ -223,4 +223,23 @@ class DomainResultTest {
         assertThat(successResult).isEqualTo(DomainResult.Success(2))
         assertThat(failureResult).isInstanceOf(DomainResult.Failure::class.java)
     }
+
+    @Test
+    fun `destructuring works for Success and Failure`() {
+        val success = DomainResult.Success(99)
+        val (value) = success
+        assertThat(value).isEqualTo(99)
+
+        val failure = DomainResult.Failure(AuthError.NotLoggedIn)
+        val (err, cause) = failure
+        assertThat(err).isEqualTo(AuthError.NotLoggedIn)
+        assertThat(cause).isNull()
+    }
+
+    @Test
+    fun `mapFlow preserves failure values`() = runTest {
+        val flow = flowOf(DomainResult.Failure(AuthError.NotLoggedIn))
+        val mapped = flow.mapFlow { it }.first()
+        assertThat(mapped).isEqualTo(DomainResult.Failure(AuthError.NotLoggedIn))
+    }
 }

@@ -22,6 +22,9 @@ android {
 }
 
 dependencies {
+    /** Project modules **/
+    implementation(project(":feature:core"))
+
     /** Kotlin  **/
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.kotlinx.serialization.json)
@@ -34,4 +37,11 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
     implementation(libs.geofire.android.common)
+
+    /** API **/
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+
+    /** Logging **/
+    implementation(libs.timber)
 }

@@ -387,10 +387,7 @@ fun MapboxMap.zoomToBounds(bounds: LatLngBounds) {
     )
 
     easeTo(
-        CameraOptions.Builder()
-            .center(mapboxBounds.center())
-            .zoom(12.0)
-            .build(),
+        this.cameraForCoordinateBounds(mapboxBounds),
         MapAnimationOptions.mapAnimationOptions { duration(500) }
     )
 }

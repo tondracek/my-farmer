@@ -2,7 +2,7 @@ package com.tondracek.myfarmer.shopfilters.domain.usecase
 
 import com.tondracek.myfarmer.core.domain.domainresult.getOrElse
 import com.tondracek.myfarmer.location.domain.model.Distance
-import com.tondracek.myfarmer.location.domain.usecase.GetUserLocationUC
+import com.tondracek.myfarmer.location.domain.usecase.GetUserApproximateLocationUC
 import com.tondracek.myfarmer.location.domain.usecase.measureMapDistance
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.usecase.GetAverageRatingsByShopUC
@@ -17,14 +17,14 @@ import javax.inject.Inject
 
 class ApplyShopFiltersUC @Inject constructor(
     private val getAverageRatingsByShopUC: GetAverageRatingsByShopUC,
-    private val getUserLocationUC: GetUserLocationUC,
+    private val approximateLocationUC: GetUserApproximateLocationUC,
 ) {
 
     operator fun invoke(
         shops: List<Shop>,
         filters: ShopFilters,
     ): Flow<List<Shop>> = combine(
-        getUserLocationUC(),
+        approximateLocationUC(),
         getAverageRatingsByShopUC().getOrElse(emptyMap()),
     ) { userLocation, ratings ->
         val distances: Map<ShopId, Distance?> = shops.associate {

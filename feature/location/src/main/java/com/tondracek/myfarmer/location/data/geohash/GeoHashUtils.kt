@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.location.data
+package com.tondracek.myfarmer.location.data.geohash
 
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
