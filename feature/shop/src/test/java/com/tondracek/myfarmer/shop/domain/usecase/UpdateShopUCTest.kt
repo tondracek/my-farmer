@@ -17,7 +17,6 @@ import com.tondracek.myfarmer.shop.sample.sampleShops
 import com.tondracek.myfarmer.user.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.user.sample.sampleUsers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -56,8 +55,8 @@ class UpdateShopUCTest {
 
     @Test
     fun `returns failure when user is not logged in`() = runTest {
-        whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(domainResultOf(AuthError.NotLoggedIn)))
+        whenever(getLoggedInUserUC.sync())
+            .thenReturn(domainResultOf(AuthError.NotLoggedIn))
 
         val result = uc(shop.id, ShopInput())
 
@@ -67,8 +66,8 @@ class UpdateShopUCTest {
 
     @Test
     fun `returns failure when shop does not exist`() = runTest {
-        whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(domainResultOf(user)))
+        whenever(getLoggedInUserUC.sync())
+            .thenReturn(domainResultOf(user))
 
         val unknownId = ShopId.newId()
         val result = uc(unknownId, ShopInput())
@@ -81,8 +80,8 @@ class UpdateShopUCTest {
     fun `returns failure when user is not the shop owner`() = runTest {
         val otherUser = sampleUsers.last()
 
-        whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(domainResultOf(otherUser)))
+        whenever(getLoggedInUserUC.sync())
+            .thenReturn(domainResultOf(otherUser))
 
         val result = uc(shop.id, ShopInput())
 
@@ -92,8 +91,8 @@ class UpdateShopUCTest {
 
     @Test
     fun `returns failure when input is invalid`() = runTest {
-        whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(domainResultOf(user)))
+        whenever(getLoggedInUserUC.sync())
+            .thenReturn(domainResultOf(user))
 
         val invalidInput = shop.toShopInput().copy(location = null)
 
@@ -105,8 +104,8 @@ class UpdateShopUCTest {
 
     @Test
     fun `updates shop and uploads only new photos`() = runTest {
-        whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(domainResultOf(user)))
+        whenever(getLoggedInUserUC.sync())
+            .thenReturn(domainResultOf(user))
 
         val imgOld1 = ImageResource("old1")
         val imgOld2 = ImageResource("old2")
@@ -136,8 +135,8 @@ class UpdateShopUCTest {
 
     @Test
     fun `successful update persists changes`() = runTest {
-        whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(domainResultOf(user)))
+        whenever(getLoggedInUserUC.sync())
+            .thenReturn(domainResultOf(user))
 
         val input = shop.toShopInput().copy(name = "Updated name")
 

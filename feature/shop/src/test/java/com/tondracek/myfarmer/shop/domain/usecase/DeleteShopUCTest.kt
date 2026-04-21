@@ -13,7 +13,6 @@ import com.tondracek.myfarmer.shop.sample.shop0
 import com.tondracek.myfarmer.user.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.user.sample.sampleUsers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -46,8 +45,8 @@ class DeleteShopUCTest {
     fun `returns failure when shop does not exist`() = runTest {
         val shopId = ShopId.newId()
 
-        whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(domainResultOf(sampleUsers.first())))
+        whenever(getLoggedInUserUC.sync())
+            .thenReturn(domainResultOf(sampleUsers.first()))
 
         val result = uc(shopId)
 
@@ -59,8 +58,8 @@ class DeleteShopUCTest {
     fun `returns failure when user is not logged in`() = runTest {
         val shopId = ShopId.newId()
 
-        whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(DomainResult.Failure(AuthError.NotLoggedIn)))
+        whenever(getLoggedInUserUC.sync())
+            .thenReturn(DomainResult.Failure(AuthError.NotLoggedIn))
 
         val result = uc(shopId)
 
@@ -75,8 +74,8 @@ class DeleteShopUCTest {
         shopRepository.create(shop)
 
         val otherUser = sampleUsers.first { it.id != shop.ownerId }
-        whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(domainResultOf(otherUser)))
+        whenever(getLoggedInUserUC.sync())
+            .thenReturn(domainResultOf(otherUser))
 
         val result = uc(shopId)
 
@@ -92,8 +91,8 @@ class DeleteShopUCTest {
         shopRepository.create(shop)
 
         val user = sampleUsers.find { it.id == shop.ownerId }!!
-        whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(domainResultOf(user)))
+        whenever(getLoggedInUserUC.sync())
+            .thenReturn(domainResultOf(user))
 
         val shops0 = shopRepository.getAll().first()
         println(shops0)

@@ -14,7 +14,6 @@ import com.tondracek.myfarmer.shop.sample.shop0
 import com.tondracek.myfarmer.user.domain.usecase.GetLoggedInUserUC
 import com.tondracek.myfarmer.user.sample.sampleUsers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -47,7 +46,7 @@ class CreateShopUCTest {
     fun `returns failure when user is not logged in`() = runTest {
         val failure = DomainResult.Failure(AuthError.NotLoggedIn)
 
-        whenever(getLoggedInUser()).thenReturn(flowOf(failure))
+        whenever(getLoggedInUser.sync()).thenReturn(failure)
 
         val result = uc(ShopInput.Empty)
 
@@ -62,7 +61,7 @@ class CreateShopUCTest {
         val input = shop.toShopInput().copy(location = null)
         val failure = DomainResult.Failure(InputDataError.MissingLocationInput)
 
-        whenever(getLoggedInUser()).thenReturn(flowOf(DomainResult.Success(user)))
+        whenever(getLoggedInUser.sync()).thenReturn(DomainResult.Success(user))
 
         val result = uc(input)
 
@@ -76,8 +75,8 @@ class CreateShopUCTest {
         val user = sampleUsers.find { it.id == shop.ownerId }!!
         val input = shop.toShopInput()
 
-        whenever(getLoggedInUser())
-            .thenReturn(flowOf(DomainResult.Success(user)))
+        whenever(getLoggedInUser.sync())
+            .thenReturn(DomainResult.Success(user))
 
         val result = uc(input)
 
