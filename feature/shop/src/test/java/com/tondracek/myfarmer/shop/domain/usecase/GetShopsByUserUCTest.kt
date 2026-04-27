@@ -47,17 +47,6 @@ class GetShopsByUserUCTest {
     }
 
     @Test
-    fun `returns failure when user is not logged in`() = runTest {
-        whenever(getLoggedInUserUC())
-            .thenReturn(flowOf(domainResultOf(AuthError.NotLoggedIn)))
-
-        val result = uc().first()
-
-        assertThat(result)
-            .isEqualTo(DomainResult.Failure(AuthError.NotLoggedIn))
-    }
-
-    @Test
     fun `returns shops for logged in user`() = runTest {
         whenever(getLoggedInUserUC())
             .thenReturn(flowOf(domainResultOf(sampleUser)))

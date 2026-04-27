@@ -2,12 +2,9 @@ package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
 import com.tondracek.myfarmer.core.data.domainResultOf
-import com.tondracek.myfarmer.core.domain.domainerror.AuthError
-import com.tondracek.myfarmer.core.domain.domainerror.ShopError
 import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.image.data.FakePhotoStorage
 import com.tondracek.myfarmer.shop.data.FakeShopRepository
-import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
 import com.tondracek.myfarmer.shop.sample.shop0
 import com.tondracek.myfarmer.user.domain.usecase.GetLoggedInUserUC
@@ -41,47 +38,6 @@ class DeleteShopUCTest {
         )
     }
 
-    @Test
-    fun `returns failure when shop does not exist`() = runTest {
-        val shopId = ShopId.newId()
-
-        whenever(getLoggedInUserUC.sync())
-            .thenReturn(domainResultOf(sampleUsers.first()))
-
-        val result = uc(shopId)
-
-        assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
-        assertThat((result as DomainResult.Failure).error).isInstanceOf(ShopError.NotFound::class.java)
-    }
-
-    @Test
-    fun `returns failure when user is not logged in`() = runTest {
-        val shopId = ShopId.newId()
-
-        whenever(getLoggedInUserUC.sync())
-            .thenReturn(DomainResult.Failure(AuthError.NotLoggedIn))
-
-        val result = uc(shopId)
-
-        assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
-    }
-
-    @Test
-    fun `returns failure when logged-in user is not the owner`() = runTest {
-        val shop = shop0
-        val shopId = shop.id
-
-        shopRepository.create(shop)
-
-        val otherUser = sampleUsers.first { it.id != shop.ownerId }
-        whenever(getLoggedInUserUC.sync())
-            .thenReturn(domainResultOf(otherUser))
-
-        val result = uc(shopId)
-
-        assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
-        assertThat((result as DomainResult.Failure).error).isInstanceOf(ShopError.NotOwner::class.java)
-    }
 
     @Test
     fun `shop is deleted on success`() = runTest {

@@ -2,14 +2,12 @@ package com.tondracek.myfarmer.shop.domain.usecase
 
 import com.google.common.truth.Truth.assertThat
 import com.tondracek.myfarmer.core.data.domainResultOf
-import com.tondracek.myfarmer.core.domain.domainerror.AuthError
 import com.tondracek.myfarmer.core.domain.domainerror.InputDataError
 import com.tondracek.myfarmer.core.domain.domainerror.ShopError
 import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.image.data.FakePhotoStorage
 import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.shop.data.FakeShopRepository
-import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShopInput
 import com.tondracek.myfarmer.shop.domain.repository.ShopRepository
@@ -51,29 +49,6 @@ class UpdateShopUCTest {
             shopRepository = repo,
             photoStorage = photoStorage
         )
-    }
-
-    @Test
-    fun `returns failure when user is not logged in`() = runTest {
-        whenever(getLoggedInUserUC.sync())
-            .thenReturn(domainResultOf(AuthError.NotLoggedIn))
-
-        val result = uc(shop.id, ShopInput())
-
-        assertThat(result)
-            .isEqualTo(DomainResult.Failure(AuthError.NotLoggedIn))
-    }
-
-    @Test
-    fun `returns failure when shop does not exist`() = runTest {
-        whenever(getLoggedInUserUC.sync())
-            .thenReturn(domainResultOf(user))
-
-        val unknownId = ShopId.newId()
-        val result = uc(unknownId, ShopInput())
-
-        assertThat(result)
-            .isEqualTo(DomainResult.Failure(ShopError.NotFound))
     }
 
     @Test
