@@ -21,9 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
-import com.tondracek.myfarmer.productmenu.domain.model.MenuItemId
-import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
+import com.tondracek.myfarmer.shop.domain.model.MenuItem
+import com.tondracek.myfarmer.shop.domain.model.MenuItemId
+import com.tondracek.myfarmer.shop.domain.model.PriceLabel
 import com.tondracek.myfarmer.ui.common.productmenu.InStockLabel
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme

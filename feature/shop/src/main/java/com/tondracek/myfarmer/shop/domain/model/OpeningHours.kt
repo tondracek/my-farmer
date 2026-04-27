@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.openinghours.domain.model
+package com.tondracek.myfarmer.shop.domain.model
 
 import java.time.DayOfWeek
 

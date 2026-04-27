@@ -1,16 +1,10 @@
-package com.tondracek.myfarmer.shop.data
+package com.tondracek.myfarmer.shop.data.entity
 
 import com.tondracek.myfarmer.core.data.firestore.FirestoreEntity
 import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.location.data.entity.LocationEntity
 import com.tondracek.myfarmer.location.data.entity.toEntity
 import com.tondracek.myfarmer.location.data.entity.toModel
-import com.tondracek.myfarmer.openinghours.data.OpeningHoursEntity
-import com.tondracek.myfarmer.openinghours.data.toEntity
-import com.tondracek.myfarmer.openinghours.data.toModel
-import com.tondracek.myfarmer.productmenu.data.ProductMenuEntity
-import com.tondracek.myfarmer.productmenu.data.toEntity
-import com.tondracek.myfarmer.productmenu.data.toModel
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shopcategory.data.ShopCategoryEntity

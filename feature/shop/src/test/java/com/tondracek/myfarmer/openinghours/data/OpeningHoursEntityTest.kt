@@ -1,7 +1,9 @@
 package com.tondracek.myfarmer.openinghours.data
 
 import com.google.common.truth.Truth.assertThat
-import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
+import com.tondracek.myfarmer.shop.data.entity.toEntity
+import com.tondracek.myfarmer.shop.data.entity.toModel
+import com.tondracek.myfarmer.shop.domain.model.OpeningHours
 import org.junit.Test
 import java.time.DayOfWeek
 

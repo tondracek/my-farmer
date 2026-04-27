@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.Query
 import com.tondracek.myfarmer.core.data.firestore.helpers.toObjectsWithId
 import com.tondracek.myfarmer.location.data.geohash.GeoHashRange
-import com.tondracek.myfarmer.shop.data.ShopEntity
+import com.tondracek.myfarmer.shop.data.entity.ShopEntity
 import kotlinx.coroutines.tasks.await
 
 suspend fun firestoreGetByGeohashPaged(

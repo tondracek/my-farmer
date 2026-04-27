@@ -1,6 +1,6 @@
-package com.tondracek.myfarmer.openinghours.data
+package com.tondracek.myfarmer.shop.data.entity
 
-import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
+import com.tondracek.myfarmer.shop.domain.model.OpeningHours
 import kotlinx.serialization.Serializable
 import java.time.DayOfWeek
 

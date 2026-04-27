@@ -1,6 +1,8 @@
 package com.tondracek.myfarmer.shop.data
 
 import com.google.common.truth.Truth.assertThat
+import com.tondracek.myfarmer.shop.data.entity.toEntity
+import com.tondracek.myfarmer.shop.data.entity.toModel
 import com.tondracek.myfarmer.shop.sample.shop0
 import org.junit.Test
 

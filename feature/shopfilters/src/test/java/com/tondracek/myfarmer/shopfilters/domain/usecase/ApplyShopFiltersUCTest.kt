@@ -5,10 +5,10 @@ import com.tondracek.myfarmer.common.color.RgbColor
 import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.location.domain.model.Location
 import com.tondracek.myfarmer.location.domain.usecase.GetUserApproximateLocationUC
-import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
-import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.review.domain.model.Rating
 import com.tondracek.myfarmer.review.domain.usecase.GetAverageRatingsByShopUC
+import com.tondracek.myfarmer.shop.domain.model.OpeningHours
+import com.tondracek.myfarmer.shop.domain.model.ProductMenu
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory

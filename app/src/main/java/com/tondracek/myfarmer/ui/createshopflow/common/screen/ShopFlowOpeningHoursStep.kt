@@ -27,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
+import com.tondracek.myfarmer.shop.domain.model.OpeningHours
 import com.tondracek.myfarmer.shop.domain.model.ShopInput
 import com.tondracek.myfarmer.shop.domain.model.toShopInput
 import com.tondracek.myfarmer.shop.sample.shop0

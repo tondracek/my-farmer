@@ -4,11 +4,11 @@ import com.tondracek.myfarmer.common.color.RgbColor
 import com.tondracek.myfarmer.common.color.fromArgb
 import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.location.domain.model.Location
-import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
-import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
-import com.tondracek.myfarmer.productmenu.domain.model.MenuItemId
-import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
-import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
+import com.tondracek.myfarmer.shop.domain.model.MenuItem
+import com.tondracek.myfarmer.shop.domain.model.MenuItemId
+import com.tondracek.myfarmer.shop.domain.model.OpeningHours
+import com.tondracek.myfarmer.shop.domain.model.PriceLabel
+import com.tondracek.myfarmer.shop.domain.model.ProductMenu
 import com.tondracek.myfarmer.shop.domain.model.Shop
 import com.tondracek.myfarmer.shop.domain.model.ShopId
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory

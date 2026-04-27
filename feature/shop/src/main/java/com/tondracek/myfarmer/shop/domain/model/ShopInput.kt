@@ -4,8 +4,6 @@ import com.tondracek.myfarmer.core.domain.domainerror.InputDataError
 import com.tondracek.myfarmer.core.domain.domainresult.DomainResult
 import com.tondracek.myfarmer.image.model.ImageResource
 import com.tondracek.myfarmer.location.domain.model.Location
-import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
-import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
 import com.tondracek.myfarmer.shopcategory.domain.model.ShopCategory
 import com.tondracek.myfarmer.user.domain.model.UserId
 

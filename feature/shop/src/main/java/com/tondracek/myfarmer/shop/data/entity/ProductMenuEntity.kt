@@ -1,9 +1,9 @@
-package com.tondracek.myfarmer.productmenu.data
+package com.tondracek.myfarmer.shop.data.entity
 
-import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
-import com.tondracek.myfarmer.productmenu.domain.model.MenuItemId
-import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
-import com.tondracek.myfarmer.productmenu.domain.model.ProductMenu
+import com.tondracek.myfarmer.shop.domain.model.MenuItem
+import com.tondracek.myfarmer.shop.domain.model.MenuItemId
+import com.tondracek.myfarmer.shop.domain.model.PriceLabel
+import com.tondracek.myfarmer.shop.domain.model.ProductMenu
 import kotlinx.serialization.Serializable
 
 @Serializable

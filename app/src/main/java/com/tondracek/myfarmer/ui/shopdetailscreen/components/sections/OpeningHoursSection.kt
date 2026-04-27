@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.openinghours.domain.model.OpeningHours
+import com.tondracek.myfarmer.shop.domain.model.OpeningHours
 import com.tondracek.myfarmer.ui.common.openinghours.getDayOfWeekString
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 import com.tondracek.myfarmer.ui.core.theme.myfarmertheme.MyFarmerTheme

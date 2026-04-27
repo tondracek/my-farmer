@@ -1,4 +1,4 @@
-package com.tondracek.myfarmer.productmenu.domain.model
+package com.tondracek.myfarmer.shop.domain.model
 
 import java.util.UUID
 

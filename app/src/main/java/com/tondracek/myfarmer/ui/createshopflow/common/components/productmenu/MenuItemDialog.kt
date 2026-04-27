@@ -20,9 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tondracek.myfarmer.R
-import com.tondracek.myfarmer.productmenu.domain.model.MenuItem
-import com.tondracek.myfarmer.productmenu.domain.model.MenuItemId
-import com.tondracek.myfarmer.productmenu.domain.model.PriceLabel
+import com.tondracek.myfarmer.shop.domain.model.MenuItem
+import com.tondracek.myfarmer.shop.domain.model.MenuItemId
+import com.tondracek.myfarmer.shop.domain.model.PriceLabel
 import com.tondracek.myfarmer.ui.core.preview.MyFarmerPreview
 
 enum class MenuItemDialogMode { ADD, EDIT }

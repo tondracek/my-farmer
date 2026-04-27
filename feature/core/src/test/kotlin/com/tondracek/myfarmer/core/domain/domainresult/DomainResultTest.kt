@@ -242,4 +242,24 @@ class DomainResultTest {
         val mapped = flow.mapFlow { it }.first()
         assertThat(mapped).isEqualTo(DomainResult.Failure(AuthError.NotLoggedIn))
     }
+
+    @Test
+    fun `mapFlatten handles success mapping to failure`() {
+        val mapped = DomainResult.Success(5).mapFlatten {
+            DomainResult.Failure(AuthError.UserNotFound)
+        }
+
+        assertThat(mapped).isEqualTo(DomainResult.Failure(AuthError.UserNotFound))
+    }
+
+    @Test
+    fun `mapFlowUC propagates failure from transform`() = runTest {
+        val flow = flowOf(DomainResult.Success(2))
+
+        val result = flow.mapFlowUC {
+            DomainResult.Failure(AuthError.UserNotFound)
+        }.first()
+
+        assertThat(result).isEqualTo(DomainResult.Failure(AuthError.UserNotFound))
+    }
 }
