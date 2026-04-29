@@ -11,6 +11,7 @@ class ImageResource {
 
 class User {
     - id: UUID
+    - authId: String
     - name: String
     - profilePicture: ImageResource?
     - contactInfo: ContactInfo
