@@ -12,6 +12,7 @@ import com.tondracek.myfarmer.location.domain.model.Location
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -50,7 +51,13 @@ class GpsLocationProvider @Inject constructor(
 
         try {
             client.lastLocation.addOnSuccessListener {
+                Timber.d(it.toString())
                 trySend(it?.let { Location(it.latitude, it.longitude) })
+            }.addOnFailureListener {
+                Timber.w(it.message.toString())
+                trySend(null)
+            }.addOnCanceledListener {
+                trySend(null)
             }
 
             client.requestLocationUpdates(

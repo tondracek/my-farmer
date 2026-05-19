@@ -1,16 +1,21 @@
 package com.tondracek.myfarmer.location.data
 
+import com.tondracek.myfarmer.core.data.permission.PermissionRepository
 import com.tondracek.myfarmer.core.domain.coroutine.AppCoroutineScope
 import com.tondracek.myfarmer.location.domain.model.Location
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class LocationRepository @Inject constructor(
+    permissionRepository: PermissionRepository,
     gpsLocationProvider: GpsLocationProvider,
     appScope: AppCoroutineScope,
 ) {
@@ -25,7 +30,14 @@ class LocationRepository @Inject constructor(
             replay = 1
         )
 
-    private val locationFlow = gpsFlow
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val locationFlow = permissionRepository.locationPermission
+        .flatMapLatest {
+            when (it) {
+                true -> gpsFlow
+                false -> flowOf(null)
+            }
+        }
         .distinctUntilChanged()
         .shareIn(
             scope = scope,

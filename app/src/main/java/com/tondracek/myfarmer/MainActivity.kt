@@ -1,5 +1,7 @@
 package com.tondracek.myfarmer
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
@@ -9,10 +11,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.tondracek.myfarmer.core.data.permission.PermissionRepository
 import com.tondracek.myfarmer.ui.auth.loginscreen.loginDestination
 import com.tondracek.myfarmer.ui.auth.registrationscreen.RegistrationRoute
 import com.tondracek.myfarmer.ui.auth.registrationscreen.registrationDestination
@@ -32,6 +36,7 @@ import com.tondracek.myfarmer.ui.profilescreen.profileScreenDestination
 import com.tondracek.myfarmer.ui.reviewscreen.shopReviewsScreenDestination
 import com.tondracek.myfarmer.ui.shopdetailscreen.shopDetailScreenDestination
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -88,5 +93,26 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    @Inject
+    lateinit var permissionRepository: PermissionRepository
+
+    override fun onResume() {
+        super.onResume()
+
+        val fineGranted =
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+        val coarseGranted =
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+        permissionRepository.setLocationPermission(fineGranted || coarseGranted)
     }
 }
