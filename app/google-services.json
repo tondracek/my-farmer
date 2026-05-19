@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "248652196071-rndd1gjer2j4dqbjj46853quou3c926k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tondracek.myfarmer",
+            "certificate_hash": "321c65048c57760e005668d00fc29737e9100f07"
+          }
+        },
+        {
           "client_id": "248652196071-sp2ed61vl3f09arji1hlr4ee4pja1oid.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
